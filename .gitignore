@@ -38,3 +38,6 @@ obj/
 utils/infosiga/*.zip
 utils/ssp/*.xlsx
 utils/ssp/*.PNG
+
+# ---- cache de ML (regenerável via src/ml/etl.py) ----
+src/ml/dados/cache/
