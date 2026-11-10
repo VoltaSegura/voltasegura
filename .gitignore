@@ -1,0 +1,34 @@
+# Git
+
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Python (src/ml e utilidades)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Node / Expo (src/mobile-app)
+node_modules/
+.expo/
+dist/
+*.log
+
+# .NET (src/csharp-backend)
+bin/
+obj/
+*.user
+
+# Segredos e chaves
+.env
+.env.*
+*.pem
+*.key
+# ⚠️ Nunca commitar chaves de API (ex.: SPTrans Olho Vivo) — use variáveis de ambiente.
