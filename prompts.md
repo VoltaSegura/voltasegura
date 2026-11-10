@@ -11,6 +11,7 @@
 | 2026-11-10 | Grupo (via assistente T3 Code) | agente de código (GLM) | Renomear produto CitizenTech → VoltaSegura | Edição consistente em todos os docs; "CitizenTech" mantido apenas para tema da GS/Fonte oficial | todos os `.md` |
 | 2026-11-10 | Grupo (via assistente T3 Code) | agente de código (GLM) | Organizar repo para a organização GitHub | `README.md` com Ficha preenchida, estrutura de pastas por disciplina, `.gitignore`, `prompts.md`, commit inicial e remote | este arquivo, `README.md` |
 | 2026-11-10 | Grupo (via assistente T3 Code) | agente de código (GLM) | Provisionar organização GitHub | Criação via REST API (autenticada com PAT fornecido pelo grupo) do monorepo `voltasegura` + 8 repos-espelho de entrega por disciplina (soa-backend, csharp-backend, ml, mobile-app, os-infra, physical-computing, qa, cybersecurity), todos privados, com docs, AGENTS.md, prompts e push | 9 repos em github.com/VoltaSegura |
+| 2026-11-10 | Grupo (via assistente T3 Code) | agente de código (GLM) | Script de sincronização | `scripts/sync_mirrors.sh`: replica docs 01–06, .gitignore, src/\<disciplina\> e regenera o README dos espelhos; commit automático com SHA do monorepo; suporta dry-run e seleção de disciplinas | `scripts/sync_mirrors.sh` |
 
 ## Como registrar (padrão)
 
