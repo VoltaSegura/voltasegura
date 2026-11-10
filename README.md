@@ -43,6 +43,21 @@
 | Testing, Compliance & QA | [`src/qa`](src/qa) | Features + test cases (Azure Boards) |
 | Cybersecurity | [`src/cybersecurity`](src/cybersecurity) | Regras PII/LGPD, Taint Analysis, indicador de risco cidadão |
 
+### Repositórios de entrega por disciplina
+
+Espelhos privados na organização, para envio/apresentação em cada disciplina (fonte da verdade sempre aqui):
+
+| Disciplina | Repositório de entrega |
+|---|---|
+| SOA & Web Services | github.com/VoltaSegura/voltasegura-soa-backend |
+| C# Software Development | github.com/VoltaSegura/voltasegura-csharp-backend |
+| IA & Machine Learning | github.com/VoltaSegura/voltasegura-ml |
+| Mobile & IoT | github.com/VoltaSegura/voltasegura-mobile-app |
+| Operating Systems | github.com/VoltaSegura/voltasegura-os-infra |
+| Physical Computing | github.com/VoltaSegura/voltasegura-physical-computing |
+| Testing, Compliance & QA | github.com/VoltaSegura/voltasegura-qa |
+| Cybersecurity | github.com/VoltaSegura/voltasegura-cybersecurity |
+
 ## Base de conhecimento (para humanos e agentes)
 
 Toda a documentação viva está em [`docs/`](docs/). O ponto de entrada para agentes de IA é o [`AGENTS.md`](AGENTS.md), que fixa a ordem de leitura e os guardrails de linguagem. Registro de prompts de IA: [`prompts.md`](prompts.md) (exigência da GS).
