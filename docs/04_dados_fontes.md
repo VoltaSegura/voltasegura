@@ -46,17 +46,20 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 | Limitações | GTFS estático: não tem posição/retardo; IDs do GTFS vs. API exigem join validado (hipóteses H1–H3 verificadas por projeto comunitário andalogo) |
 | Pendências | [ ] Testar download recorrente automático (semanal) no repo · [ ] Confirmar condições/licença de redistribuição de trechos do GTFS no produto |
 
-### 2.2 API Olho Vivo `[VERIFICADO — DOCUMENTAÇÃO]`
+### 2.2 API Olho Vivo `[VERIFICADA AO VIVO — 10/11/2026]`
 
 | Campo | Evidência |
 |---|---|
 | Base URL | `https://api.olhovivo.sptrans.com.br/v2.1` (v0 legado) |
-| Autenticação | POST `/Login/Autenticar?token=<key>` — cookie de sessão para chamadas seguintes; **cadastro em "Meus Aplicativos" no portal desenvolvedores: `sptrans.com.br/desenvolvedores`** |
-| Endpoints-chave | Linhas (busca por termo/sentido), Paradas (por linha/corredor), Corredores, Empresas, **Posição da frota em tempo real** (por linha), **Previsão de chegada por parada** |
-| Cadência de posições | ~85 s (documentado por usuários/projetos; confirmar no sandbox) |
-| Ambientes | Produção + sandbox → em sandbox há uso comercial — `[CONFIRMAR termos de uso e limites de requisição de produção]` |
+| Autenticação | POST `/Login/Autenticar?token=<key>` — **confirmado ao vivo: retorna `true` + cookie de sessão**. Detalhe técnico obrigatório: a API exige `Content-Length` → enviar `-d ""` (sem body a requisição responde **HTTP 411**) |
+| Endpoints confirmados ao vivo | `/Linha/Buscar?termosBusca=<termo>` (ex.: linha 8000 → 4 variantes com `cl`, `lt`, `sl`, `tp`, `ts`) · `/Corredor` (singular na v2.1, `Corredores` plural dá 404; retornou os 7 corredores: Campo Limpo, Expresso Tiradentes, Inajar de Souza, Parelheiros, Pirituba, Santo Amaro, Paes de Barros) · `/Posicao` (frota toda) · `/Posicao/Linha?codigoLinha=<cl>` |
+| Teste da frota toda (04h38, 10/11/2026) | **1.730 linhas ativas, 4.218 veículos**; campos do veículo: `p` (prefixo), `a` (**acessível para pessoas com deficiência** — útil como dado de acessibilidade), `py`/`px` (lat/lon), `ta` (hora de atualização) |
+| Nota teste | `/Posicao/Linha?codigoLinha=2506` às 04h38 retornou `vs` vazio (janela noturna sem frota na linha) — comportamento normal; retestar em horário comercial |
+| Cadência de posições | ~85 s (documentado por usuários/projetos; confirmar medindo 2 amostras espaçadas) |
+| Ambientes | Produção + sandbox — `[EM ABERTO: limites de requisição, termos de uso e política de redistribuição da produção]` |
+| Credencial | Token em `.env` local (variável `OLHO_VIVO`), fora do git (`.gitignore` cobre `.env`); verificação reproduzível: `bash scripts/olhovivo_check.sh` |
 | Limitação crítica `[DECISÃO]` | **Posição/previsão ≠ lotação.** Não prometer indicador de lotação no MVP sem fonte validada |
-| Pendências | [ ] Criar conta e app no portal (uma pessoa do grupo) para obter token e testar endpoints reais · [ ] Verificar limite de requisições e política de redistribuição |
+| Pendências | [ ] Medir cadência real (~85 s) com 2 amostras · [ ] Limites de requisição e termos de redistribuição |
 
 ## 3. Infraestrutura urbana — GeoSampa Iluminação Pública `[VERIFICADO AO VIVO]`
 
@@ -102,8 +105,8 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 | 1 | Órgão responsável | ✅ SSP-SP/Prodesp | ✅ SPTRANS | ✅ SPTRANS | ✅ PMSP/SPRegula | ✅ DETRAN-SP | — |
 | 2 | Variáveis disponíveis | ⚠️ por confirmar em download | ✅ linhas/paradas/horários/shape (3 modos) | ✅ posição/previsão/linhas/corredores | ✅ ponto + tipo + carga | ⚠️ por confirmar | — |
 | 3 | Granularidade | ⚠️ município via painel; distrito? (baixar "Consultas") | ✅ por parada/route/shape | ✅ por veículo/parada | ✅ ponto (662.945 registros) | ⚠️ município; logradouro? | — |
-| 4 | Frequência / última atualização | ⚠️ mensal (declarado) | ✅ 09/11/2026 | ✅ ~85 s (confirmar ao vivo) | ✅ mensal; última carga 21/10/2026 | ⚠️ confirmar | — |
-| 5 | Licença / autenticação / limites | ✅ CC-BY-4.0; site manual | ⚠️ GTFS download livre; redistrib. a validar | ⚠️ token grátis; limite/termos a validar | ✅ semRestrição; uso="License" (qual?) | ✅ CC-BY-4.0 | — |
+| 4 | Frequência / última atualização | ⚠️ mensal (declarado) | ✅ 09/11/2026 | ✅ teste ao vivo 04h38 10/11/2026 (~85 s a medir) | ✅ mensal; última carga 21/10/2026 | ⚠️ confirmar | — |
+| 5 | Licença / autenticação / limites | ✅ CC-BY-4.0; site manual | ⚠️ GTFS download livre; redistrib. a validar | ✅ token testado ao vivo (login OK); limites/termos `EM ABERTO` | ✅ semRestrição; uso="License" (qual?) | ✅ CC-BY-4.0 | — |
 | 6 | Lacunas / vieses | ✅ subnotificação (ver 03 §5) | ✅ estático, sem atraso | ✅ sem lotação | ✅ sem estado da lâmpada (só cadastro) | ✅ apenas óbitos, não acidentes | — |
 
 **Legenda**: ✅ verificado · ⚠️ parcial — ação pendente · — n/a
@@ -111,7 +114,7 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 ## Ações imediatas da Fase 0 (atualizada)
 
 1. `[PESSOA DO GRUPO]` Baixar manualmente no `ssp.sp.gov.br`: dados mensais (2 meses) + 1 consulta distrital → registrar granularidade real.
-2. `[PESSOA DO GRUPO]` Criar conta/app no portal SPTrans → token → testar `/Login/Autenticar` e `/Posicao/Linha` (registrar no `prompts.md`/`docs`).
+2. ~~`[PESSOA DO GRUPO]` Criar conta/app no portal SPTrans → token~~ **CONCLUÍDO (10/11/2026)**: token criado e guardado em `.env` (`OLHO_VIVO`, fora do git); autenticação + 4 endpoints testados ao vivo (ver §2.2). Restam as medições de cadência e os termos de uso.
 3. `[TÉCNICO]` Baixar histórico Infosiga (2024) → `src/ml/dados/` → preencher campos/período.
 4. `[TÉCNICO]` Definir licença formal da camada GeoSampa (página Dados Abertos ↦ metadados) e anotar.
 5. `[DECISÃO DE ARQUITETURA]` Roteamento: abrir conta/projeto de OTP/OSRM na Fase 1 com GTFS (sem custo) — ver seção 6.
