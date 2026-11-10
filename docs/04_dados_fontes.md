@@ -16,7 +16,7 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 
 ---
 
-## 1. Segurança pública — SSP-SP `[AUDITADA PARCIAL]`
+## 1. Segurança pública — SSP-SP `[AUDITADA COMPLETA — 10/11/2026]`
 
 | Campo | Evidência (10/11/2026) |
 |---|---|
@@ -25,12 +25,12 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 | Recursos do dataset | NOTAS TÉCNICAS · DADOS MENSAIS · DADOS TRIMESTRAIS · PAINEL DE DADOS ESTATÍSTICOS · **CONSULTAS (download da base criminal e de produtividade)** · Bombeiros (2016–2025) · SP Vida · Violência contra mulher (2011–2025) |
 | Licença | **CC-BY 4.0** (portal declara Open Definition) |
 | Tipos de arquivo | Páginas dinâmicas ASP.NET no próprio `ssp.sp.gov.br` (downloads via menu) — o CKAN é catálogo/redirecionador |
-| Granularidade | `ATENÇÃO`: o Painel Estatístico (ArcGIS) filtrável por **cidade, tipo de crime, dia da semana e horário** — indicativo de agregados por município com recorte temporal. **Granularidade por distrito/unidade policial: CONFIRMAR baixando "CONSULTAS" manualmente** (o site bloqueia crawlers) |
-| Cadência | Mensal (páginas "Dados Mensais"; painel atualizado por release mensal) `[CONFIRMAR data exata do release]` |
-| Limitações | Subnotificação e mudanças de naturezas ao longo do tempo (ver `03` §5) ; downloads manuais (sem API pública JSON/CSV documentada) |
-| Pendências | [ ] Baixar 2–3 meses de "Dados Mensais" + 1 arquivo de "CONSULTAS" e registrar granularidade real por distrito · [ ] Ler NOTAS TÉCNICAS para definições das naturezas · [ ] Confirmar periodicidade de revisão retroativa |
+| Granularidade | **~~Por confirmar~~ → CONFIRMADA (download real em 10/11/2026, `utils/ssp/`)**: a base "SPDadosCriminais" é **registro individual de BO** — 555.405 linhas por semestre × 30 colunas, incluindo `NOME_MUNICIPIO`, `BAIRRO`, `LOGRADOURO`, `LATITUDE`, `LONGITUDE`, `RUBRICA`, `NATUREZA_APURADA`, `HORA_OCORRENCIA_BO`, `DESCR_TIPOLOCAL`, delegacia/seccional e `COD IBGE`. Abas: `JAN-JUN_2026` e `JUL-DEZ_2026` (ano completo corrente) |
+| Cadência | Mensal (páginas "Dados Mensais"); base criminal "SPDadosCriminais" por **semestre-ano** no "Consultas" |
+| Limitações | Subnotificação; só insere a partir de 2026 (downloads por ano); ~140 MB por arquivo (não versionar no git — registro em `src/ml/dados/README.md` com SHA256) |
+| Pendências | [ ] Ler aba "Campos da Tabela_SPDADOS" (descrições oficiais de cada coluna) · [ ] Definir recorte baseado em `RUBRICA`/`NATUREZA_APURADA` para "crimes de contato com vítima" (roubo/furto) |
 
-> **Insight para ML (disciplina IA&ML)**: o recorte "dia da semana + horário" do painel é exatamente o tipo de agregado útil para pergunta de ML por distrito/hora (`src/ml/README.md`). Dados simulados NÃO são aceitos pela disciplina — usar essa base real.
+> **Insight para ML (disciplina IA&ML)**: com registro por BO (bairro + lat/lon + rubrica + hora do BO de 2026) a pergunta de ML deixa de depender de agregado do painel — dá para modelar na escala territorial-temporal que o produto precisa. Base disponível em `utils/ssp/SPDadosCriminais_2026.xlsx` (registro em `src/ml/dados/README.md`).
 
 ## 2. Transporte público (ônibus) — SPTrans GTFS + API Olho Vivo `[AUDITADA]`
 
@@ -77,12 +77,25 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 
 **Uso proposto MVP** `[HIPÓTESE]`: raio de busca (buffer) ao redor do segmento de caminhada → **densidade de pontos de iluminação** como indicador de infraestrutura — nunca como "segurança", apenas como cobertura de iluminação documentada pela Prefeitura.
 
-## 4. Trânsito — Infosiga SP `[AUDITADA PARCIALMENTE]`
+## 4. Trânsito — Infosiga SP `[AUDITADA COMPLETA — 10/11/2026]`
 
 - Portal: `infosiga.detran.sp.gov.br` → Dados Abertos e Documentos; + CKAN `governoaberto.sp.gov.br` (org DETRAN-SP).
-- Licença declarada no CKAN: **CC-BY-4.0**; formatos CSV/ZIP; presença de tags por categoria de dados (sinistro fatal, atropelamentos, código IBGE, região administrativa, dia do falecimento).
-- **Papel**: dados REAIS de sinistros (óbitos) — pergunta de ML viável; granularidade municipal + logradouro `[CONFIRMAR]`.
-- Pendências: baixar 1 dataset consolidado histórico (ex.: óbitos 2024) e registrar campos + cobertura + período real em `src/ml/dados/README.md`.
+- Licença declarada no CKAN: **CC-BY-4.0**.
+- **Granularidade CONFIRMADA (download real 10/11/2026, `utils/infosiga/dados_infosiga.zip`, 141 MB)**: 9 CSVs (`sinistros_`/`pessoas_`/`veiculos_` × 3 recortes: 2015–2021, 2022–2024, 2025–2026), separador `;`. A tabela `sinistros` traz **`logradouro`, `latitude`, `longitude`, `hora_sinistro`, `dia_da_semana`, `turno`, `tp_sinistro_primario`, `qtd_pedestre`, `qtd_bicicleta`, `qtd_motocicleta`, `qtd_automovel`…** — recorte espacial+temporal+modal real. `pessoas` complementa com sexo, idade, gravidade da lesão, meio de transporte da vítima. Dicionários oficiais v1.8 versionados em `src/ml/dados/documentacao/infosiga/`.
+- **Papel**: dados REAIS de sinistros graves/fatais — fonte primária da pergunta de ML `[COMPLETO]`.
+- Pendências: definir janela (ex.: 2022–2026) e recorte territorial (município de SP) para o notebook.
+
+## 4.1 Comparação das fontes de segurança/sinistro (para escolha do modelo) — `10/11/2026`
+
+| Dimensão | SSP-SP (SPDadosCriminais) | Infosiga (sinistros) |
+|---|---|---|
+| Escala territorial | registro individual (BO): bairro + lat/lon | registro individual: logradouro + lat/lon (+ `cod_ibge` do município) |
+| Escala temporal | hora do BO + data de ocorrência; **corrente (2026 por semestre)** | hora + dia da semana + turno + data; **série longa (2015–2026)** |
+| Evento coberto | todos os crimes com BO (rubrica/natureza) | sinistros de trânsito graves/fatais |
+| Uso no VoltaSegura | comparação de "exposição a crimes contra a vítima" por recorte territorial-temporal | contraprova de trânsito por via (`logradouro`): gravidade e modo de deslocamento (pedestre/bicicleta/motocicleta + `qtd_*`) |
+| Cobertura do período | 2026 (ano corrente, 555.405 BOs por semestre) | 2015–2026 (contínuo) |
+
+> Ambas são complementares, não concorrentes — SSP-SP para crime contra a vítima (roubo/furto); Infosiga para risco de trânsito por modo de deslocamento. A hipótese de "exposição estimada" pode combinar as duas sob os guardrails éticos (`05`).
 
 ## 5. Metrô e CPTM `[FECHADO (ESTÁTICO) · EM ABERTO (TEMPO REAL)]`
 
@@ -103,9 +116,9 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 | # | Campo | SSP-SP | GTFS SPTrans | Olho Vivo | GeoSampa/IP | Infosiga | Roteamento |
 |---|---|---|---|---|---|---|---|
 | 1 | Órgão responsável | ✅ SSP-SP/Prodesp | ✅ SPTRANS | ✅ SPTRANS | ✅ PMSP/SPRegula | ✅ DETRAN-SP | — |
-| 2 | Variáveis disponíveis | ⚠️ por confirmar em download | ✅ linhas/paradas/horários/shape (3 modos) | ✅ posição/previsão/linhas/corredores | ✅ ponto + tipo + carga | ⚠️ por confirmar | — |
-| 3 | Granularidade | ⚠️ município via painel; distrito? (baixar "Consultas") | ✅ por parada/route/shape | ✅ por veículo/parada | ✅ ponto (662.945 registros) | ⚠️ município; logradouro? | — |
-| 4 | Frequência / última atualização | ⚠️ mensal (declarado) | ✅ 09/11/2026 | ✅ teste ao vivo 04h38 10/11/2026 (~85 s a medir) | ✅ mensal; última carga 21/10/2026 | ⚠️ confirmar | — |
+| 2 | Variáveis disponíveis | ✅ 30 colunas/BO: rubrica, natureza, bairro, lat/lon, hora, delegacia, COD IBGE (dados em `utils/ssp/`) | ✅ linhas/paradas/horários/shape (3 modos) | ✅ posição/previsão/linhas/corredores | ✅ ponto + tipo + carga | ✅ 3 tabelas (sinistros/pessoas/veículos): logradouro+lat/lon+hora+dia+turno + `qtd_*` por modo | — |
+| 3 | Granularidade | ✅ **registro individual de BO** (555.405/semestre, 2026) | ✅ por parada/route/shape | ✅ por veículo/parada | ✅ ponto (662.945 registros) | ✅ registro individual (2015–2026, `;`-CSV) | — |
+| 4 | Frequência / última atualização | ✅ mensal + base criminal por semestre-ano (2026 completo baixado) | ✅ 09/11/2026 | ✅ teste ao vivo 04h38 10/11/2026 (~85 s a medir) | ✅ mensal; última carga 21/10/2026 | ✅ 2015–2026 contínuo (recorte em 3 arquivos) | — |
 | 5 | Licença / autenticação / limites | ✅ CC-BY-4.0; site manual | ⚠️ GTFS download livre; redistrib. a validar | ✅ token testado ao vivo (login OK); limites/termos `EM ABERTO` | ✅ semRestrição; uso="License" (qual?) | ✅ CC-BY-4.0 | — |
 | 6 | Lacunas / vieses | ✅ subnotificação (ver 03 §5) | ✅ estático, sem atraso | ✅ sem lotação | ✅ sem estado da lâmpada (só cadastro) | ✅ apenas óbitos, não acidentes | — |
 
@@ -113,9 +126,9 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 
 ## Ações imediatas da Fase 0 (atualizada)
 
-1. `[PESSOA DO GRUPO]` Baixar manualmente no `ssp.sp.gov.br`: dados mensais (2 meses) + 1 consulta distrital → registrar granularidade real.
+1. ~~`[PESSOA DO GRUPO]` Baixar manualmente no `ssp.sp.gov.br`~~ **CONCLUÍDO (10/11/2026)**: 11 arquivos baixados para `utils/ssp/` (SPDadosCriminais 2026 completo com 30 colunas/BO, produtividade, veículos/celulares/objetos subtraídos, consolidados anual/mensal, taxas de delito) — granularidade real: registro individual. Registro com SHA256 em `src/ml/dados/README.md`.
 2. ~~`[PESSOA DO GRUPO]` Criar conta/app no portal SPTrans → token~~ **CONCLUÍDO (10/11/2026)**: token criado e guardado em `.env` (`OLHO_VIVO`, fora do git); autenticação + 4 endpoints testados ao vivo (ver §2.2). Restam as medições de cadência e os termos de uso.
-3. `[TÉCNICO]` Baixar histórico Infosiga (2024) → `src/ml/dados/` → preencher campos/período.
+3. ~~`[TÉCNICO]` Baixar histórico Infosiga (2024)~~ **CONCLUÍDO (10/11/2026)**: dado melhor que o esperado — `dados_infosiga.zip` com 9 CSVs cobrindo **2015–2026** em 3 tabelas (sinistros/pessoas/veículos), com logradouro+lat/lon+hora+turno; dicionários v1.8 + diagrama ER + fluxograma versionados em `src/ml/dados/documentacao/infosiga/`.
 4. `[TÉCNICO]` Definir licença formal da camada GeoSampa (página Dados Abertos ↦ metadados) e anotar.
 5. `[DECISÃO DE ARQUITETURA]` Roteamento: abrir conta/projeto de OTP/OSRM na Fase 1 com GTFS (sem custo) — ver seção 6.
 

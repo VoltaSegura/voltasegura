@@ -33,3 +33,8 @@ obj/
 *.pem
 *.key
 # ⚠️ Nunca commitar chaves de API (ex.: SPTrans Olho Vivo) — use variáveis de ambiente.
+
+# ---- Datasets brutos (grandes; registro em src/ml/dados/README.md) ----
+utils/infosiga/*.zip
+utils/ssp/*.xlsx
+utils/ssp/*.PNG
