@@ -43,7 +43,7 @@ Você é um agente trabalhando neste repositório. Toda a base de conhecimento e
 | `src/qa/` | Features e test cases (Azure Boards) |
 | `src/cybersecurity/` | Regras PII/LGPD e evidências de auditoria |
 
-> **Espelhos de entrega**: cada disciplina tem um repo privado de entrega (`https://github.com/VoltaSegura/voltasegura-<disciplina>`), criado a partir deste monorepo — fonte da verdade sempre aqui; sincronize alterações nas duas direções conscientemente.
+> **Espelhos de entrega**: cada disciplina tem um repo privado de entrega (`https://github.com/VoltaSegura/<disciplina>`, ex.: `ml`, `qa`, `soa-backend`), criado a partir deste monorepo — fonte da verdade sempre aqui; sincronize com `bash scripts/sync_mirrors.sh`. Alterações manuais diretas no espelho serão sobrescritas no sync.
 
 ## Convenções globais desta base
 

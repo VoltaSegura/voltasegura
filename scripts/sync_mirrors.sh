@@ -60,6 +60,11 @@ clone_or_update() { # $1 = repo
     mkdir -p "$MIRRORS_DIR"
     git clone -b main "$(repo_url "$repo")" "$mirror" >/dev/null
   fi
+  # identidade de commit local (evita erro de "user.name/email" em máquina nova)
+  if [ -z "$(git -C "$mirror" config user.name || true)" ]; then
+    git -C "$mirror" config user.name "Equipe VoltaSegura"
+    git -C "$mirror" config user.email "Asteriuz@users.noreply.github.com"
+  fi
   echo "$mirror"
 }
 

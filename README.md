@@ -49,14 +49,14 @@ Espelhos privados na organização, para envio/apresentação em cada disciplina
 
 | Disciplina | Repositório de entrega |
 |---|---|
-| SOA & Web Services | github.com/VoltaSegura/voltasegura-soa-backend |
-| C# Software Development | github.com/VoltaSegura/voltasegura-csharp-backend |
-| IA & Machine Learning | github.com/VoltaSegura/voltasegura-ml |
-| Mobile & IoT | github.com/VoltaSegura/voltasegura-mobile-app |
-| Operating Systems | github.com/VoltaSegura/voltasegura-os-infra |
-| Physical Computing | github.com/VoltaSegura/voltasegura-physical-computing |
-| Testing, Compliance & QA | github.com/VoltaSegura/voltasegura-qa |
-| Cybersecurity | github.com/VoltaSegura/voltasegura-cybersecurity |
+| SOA & Web Services | github.com/VoltaSegura/soa-backend |
+| C# Software Development | github.com/VoltaSegura/csharp-backend |
+| IA & Machine Learning | github.com/VoltaSegura/ml |
+| Mobile & IoT | github.com/VoltaSegura/mobile-app |
+| Operating Systems | github.com/VoltaSegura/os-infra |
+| Physical Computing | github.com/VoltaSegura/physical-computing |
+| Testing, Compliance & QA | github.com/VoltaSegura/qa |
+| Cybersecurity | github.com/VoltaSegura/cybersecurity |
 
 ## Base de conhecimento (para humanos e agentes)
 
