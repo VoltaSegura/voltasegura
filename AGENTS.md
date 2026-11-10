@@ -42,6 +42,7 @@ Você é um agente trabalhando neste repositório. Toda a base de conhecimento e
 | `src/physical-computing/` | Circuito ESP32 (Wokwi) |
 | `src/qa/` | Features e test cases (Azure Boards) |
 | `src/cybersecurity/` | Regras PII/LGPD e evidências de auditoria |
+| `design/` | Identidade visual da marca (rascunhos de logo, prompts versionados e ledger de custos de geração) |
 
 > **Espelhos de entrega**: cada disciplina tem um repo privado de entrega (`https://github.com/VoltaSegura/<disciplina>`, ex.: `ml`, `qa`, `soa-backend`), criado a partir deste monorepo — fonte da verdade sempre aqui; sincronize com `bash scripts/sync_mirrors.sh`. Alterações manuais diretas no espelho serão sobrescritas no sync.
 

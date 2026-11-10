@@ -43,6 +43,7 @@ atualizacao: "A cada mudança: registrar data, mudança, motivo, evidência e re
 - [ ] Qual mecanismo de roteamento será usado e quanto custará?
 - [ ] Qual será a estratégia de privacidade, retenção e segurança dos dados de localização?
 - [ ] **Marca VoltaSegura**: concluir as checagens de marca, domínio e anterioridade para o nome **VoltaSegura** (renomeado de "CitizenTech" em 10/11/2026; o conflito com o app Citizen foi eliminado pela renomeação)
+- [ ] **Logo v1 gerada (10/11/2026)**: 2 rascunhos de marca — com wordmark e ícone puro (`design/logo_v1_wordmark.png`, `design/logo_v1_icone.png`) — com o conceito **"V" formado por rota terminando em pino**, paleta preto/laranja e exclusões éticas de escudo/cadeado/triângulo (guardrails de `docs/05`). Prompts versionados em `design/prompts/`. Pendente: revisão/aprovação do grupo (não apresentar como marca fechada), escolha da variante, versão vetorial (SVG) e as checagens de marca do item acima.
 - [ ] Qual instituição pode participar do primeiro piloto?
 - [ ] ODS conectados e suas justificativas no formato exigido pela FIAP (candidatos fortes: ODS 11 e 10).
 - [ ] Arquitetura: SOA e C# serão o mesmo serviço ou módulos distintos?
@@ -77,5 +78,6 @@ atualizacao: "A cada mudança: registrar data, mudança, motivo, evidência e re
 |---|---|---|---|---|
 | 09/11/2026 | 0.1 | Consolidação da ideia original, feedback do professor, novo posicionamento, público inicial, metodologia proposta, fontes de dados, riscos éticos, concorrência, modelo de negócio, roadmap e plano de validação | Documento Vivo original | grupo |
 | 10/11/2026 | 0.2 | Conversão para base de conhecimento em markdown para agentes (`docs/`); **renomeação do produto: CitizenTech → VoltaSegura** (motivo: evitar conflito com o app "Citizen" e com o nome do tema da GS; por decisão do grupo) | docx v0.1 + pdf briefing + decisão do grupo | (preencher) |
+| 10/11/2026 | 0.3 | **Logo v1 (2 rascunhos)**: conceito "V formado por rota com pino", paleta preto/laranja, exclusões éticas (sem escudo/cadeado — `docs/05`); prompts versionados em `design/prompts/`; geração via OpenRouter Image API registrada em `prompts.md` | `design/`, `prompts.md` | assistente + grupo |
 
 > Próximas versões: registrar data, mudança realizada, motivo, evidência utilizada, decisão tomada e responsável. Não apagar decisões antigas sem registrar o que mudou e por quê.
