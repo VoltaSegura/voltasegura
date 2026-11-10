@@ -29,6 +29,7 @@ obj/
 # Segredos e chaves
 .env
 .env.*
+!/.env.example
 *.pem
 *.key
 # ⚠️ Nunca commitar chaves de API (ex.: SPTrans Olho Vivo) — use variáveis de ambiente.
