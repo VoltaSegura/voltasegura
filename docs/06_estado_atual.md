@@ -19,6 +19,7 @@ atualizacao: "A cada mudança: registrar data, mudança, motivo, evidência e re
 - [x] Modelo comercial prioritário a validar: **B2B2C**, começando por universidades.
 - [x] Identidade visual da apresentação: **preto e laranja**, menos texto e Big Numbers em destaque.
 - [x] **Renomeação do produto (10/11/2026)**: de "CitizenTech" para **VoltaSegura** — elimina o conflito de identidade com o app "Citizen" e evita confusão com o nome do tema da GS.
+- [x] **1ª auditoria de fontes (Fase 0, 10/11/2026)**: GeoSampa/IP verificada ao vivo (WFS, 662.945 pontos, mensal); SPTrans GTFS vs.Ne podem baixados (1.365 rotas: 1.349 ônibus + 9 Metrô + 7 CPTM; 22.273 paradas; sem login); API Olho Vivo v2.1 documentada (token/free, ~85 s); SSP-SP CC-BY-4.0 no CKAN estadual; Infosiga CC-BY-4.0. Resultados na `docs/04_dados_fontes.md`. Pendências: download manual no site SSP (crawlers bloqueados), token Olho Vivo, histórico Infosiga.
 - [x] Mockup (tempos 32 min / 38 min) permanece como **exemplo visual**, não como algoritmo validado.
 
 ## 2. Hipóteses que precisam de validação `[HIPÓTESE]`
@@ -35,7 +36,7 @@ atualizacao: "A cada mudança: registrar data, mudança, motivo, evidência e re
 - [ ] Quais tipos de ocorrência serão considerados e por quê?
 - [ ] Qual é a granularidade real das bases criminais que poderemos integrar?
 - [ ] Quais serão os critérios, pesos e limites da metodologia de exposição estimada?
-- [ ] Quais dados de Metrô e CPTM podem ser integrados e em quais condições?
+- [x] ~~Quais dados de Metrô e CPTM podem ser integrados e em quais condições?~~ **FECHADO parcialmente (10/11/2026)**: GTFS estático da SPTrans já inclui 9 linhas de Metrô + 7 de CPTM (verificado com download em `docs/04` §2.1/§5). Tempo real de Metrô/CPTM permanece `EM ABERTO`.
 - [ ] Qual mecanismo de roteamento será usado e quanto custará?
 - [ ] Qual será a estratégia de privacidade, retenção e segurança dos dados de localização?
 - [ ] **Marca VoltaSegura**: concluir as checagens de marca, domínio e anterioridade para o nome **VoltaSegura** (renomeado de "CitizenTech" em 10/11/2026; o conflito com o app Citizen foi eliminado pela renomeação)
