@@ -14,6 +14,7 @@ Você é um agente trabalhando neste repositório. Toda a base de conhecimento e
 4. **Não invente** dados, métricas, fontes, pesos ou funcionalidades. Se algo estiver `[EM ABERTO]`, mantenha em aberto.
 5. **Datas-limite são rígidas**: entrega em **19/11/2026, 23h55** (ver `docs/01_gs_briefing.md`).
 6. Ao produzir alterações de estado (nova decisão, hipótese validada, ponto fechado), anote a mudança no **Documento Vivo**, no formato de `docs/06_estado_atual.md`, sem apagar o histórico. Prompts usados devem ser registrados em `prompts.md` (regra da GS).
+7. **Leia o `TODO.md` (raiz) no início de qualquer tarefa e mantenha-o atualizado.** Sempre que uma alteração no repositório tocar uma tarefa da lista (andamento, conclusão, nova pendência, decisão que muda o escopo), atualize o status e a evidência no `TODO.md` **na mesma alteração** e acrescente uma linha em "Histórico". Não marque `CONCLUÍDO` sem evidência. As regras completas estão no topo do próprio `TODO.md`.
 
 ## Ordem de leitura
 
@@ -36,6 +37,7 @@ Você é um agente trabalhando neste repositório. Toda a base de conhecimento e
 | `README.md` | Visão do produto + **Ficha da CitizenTech** preenchida (obrigatória no topo do README) |
 | `AGENTS.md` | Este arquivo — ponto de entrada para agentes |
 | `CLAUDE.md` | Complemento curto para o Claude Code (ambiente, comandos, rotina de fechamento); remete a este arquivo |
+| `TODO.md` | Lista viva de tarefas (status, detalhes e histórico); agentes devem mantê-la atualizada |
 | `prompts.md` | Registro obrigatório de uso de IA |
 | `docs/` | Base de conhecimento (01–09) |
 | `src/soa-backend/` | API REST (SOA/Web Services) |

@@ -9,7 +9,8 @@ Este arquivo descreve como manter a base de conhecimento coerente. As decisões 
 3. Consultar a fonte específica antes de editar: `docs/04` para dados, `docs/07` para categorias SSP-SP e `docs/08` para a comparação inicial. Citar a evidência e não criar números, pesos ou exigências legais sem fonte.
 4. Fazer a alteração no documento ou código responsável, sem usar `docs/06` como substituto da especificação detalhada. Atualizar também os resumos afetados em `README.md` e `AGENTS.md`.
 5. Se uma decisão, hipótese ou pendência mudou, atualizar a seção correspondente de `docs/06` e acrescentar uma linha ao histórico, preservando as versões anteriores. Registrar o uso da IA em `prompts.md`.
-6. Rodar `python scripts/check_knowledge.py` e as verificações pertinentes à entrega. Revisar o diff e informar o que foi decidido, o que permanece em aberto e como a mudança foi verificada.
+6. Se a alteração tocou uma tarefa da lista, atualizar `TODO.md` (status, evidência e linha em "Histórico") na mesma alteração.
+7. Rodar `python scripts/check_knowledge.py` e as verificações pertinentes à entrega. Revisar o diff e informar o que foi decidido, o que permanece em aberto e como a mudança foi verificada.
 
 ## Para percorrer pontos em aberto com o grupo
 
