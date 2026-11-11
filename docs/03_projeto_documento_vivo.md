@@ -100,29 +100,32 @@ Riscos documentados em sistemas que rotulam territórios (stigma, vieses) — pr
 7. Não vender histórico individual de localização; patrocinadores não alteram classificações.
 8. Avaliar periodicamente resultados desproporcionais contra determinadas regiões.
 
-### Dados de localização do usuário `[DECISÃO PARCIAL — 11/11/2026: proposta preliminar, pendente de validação do grupo]`
+### Dados de localização do usuário `[DECISÃO — 11/11/2026, para o MVP; responsáveis e revisão jurídica EM ABERTO]`
 
 Origem, destino e horário das consultas são os dados mais sensíveis do produto: para quem repete o trajeto toda noite, revelam onde mora e qual é a rotina. Usar roteamento em servidor próprio (OTP2, `docs/04` §6) já evita enviar esses dados a serviços externos.
 
-**Proposta preliminar — pacote mínimo (recomendado na conversa de 11/11/2026):**
+**Decisão para o MVP — pacote mínimo com conta obrigatória (opção A, escolhida pelo Lucas em 11/11/2026):**
 
-1. Sem conta obrigatória para consultar rotas.
+1. **Conta obrigatória** (e-mail e senha, ou login Google a confirmar), guardando só e-mail e identificador; sem nome completo, telefone ou endereço. Consentimento e aviso de privacidade no cadastro.
 2. O servidor usa origem, destino e horário só para calcular a resposta e os descarta; as consultas não são armazenadas.
-3. Logs técnicos sem coordenadas nem endereços, só dados de erro e desempenho.
-4. Histórico de trajetos apenas no aparelho, opcional e apagável pelo usuário.
+3. Logs técnicos sem coordenadas nem endereços e **sem vínculo com a conta**, só dados de erro e desempenho. Como a consulta chega autenticada, o servidor não registra consultas por usuário.
+4. Histórico de trajetos apenas no aparelho, opcional e apagável pelo usuário. Não fica vinculado à conta no servidor (isso seria a opção C).
 5. GPS opcional, acionado pelo usuário só para preencher a origem; sem rastreamento contínuo.
 6. Nenhum dado de consulta repassado a universidades no MVP. Relatórios institucionais agregados exigem consentimento e regras próprias em fase posterior.
+7. **Exclusão da conta pelo próprio app**, que apaga tudo o que o servidor tenha sobre a pessoa. Retenção dos dados da conta: enquanto ela existir.
 
-Limitação aceita pela proposta: sem armazenar consultas, a adoção no piloto é medida por entrevistas e não por dados de uso.
+A conta torna e-mail e identificador dados pessoais: exige base legal, aviso de privacidade, exclusão a pedido e segurança do cadastro.
 
-**Alternativas a discutir com o grupo:**
+Limitação aceita pela decisão: sem armazenar consultas, a adoção no piloto é medida por entrevistas e não por dados de uso.
+
+**Alternativas avaliadas (não adotadas no MVP):**
 
 | Opção | O que muda em relação ao pacote mínimo | Implicações |
 |---|---|---|
 | Mínimo + contadores agregados | O servidor conta uso sem localização (número de consultas por dia e por faixa do dia) | Permite medir adoção no piloto; definir antes quais contadores existem e garantir que não incluam coordenadas, endereços ou identificadores |
 | Conta com histórico no servidor | Trajetos salvos no servidor, vinculados a uma conta (sincronização entre aparelhos) | Exige desde o MVP: base legal e consentimento, prazo de retenção, exclusão a pedido, controle de acesso, criptografia e resposta a incidentes |
 
-`[EM ABERTO]` Escolha final entre as opções, prazos concretos de retenção (se houver armazenamento) e responsáveis por acesso e exclusão.
+`[EM ABERTO]` Responsáveis por acesso e exclusão; provedor de login (e-mail e senha ou Google); base legal exata e revisão jurídica do aviso de privacidade; reavaliar os contadores agregados (opção B) depois do piloto.
 
 > A plataforma apoia a decisão do usuário; **não transfere a ele a responsabilidade por uma ocorrência**. Avisos e termos de uso não substituem projeto responsável, segurança da informação e análise jurídica.
 
