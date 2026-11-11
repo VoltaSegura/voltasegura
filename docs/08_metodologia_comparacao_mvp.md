@@ -78,6 +78,18 @@ Para cada rota `r`:
 
 `[EM ABERTO]` Quem assume o papel de **responsável pela metodologia** (executar e publicar a revisão): a indicar pelo grupo.
 
+`[EM ABERTO — proposta em avaliação, 11/11/2026]` **Proposta de Lucas Simidu: automatizar a revisão de vieses.** Origem: Lucas perguntou se não seria possível dispensar a revisão humana ("nós bateríamos nos dados e atualizaríamos os vieses do app a partir dessas atualizações") e pediu a opinião do assistente. Registrado a pedido dele, que estava sem o grupo. **O grupo ainda não avaliou esta proposta: a decisão acima continua valendo até que decida.**
+
+Parecer do assistente (Claude) sobre a pergunta:
+
+- **O que pode ser automático:** (a) a checagem de cobertura por circunscrição, com um script que mede, a cada atualização da base, a proporção de boletins com coordenada e horário utilizáveis em cada região; (b) a consequência, porque a regra de "dados insuficientes" (cobertura abaixo de 80% ou diferença acima de 10 p.p. entre as rotas) já bloqueia a comparação sozinha, sem aprovação de ninguém; (c) o relatório a cada atualização, no modelo de `src/ml/auditar_calibracao_ssp.py`.
+- **O que a automação não resolve:** (1) ela *detecta*, não *corrige* o viés: o efeito prático é bloquear a comparação ("dados insuficientes") naquela região; (2) ela só vê o que foi programado para medir, então uma mudança no formato da SSP, na geocodificação ou um padrão novo pode passar batido ou gerar alarme falso; (3) responsabilidade: os princípios de `docs/03` §6 (itens 3, 4 e 8) falam em avaliar resultados desproporcionais e sinalizar vieses, e um processo sem pessoa responsável tende a não ser feito.
+- **Opinião do assistente:** automatizar a checagem e o bloqueio, mantendo apenas uma **conferência humana curta** (cerca de 5 minutos de leitura do relatório) a cada atualização da base e antes do piloto, com ação só se o relatório apontar exceção.
+- **Prazo (19/11):** o script não é obrigatório. No MVP basta fazer a checagem uma vez, antes do piloto, com o relatório de auditoria que já existe; a automação a cada atualização fica como evolução.
+- **Opções apresentadas ao Lucas:** **A.** checagem automática com bloqueio automático e conferência humana curta só nas atualizações (recomendada pelo assistente); **B.** totalmente automático, sem responsável (desaconselhada pelos pontos 2 e 3); **C.** manter a decisão atual, com revisão humana completa a cada atualização.
+- **Impacto na decisão atual:** a opção A ou B alteraria a frase "Uma diferença encontrada leva a revisão humana, não a ajuste automático de pesos ou limites", passando a permitir o bloqueio automático por "dados insuficientes" (sem ajuste de pesos). Isso só vale depois que o grupo decidir.
+- **Pendente:** escolha do grupo entre A, B e C e, se for A, o nome de quem faz a conferência (a indicar).
+
 ## Apresentação da confiança dos dados
 
 `[DECISÃO — 11/11/2026]` A confiança dos dados aparece em um bloco **"Sobre os dados"**, sempre visível junto da comparação e separado da exposição estimada. **Não há nota, escala nem níveis** (alta/média/baixa): os limites entre níveis seriam arbitrários, e uma escala tende a ser lida como nota de segurança. O bloco traz:
