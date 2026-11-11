@@ -70,6 +70,9 @@ Toda a documentação viva está em [`docs/`](docs/). O ponto de entrada para ag
 | [`docs/04_dados_fontes.md`](docs/04_dados_fontes.md) | Fontes de dados e matriz de validação |
 | [`docs/05_regras_linguagem_etica.md`](docs/05_regras_linguagem_etica.md) | Guardrails: o que pode e não pode ser dito |
 | [`docs/06_estado_atual.md`](docs/06_estado_atual.md) | Decisões, hipóteses e pontos em aberto |
+| [`docs/07_classificacao_ssp_app.md`](docs/07_classificacao_ssp_app.md) | Categorias SSP-SP selecionadas para o app e regras de apresentação |
+| [`docs/08_metodologia_comparacao_mvp.md`](docs/08_metodologia_comparacao_mvp.md) | Regra inicial de comparação de trajetos e validações pendentes |
+| [`docs/09_fluxo_trabalho_ia.md`](docs/09_fluxo_trabalho_ia.md) | Fluxo para agentes, registro de decisões e verificação da base |
 
 ## Convenções da equipe
 
