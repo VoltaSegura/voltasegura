@@ -11,7 +11,7 @@ using VoltaSegura.Infrastructure.Dados;
 namespace VoltaSegura.Infrastructure.Migrations
 {
     [DbContext(typeof(VoltaSeguraDbContext))]
-    [Migration("20261112003004_MigracaoInicial")]
+    [Migration("20261112004143_MigracaoInicial")]
     partial class MigracaoInicial
     {
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace VoltaSegura.Infrastructure.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Faixa")
+                    b.Property<int?>("Faixa")
                         .HasColumnType("INTEGER");
 
                     b.Property<double?>("Latitude")

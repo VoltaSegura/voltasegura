@@ -24,13 +24,16 @@ dotnet build
 dotnet ef database update --project VoltaSegura.Infrastructure --startup-project VoltaSegura.Api
 # (o banco SQLite fica em dados/voltasegura.db — fora do git)
 
-# 2. API de consultas (entrega C#) — Swagger em /swagger
+# 2. Carregar o recorte SSP-SP no banco (dados REAIS; requer utils/ssp/SPDadosCriminais_2026.xlsx)
+uv run --with pandas,openpyxl,python-calamine,pyarrow python scripts/carga_ocorrencias.py
+
+# 3. API de consultas (entrega C#) — Swagger em /swagger
 dotnet run --project VoltaSegura.Api
 
-# 3. Serviço de comparação (entrega SOA) — Swagger em /swagger
+# 4. Serviço de comparação (entrega SOA) — Swagger em /swagger
 dotnet run --project VoltaSegura.Servicos
 
-# 4. Testes automatizados
+# 5. Testes automatizados
 dotnet test
 ```
 
@@ -43,6 +46,31 @@ curl -X POST http://localhost:5000/api/comparacoes/trajetos \
   -d '{"origem":{"latitude":-23.56,"longitude":-46.65},"destino":{"latitude":-23.55,"longitude":-46.63},"sentido":"volta"}'
 ```
 
+## Acervo carregado (11/11/2026)
+
+Recorte real carregado no banco a partir de `utils/ssp/SPDadosCriminais_2026.xlsx` (SSP-SP, dados públicos):
+
+| Métrica | Valor |
+|---|---|
+| Boletins distintos (NUM_BO+ANO_BO+delegacia) | **278.961** |
+| Furto (art. 155) | 200.181 |
+| Roubo (art. 157) | 68.478 |
+| Trânsito (Art. 302/303) | 10.302 |
+| Sem faixa do dia (`DESC_PERIODO` vazio/"em hora incerta") | 155.921 (55,9% — preservado como NULL) |
+| Sem coordenadas (não entram em corredor) | 6.862 |
+| Período | jan–set/2026, capital (S.PAULO) |
+
+## Achado do teste com dados reais (honestidade do item 16)
+
+Nas comparações ponta a ponta (corredores centrais e de periferia, rotas do mock), o resultado
+**muda com a largura do corredor** (±50/±100/±150 m) em quase todos os casos → o serviço retorna
+**"dados insuficientes"** com o motivo explícito, **sem** inventar preferência. Auditoria no banco
+confirmou que a contagem está correta (ex.: R1 = 166/556/1.064 BOs a 50/100/150 m): a
+instabilidade vem dos dados, não de bug. É o comportamento acordado no item 16 — o teste de
+integração (`ComparacaoPontaAPontaTests`) prova o caminho "Conclusiva" com corredores de fato
+distintos. Com rotas reais do OTP2 (item 22), que caminham ruas diferentes entre alternativas,
+espera-se mais resultados conclusivos/divergentes.
+
 ## Decisões incorporadas (itens do grupo, 11/11/2026)
 
 - **Recorte SSP-SP** (item 8): Furto, Roubo e Trânsito; só `FURTO - OUTROS`/`ROUBO - OUTROS` na comparação.
@@ -54,7 +82,7 @@ curl -X POST http://localhost:5000/api/comparacoes/trajetos \
 
 ## Próximos passos
 
-- [ ] ETL para carga das ocorrências SSP-SP no banco (fonte: `src/ml/etl.py`, mesmas fontes).
+- [x] ETL para carga das ocorrências SSP-SP no banco (`scripts/carga_ocorrencias.py`) — **278.961 boletins distintos** em `dados/voltasegura.db`.
 - [ ] Ativar `Otp2Roteador` (item 22) e trocar o registro de DI no `Program.cs`.
 - [ ] Evidências da aplicação (prints) para o README de entrega.
 - [ ] Preencher os nomes dos integrantes abaixo.

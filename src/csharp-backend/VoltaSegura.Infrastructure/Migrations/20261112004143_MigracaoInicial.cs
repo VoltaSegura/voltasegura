@@ -25,7 +25,7 @@ namespace VoltaSegura.Infrastructure.Migrations
                     Bairro = table.Column<string>(type: "TEXT", maxLength: 80, nullable: false),
                     Municipio = table.Column<string>(type: "TEXT", maxLength: 80, nullable: false),
                     DataOcorrencia = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    Faixa = table.Column<int>(type: "INTEGER", nullable: false),
+                    Faixa = table.Column<int>(type: "INTEGER", nullable: true),
                     Latitude = table.Column<double>(type: "REAL", nullable: true),
                     Longitude = table.Column<double>(type: "REAL", nullable: true)
                 },

@@ -31,8 +31,13 @@ public class Ocorrencia
 
     public DateOnly DataOcorrencia { get; set; }
 
-    /// <summary>Faixa do dia conforme os 4 períodos da SSP (item 12).</summary>
-    public FaixaDoDia Faixa { get; set; }
+    /// <summary>
+    /// Faixa do dia conforme os 4 períodos da SSP (item 12). ANULÁVEL por honestidade:
+    /// ~57% dos BOs da capital em 2026 vêm sem DESC_PERIODO preenchido (ou "Em hora
+    /// incerta") — nesses casos a faixa fica NULL e o BO não participa de contagens
+    /// filtradas por faixa (achado de qualidade do ML, 10/11/2026).
+    /// </summary>
+    public FaixaDoDia? Faixa { get; set; }
 
     /// <summary>Coordenadas como publicadas pela fonte (item 12). Anonimizadas em logs e saídas.</summary>
     public double? Latitude { get; set; }

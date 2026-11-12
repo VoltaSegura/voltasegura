@@ -41,7 +41,7 @@ namespace VoltaSegura.Infrastructure.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Faixa")
+                    b.Property<int?>("Faixa")
                         .HasColumnType("INTEGER");
 
                     b.Property<double?>("Latitude")

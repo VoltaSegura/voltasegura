@@ -60,7 +60,7 @@ public class OcorrenciaRepositorio : IOcorrenciaRepositorio
             .Where(o => o.DataOcorrencia >= inicio && o.DataOcorrencia <= fim);
 
         if (faixas is { Count: > 0 })
-            consulta = consulta.Where(o => faixas.Contains(o.Faixa));
+            consulta = consulta.Where(o => o.Faixa != null && faixas.Contains(o.Faixa.Value));
 
         return await consulta.ToListAsync(ct);
     }
