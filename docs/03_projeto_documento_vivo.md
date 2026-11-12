@@ -2,7 +2,7 @@
 titulo: VoltaSegura — Documento Vivo do Projeto (consolidado)
 projeto: VoltaSegura (produto; ex-"CitizenTech", renomeado em 10/11/2026)
 versao_origem: "0.1 — 09/11/2026"
-atualizado: 2026-11-10
+atualizado: 2026-11-11
 tipo: referencia-produto-estrategia
 convencao_status: "[DECISÃO] direcionamento atual do grupo · [HIPÓTESE] precisa ser testada · [EM ABERTO] não apresentar como feito"
 ---
@@ -46,7 +46,9 @@ Aplicativos de mobilidade priorizam tempo, distância e conveniência, mas não 
 Ajudar o usuário a entender as diferenças entre trajetos possíveis — não apenas tempo, mas indicadores disponíveis sobre os trechos, meios de transporte, horário e confiabilidade dos dados.
 
 ### Público inicial `[DECISÃO]`
-**Estudantes universitários que retornam para casa à noite**, usando transporte público e caminhadas. Justificativa: rotina recorrente e previsível, testável em uma região delimitada, e conecta público de impacto ao modelo de negócio (universidades como clientes institucionais).
+**Estudantes universitários que retornam para casa à noite**, usando transporte público e caminhadas. Justificativa: rotina recorrente e previsível, testável com trajetos reais em diferentes partes do município, e conecta público de impacto ao modelo de negócio (universidades como clientes institucionais).
+
+**Abrangência do piloto `[DECISÃO — 11/11/2026]`**: todo o município de São Paulo. O lançamento não fica restrito a um campus ou bairro; a comparação de cada trajeto depende de cobertura e qualidade suficientes, que podem variar dentro da cidade. Trajetos reais em partes diferentes do município servirão como testes iniciais, complementados por avaliação de cobertura em toda a cidade.
 
 ### Persona de trabalho: **Marina, 22 anos** `[HIPÓTESE — validar via entrevistas]`
 - Estudante universitária do período noturno; usa ônibus, metrô e caminhadas; sai da faculdade tarde; nem sempre conhece bem todos os trechos.
@@ -66,9 +68,12 @@ Trabalhadores noturnos · frequentadores de eventos · turistas · outros usuár
 
 **Frase de diferenciação em desenvolvimento** `[HIPÓTESE]`: "não mostramos apenas informações sobre riscos; organizamos essas informações para apoiar uma decisão prática de mobilidade."
 
-## 5. Metodologia de exposição estimada `[EM ABERTO — não definir pesos ainda]`
+## 5. Metodologia de exposição estimada `[DECISÃO — regra inicial; calibração EM ABERTO]`
 
-- A classificação **não está definida**. Não inventar pesos nem apresentar índice numérico como validado. **Primeiro auditar as bases** (ver `04_dados_fontes.md`).
+- `[DECISÃO — 10/11/2026]` O **recorte de apresentação** das ocorrências SSP-SP foi fechado: Furto, Roubo e Ocorrências de trânsito são grupos padrão; homicídio doloso, tentativa de homicídio e violência sexual ficam em panorama municipal acessado em “Dados considerados / Detalhes”, sem marcação por rua. Mapeamento exato, inclusões e exclusões em [`07_classificacao_ssp_app.md`](07_classificacao_ssp_app.md).
+- `[DECISÃO — 11/11/2026]` A **conta inicial de comparação criminal** foi definida em [`08_metodologia_comparacao_mvp.md`](08_metodologia_comparacao_mvp.md): para cada alternativa, contar registros elegíveis no corredor dos trechos caminhados, sem dupla contagem (`N`), e dividir pela distância caminhada em quilômetros (`D = N/L`). Usar mesma janela histórica/horária e largura de corredor em X e Y. Somente se `N_X < N_Y` **e** `D_X < D_Y`, com qualidade suficiente, apontar X como alternativa de menor exposição estimada entre as avaliadas; divergência entre as medidas não gera vencedor. Tempo, conexões e infraestrutura são exibidos separadamente, sem pesos arbitrários. A regra ainda **não foi calibrada nem validada** nos dados reais.
+- ~~`[EM ABERTO]` Calibrar largura do corredor, período e faixa horária, cobertura, suficiência amostral e estabilidade da diferença antes de exibir a comparação como resultado do produto.~~ `[DECISÃO — 11/11/2026, após auditoria dos dados SSP-SP 2026]` Parâmetros calibrados em [`08_metodologia_comparacao_mvp.md`](08_metodologia_comparacao_mvp.md): `N` conta boletins distintos de todos os tipos de local; quatro períodos do dia da SSP, sem separar dias úteis e fins de semana; 12 meses de histórico (9 disponíveis no MVP); corredor de ±100 m com sensibilidade em 50/150 m; cobertura ≥ 80%; `N_X + N_Y ≥ 10`; teste binomial bilateral a 5%. `[EM ABERTO]` Validar em trajetos reais e com usuários. Até lá, não apresentar a comparação como validada. Evidência em `src/ml/dados/AUDITORIA_CALIBRACAO_SSP_2026.md`.
+- `[DECISÃO conceitual — 11/11/2026]` Os limites de **privacidade** e de **validade estatística** devem ser avaliados separadamente. A LGPD orienta minimização, proteção e prevenção de reidentificação; ela não define um número mínimo universal de registros para comparar rotas. Não divulgar recortes que possam identificar pessoas. Os limiares quantitativos de suficiência seguem `[EM ABERTO]`.
 - **Abordagem proposta para o MVP**:
   1. Dividir cada rota em segmentos respeitando a granularidade das fontes.
   2. Considerar indicadores disponíveis: ocorrências, período, iluminação, caminhada, conexões, oferta de transporte.
@@ -94,6 +99,33 @@ Riscos documentados em sistemas que rotulam territórios (stigma, vieses) — pr
 6. Privacidade desde a concepção; minimização de dados; controles LGPD.
 7. Não vender histórico individual de localização; patrocinadores não alteram classificações.
 8. Avaliar periodicamente resultados desproporcionais contra determinadas regiões.
+
+### Dados de localização do usuário `[DECISÃO — 11/11/2026, para o MVP; responsáveis e revisão jurídica EM ABERTO]`
+
+Origem, destino e horário das consultas são os dados mais sensíveis do produto: para quem repete o trajeto toda noite, revelam onde mora e qual é a rotina. Usar roteamento em servidor próprio (OTP2, `docs/04` §6) já evita enviar esses dados a serviços externos.
+
+**Decisão para o MVP — pacote mínimo com conta obrigatória (opção A, escolhida pelo Lucas em 11/11/2026):**
+
+1. **Conta obrigatória** (e-mail e senha, ou login Google a confirmar), guardando só e-mail e identificador; sem nome completo, telefone ou endereço. Consentimento e aviso de privacidade no cadastro.
+2. O servidor usa origem, destino e horário só para calcular a resposta e os descarta; as consultas não são armazenadas.
+3. Logs técnicos sem coordenadas nem endereços e **sem vínculo com a conta**, só dados de erro e desempenho. Como a consulta chega autenticada, o servidor não registra consultas por usuário.
+4. Histórico de trajetos apenas no aparelho, opcional e apagável pelo usuário. Não fica vinculado à conta no servidor (isso seria a opção C).
+5. GPS opcional, acionado pelo usuário só para preencher a origem; sem rastreamento contínuo.
+6. Nenhum dado de consulta repassado a universidades no MVP. Relatórios institucionais agregados exigem consentimento e regras próprias em fase posterior.
+7. **Exclusão da conta pelo próprio app**, que apaga tudo o que o servidor tenha sobre a pessoa. Retenção dos dados da conta: enquanto ela existir.
+
+A conta torna e-mail e identificador dados pessoais: exige base legal, aviso de privacidade, exclusão a pedido e segurança do cadastro.
+
+Limitação aceita pela decisão: sem armazenar consultas, a adoção no piloto é medida por entrevistas e não por dados de uso.
+
+**Alternativas avaliadas (não adotadas no MVP):**
+
+| Opção | O que muda em relação ao pacote mínimo | Implicações |
+|---|---|---|
+| Mínimo + contadores agregados | O servidor conta uso sem localização (número de consultas por dia e por faixa do dia) | Permite medir adoção no piloto; definir antes quais contadores existem e garantir que não incluam coordenadas, endereços ou identificadores |
+| Conta com histórico no servidor | Trajetos salvos no servidor, vinculados a uma conta (sincronização entre aparelhos) | Exige desde o MVP: base legal e consentimento, prazo de retenção, exclusão a pedido, controle de acesso, criptografia e resposta a incidentes |
+
+`[EM ABERTO]` Responsáveis por acesso e exclusão; provedor de login (e-mail e senha ou Google); base legal exata e revisão jurídica do aviso de privacidade; reavaliar os contadores agregados (opção B) depois do piloto.
 
 > A plataforma apoia a decisão do usuário; **não transfere a ele a responsabilidade por uma ocorrência**. Avisos e termos de uso não substituem projeto responsável, segurança da informação e análise jurídica.
 
@@ -127,7 +159,7 @@ O produto passa a se chamar **VoltaSegura**. O nome resolve o conflito de identi
 
 | Fase | Escopo |
 |---|---|
-| **Fase 0 — Viabilidade e descoberta** | Auditar fontes/formatos/granularidade/atualização/licenças; entrevistar estudantes noturnos e universidades; escolher região ou campus do piloto; definir princípios de ética, privacidade e comunicação de incerteza |
+| **Fase 0 — Viabilidade e descoberta** | Auditar fontes/formatos/granularidade/atualização/licenças; entrevistar estudantes noturnos e universidades; validar a cobertura do piloto municipal com trajetos em diferentes partes de São Paulo; definir princípios de ética, privacidade e comunicação de incerteza |
 | **Fase 1 — MVP** | Planejamento de **ida e volta**; rotas multimodais com integração validada; comparação de alternativas por tempo, conexões e indicadores de exposição disponíveis; explicação de fontes, datas e qualidade; orientação passo a passo; indicação de "dados insuficientes" quando aplicável |
 | **Fase 2 — Acompanhamento** | Tempo real de transporte (com fonte confiável); replanejamento diante de mudanças operacionais; compartilhamento opcional de trajeto com consentimento e controles de privacidade |
 | **Fase 3 — Inteligência e personalização** | Indicadores urbanos adicionais; preferências de mobilidade e acessibilidade; assistente de orientação após validação |

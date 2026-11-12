@@ -6,7 +6,7 @@
 
 | Fonte | Link | Período sugerido | Licença | Status |
 |---|---|---|---|---|
-| SSP-SP — Dados mensais / Consultas | https://www.ssp.sp.gov.br/estatistica/dados-mensais · https://www.ssp.sp.gov.br/estatistica/consultas | Série 2023–2026 | CC-BY-4.0 (via CKAN `dadosabertos.sp.gov.br`) | ⚠️ baixar manualmente (site bloqueia crawlers) |
+| SSP-SP — Dados mensais / Consultas | https://www.ssp.sp.gov.br/estatistica/dados-mensais · https://www.ssp.sp.gov.br/estatistica/consultas | Série 2023–2026 | CC-BY-4.0 (via CKAN `dadosabertos.sp.gov.br`) | ✅ `SPDadosCriminais_2026.xlsx` conferido e catalogado; demais recursos conforme registro abaixo |
 | Infosiga SP — sinistros com óbitos | https://infosiga.detran.sp.gov.br/ (Dados Abertos) · CKAN org DETRAN-SP | Histórico 2023–2025 | CC-BY-4.0 | ⚠️ baixar arquivo consolidado |
 | GeoSampa — iluminação pública (**feature de contexto urbano**, não alvo do modelo) | WFS: `wfs.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wfs?…typeName=geoportal:iluminacao_publica&outputFormat=application/json` | carga vigente (última carga 21/10/2026) | acesso sem restrições (uso: licença a confirmar) | ✅ verificada ao vivo (662.945 pontos) |
 | GTFS SPTrans (**feature de transporte**, não alvo do modelo) | https://www.sptrans.com.br/umbraco/Surface/PerfilDesenvolvedor/BaixarGTFS?memberName=sptrans | versão 09/11/2026 | redistribuição a validar | ✅ verificado (1.365 rotas: 1.349 ônibus + 9 Metrô + 7 CPTM; 22.273 paradas) |
@@ -22,6 +22,8 @@
 
 ## Padrão de anotação de datasets baixados
 
+O [catálogo SSP-SP 2026](CATALOGO_SSP_2026.md) lista todos os valores observados de `RUBRICA` e `NATUREZA_APURADA`, com contagens e o [cruzamento completo](ssp_2026_rubrica_natureza.csv). As listas são extraídas pelo script `src/ml/catalogar_ssp.py` a partir do arquivo bruto; não definem, por si, o recorte de ocorrências do produto.
+
 Ao baixar qualquer arquivo para esta pasta, registrar aqui. **Arquivos brutos pesados vivem em `utils/` (fora do git)**; são versionados no git apenas esta tabela, os PDFs de documentação oficial (`documentacao/`) e o código do notebook.
 
 ### DOWNLOAD 2026-11-10 (.datas brutos em `utils/infosiga/` e `utils/ssp/`)
@@ -34,7 +36,7 @@ Fonte dos links: Infosiga = `https://infosiga.detran.sp.gov.br/` → Dados Abert
 | `infosiga/Infosiga_dicionario_dados.zip` (640 KB) | Infosiga → Dados Abertos | 3 dicionários v1.8 (sinistros, pessoas, veículos) | — | 10/11/2026 | `b8cb25c6…` |
 | `infosiga/Infosiga_diagrama_ER.pdf` | Infosiga → Dados Abertos | Modelo relacional das 3 tabelas | — | 10/11/2026 | `78c313a1…` |
 | `infosiga/Infosiga_fluxograma_consolidacao.pdf` | Infosiga → Dados Abertos | Fluxo de consolidação dos registros | — | 10/11/2026 | `bc8d2650…` |
-| `ssp/SPDadosCriminais_2026.xlsx` (140 MB) | SSP-SP → Consultas ("base criminal e produtividade") | **Registros individuais de BO** (555.405 linhas/semestre × 30 colunas): `NOME_MUNICIPIO`, `BAIRRO`, `LOGRADOURO`, `LATITUDE`, `LONGITUDE`, `RUBRICA`, `NATUREZA_APURADA`, `HORA_OCORRENCIA_BO`, `DESCR_TIPOLOCAL`, `COD IBGE`; abas "Campos da Tabela_SPDADOS", `JAN-JUN_2026`, `JUL-DEZ_2026` | **jan–dez 2026** | 10/11/2026 | `f627d84e…` |
+| `ssp/SPDadosCriminais_2026.xlsx` (140 MB) | SSP-SP → Consultas ("base criminal e produtividade") | **Registros individuais de BO** (814.900 linhas × 30 colunas; 555.404 em `JAN-JUN_2026` e 259.496 em `JUL-DEZ_2026`): `NOME_MUNICIPIO`, `BAIRRO`, `LOGRADOURO`, `LATITUDE`, `LONGITUDE`, `RUBRICA`, `NATUREZA_APURADA`, `HORA_OCORRENCIA_BO`, `DESCR_TIPOLOCAL`, `COD IBGE`; aba adicional "Campos da Tabela_SPDADOS" | **meses estatísticos jan–set/2026** | 10/11/2026 | `f627d84e…` |
 | `ssp/DadosProdutividade_2026.xlsx` (130 MB) | SSP-SP → Consultas | Produtividade policial (presos/apreendidos + demais abas), 63 campos | 2026 | 10/11/2026 | `7ee7e5b4…` |
 | `ssp/VeiculosSubtraidos_2026.xlsx` (45 MB) | SSP-SP → Consultas | Roubo/furto de veículos (abas: metodologia, dicionário, dados) | 2026 | 10/11/2026 | `b3832e93…` |
 | `ssp/CelularesSubtraidos_2026.xlsx` (73 MB) | SSP-SP → Consultas | Roubo/furto de celulares | 2026 | 10/11/2026 | `078426f0…` |

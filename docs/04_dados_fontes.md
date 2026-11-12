@@ -25,12 +25,12 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 | Recursos do dataset | NOTAS TÉCNICAS · DADOS MENSAIS · DADOS TRIMESTRAIS · PAINEL DE DADOS ESTATÍSTICOS · **CONSULTAS (download da base criminal e de produtividade)** · Bombeiros (2016–2025) · SP Vida · Violência contra mulher (2011–2025) |
 | Licença | **CC-BY 4.0** (portal declara Open Definition) |
 | Tipos de arquivo | Páginas dinâmicas ASP.NET no próprio `ssp.sp.gov.br` (downloads via menu) — o CKAN é catálogo/redirecionador |
-| Granularidade | **~~Por confirmar~~ → CONFIRMADA (download real em 10/11/2026, `utils/ssp/`)**: a base "SPDadosCriminais" é **registro individual de BO** — 555.405 linhas por semestre × 30 colunas, incluindo `NOME_MUNICIPIO`, `BAIRRO`, `LOGRADOURO`, `LATITUDE`, `LONGITUDE`, `RUBRICA`, `NATUREZA_APURADA`, `HORA_OCORRENCIA_BO`, `DESCR_TIPOLOCAL`, delegacia/seccional e `COD IBGE`. Abas: `JAN-JUN_2026` e `JUL-DEZ_2026` (ano completo corrente) |
+| Granularidade | **CONFIRMADA (arquivo oficial, SHA256 `f627d84e…`)**: a base "SPDadosCriminais" tem **registros individuais de BO** em 30 colunas, incluindo `NOME_MUNICIPIO`, `BAIRRO`, `LOGRADOURO`, `LATITUDE`, `LONGITUDE`, `RUBRICA`, `NATUREZA_APURADA`, `HORA_OCORRENCIA_BO`, `DESCR_TIPOLOCAL`, delegacia/seccional e `COD IBGE`. Há **555.404 linhas de dados** na aba `JAN-JUN_2026` e **259.496** na aba `JUL-DEZ_2026` (o segundo semestre está parcial) |
 | Cadência | Mensal (páginas "Dados Mensais"); base criminal "SPDadosCriminais" por **semestre-ano** no "Consultas" |
-| Limitações | Subnotificação; só insere a partir de 2026 (downloads por ano); ~140 MB por arquivo (não versionar no git — registro em `src/ml/dados/README.md` com SHA256) |
-| Pendências | [ ] Ler aba "Campos da Tabela_SPDADOS" (descrições oficiais de cada coluna) · [ ] Definir recorte baseado em `RUBRICA`/`NATUREZA_APURADA` para "crimes de contato com vítima" (roubo/furto) |
+| Limitações | Subnotificação; a planilha 2026 consultada cobre meses estatísticos até setembro; ~140 MB por arquivo (não versionar no git — registro em `src/ml/dados/README.md` com SHA256) |
+| Catálogo / recorte | [x] Lidas as definições oficiais de `RUBRICA` e `NATUREZA_APURADA` na aba "Campos da Tabela_SPDADOS" e catalogados **72 valores de rubrica, 23 de natureza apurada e 129 pares** em `src/ml/dados/CATALOGO_SSP_2026.md` (10/11/2026). [x] Recorte e apresentação do app definidos em `docs/07_classificacao_ssp_app.md`, com classificação por `NATUREZA_APURADA`. O recorte por `RUBRICA` do notebook é específico da entrega de ML; o cálculo de exposição por trecho ainda não foi validado |
 
-> **Insight para ML (disciplina IA&ML)**: com registro por BO (bairro + lat/lon + rubrica + hora do BO de 2026) a pergunta de ML deixa de depender de agregado do painel — dá para modelar na escala territorial-temporal que o produto precisa. Base disponível em `utils/ssp/SPDadosCriminais_2026.xlsx` (registro em `src/ml/dados/README.md`).
+> **Insight para ML (disciplina IA&ML)**: com registro por BO (bairro + lat/lon + rubrica + hora do BO de 2026) a pergunta de ML deixa de depender de agregado do painel. A utilidade na escala de trechos do produto ainda precisa de validação. Base disponível em `utils/ssp/SPDadosCriminais_2026.xlsx` (registro em `src/ml/dados/README.md`). A versão catalogada contém meses estatísticos de **janeiro a setembro de 2026**, não o ano completo.
 
 ## 2. Transporte público (ônibus) — SPTrans GTFS + API Olho Vivo `[AUDITADA]`
 
@@ -45,6 +45,7 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 | Uso no produto | Cadastro de linhas/paradas/itinerários + rotas multimodais programadas constitui a base do MVP (sem requisição autenticada) |
 | Limitações | GTFS estático: não tem posição/retardo; IDs do GTFS vs. API exigem join validado (hipóteses H1–H3 verificadas por projeto comunitário andalogo) |
 | Pendências | [ ] Testar download recorrente automático (semanal) no repo · [ ] Confirmar condições/licença de redistribuição de trechos do GTFS no produto |
+| Verificação de 11/11/2026 | **Atualização**: novo download trouxe a versão `?versao=101126` (na véspera era `091126`), com arquivos gerados em 10/11/2026; o feed é regenerado com frequência, pelo menos diariamente nesses dois dias. **Estrutura dos horários**: as 2.268 viagens (uma por linha e sentido) usam `frequencies.txt`. O feed descreve **intervalos entre partidas**, não horários exatos, e o `calendar.txt` tem 6 padrões genéricos válidos de 01/10/2023 a 01/06/2027. Consequência: tempos de espera calculados são estimativas a partir dos intervalos. **Serviço noturno**: 1.010 linhas operam às 23h, 915 às 00h30 e 155 às 02h (151 linhas com prefixo "N"). **Termos de redistribuição**: não publicados nas páginas públicas de desenvolvedores (`sptrans.com.br/desenvolvedores` e guia da API, consultados em 11/11/2026). Podem estar no termo aceito no cadastro da área logada; conferir com quem tem a conta ou pelo SP156. **Ligação de IDs com a Olho Vivo**: o `route_id` segue o formato `<letreiro>-<tipo>` (ex.: `1012-10`), compatível com os campos `lt` e `tl` da API. Teste efetivo pendente porque o `.env` com o token não está nesta cópia do repositório |
 
 ### 2.2 API Olho Vivo `[VERIFICADA AO VIVO — 10/11/2026]`
 
@@ -60,6 +61,7 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 | Credencial | Token em `.env` local (variável `OLHO_VIVO`), fora do git (`.gitignore` cobre `.env`); verificação reproduzível: `bash scripts/olhovivo_check.sh` |
 | Limitação crítica `[DECISÃO]` | **Posição/previsão ≠ lotação.** Não prometer indicador de lotação no MVP sem fonte validada |
 | Pendências | [ ] Medir cadência real (~85 s) com 2 amostras · [ ] Limites de requisição e termos de redistribuição |
+| Verificação de 11/11/2026 | **Limites e termos**: não constam na página de desenvolvedores nem no guia de referência públicos. A busca na web não encontrou termos oficiais, só projetos de terceiros. **Cadência**: não medida porque o `.env` com `OLHO_VIVO` não está nesta cópia do repositório. Script pronto para a medição: `python scripts/olhovivo_cadencia.py <routes.txt do GTFS>` (4 amostras de `/Posicao` a cada 45 s, comparando o campo `ta` por veículo, mais o teste de ligação com o GTFS). Rodar quando o token estiver no `.env` |
 
 ## 3. Infraestrutura urbana — GeoSampa Iluminação Pública `[VERIFICADO AO VIVO]`
 
@@ -73,6 +75,7 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 | Frequência | **Mensal** (metadados) + atualizações pontuais por OS manual |
 | Acesso | Portais: download SP (SHP/KMZ/DXF/GPKG/JPG) + **WFS/WMS públicos sem autenticação** (`wfs.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wfs`) + conteúdo interno PostGIS |
 | Restrições | Acesso: semRestrições; uso: declaração "License" `[CONFIRMAR qual licença formal na página de metadados/dados abertos]` |
+| Licença (verificada em 11/11/2026) | **CC-BY-SA 4.0** (Creative Commons Atribuição-CompartilhaIgual), conforme a página oficial "Licença para uso de dados do GeoSampa" (`prefeitura.sp.gov.br/web/licenciamento/w/licença-para-uso-de-dados-do-geosampa`; definição tratada no processo SEI 6066.2020/0003044-4). Exige **reconhecimento da fonte**, sem texto de crédito padronizado. Exige que dados republicados e **resultados derivados** mantenham licença semelhante. A página diz que os dados não são de domínio público. Consequência: qualquer base derivada que o VoltaSegura publique (por exemplo, densidade de iluminação por trecho) deve ser distribuída sob CC-BY-SA 4.0 com crédito ao GeoSampa/PMSP. Verificar a compatibilidade ao combiná-la com dados do OpenStreetMap (ODbL) |
 | Pendências | [ ] Consultar a camada de "Bueiros/buracos" e "Calçadas" se tiver; [ ] Confirmar que os downloads diários de SP não apresentam variação sem licença explícita |
 
 **Uso proposto MVP** `[HIPÓTESE]`: raio de busca (buffer) ao redor do segmento de caminhada → **densidade de pontos de iluminação** como indicador de infraestrutura — nunca como "segurança", apenas como cobertura de iluminação documentada pela Prefeitura.
@@ -93,7 +96,7 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 | Escala temporal | hora do BO + data de ocorrência; **corrente (2026 por semestre)** | hora + dia da semana + turno + data; **série longa (2015–2026)** |
 | Evento coberto | todos os crimes com BO (rubrica/natureza) | sinistros de trânsito graves/fatais |
 | Uso no VoltaSegura | comparação de "exposição a crimes contra a vítima" por recorte territorial-temporal | contraprova de trânsito por via (`logradouro`): gravidade e modo de deslocamento (pedestre/bicicleta/motocicleta + `qtd_*`) |
-| Cobertura do período | 2026 (ano corrente, 555.405 BOs por semestre) | 2015–2026 (contínuo) |
+| Cobertura do período | Meses estatísticos jan–set/2026 (**814.900 linhas de dados** no estado; **330.690** no município de São Paulo) | 2015–2026 (contínuo) |
 
 > Ambas são complementares, não concorrentes — SSP-SP para crime contra a vítima (roubo/furto); Infosiga para risco de trânsito por modo de deslocamento. A hipótese de "exposição estimada" pode combinar as duas sob os guardrails éticos (`05`).
 
@@ -102,12 +105,53 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 - **FECHADO — parte estática**: linhas, paradas e horários programados de Metrô e CPTM **já vêm integrados no GTFS da SPTrans** (verificado em 2.1, download de 10/11/2026). Isso valida a "fonte cuja integração esteja validada" exigida pela Fase 1 do roadmap para rotas multimodais programadas.
 - **EM ABERTO — tempo real**: estado operacional de Metrô/CPTM (sistema funcionando/atrasos, como o "status de operações") ainda **sem fonte de dados aberta confirmada** — não incluir no MVP; reservar para a Fase 2 com fonte validada.
 - Nota: o GTFS de rail pode ter cobertura de headways incompleta (frequências.txt) — validar per-line durante o planejamento do roteamento.
+- **Verificação de 11/11/2026 (feed `101126`)**: as 16 linhas de trilho (7 CPTM, 9 Metrô) têm viagens com `stop_times` e `frequencies.txt`.
+  - Janela declarada de 04h00 a 23h59 para as linhas CPTM 07–13 e Metrô 1–4 e 15; o Metrô 5 começa às 00h00.
+  - Intervalos declarados: de 1 a 15 min no Metrô 1/2, de 4 a 8 min na CPTM 09/11 e de 20 a 30 min na CPTM 13.
+  - **Exceções**: **Metrô 6** só tem janela das 10h00 às 14h59; **Metrô 17 (17A/17W)**, das 09h00 às 15h59. À noite, o roteamento não oferecerá essas linhas.
+  - `[EM ABERTO]` Conferir se essas janelas refletem a operação real (por exemplo, operação parcial de linhas recentes) ou uma lacuna do feed. Até lá, trajetos noturnos que dependeriam delas podem sair diferentes da realidade.
 
-## 6. Roteamento multimodal `[EM ABERTO]`
+## 6. Roteamento multimodal `[DECISÃO de direção — 11/11/2026 · validação técnica EM ABERTO]`
 
-- O GTFS permite calcular **horários programados** — a recomendação para a Fase 1 é um mecanismo de roteamento **open-source self-hosted** (OpenTripPlanner ou OSRM com GTFS, sem custo de licenciamento), alimentado pelos feeds verificados (SPTrans incl. Metrô/CPTM; EMTU via `dadosabertos.artesp.sp.gov.br`).
-- Alternativa comercial (APIs de mapas/roteamento pagas) fica como opção da Fase 2, se a cobertura self-hosted se mostrar insuficiente.
-- Questões a decidir: requisitos de hardware/hosting do OTP/OSRM, custo de infraestrutura, limite de `partida` (e.g. viagem multimodal com transferência), e integração com o backend SOA. Esperamos essas balizas no desenho de arquitetura.
+> Texto anterior (10/11/2026), preservado: "recomendação para a Fase 1 é um mecanismo de roteamento open-source self-hosted (OpenTripPlanner ou OSRM com GTFS)…". **Correção**: o OSRM não processa GTFS nem roteia transporte público; ele calcula rotas viárias (carro, bicicleta, a pé). Ver a tabela abaixo.
+
+### 6.1 O que o VoltaSegura exige do roteamento
+
+1. Alternativas para a mesma origem, destino e horário, com ônibus, Metrô e CPTM, baldeações e caminhada.
+2. **Geometria de cada trecho a pé** (linha com coordenadas), indispensável para traçar o corredor de ±100 m e calcular `N`, `L` e `D` (`docs/08`).
+3. Horários programados a partir do GTFS da SPTrans já verificado (§2.1). Tempo real fica fora do MVP.
+4. Uso dos resultados combinados com dados da SSP-SP, sem restrição contratual a armazenar ou cruzar o itinerário.
+5. Custo previsível, sem cobrança por consulta no piloto.
+
+### 6.2 Decisão
+
+`[DECISÃO — 11/11/2026]` **OpenTripPlanner 2 (OTP2), servidor próprio**, alimentado pelo GTFS da SPTrans (inclui Metrô/CPTM) e por um extrato do OpenStreetMap (OSM) do município. É a opção que atende os cinco requisitos sem custo por consulta. Integrações com as entregas das disciplinas (SOA/C#) **não** fazem parte desta decisão.
+
+`[EM ABERTO — evidência necessária]` Antes de depender do OTP2, executar um teste local:
+
+- [ ] Instalar o Java exigido pela versão do OTP2 escolhida. As versões recentes pedem Java 21 (confirmar na documentação oficial). A máquina de testes tem Java 8 e 16 GB de RAM.
+- [ ] Montar o grafo com o GTFS da SPTrans e o OSM de São Paulo; medir memória, tempo de montagem e tamanho do grafo.
+- [ ] Consultar 2–3 trajetos reais em regiões diferentes; conferir se o itinerário traz a geometria dos trechos a pé, as baldeações e horários plausíveis.
+- [ ] Registrar a atribuição exigida pela licença do OSM (ODbL) e confirmar a licença do OTP2 na versão usada.
+- [ ] Definir a hospedagem do piloto a partir do consumo medido; o custo será o da máquina, a estimar só depois da medição.
+
+### 6.3 Alternativas avaliadas (para eventual revisão da decisão)
+
+| Opção | Tipo | Transporte público (GTFS) | Geometria dos trechos a pé | Custo | Pontos fortes | Limitações / riscos | Situação |
+|---|---|---|---|---|---|---|---|
+| **OpenTripPlanner 2** | Software livre, servidor próprio | Sim, nativo, com baldeações | Sim, por trecho do itinerário | Só infraestrutura | Feito para planejamento multimodal; várias alternativas por consulta; uso amplo por agências de transporte | Precisa de Java recente e memória proporcional à área; montar e atualizar o grafo é tarefa de operação | **Escolhida** |
+| **r5 / r5py** (Conveyal) | Motor livre; r5py é a interface Python | Sim | Sim, em itinerários detalhados | Só infraestrutura | Ótimo para análises em lote, como testar a regra de `docs/08` em milhares de pares origem–destino | Pensado para análise de acessibilidade, não para atender um app consulta a consulta; também pede Java recente | **Complementar**: candidato para validar a calibração em lote |
+| **GraphHopper** (módulo de transporte público) | Software livre, servidor próprio | Sim, módulo específico | Sim | Só infraestrutura (versão hospedada é paga) | Roteamento viário maduro e rápido | Transporte público menos difundido que o do OTP; conferir a maturidade do módulo para feeds grandes | Reserva |
+| **Valhalla** (modo multimodal) | Software livre, servidor próprio | Sim, com GTFS | Sim | Só infraestrutura | Bom roteamento a pé e por bicicleta | Suporte a transporte público menos maduro que o do OTP; validar com o GTFS da SPTrans | Reserva |
+| **OSRM** | Software livre, servidor próprio | **Não** | Sim, só para rotas viárias | Só infraestrutura | Muito rápido para carro, bicicleta e a pé | Não roteia transporte público; serviria apenas para os trechos a pé de itinerários vindos de outra fonte | **Descartado como motor principal** |
+| **Google Maps Platform** (Routes/Directions, modo transporte público) | API comercial | Sim (fonte própria) | Sim | Cobrança por consulta | Cobertura e qualidade conhecidas; sem servidor | Termos de uso restringem armazenar resultados e exibi-los fora de um mapa Google, o que conflita com o requisito 4 (verificar os termos vigentes); dependência externa e custo variável | Descartado no MVP |
+| **HERE** (Public Transit API) | API comercial | Sim (fonte própria) | Sim | Plano gratuito com limite; depois, por consulta (verificar) | Sem servidor | Termos de armazenamento e combinação a verificar; dependência externa | Reserva comercial |
+| **Moovit** (soluções corporativas) | API/licença comercial | Sim | A verificar | Contrato | Forte em transporte público no Brasil | Acesso por contrato corporativo; inviável no prazo e no orçamento do piloto | Descartado no MVP |
+| **Rotas pré-calculadas** | Itinerários fixos salvos (gerados uma vez, por exemplo no próprio OTP2) | Depende da fonte usada | Sim | Nenhum | Garante uma demonstração estável | Não atende origem e destino quaisquer; não é produto | Plano de contingência para demonstrações |
+
+> Os custos e termos das opções comerciais **não foram consultados nesta data**; a tabela registra o critério de avaliação, não preços. Confirmar nas páginas oficiais antes de qualquer reconsideração.
+>
+> Fontes adicionais de GTFS a avaliar, se necessárias: EMTU (ônibus intermunicipais), via `dadosabertos.artesp.sp.gov.br`. Fora do MVP municipal até haver necessidade.
 
 ---
 
@@ -117,20 +161,20 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 |---|---|---|---|---|---|---|---|
 | 1 | Órgão responsável | ✅ SSP-SP/Prodesp | ✅ SPTRANS | ✅ SPTRANS | ✅ PMSP/SPRegula | ✅ DETRAN-SP | — |
 | 2 | Variáveis disponíveis | ✅ 30 colunas/BO: rubrica, natureza, bairro, lat/lon, hora, delegacia, COD IBGE (dados em `utils/ssp/`) | ✅ linhas/paradas/horários/shape (3 modos) | ✅ posição/previsão/linhas/corredores | ✅ ponto + tipo + carga | ✅ 3 tabelas (sinistros/pessoas/veículos): logradouro+lat/lon+hora+dia+turno + `qtd_*` por modo | — |
-| 3 | Granularidade | ✅ **registro individual de BO** (555.405/semestre, 2026) | ✅ por parada/route/shape | ✅ por veículo/parada | ✅ ponto (662.945 registros) | ✅ registro individual (2015–2026, `;`-CSV) | — |
-| 4 | Frequência / última atualização | ✅ mensal + base criminal por semestre-ano (2026 completo baixado) | ✅ 09/11/2026 | ✅ teste ao vivo 04h38 10/11/2026 (~85 s a medir) | ✅ mensal; última carga 21/10/2026 | ✅ 2015–2026 contínuo (recorte em 3 arquivos) | — |
-| 5 | Licença / autenticação / limites | ✅ CC-BY-4.0; site manual | ⚠️ GTFS download livre; redistrib. a validar | ✅ token testado ao vivo (login OK); limites/termos `EM ABERTO` | ✅ semRestrição; uso="License" (qual?) | ✅ CC-BY-4.0 | — |
+| 3 | Granularidade | ✅ **registro individual de BO** (814.900 linhas, meses estatísticos jan–set/2026; 30 colunas) | ✅ por parada/route/shape | ✅ por veículo/parada | ✅ ponto (662.945 registros) | ✅ registro individual (2015–2026, `;`-CSV) | — |
+| 4 | Frequência / última atualização | ✅ dados mensais + planilha anual em duas abas (versão consultada: jan–set/2026) | ✅ 09/11/2026 | ✅ teste ao vivo 04h38 10/11/2026 (~85 s a medir) | ✅ mensal; última carga 21/10/2026 | ✅ 2015–2026 contínuo (recorte em 3 arquivos) | — |
+| 5 | Licença / autenticação / limites | ✅ CC-BY-4.0; site manual | ⚠️ GTFS download livre; redistrib. a validar (termos não públicos) | ✅ token testado ao vivo (login OK); limites/termos `EM ABERTO` (não públicos) | ✅ CC-BY-SA 4.0 (verificada em 11/11/2026) | ✅ CC-BY-4.0 | — |
 | 6 | Lacunas / vieses | ✅ subnotificação (ver 03 §5) | ✅ estático, sem atraso | ✅ sem lotação | ✅ sem estado da lâmpada (só cadastro) | ✅ apenas óbitos, não acidentes | — |
 
 **Legenda**: ✅ verificado · ⚠️ parcial — ação pendente · — n/a
 
 ## Ações imediatas da Fase 0 (atualizada)
 
-1. ~~`[PESSOA DO GRUPO]` Baixar manualmente no `ssp.sp.gov.br`~~ **CONCLUÍDO (10/11/2026)**: 11 arquivos baixados para `utils/ssp/` (SPDadosCriminais 2026 completo com 30 colunas/BO, produtividade, veículos/celulares/objetos subtraídos, consolidados anual/mensal, taxas de delito) — granularidade real: registro individual. Registro com SHA256 em `src/ml/dados/README.md`.
+1. ~~`[PESSOA DO GRUPO]` Baixar manualmente no `ssp.sp.gov.br`~~ **CONCLUÍDO (10/11/2026)**: 11 arquivos originalmente baixados para `utils/ssp/` (SPDadosCriminais 2026 com 30 colunas/BO, produtividade, veículos/celulares/objetos subtraídos, consolidados anual/mensal, taxas de delito) — granularidade real: registro individual. O arquivo criminal de mesmo SHA256 foi obtido novamente para o catálogo; contém meses estatísticos jan–set/2026. Registro de fontes em `src/ml/dados/README.md`.
 2. ~~`[PESSOA DO GRUPO]` Criar conta/app no portal SPTrans → token~~ **CONCLUÍDO (10/11/2026)**: token criado e guardado em `.env` (`OLHO_VIVO`, fora do git); autenticação + 4 endpoints testados ao vivo (ver §2.2). Restam as medições de cadência e os termos de uso.
 3. ~~`[TÉCNICO]` Baixar histórico Infosiga (2024)~~ **CONCLUÍDO (10/11/2026)**: dado melhor que o esperado — `dados_infosiga.zip` com 9 CSVs cobrindo **2015–2026** em 3 tabelas (sinistros/pessoas/veículos), com logradouro+lat/lon+hora+turno; dicionários v1.8 + diagrama ER + fluxograma versionados em `src/ml/dados/documentacao/infosiga/`.
 4. `[TÉCNICO]` Definir licença formal da camada GeoSampa (página Dados Abertos ↦ metadados) e anotar.
-5. `[DECISÃO DE ARQUITETURA]` Roteamento: abrir conta/projeto de OTP/OSRM na Fase 1 com GTFS (sem custo) — ver seção 6.
+5. `[DECISÃO DE ARQUITETURA — 11/11/2026]` Roteamento: **OpenTripPlanner 2** com GTFS SPTrans + OSM; executar o teste local listado na §6.2. (Texto anterior: "abrir conta/projeto de OTP/OSRM"; o OSRM foi descartado por não rotear transporte público.)
 
 ## Referências (links testados em 10/11/2026)
 

@@ -1,0 +1,73 @@
+﻿RUBRICA,estado_jan_jun,estado_jul_dez,estado_total,capital_jan_jun,capital_jul_dez,capital_total
+Adulteração de sinal identificador de veículo automotor (art. 311),7,3,10,5,1,6
+Ameaça (art. 147),1,0,1,0,0,0
+"Associação para o tráfico (Art.35,caput)",2143,975,3118,266,123,389
+Atropelamento,7,1,8,2,0,2
+Capotamento,1,1,2,0,0,0
+Captura de procurado,1,0,1,1,0,1
+Causas de aumento,7,6,13,1,0,1
+Choque,2,0,2,2,0,2
+Colisão,2,3,5,0,0,0
+Comunicação de óbito,78,56,134,25,24,49
+Contrabando (Art 334A ),0,1,1,0,1,1
+Corrupção ativa (art. 333),1,0,1,0,0,0
+Crime contra as relações de consumo (Art. 7º),1,0,1,0,0,0
+Crime contra registro de marca (Art. 190),0,1,1,0,1,1
+Cumprimento de mandado de busca e apreensão,11,7,18,3,2,5
+Dano (art. 163),1,4,5,0,1,1
+Desacato (art. 331),1,2,3,0,0,0
+Desobediência (art. 330),2,0,2,0,0,0
+"Destruição, subtração ou ocultação de cadáver (art. 211)",0,1,1,0,0,0
+Disparo de arma de fogo (Art. 15),2,2,4,0,2,2
+"Drogas para consumo pessoal sem autorização ou em desacordo (Art.28,caput)",3143,1605,4748,278,111,389
+Entrada ilegal de aparelho movél de comunicação em estabelecimento prisional,7,0,7,1,0,1
+Entrega de objeto localizado/apreendido,2,3,5,0,1,1
+Entrega de veículo localizado/apreendido,2,3,5,1,1,2
+Entregar produtos cujos componentes possam causar dependência (Art. 243),1,0,1,0,0,0
+Estupro - Art. 213,1766,848,2614,401,199,600
+Estupro de vulneravel (art.217-A),5928,2956,8884,1248,612,1860
+Extorsão (art. 158),1,0,1,0,0,0
+Extorsão mediante seqüestro (art. 159),53,21,74,25,5,30
+Fabricação de drogas (Art.34),4,2,6,1,0,1
+Fals/corr/adult/alt produtos terapêuticos/medicinais (art. 273),0,1,1,0,1,1
+Falsa identidade (art. 307),1,0,1,0,0,0
+"Falsa identidade, usar, como próprio, documento de identidade alheia (art. 308)",0,1,1,0,1,1
+Falsidade ideológica (art. 299),1,0,1,1,0,1
+Feminicídio,405,200,605,97,61,158
+"Financiar ou custear a prática dos crimes - arts.33, caput e §1º, e 34 (Art.36)",2,1,3,0,0,0
+Fuga de pessoa presa ou submetida a medida de segurança (art. 351),1,0,1,0,0,0
+Furto (art. 155),302236,136320,438556,138693,66785,205478
+Furto de coisa comum (art. 156),122,67,189,24,14,38
+Homicídio (art. 121),2688,1257,3945,474,243,717
+Homicídio culposo na direção de veículo automotor (Art. 302),1744,932,2676,240,145,385
+ilícito extrapenal (tema 506 STF),4008,1870,5878,281,121,402
+"Incêndio (art. 250, caput)",0,1,1,0,0,0
+Injúria (art. 140),1,0,1,0,0,0
+Jogo de azar (art. 50),0,1,1,0,0,0
+L 9.503/97 - Código de Trânsito Brasileiro - Homicídio culposo na direção de veículo automotor (Art. 302,0,1,1,0,1,1
+Lesão corporal (art. 129),88722,44793,133515,21873,11351,33224
+Lesão corporal culposa na direção de veículo automotor (Art. 303),34518,17551,52069,6983,3377,10360
+Localização/Apreensão de objeto,1499,780,2279,209,128,337
+Localização/Apreensão de veículo,6,1,7,2,1,3
+Localização/Apreensão e Entrega de objeto,13,6,19,2,1,3
+Localização/Apreensão e Entrega de veículo,18,23,41,12,10,22
+Morte suspeita,15,3,18,10,2,12
+NULL,1,0,1,0,0,0
+"Outras substâncias nocivas à saúde pública (art. 278, caput)",1,0,1,1,0,1
+Outros não criminal,21,12,33,3,1,4
+Outros não criminal - Irregularidades Funcionais,1,0,1,0,0,0
+Pendente de Validação,1,0,1,0,0,0
+Porte de arma (art. 19),480,209,689,37,18,55
+Porte ilegal de arma de fogo de uso permitido (Art. 14),884,490,1374,143,73,216
+Posse irregular de arma de fogo de uso permitido (Art.12),3,2,5,2,0,2
+Posse ou porte ilegal de arma de fogo de uso restrito (Art. 16),1354,726,2080,347,150,497
+Receptação (art. 180),3,3,6,1,0,1
+Resistência (art. 329),2,5,7,1,0,1
+Roubo (art. 157),80139,35713,115852,48057,21417,69474
+Supressão de documento (art. 305),1,0,1,1,0,1
+"tráfico drogas (Art.33, caput)",23334,12023,35357,3958,1991,5949
+Uso de documento falso (art. 304),0,1,1,0,1,1
+Usura pecuniária ou real (Art. 4º),1,0,1,0,0,0
+Vicaricídio,0,1,1,0,1,1
+Violação de domicílio (art. 150),1,0,1,0,0,0
+Violência Doméstica,2,1,3,0,0,0

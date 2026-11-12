@@ -17,7 +17,7 @@
 | Campo | Resposta |
 |---|---|
 | **Nome da CitizenTech** | **VoltaSegura** (ex-"CitizenTech"; produto renomeado em 10/11/2026) |
-| **Cidade e bairro** | São Paulo (região de piloto `[EM ABERTO]` — campus/região delimitada a definir) |
+| **Cidade e bairro** | Município de São Paulo — todos os bairros no escopo planejado do piloto `[DECISÃO]`; comparação por trajeto depende de cobertura e qualidade dos dados locais |
 | **Cidadão beneficiado** | Estudante universitário do período noturno que retorna para casa por transporte público e caminhadas (persona de trabalho: Marina, 22)`[validar via entrevistas]` |
 | **Problema, em uma frase** | Apps de mobilidade priorizam tempo e distância, mas não oferecem visão integrada das condições urbanas que influenciam a percepção de segurança no deslocamento, dificultando a escolha consciente entre trajetos |
 | **Como funciona** | O usuário informa origem, destino, horário (ida e, se aplicável, volta); a plataforma consulta fontes de mobilidade, segurança e infraestrutura; compara alternativas por tempo, conexões, indicadores de exposição e confiabilidade dos dados; e o usuário decide com contexto |
@@ -70,6 +70,9 @@ Toda a documentação viva está em [`docs/`](docs/). O ponto de entrada para ag
 | [`docs/04_dados_fontes.md`](docs/04_dados_fontes.md) | Fontes de dados e matriz de validação |
 | [`docs/05_regras_linguagem_etica.md`](docs/05_regras_linguagem_etica.md) | Guardrails: o que pode e não pode ser dito |
 | [`docs/06_estado_atual.md`](docs/06_estado_atual.md) | Decisões, hipóteses e pontos em aberto |
+| [`docs/07_classificacao_ssp_app.md`](docs/07_classificacao_ssp_app.md) | Categorias SSP-SP selecionadas para o app e regras de apresentação |
+| [`docs/08_metodologia_comparacao_mvp.md`](docs/08_metodologia_comparacao_mvp.md) | Regra inicial de comparação de trajetos e validações pendentes |
+| [`docs/09_fluxo_trabalho_ia.md`](docs/09_fluxo_trabalho_ia.md) | Fluxo para agentes, registro de decisões e verificação da base |
 
 ## Convenções da equipe
 

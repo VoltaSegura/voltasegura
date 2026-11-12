@@ -44,6 +44,7 @@ regra: "Estas regras têm prioridade sobre qualquer outro documento. Verifique T
 - **Não** vender histórico individual de localização **nem** permitir que patrocinadores alterem classificações.
 - **Não** apresentar o produto como transferência de responsabilidade ao usuário por uma ocorrência futura.
 - Em caso de hipótese não testada: rotular como hipótese (não como funcionalidade comprovada).
+- Para registros de violência sexual, seguir a decisão de apresentação em `docs/07_classificacao_ssp_app.md`: panorama municipal apenas em detalhes acessados pelo usuário, sem pino ou associação a uma rua/rota. Não usar esses registros como fator oculto da exposição estimada.
 
 ## Contexto de risco (precedentes que orientam estas regras)
 

@@ -9,7 +9,7 @@
 #   MIRRORS_DIR=~/espelhos bash scripts/sync_mirrors.sh   # cache alternativo
 #
 # O que é sincronizado por espelho:
-#   - docs/01..06 em docs/            (base de conhecimento, igual ao monorepo)
+#   - docs numerados em docs/        (base de conhecimento, igual ao monorepo)
 #   - .gitignore                       (idem)
 #   - src/<disciplina>/                (conteúdo exato do monorepo, com --delete)
 #   - README.md                        (regenerado: Ficha + README da disciplina)
@@ -77,7 +77,7 @@ regenerate_readme() { # $1 = mirror, $2 = dir, $3 = repo
 > problema = falta de visão integrada das condições urbanas que influenciam a percepção de segurança no deslocamento;
 > como funciona = comparação de alternativas de ida/volta com exposição estimada e confiança dos dados;
 > ODS = 11 e 10. Ficha completa: monorepo **https://github.com/$ORG/voltasegura**.
-> ⚠️ O produto não garante segurança e não classifica bairros — comunicar apenas exposição estimada e confiança dos dados (=\`docs\`/04).
+> ⚠️ O produto não garante segurança e não classifica bairros — comunicar apenas exposição estimada e confiança dos dados (ver docs/05_regras_linguagem_etica.md).
 
 **Monorepo central (fonte da verdade)**: https://github.com/$ORG/voltasegura
 
@@ -91,7 +91,7 @@ sync_mirror() { # $1 = dir
 
   # docs + .gitignore
   mkdir -p "$mirror/docs"
-  rsync -a --checksum "$ROOT"/docs/0[1-6]_*.md "$mirror/docs/"
+  rsync -a --checksum "$ROOT"/docs/[0-9][0-9]_*.md "$mirror/docs/"
   rsync -a --checksum "$ROOT/.gitignore" "$mirror/.gitignore"
 
   # código da disciplina (réplica exata)
