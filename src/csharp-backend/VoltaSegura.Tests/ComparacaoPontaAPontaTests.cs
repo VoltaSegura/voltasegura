@@ -46,6 +46,8 @@ public class ComparacaoPontaAPontaTests
             NumeroBo = $"BO-{numero:D6}",
             AnoBo = "2026",
             Delegacia = "DELEGACIA TESTE",
+            Circunscricao = "CIRCUNSCRICAO TESTE",
+            Natureza = "FURTO - OUTROS",
             Rubrica = "FURTO - OUTROS",
             TipoLocal = "Via pública",
             Bairro = "TESTE",
@@ -128,11 +130,11 @@ public class ComparacaoPontaAPontaTests
         // chegariam do dataset público): o índice único + INSERT OR IGNORE descartam.
         var ignoradas = await _contexto.Database.ExecuteSqlAsync(
             $@"INSERT OR IGNORE INTO ocorrencias
-               (NumeroBo, AnoBo, Delegacia, Rubrica, TipoLocal, Bairro, Municipio,
-                DataOcorrencia, Faixa, Latitude, Longitude)
-               VALUES ('BO-000001', '2026', 'DELEGACIA TESTE', 'FURTO - OUTROS',
-                       'Via pública', 'TESTE', 'S.PAULO', '2026-05-10', 4,
-                       {-23.5500 + 0.00030}, -46.6400)");
+               (NumeroBo, AnoBo, Delegacia, Circunscricao, Natureza, Rubrica, TipoLocal,
+                Bairro, Municipio, DataOcorrencia, Faixa, Latitude, Longitude)
+               VALUES ('BO-000001', '2026', 'DELEGACIA TESTE', 'CIRCUNSCRICAO TESTE',
+                       'FURTO - OUTROS', 'FURTO - OUTROS', 'Via pública', 'TESTE',
+                       'S.PAULO', '2026-05-10', 4, {-23.5500 + 0.00030}, -46.6400)");
         Assert.Equal(0, ignoradas);
 
         var repositorio = new OcorrenciaRepositorio(_contexto);
@@ -163,6 +165,95 @@ public class ComparacaoPontaAPontaTests
             new[] { FaixaDoDia.Noite }, CancellationToken.None);
 
         Assert.Equal(1, n);
+    }
+
+    [Fact]
+    public async Task Repositorio_TransitoENaturezasContexto_NaoContamNaComparacao()
+    {
+        // docs/07 e docs/08 §3: somente FURTO - OUTROS e ROUBO - OUTROS entram em N.
+        // Trânsito (lesão culposa) e naturezas de contexto (carga, veículo, latrocínio)
+        // ficam de fora da comparação de trajetos.
+        var corredor = Corredor(-46.6400);
+        var data = new DateOnly(2026, 3, 1);
+
+        var transito = Bo(1, corredor[0], data);
+        transito.Natureza = "LESÃO CORPORAL CULPOSA POR ACIDENTE DE TRÂNSITO";
+        transito.Rubrica = "LESÃO CORPORAL CULPOSA-ACID. TRÂNSITO";
+        _contexto.Ocorrencias.Add(transito);
+
+        var furtoVeiculo = Bo(2, corredor[1], data);
+        furtoVeiculo.Natureza = "FURTO DE VEÍCULO";
+        furtoVeiculo.Rubrica = "FURTO DE VEÍCULO";
+        _contexto.Ocorrencias.Add(furtoVeiculo);
+
+        var rouboCarga = Bo(3, corredor[2], data);
+        rouboCarga.Natureza = "ROUBO DE CARGA";
+        rouboCarga.Rubrica = "ROUBO DE CARGA";
+        _contexto.Ocorrencias.Add(rouboCarga);
+
+        var latrocinio = Bo(4, corredor[3], data);
+        latrocinio.Natureza = "LATROCÍNIO";
+        latrocinio.Rubrica = "LATROCÍNIO (ROUBO COM RESULTADO MORTE)";
+        _contexto.Ocorrencias.Add(latrocinio);
+
+        await _contexto.SaveChangesAsync(CancellationToken.None);
+
+        var repositorio = new OcorrenciaRepositorio(_contexto);
+        var n = await repositorio.ContarBoletinsDistintosAsync(
+            corredor, 100, new DateOnly(2026, 1, 1), new DateOnly(2026, 9, 30),
+            new[] { FaixaDoDia.Noite }, CancellationToken.None);
+
+        Assert.Equal(0, n);
+    }
+
+    [Fact]
+    public async Task Repositorio_RouboOutros_ContaNaComparacao()
+    {
+        // ROUBO - OUTROS é a segunda natureza elegível (docs/08 §3).
+        var corredor = Corredor(-46.6400);
+        var roubo = Bo(1, corredor[0], new DateOnly(2026, 3, 1));
+        roubo.Natureza = "ROUBO - OUTROS";
+        roubo.Rubrica = "ROUBO (ART. 157) - TRANSITO";
+        _contexto.Ocorrencias.Add(roubo);
+        await _contexto.SaveChangesAsync(CancellationToken.None);
+
+        var repositorio = new OcorrenciaRepositorio(_contexto);
+        var n = await repositorio.ContarBoletinsDistintosAsync(
+            corredor, 100, new DateOnly(2026, 1, 1), new DateOnly(2026, 9, 30),
+            new[] { FaixaDoDia.Noite }, CancellationToken.None);
+
+        Assert.Equal(1, n);
+    }
+
+    [Fact]
+    public async Task Cobertura_SemFaixaOuSemCoordenada_ContamNoDenominador()
+    {
+        // docs/08 §64: cobertura = fração de boletins elegíveis COM coordenada e faixa
+        // informadas, nas circunscrições atravessadas. BO sem faixa ou sem coordenada
+        // entra no denominador e reduz a fração (nunca fabricar dado).
+        var corredor = Corredor(-46.6400);
+        var data = new DateOnly(2026, 3, 1);
+
+        _contexto.Ocorrencias.Add(Bo(1, corredor[0], data)); // completo
+
+        var semFaixa = Bo(2, corredor[1], data);
+        semFaixa.Faixa = null;
+        _contexto.Ocorrencias.Add(semFaixa);
+
+        var semCoordenada = Bo(3, corredor[1], data);
+        semCoordenada.Latitude = null;
+        semCoordenada.Longitude = null;
+        _contexto.Ocorrencias.Add(semCoordenada);
+
+        await _contexto.SaveChangesAsync(CancellationToken.None);
+
+        var repositorio = new OcorrenciaRepositorio(_contexto);
+        var cobertura = await repositorio.CoberturaCorredorAsync(
+            corredor, 100, new DateOnly(2026, 1, 1), new DateOnly(2026, 9, 30),
+            new[] { FaixaDoDia.Noite }, CancellationToken.None);
+
+        // 1 boletim utilizável de 3 elegíveis na circunscrição = 1/3.
+        Assert.Equal(1.0 / 3, cobertura, 6);
     }
 
     public void Dispose()

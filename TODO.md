@@ -59,7 +59,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | T10 | Testing, Compliance & QA | Features e Test Cases no Azure Boards, PDF | PENDENTE | T02 (backlog), `docs/08` | a definir |
 | T11 | Cybersecurity | Módulo PII, Taint Analysis, Risco Cidadão, ZIP | PENDENTE | T01.3 (privacidade), T01.6 (Risco Cidadão) | a definir |
 | T18 | Envio final (todas) | Conferir e enviar cada disciplina até 19/11 23h55 | PENDENTE | T04 a T11 | a definir |
-| T20 | Alinhar backend ao `docs/07`/`docs/08` | Rubricas elegíveis, faixa do dia, cobertura e frases fixas | EM DESENVOLVIMENTO | `docs/07`, `docs/08` | a definir |
+| T20 | Alinhar backend ao `docs/07`/`docs/08` | Rubricas elegíveis, faixa do dia, cobertura e frases fixas | CONCLUÍDO (12/11/2026) | `docs/07`, `docs/08` | a definir |
 
 ---
 
@@ -405,3 +405,4 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 11/11/2026 | T01.3 concluída: privacidade do MVP decidida (pacote mínimo com conta obrigatória). T01.2 (OTP2) pulada por ser questão técnica sem responsável. Impactos anotados em T05 (autenticação), T07 (cadastro e login) e T11 (PII da conta). | assistente (a pedido do Lucas) |
 | 11/11/2026 | T01.4 segue em aberto: registrada a proposta de Lucas Simidu de automatizar a revisão de vieses (opções A, B e C), a ser avaliada pelo grupo. | assistente (a pedido do Lucas) |
 | 12/11/2026 | T01.17 concluída (arquitetura: mesma solution .NET, duas APIs). T05/T06 passam a EM DESENVOLVIMENTO: solution estruturada, migração + ETL com 278.961 boletins reais, 17 testes passando, APIs no ar com Swagger. Criada T20 (alinhar backend ao docs/07/docs/08). | assistente + grupo |
+| 12/11/2026 | **T20 CONCLUÍDA**: backend alinhado ao docs/07/docs/08 — recorte por `NATUREZA_APURADA` (só FURTO - OUTROS 172.852 e ROUBO - OUTROS 62.365 em N), faixa pela HORA_OCORRENCIA_BO com fallback DESC_PERIODO (sem faixa: 0,9%), cobertura real por circunscrição (docs/08 §64) e frases fixas (§§99–102). Migração regenerada + recarga (278.687 boletins); 20 testes passando; APIs ao vivo e smoke test OK. Evidência: `src/csharp-backend/` (commit deste dia), README do backend, `docs/06` §1.17. | assistente + grupo |

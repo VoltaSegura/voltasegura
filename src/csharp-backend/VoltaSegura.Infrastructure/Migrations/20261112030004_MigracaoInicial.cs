@@ -20,6 +20,8 @@ namespace VoltaSegura.Infrastructure.Migrations
                     NumeroBo = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
                     AnoBo = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
                     Delegacia = table.Column<string>(type: "TEXT", maxLength: 120, nullable: false),
+                    Circunscricao = table.Column<string>(type: "TEXT", maxLength: 120, nullable: false),
+                    Natureza = table.Column<string>(type: "TEXT", maxLength: 60, nullable: false),
                     Rubrica = table.Column<string>(type: "TEXT", maxLength: 80, nullable: false),
                     TipoLocal = table.Column<string>(type: "TEXT", maxLength: 60, nullable: false),
                     Bairro = table.Column<string>(type: "TEXT", maxLength: 80, nullable: false),

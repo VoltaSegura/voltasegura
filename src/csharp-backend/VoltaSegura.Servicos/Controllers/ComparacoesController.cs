@@ -50,8 +50,11 @@ public class ComparacoesController : ControllerBase
             ? requisicao.Faixas.Select(f => (FaixaDoDia)f).ToList()
             : null;
 
-        // 3. Cenários por rota e largura de corredor (itens 11/12).
+        // 3. Cenários por rota e largura de corredor (docs/08 §§28–32).
         var porLargura = new Dictionary<double, ResultadoComparacao>();
+        IReadOnlyDictionary<string, int> boletinsPorRota = new Dictionary<string, int>();
+        IReadOnlyDictionary<string, double> kmCaminhadosPorRota = new Dictionary<string, double>();
+        IReadOnlyDictionary<string, double> coberturaPorRota = new Dictionary<string, double>();
         foreach (var largura in EstabilidadeCorredor.LargurasPadraoM)
         {
             var cenarios = new List<CenarioRota>();
@@ -71,10 +74,29 @@ public class ComparacoesController : ControllerBase
 
             var avaliador = new AvaliadorComparacao();
             porLargura[largura] = avaliador.Avaliar(cenarios[0], cenarios[1]);
+
+            // O bloco "Sobre os dados" exibe N, D e L por alternativa (docs/08 §§101–102).
+            // A cobertura reportada é a do corredor padrão ±100 m (docs/08 §22).
+            if (largura == 100)
+            {
+                boletinsPorRota = cenarios.ToDictionary(c => c.Identificador, c => c.QuantidadeBoletins);
+                kmCaminhadosPorRota = cenarios.ToDictionary(c => c.Identificador, c => c.KmCaminhados);
+                coberturaPorRota = cenarios.ToDictionary(c => c.Identificador, c => c.Cobertura);
+            }
         }
 
-        // 4. Estabilidade entre larguras (item 16): divergência → dados insuficientes.
+        // 4. Estabilidade entre larguras (docs/08 §66): divergência → dados insuficientes.
         var resultado = EstabilidadeCorredor.Consolidar(porLargura);
+
+        // Números descritivos exibidos: corredor padrão ±100 m (docs/08 §22). O destaque,
+        // quando existe, só é emitido se coincidir nas três larguras testadas.
+        var temResultadoPadrao = porLargura.TryGetValue(100, out var resultadoPadrao);
+        var pValorExibido = resultado.Status == StatusComparacao.DadosInsuficientes
+            ? null
+            : temResultadoPadrao ? resultadoPadrao.PValor : resultado.PValor;
+        var exposicaoExibida = temResultadoPadrao
+            ? resultadoPadrao.ExposicaoEstimadaPorRota
+            : resultado.ExposicaoEstimadaPorRota;
 
         // 5. Auditoria SEM dados pessoais (item 23): nenhum coordenada/identificador gravado.
         _contexto.RegistrosConsulta.Add(new RegistroConsulta
@@ -87,23 +109,28 @@ public class ComparacoesController : ControllerBase
         });
         await _contexto.SaveChangesAsync(ct);
 
-        // 6. Resposta: sempre com o bloco "Sobre os dados" (item 15) e linguagem acordada.
+        // 6. Resposta: sempre com o bloco "Sobre os dados" (docs/08 §§93–104) e
+        //    linguagem acordada — "exposição estimada", nunca "rota segura".
         return Ok(new
         {
             status = resultado.Status.ToString(),
+            situacao = resultado.Motivo, // frase fixa do bloco "Sobre os dados"
             rotaComMenorExposicaoEstimada = resultado.RotaDestacada,
-            motivo = resultado.Motivo,
-            pValor = resultado.PValor,
-            exposicaoEstimadaBoletinsPorKm = resultado.ExposicaoEstimadaPorRota,
+            pValor = pValorExibido,
+            boletinsPorRota,           // N por alternativa (corredor ±100 m)
+            kmCaminhadosPorRota,       // L por alternativa
+            coberturaPorRota,          // cobertura por alternativa (corredor ±100 m)
+            exposicaoEstimadaBoletinsPorKm = exposicaoExibida,
             largurasCorredorTestadasM = EstabilidadeCorridaLarguras(),
             periodoDados = new { inicio, fim },
             sobreOsDados = new[]
             {
-                $"Dados públicos (SSP-SP/SPTrans) no período {inicio:dd/MM/yyyy} a {fim:dd/MM/yyyy}.",
-                $"Cobertura de dados avaliada por rota; valores de N e D calculados só nos trechos caminhados.",
-                resultado.Status == StatusComparacao.DadosInsuficientes
-                    ? "Dados insuficientes: a comparação não é concluída — nunca há resposta silenciosa."
-                    : "A menor exposição estimada não significa rota segura.",
+                $"Fonte: SSP-SP, boletins de ocorrência de {inicio:dd/MM/yyyy} a {fim:dd/MM/yyyy} (recorte do MVP).",
+                "Cobertura: fração de boletins com coordenada e período informados nas circunscrições de delegacia atravessadas pelos trechos a pé.",
+                "N e D exibidos para o corredor padrão de ±100 m; o destaque só aparece se for estável também com ±50 m e ±150 m.",
+                resultado.Motivo,
+                "Limitações: subnotificação (zero registro não significa ausência de ocorrência); coordenadas podem indicar ponto de referência do logradouro; a contagem inclui todos os tipos de local; apenas furtos e roubos 'outros' são considerados.",
+                "Menor exposição estimada entre as alternativas avaliadas não significa rota segura.",
             },
         });
     }

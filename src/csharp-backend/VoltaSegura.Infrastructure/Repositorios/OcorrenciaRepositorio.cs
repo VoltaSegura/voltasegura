@@ -6,9 +6,10 @@ using VoltaSegura.Infrastructure.Dados;
 namespace VoltaSegura.Infrastructure.Repositorios;
 
 /// <summary>
-/// Conta boletins distintos no corredor caminhado (regra dos itens 11/12). Estratégia:
+/// Conta boletins distintos no corredor caminhado (docs/08 §§28 e 59). Estratégia:
 /// pré-filtro por janela geográfica no banco (LINQ → SQL), depois filtro preciso de
-/// distância (Haversine) em memória. Os dados vêm do recorte SSP-SP carregado pelo ETL.
+/// distância (Haversine) em memória. A contagem considera apenas as naturezas
+/// elegíveis (FURTO - OUTROS e ROUBO - OUTROS — docs/07 e docs/08 §3).
 /// </summary>
 public class OcorrenciaRepositorio : IOcorrenciaRepositorio
 {
@@ -28,18 +29,54 @@ public class OcorrenciaRepositorio : IOcorrenciaRepositorio
         return distintas.Count();
     }
 
+    /// <summary>
+    /// Cobertura conforme docs/08 §64 (DECISÃO de 11/11/2026, após auditoria): fração de
+    /// boletins elegíveis com coordenada válida E faixa do dia informada, dentro das
+    /// circunscrições de delegacia atravessadas pelo corredor. As circunscrições são
+    /// identificadas pelos boletins elegíveis (no período, sem filtro de faixa) cujas
+    /// coordenadas caem no corredor; a fração é calculada sobre TODOS os boletins
+    /// elegíveis dessas circunscrições no período — mede a qualidade dos dados da
+    /// região, não a ocupação do corredor.
+    /// </summary>
     public async Task<double> CoberturaCorredorAsync(
         IReadOnlyList<Coordenada> pontosCaminhados, double raioMetros,
         DateOnly inicio, DateOnly fim, IReadOnlyCollection<FaixaDoDia>? faixas, CancellationToken ct)
     {
-        // HEURÍSTICA PROVISÓRIA (metodologia definitiva de cobertura é EM ABERTO no grupo):
-        // proporção dos pontos do corredor que possuem ao menos uma ocorrência publicada
-        // por perto no período. O bloco "Sobre os dados" declara isso ao usuário.
         if (pontosCaminhados.Count == 0) return 0.0;
-        var candidatas = await BuscarCandidatasAsync(pontosCaminhados, raioMetros, inicio, fim, faixas, ct);
-        var cobertos = pontosCaminhados.Count(ponto =>
-            candidatas.Any(o => Geografia.HaversineMetros(ponto, new Coordenada(o.Latitude!.Value, o.Longitude!.Value)) <= raioMetros));
-        return (double)cobertos / pontosCaminhados.Count;
+
+        // 1. Circunscrições atravessadas: boletins elegíveis com coordenada no corredor,
+        //    no período, sem filtro de faixa (a cobertura mede usabilidade de dados).
+        var noCorredor = await BuscarCandidatasAsync(pontosCaminhados, raioMetros, inicio, fim, faixas: null, ct);
+        var circunscricoes = noCorredor
+            .Where(o => pontosCaminhados.Any(p => Geografia.HaversineMetros(p, new Coordenada(o.Latitude!.Value, o.Longitude!.Value)) <= raioMetros))
+            .Select(o => o.Circunscricao)
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Distinct()
+            .ToList();
+        if (circunscricoes.Count == 0) return 0.0;
+
+        // 2. Fração dos boletins elegíveis dessas circunscrições (período) com
+        //    coordenada válida e faixa informada — projeção mínima para o banco.
+        var consulta = _contexto.Ocorrencias
+            .AsNoTracking()
+            .Where(o => Ocorrencia.NaturezasComparacao.Contains(o.Natureza))
+            .Where(o => o.DataOcorrencia >= inicio && o.DataOcorrencia <= fim)
+            .Where(o => circunscricoes.Contains(o.Circunscricao))
+            .Select(o => new { o.NumeroBo, o.AnoBo, o.Delegacia, o.Faixa, o.Latitude });
+        var registros = await consulta.ToListAsync(ct);
+
+        var total = registros
+            .Select(o => $"{o.NumeroBo}|{o.AnoBo}|{o.Delegacia}")
+            .Distinct()
+            .Count();
+        if (total == 0) return 0.0;
+
+        var usaveis = registros
+            .Where(o => o.Latitude != null && o.Faixa != null)
+            .Select(o => $"{o.NumeroBo}|{o.AnoBo}|{o.Delegacia}")
+            .Distinct()
+            .Count();
+        return (double)usaveis / total;
     }
 
     private async Task<List<Ocorrencia>> BuscarCandidatasAsync(
@@ -54,6 +91,10 @@ public class OcorrenciaRepositorio : IOcorrenciaRepositorio
         var maxLon = pontos.Max(p => p.Longitude) + Graus(raioMetros);
 
         var consulta = _contexto.Ocorrencias
+            .AsNoTracking()
+            // Somente naturezas elegíveis para N (docs/07 e docs/08 §3): FURTO - OUTROS
+            // e ROUBO - OUTROS. Carga, veículo, latrocínio e trânsito não entram.
+            .Where(o => Ocorrencia.NaturezasComparacao.Contains(o.Natureza))
             .Where(o => o.Latitude != null && o.Longitude != null)
             .Where(o => o.Latitude >= minLat && o.Latitude <= maxLat)
             .Where(o => o.Longitude >= minLon && o.Longitude <= maxLon)

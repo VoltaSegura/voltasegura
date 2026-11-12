@@ -46,44 +46,59 @@ curl -X POST http://localhost:5000/api/comparacoes/trajetos \
   -d '{"origem":{"latitude":-23.56,"longitude":-46.65},"destino":{"latitude":-23.55,"longitude":-46.63},"sentido":"volta"}'
 ```
 
-## Acervo carregado (11/11/2026)
+## Acervo carregado (12/11/2026 — recorte por `NATUREZA_APURADA`, docs/07)
 
 Recorte real carregado no banco a partir de `utils/ssp/SPDadosCriminais_2026.xlsx` (SSP-SP, dados públicos):
 
 | Métrica | Valor |
 |---|---|
-| Boletins distintos (NUM_BO+ANO_BO+delegacia) | **278.961** |
-| Furto (art. 155) | 200.181 |
-| Roubo (art. 157) | 68.478 |
-| Trânsito (Art. 302/303) | 10.302 |
-| Sem faixa do dia (`DESC_PERIODO` vazio/"em hora incerta") | 155.921 (55,9% — preservado como NULL) |
-| Sem coordenadas (não entram em corredor) | 6.862 |
+| Boletins distintos (NUM_BO+ANO_BO+delegacia) | **278.687** |
+| `FURTO - OUTROS` (entra em N) | 172.852 |
+| `ROUBO - OUTROS` (entra em N) | 62.365 |
+| `FURTO DE VEÍCULO` / `FURTO DE CARGA` (contexto) | 27.437 / 86 |
+| `ROUBO DE VEÍCULO` / `ROUBO DE CARGA` / `LATROCÍNIO` (contexto) | 5.053 / 904 / 23 |
+| `LESÃO CORPORAL CULPOSA POR ACIDENTE DE TRÂNSITO` (contexto) | 9.967 |
+| Sem faixa do dia (hora e período ausentes → NULL) | 2.476 (0,9% — preservado como NULL) |
+| Sem coordenadas (não entram em corredor) | 6.863 |
 | Período | jan–set/2026, capital (S.PAULO) |
 
-## Achado do teste com dados reais (honestidade do item 16)
+A faixa do dia é derivada da `HORA_OCORRENCIA_BO` quando existe e, caso contrário, de
+`DESC_PERIODO` (docs/08 §16) — as duas fontes coincidem em 100% das linhas com ambas, e a
+cobertura de faixa passa de ~44% (só `DESC_PERIODO`) para ~99,1%.
 
-Nas comparações ponta a ponta (corredores centrais e de periferia, rotas do mock), o resultado
-**muda com a largura do corredor** (±50/±100/±150 m) em quase todos os casos → o serviço retorna
-**"dados insuficientes"** com o motivo explícito, **sem** inventar preferência. Auditoria no banco
-confirmou que a contagem está correta (ex.: R1 = 166/556/1.064 BOs a 50/100/150 m): a
-instabilidade vem dos dados, não de bug. É o comportamento acordado no item 16 — o teste de
-integração (`ComparacaoPontaAPontaTests`) prova o caminho "Conclusiva" com corredores de fato
-distintos. Com rotas reais do OTP2 (item 22), que caminham ruas diferentes entre alternativas,
+## Comparações ao vivo com dados reais (12/11/2026)
+
+Corredor Paulista → Luz (`-23.5629,-46.6544` → `-23.5379,-46.6295`), rotas do mock, período jan–set/2026:
+
+| Consulta | N (±100 m) | D (BO/km) | Cobertura | Situação |
+|---|---|---|---|---|
+| Faixa noite (`faixas:[4]`) | R1 183 · R2 97 | 108,0 · 66,9 | ~96% | **Dados insuficientes** — resultado muda com a largura do corredor |
+| Sem filtro de faixa | R1 526 · R2 480 | 310,5 · 331,2 | ~96% | **Dados insuficientes** — resultado muda com a largura do corredor |
+
+A instabilidade entre ±50/±100/±150 m persiste com as rotas do **mock** (que caminham o
+mesmo corredor nas duas alternativas) — é o comportamento acordado no docs/08 §66: destaque
+só aparece se for estável nas três larguras, e por isso será raro. O teste de integração
+(`ComparacaoPontaAPontaTests`) prova o caminho "Conclusiva" com corredores de fato distintos.
+Com rotas reais do OTP2 (docs/04 §6), que caminham ruas diferentes entre alternativas,
 espera-se mais resultados conclusivos/divergentes.
 
-## Decisões incorporadas (itens do grupo, 11/11/2026)
+## Decisões incorporadas (docs/07 e docs/08 — decisões do grupo, 11/11/2026)
 
-- **Recorte SSP-SP** (item 8): Furto, Roubo e Trânsito; só `FURTO - OUTROS`/`ROUBO - OUTROS` na comparação.
-- **Regra de comparação** (itens 11/12): só trechos caminhados; N = boletins distintos (`NUM_BO`+`ANO_BO`+delegacia); D = N/km; destaque só se a mesma rota tem N e D menores; divergente não gera preferência.
-- **Estabilidade** (item 16): corredor testado em ±50/±100/±150 m — resultado que muda = dados insuficientes.
-- **Roteamento** (item 14): `IRoteador` com adaptador OTP2 (GTFS SPTrans + OSM); mock determinístico enquanto o OTP2 não está ativo (item 22).
-- **Privacidade** (item 23): auditoria de consultas **sem** coordenadas, endereços ou identificadores.
-- **Linguagem** (`docs/05`): "exposição estimada", nunca "rota segura"; bloco "Sobre os dados" em toda resposta; banco vazio → dados insuficientes, nunca silêncio.
+- **Recorte por natureza** (docs/07): grupos Furto, Roubo e Trânsito por `NATUREZA_APURADA` literal; **só `FURTO - OUTROS`/`ROUBO - OUTROS` entram em N** (carga, veículo, latrocínio e trânsito são contexto, sem influência na comparação); `RUBRICA` conservada para auditoria.
+- **Faixa do dia** (docs/08 §16): da `HORA_OCORRENCIA_BO` com fallback `DESC_PERIODO`; os 4 períodos da SSP (madrugada 0–5h, manhã 6–11h, tarde 12–17h, noite 18–23h); sem hora → NULL, nunca fabricada.
+- **Regra de comparação** (docs/08 §§28–49): só trechos caminhados; N = boletins distintos (`NUM_BO`+`ANO_BO`+delegacia — §59); D = N/km; destaque só se p < 0,05 **e** a mesma rota tem N e D menores **e** o resultado é estável nas três larguras; divergente não gera preferência.
+- **Cobertura** (docs/08 §64): fração de boletins elegíveis com coordenada e faixa informadas nas `NOME_DELEGACIA_CIRCUNSCRICAO` atravessadas; exige ≥ 80% por alternativa e diferença ≤ 10 p.p.
+- **Amostra mínima** (docs/08 §65): N_X + N_Y < 10 → "dados insuficientes".
+- **Frases fixas** (docs/08 §§99–102): "Dados suficientes para comparar" / "Sem diferença clara entre os registros" / "Dados insuficientes" (com o motivo); bloco "Sobre os dados" em toda resposta, com fonte, cobertura por alternativa e limitações fixas.
+- **Roteamento** (docs/04 §6): `IRoteador` com adaptador OTP2 (GTFS SPTrans + OSM); mock determinístico enquanto o OTP2 não está ativo.
+- **Privacidade** (docs/03 §6, docs/05): auditoria de consultas **sem** coordenadas, endereços ou identificadores; coordenadas de consulta não gravadas.
+- **Linguagem** (docs/05): "exposição estimada", nunca "rota segura"; banco vazio → dados insuficientes, nunca silêncio.
 
 ## Próximos passos
 
-- [x] ETL para carga das ocorrências SSP-SP no banco (`scripts/carga_ocorrencias.py`) — **278.961 boletins distintos** em `dados/voltasegura.db`.
-- [ ] Ativar `Otp2Roteador` (item 22) e trocar o registro de DI no `Program.cs`.
+- [x] ETL para carga das ocorrências SSP-SP no banco (`scripts/carga_ocorrencias.py`) — **278.687 boletins distintos** em `dados/voltasegura.db` (recorte por `NATUREZA_APURADA`, docs/07).
+- [x] Backend alinhado ao `docs/07`/`docs/08` (12/11/2026): naturezas elegíveis, faixa pela hora, cobertura por circunscrição, frases fixas — 20 testes passando.
+- [ ] Ativar `Otp2Roteador` (docs/04 §6) e trocar o registro de DI no `Program.cs`.
 - [ ] Evidências da aplicação (prints) para o README de entrega.
 - [ ] Preencher os nomes dos integrantes abaixo.
 

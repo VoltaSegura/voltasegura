@@ -32,7 +32,7 @@ public static class EstabilidadeCorredor
         return new ResultadoComparacao(
             StatusComparacao.DadosInsuficientes,
             null,
-            "resultado muda com a largura do corredor testada (±50/±100/±150 m) — comparação não é concluída",
+            "Dados insuficientes — resultado muda com a largura do corredor testada (±50/±100/±150 m)",
             null,
             referencia.ExposicaoEstimadaPorRota);
     }

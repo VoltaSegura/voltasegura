@@ -3,18 +3,23 @@
 Fonte: <raiz>/utils/ssp/SPDadosCriminais_2026.xlsx (dados REAIS e públicos, CC-BY-4.0,
 SSP-SP/CKAN estadual — ver src/ml/dados/README.md). Nunca dados simulados.
 
-Recorte acordado pelo grupo (itens 8 e 12 das decisões, 11/11/2026):
+Recorte acordado pelo grupo (docs/07 e docs/08, decisões de 11/11/2026):
   - Município: capital (S.PAULO);
   - Período do MVP: jan–set/2026 (12 meses completos virão após o MVP, com aviso);
-  - Rubricas da tela principal: Furto (art. 155), Roubo (art. 157) e trânsito
-    (Art. 302/303 — lesão e homicídio culposos na direção). Homicídio, tentativa
-    e violência sexual ficam FORA (item 8: panorama municipal, sem ligação a rota).
-  - N = boletins distintos: NUM_BO + ANO_BO + NOME_DELEGACIA (item 12).
-  - Faixa do dia: DESC_PERIODO (4 períodos da SSP) como publicado; vazio ou
-    "Em hora incerta" → NULL (não fabricar faixa — honestidade do item 15).
+  - NATUREZA_APURADA dos grupos da tela principal (docs/07, valores literais):
+    Furto (OUTROS, carga, veículo), Roubo (OUTROS, carga, veículo, latrocínio) e
+    trânsito (lesão corporal culposa por acidente). Somente FURTO - OUTROS e
+    ROUBO - OUTROS entram na comparação de trajetos (docs/08 §3). Homicídio,
+    tentativa e violência sexual ficam FORA (panorama municipal, sem ligação a rota).
+  - N = boletins distintos: NUM_BO + ANO_BO + NOME_DELEGACIA (docs/08 §59); um
+    boletim com mais de uma natureza do recorte fica com a de maior prioridade.
+  - Faixa do dia: da HORA_OCORRENCIA_BO quando existe; caso contrário de
+    DESC_PERIODO (os dois coincidem em 100% das linhas com ambos — auditoria §4).
+    "Em hora incerta" e vazio em ambos → NULL (não fabricar faixa — docs/08 §16).
   - Coordenadas como publicadas; sem coordenada → NULL (nunca entra em corredor).
+  - NOME_DELEGACIA_CIRCUNSCRICAO carregada para a checagem de cobertura (docs/08 §64).
 
-Banco: dados/voltasegura.db (schema gerado pelo EF Core — migração 20261112003004_MigracaoInicial).
+Banco: dados/voltasegura.db (schema gerado pelo EF Core — migração MigracaoInicial).
 O ETL NÃO cria schema: rode antes `dotnet ef database update --project VoltaSegura.Infrastructure
 --startup-project VoltaSegura.Api`. A carga usa INSERT OR IGNORE: o índice único
 (NUM_BO, ANO_BO, delegacia) garante 1 registro por boletim distinto.
@@ -41,16 +46,22 @@ DB = RAIZ / "src" / "csharp-backend" / "dados" / "voltasegura.db"
 # Cache do recorte (parquet) — evita reler o xlsx de 140 MB a cada tentativa.
 CACHE = RAIZ / "src" / "csharp-backend" / "dados" / "cache_recorte_ssp.parquet"
 
-# Campos da base SPDadosCriminais usados na carga (30 no total; o resto não entra).
+# Campos da base SPDadosCriminais usados na carga (33 no total; o resto não entra).
+# docs/08 (decisão 11/11/2026): recorte por NATUREZA_APURADA (não por RUBRICA),
+# faixa do dia derivada da HORA_OCORRENCIA_BO (com fallback DESC_PERIODO) e
+# NOME_DELEGACIA_CIRCUNSCRICAO para a checagem de cobertura (docs/08 §64).
 COLUNAS = [
     "NOME_MUNICIPIO",
     "NUM_BO",
     "ANO_BO",
     "NOME_DELEGACIA",
+    "NOME_DELEGACIA_CIRCUNSCRICAO",
+    "NATUREZA_APURADA",
     "RUBRICA",
     "DESCR_TIPOLOCAL",
     "BAIRRO",
     "DATA_OCORRENCIA_BO",
+    "HORA_OCORRENCIA_BO",
     "DESC_PERIODO",
     "LATITUDE",
     "LONGITUDE",
@@ -69,14 +80,21 @@ FAIXAS_SSP = {
     # "em hora incerta" e vazio → NULL (nunca fabricar faixa)
 }
 
-# Padrões de rubrica do recorte (item 8). Ordem = prioridade de deduplicação
-# quando um mesmo BO tem mais de uma natureza no recorte (Roubo > Furto > Trânsito).
-RECORTE = [
-    ("roubo (art. 157)", "roubo"),
-    ("furto (art. 155)", "furto"),
-    ("art. 302", "transito"),
-    ("art. 303", "transito"),
-]
+# Recorte por NATUREZA_APURADA (docs/07 — valores literais; docs/08 §3): grupos
+# Furto, Roubo e Trânsito do app. Somente FURTO - OUTROS e ROUBO - OUTROS entram
+# na comparação de trajetos; carga, veículo, latrocínio e trânsito são contexto.
+# A prioridade define qual linha fica quando um mesmo boletim tem mais de uma
+# natureza do recorte (ex.: os 42 BOs com furto e roubo — docs/08 §59).
+NATUREZAS_RECORTE = {
+    "ROUBO - OUTROS": 0,
+    "FURTO - OUTROS": 1,
+    "ROUBO DE CARGA": 2,
+    "ROUBO DE VEÍCULO": 3,
+    "LATROCÍNIO": 4,
+    "FURTO DE CARGA": 5,
+    "FURTO DE VEÍCULO": 6,
+    "LESÃO CORPORAL CULPOSA POR ACIDENTE DE TRÂNSITO": 7,
+}
 
 
 def ler_base() -> pd.DataFrame:
@@ -94,7 +112,7 @@ def ler_base() -> pd.DataFrame:
 
 
 def recortar(df: pd.DataFrame) -> pd.DataFrame:
-    """Filtra capital + período + rubricas do recorte; normaliza tipos e deduplica."""
+    """Filtra capital + período + naturezas do recorte; normaliza tipos e deduplica."""
     df = df[df["NOME_MUNICIPIO"] == MUNICIPIO_CAPITAL].copy()
     df["DATA_OCORRENCIA_BO"] = pd.to_datetime(df["DATA_OCORRENCIA_BO"], errors="coerce")
     df = df[
@@ -102,33 +120,48 @@ def recortar(df: pd.DataFrame) -> pd.DataFrame:
         & (df["DATA_OCORRENCIA_BO"] <= pd.Timestamp(PERIODO_FIM))
     ].copy()
 
-    # Rubrica normalizada → tipo do recorte (ordem = prioridade de deduplicação).
-    rubrica_norm = df["RUBRICA"].astype("string").str.lower().str.strip()
-    tipo = pd.Series(pd.NA, index=df.index, dtype="string")
-    for padrao, nome in RECORTE:
-        mascara = rubrica_norm.str.contains(padrao, regex=False) & tipo.isna()
-        tipo[mascara] = nome
-    df = df[tipo.notna()].copy()
-    df["__tipo"] = tipo[tipo.notna()].astype(str)
+    # Recorte por NATUREZA_APURADA (docs/07: valores literais, sem aproximação textual).
+    natureza = df["NATUREZA_APURADA"].astype("string").str.strip()
+    df["__prio"] = natureza.map(NATUREZAS_RECORTE).astype("Int64")
+    df["__natureza"] = natureza
+    df = df[df["__prio"].notna()].copy()
 
-    # Deduplicação por boletim distinto (item 12), prioridade Roubo > Furto > Trânsito.
-    df["__prio"] = df["__tipo"].map({"roubo": 0, "furto": 1, "transito": 2})
+    # Deduplicação por boletim distinto (docs/08 §59): uma linha por boletim, ficando
+    # a natureza de maior prioridade (ROUBO - OUTROS > FURTO - OUTROS > contexto).
     df = df.sort_values(["__prio"]).drop_duplicates(
         subset=["NUM_BO", "ANO_BO", "NOME_DELEGACIA"], keep="first"
     )
 
-    # Coordenadas como publicadas (item 12): '-' e vazios viram NULL.
+    # Coordenadas como publicadas (docs/08 §61): '-' e vazios viram NULL; sem filtro.
     for col in ("LATITUDE", "LONGITUDE"):
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    # Faixa do dia: DESC_PERIODO como publicado; vazio/'Em hora incerta' → NULL.
+    # Faixa do dia (docs/08 §16): da HORA_OCORRENCIA_BO quando existe; caso contrário
+    # de DESC_PERIODO. Os dois coincidem em 100% das 16.077 linhas com ambos (auditoria).
+    # "Em hora incerta" e vazio em ambos → NULL (nunca fabricar faixa).
+    hora_txt = df["HORA_OCORRENCIA_BO"].astype("string").str.strip()
+    hora = pd.to_datetime(hora_txt, format="%H:%M:%S", errors="coerce").fillna(
+        pd.to_datetime(hora_txt, format="%H:%M", errors="coerce")
+    )
+    faixa_pela_hora = pd.cut(
+        hora.dt.hour,
+        bins=[-1, 5, 11, 17, 23],
+        labels=[1, 2, 3, 4],
+        ordered=True,
+    ).astype("Int64")
+
     periodo = df["DESC_PERIODO"].astype("string").str.lower().str.strip()
-    df["__faixa"] = periodo.map(FAIXAS_SSP).astype("Int64")
+    faixa_pelo_periodo = periodo.map(FAIXAS_SSP).astype("Int64")
+
+    df["__faixa"] = faixa_pela_hora.fillna(faixa_pelo_periodo)
 
     df["DATA_OCORRENCIA_BO"] = df["DATA_OCORRENCIA_BO"].dt.strftime("%Y-%m-%d")
     df["NUM_BO"] = df["NUM_BO"].astype("string").str.strip().fillna("")
     df["ANO_BO"] = df["ANO_BO"].astype("string").str.strip().fillna("")
     df["NOME_DELEGACIA"] = df["NOME_DELEGACIA"].astype("string").str.strip().fillna("")
+    df["NOME_DELEGACIA_CIRCUNSCRICAO"] = (
+        df["NOME_DELEGACIA_CIRCUNSCRICAO"].astype("string").str.strip().fillna("")
+    )
     for col in ("RUBRICA", "DESCR_TIPOLOCAL", "BAIRRO"):
         df[col] = df[col].astype("string").str.strip().fillna("")
     return df
@@ -145,15 +178,17 @@ def carregar(df: pd.DataFrame, db: Path, truncate: bool = False) -> int:
             print(f"      [truncate] {apagadas:,} linhas antigas removidas")
         sql = (
             "INSERT OR IGNORE INTO ocorrencias "
-            "(NumeroBo, AnoBo, Delegacia, Rubrica, TipoLocal, Bairro, Municipio, "
-            " DataOcorrencia, Faixa, Latitude, Longitude) "
-            "VALUES (?, ?, ?, ?, ?, ?, 'S.PAULO', ?, ?, ?, ?)"
+            "(NumeroBo, AnoBo, Delegacia, Circunscricao, Natureza, Rubrica, TipoLocal, "
+            " Bairro, Municipio, DataOcorrencia, Faixa, Latitude, Longitude) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'S.PAULO', ?, ?, ?, ?)"
         )
         linhas = [
             (
                 r["NUM_BO"],
                 r["ANO_BO"],
                 r["NOME_DELEGACIA"],
+                r["NOME_DELEGACIA_CIRCUNSCRICAO"],
+                r["__natureza"],
                 r["RUBRICA"],
                 r["DESCR_TIPOLOCAL"],
                 r["BAIRRO"],
@@ -214,18 +249,18 @@ def main() -> None:
         base = ler_base()
         print(f"      total estado: {len(base):,} linhas")
         print(
-            "[2/3] aplicando recorte (capital, jan-set/2026, Furto/Roubo/Transito)..."
+            "[2/3] aplicando recorte (capital, jan-set/2026, NATUREZA_APURADA do recorte)..."
         )
         recorte = recortar(base)
         CACHE.parent.mkdir(parents=True, exist_ok=True)
         recorte.to_parquet(CACHE)
         print(f"      recorte salvo em cache: {CACHE.name}")
 
-    por_tipo = recorte["__tipo"].value_counts().to_dict()
+    por_natureza = recorte["__natureza"].value_counts().to_dict()
     sem_faixa = int(recorte["__faixa"].isna().sum())
     sem_coords = int(recorte["LATITUDE"].isna().sum())
     print(f"      recorte: {len(recorte):,} boletins distintos")
-    print(f"      tipos: {por_tipo}")
+    print(f"      naturezas: {por_natureza}")
     print(f"      sem faixa (NULL): {sem_faixa:,} | sem coordenadas: {sem_coords:,}")
 
     print("[3/3] gravando no SQLite...")

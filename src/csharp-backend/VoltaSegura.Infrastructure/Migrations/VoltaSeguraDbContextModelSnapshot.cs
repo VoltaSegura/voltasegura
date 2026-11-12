@@ -33,6 +33,11 @@ namespace VoltaSegura.Infrastructure.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Circunscricao")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateOnly>("DataOcorrencia")
                         .HasColumnType("TEXT");
 
@@ -53,6 +58,11 @@ namespace VoltaSegura.Infrastructure.Migrations
                     b.Property<string>("Municipio")
                         .IsRequired()
                         .HasMaxLength(80)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Natureza")
+                        .IsRequired()
+                        .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NumeroBo")

@@ -21,7 +21,8 @@ public class AvaliadorComparacaoTests
 
         Assert.Equal(StatusComparacao.DadosInsuficientes, resultado.Status);
         Assert.Null(resultado.RotaDestacada);
-        Assert.Contains("amostra insuficiente", resultado.Motivo);
+        Assert.StartsWith(AvaliadorComparacao.FraseDadosInsuficientes, resultado.Motivo);
+        Assert.Contains("menos de 10 registros no total", resultado.Motivo);
     }
 
     [Fact]
@@ -33,6 +34,7 @@ public class AvaliadorComparacaoTests
 
         Assert.Equal(StatusComparacao.DadosInsuficientes, resultado.Status);
         Assert.Contains("cobertura", resultado.Motivo);
+        Assert.StartsWith(AvaliadorComparacao.FraseDadosInsuficientes, resultado.Motivo);
     }
 
     [Fact]
@@ -44,6 +46,7 @@ public class AvaliadorComparacaoTests
 
         Assert.Equal(StatusComparacao.DadosInsuficientes, resultado.Status);
         Assert.Contains("10 p.p.", resultado.Motivo);
+        Assert.StartsWith(AvaliadorComparacao.FraseDadosInsuficientes, resultado.Motivo);
     }
 
     [Fact]
@@ -68,6 +71,7 @@ public class AvaliadorComparacaoTests
 
         Assert.Equal(StatusComparacao.Divergente, resultado.Status);
         Assert.Null(resultado.RotaDestacada);
+        Assert.Equal(AvaliadorComparacao.FraseSemDiferencaClara, resultado.Motivo);
     }
 
     [Fact]
@@ -79,6 +83,7 @@ public class AvaliadorComparacaoTests
         var resultado = avaliador.Avaliar(Rota("R1", 90, 1.0, 0.95), Rota("R2", 20, 1.0, 0.95));
 
         Assert.Equal(StatusComparacao.Conclusiva, resultado.Status);
+        Assert.StartsWith(AvaliadorComparacao.FraseDadosSuficientes, resultado.Motivo);
         Assert.Equal("R2", resultado.RotaDestacada);
         Assert.NotNull(resultado.PValor);
         Assert.True(resultado.PValor < AvaliadorComparacao.NivelSignificancia);

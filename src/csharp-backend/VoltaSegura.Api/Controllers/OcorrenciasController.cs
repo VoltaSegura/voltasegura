@@ -20,17 +20,20 @@ public class OcorrenciasController : ControllerBase
 
     /// <summary>Resumo agregado por bairro e faixa do dia, com o período consultado sempre explícito.</summary>
     /// <param name="bairro">Filtro opcional por bairro (nome exato da SSP-SP).</param>
-    /// <param name="rubrica">Filtro opcional por rubrica (ex.: "FURTO - OUTROS").</param>
+    /// <param name="natureza">Filtro opcional por NATUREZA_APURADA (docs/07 — ex.: "FURTO - OUTROS").</param>
+    /// <param name="rubrica">Filtro opcional por rubrica (conservada para auditoria — docs/07).</param>
     /// <param name="faixa">Filtro opcional por faixa do dia (1=madrugada, 2=manhã, 3=tarde, 4=noite).</param>
     [HttpGet]
     public async Task<IActionResult> Resumo(
-        [FromQuery] string? bairro, [FromQuery] string? rubrica, [FromQuery] int? faixa,
-        CancellationToken ct)
+        [FromQuery] string? bairro, [FromQuery] string? natureza, [FromQuery] string? rubrica,
+        [FromQuery] int? faixa, CancellationToken ct)
     {
         var consulta = _contexto.Ocorrencias.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(bairro))
             consulta = consulta.Where(o => o.Bairro == bairro);
+        if (!string.IsNullOrWhiteSpace(natureza))
+            consulta = consulta.Where(o => o.Natureza == natureza);
         if (!string.IsNullOrWhiteSpace(rubrica))
             consulta = consulta.Where(o => o.Rubrica == rubrica);
         if (faixa is >= 1 and <= 4)

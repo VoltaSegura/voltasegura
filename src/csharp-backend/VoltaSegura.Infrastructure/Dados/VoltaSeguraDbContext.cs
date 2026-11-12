@@ -32,6 +32,8 @@ public class VoltaSeguraDbContext : DbContext
             entidade.Property(o => o.NumeroBo).HasMaxLength(40);
             entidade.Property(o => o.AnoBo).HasMaxLength(8);
             entidade.Property(o => o.Delegacia).HasMaxLength(120);
+            entidade.Property(o => o.Circunscricao).HasMaxLength(120);
+            entidade.Property(o => o.Natureza).HasMaxLength(60);
             entidade.Property(o => o.Rubrica).HasMaxLength(80);
             entidade.Property(o => o.TipoLocal).HasMaxLength(60);
             entidade.Property(o => o.Bairro).HasMaxLength(80);

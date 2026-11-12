@@ -11,7 +11,7 @@ using VoltaSegura.Infrastructure.Dados;
 namespace VoltaSegura.Infrastructure.Migrations
 {
     [DbContext(typeof(VoltaSeguraDbContext))]
-    [Migration("20261112004143_MigracaoInicial")]
+    [Migration("20261112030004_MigracaoInicial")]
     partial class MigracaoInicial
     {
         /// <inheritdoc />
@@ -36,6 +36,11 @@ namespace VoltaSegura.Infrastructure.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Circunscricao")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateOnly>("DataOcorrencia")
                         .HasColumnType("TEXT");
 
@@ -56,6 +61,11 @@ namespace VoltaSegura.Infrastructure.Migrations
                     b.Property<string>("Municipio")
                         .IsRequired()
                         .HasMaxLength(80)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Natureza")
+                        .IsRequired()
+                        .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NumeroBo")
