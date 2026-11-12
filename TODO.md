@@ -45,7 +45,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | T16 | Slides da apresentação | PENDENTE | a definir | a definir |
 | T17 | Benchmarking atualizado | PENDENTE | a definir | a definir |
 | T19 | Base de conhecimento e dados já entregues | CONCLUÍDO | grupo | 11/11 |
-| T20 | Script automático de cobertura por região (revisão de vieses) | PENDENTE | a definir | antes do piloto |
+| T21 | Script automático de cobertura por região (revisão de vieses) | PENDENTE | a definir | antes do piloto |
 
 ### Parte B — Entregas de disciplinas (prazo de todas: 19/11/2026, 23h55)
 
@@ -78,7 +78,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [ ] 1. Validar a regra de comparação em trajetos reais. *Em andamento: teste 1 do Lucas Simidu redefinido (11/11, ver T12): ida trabalho → FIAP às 18h, volta FIAP → casa às 23h, alternativas geradas pelo OTP2. Faltam a execução (depende do OTP2), outros testes em outras regiões e quem roda a regra.*
 - [ ] 2. Teste local do OTP2 (ver T12). *Pulado em 11/11 por falta de responsável; retomado no mesmo dia: Lucas Simidu assumiu a execução. Roteiro e scripts em `scripts/otp2/`. Falta rodar e anotar as medições.*
 - [x] 3. Privacidade, retenção e LGPD da localização: decidido em 11/11 para o MVP (pacote mínimo com conta obrigatória, `docs/03` §6). Falta: responsável por acesso e exclusão, provedor de login, base legal e revisão jurídica (continuam em `docs/06`).
-- [x] 4. Vieses entre regiões: decidido em 11/11 pela **opção B** (revisão totalmente automática, sem responsável humano; `docs/08`). Implementação em T20.
+- [x] 4. Vieses entre regiões: decidido em 11/11 pela **opção B** (revisão totalmente automática, sem responsável humano; `docs/08`). Implementação em T21.
 - [x] 5. Teste das mensagens de incerteza: decidido em 11/11 que **não será feito nesta fase**; metodologia registrada em `docs/08` ("Teste de compreensão das mensagens") para uso futuro.
 - [ ] 6. Indicador "Risco Cidadão" (despriorizado; ver T11)
 - [ ] 7. GTFS/SPTrans: termos de redistribuição e ligação de IDs com a Olho Vivo. *Em aberto, com Lucas Simidu (11/11): será tratada na entrega de Mobile (T07), onde ficam as questões técnicas do app.*
@@ -177,7 +177,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | Teste 1 | Lucas Simidu | 1 (ida) | Trabalho do Lucas → FIAP Paulista | saída às 18h · noite | geradas pelo OTP2 | PENDENTE (execução) |
 | Teste 1 | Lucas Simidu | 2 (volta) | FIAP Paulista → residência do Lucas | saída por volta das 23h · noite (trecho a pé depois de 0h conta como madrugada) | geradas pelo OTP2 | PENDENTE (execução) |
 
-- Definido em 11/11/2026 pelo Lucas e redefinido no mesmo dia (versão 1.15 de `docs/06`): a primeira versão (casa ↔ FIAP via Metrô Vila Sônia e Oscar Freire) foi substituída; o percurso agora sai do roteamento.
+- Definido em 11/11/2026 pelo Lucas e redefinido no mesmo dia (versão 1.17 de `docs/06`): a primeira versão (casa ↔ FIAP via Metrô Vila Sônia e Oscar Freire) foi substituída; o percurso agora sai do roteamento.
 - Os endereços de trabalho e residência **não** entram no repositório (dados pessoais): usar pontos de referência aproximados.
 - Pendente do teste 1: executar depois do OTP2 e definir quem roda a regra.
 - Lembrete: a regra conta só os trechos caminhados. `docs/08` pede trajetos de diferentes regiões, então outros testes serão necessários.
@@ -197,7 +197,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ## T14 — Pesquisa com estudantes noturnos e universidades
 
-**Status:** CONCLUÍDO (encerrada por decisão do grupo em 11/11/2026: sem entrevistas, testes com usuários nem instituições nesta fase; evidência em `docs/06`, versões 1.18, 1.26 e 1.28)
+**Status:** CONCLUÍDO (encerrada por decisão do grupo em 11/11/2026: sem entrevistas, testes com usuários nem instituições nesta fase; evidência em `docs/06`, versões 1.20, 1.28 e 1.30)
 **Tipo:** Core do projeto
 **Referência:** `docs/03` §12; `docs/06` §2.
 - [ ] ~~Roteiro das entrevistas (sem dados pessoais nas anotações)~~ Fora desta fase.
@@ -257,7 +257,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ---
 
-## T20 — Script automático de cobertura por região (revisão de vieses)
+## T21 — Script automático de cobertura por região (revisão de vieses)
 
 **Status:** PENDENTE
 **Tipo:** Core do projeto
@@ -429,7 +429,7 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 11/11/2026 | T01.4 segue em aberto: registrada a proposta de Lucas Simidu de automatizar a revisão de vieses (opções A, B e C), a ser avaliada pelo grupo. | assistente (a pedido do Lucas) |
 | 11/11/2026 | T01.1 e T12: teste 1 redefinido pelo Lucas (ida trabalho → FIAP às 18h, volta FIAP → casa às 23h, faixa noite; alternativas X/Y geradas pelo OTP2). Endereços não registrados. Execução segue pendente. | assistente (a pedido do Lucas) |
 | 11/11/2026 | T12 → EM DESENVOLVIMENTO: Lucas Simidu assumiu o teste local do OTP2 (T01.2 retomada). Criados `scripts/otp2/` (roteiro, preparo dos dados, consulta do teste 1) e regras no `.gitignore`. Corrigido o requisito de Java para 25 (OTP 2.10.0). Medições ainda não feitas. | assistente (a pedido do Lucas) |
-| 11/11/2026 | T01.4 concluída: revisão de vieses totalmente automática (opção B), sem responsável humano. Criada a T20 (script de cobertura por região). | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.4 concluída: revisão de vieses totalmente automática (opção B), sem responsável humano. Criada a T21 (script de cobertura por região). | assistente (a pedido do Lucas) |
 | 11/11/2026 | T01.5 concluída: teste de compreensão das mensagens fora desta fase; metodologia preservada em `docs/08`. Item correspondente da T14 marcado como fora do escopo. | assistente (a pedido do Lucas) |
 | 11/11/2026 | T01.7 segue em aberto, atribuída a Lucas Simidu e ligada à T07 (Mobile), que passa a ter Lucas como responsável. | assistente (a pedido do Lucas) |
 | 11/11/2026 | T01.8 segue em aberto, atribuída a Lucas Simidu e ligada à T07 (Mobile). | assistente (a pedido do Lucas) |

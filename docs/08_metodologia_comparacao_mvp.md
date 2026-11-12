@@ -98,7 +98,7 @@ Parecer do assistente sobre a pergunta:
 
 Riscos aceitos com esta escolha (parecer do assistente, mantido como registro): a automação só detecta o que foi programada para medir; mudanças de formato da SSP, de geocodificação ou padrões novos podem passar sem alerta; e não há quem responda pelo processo. `docs/03` §6 (princípio 8) pede avaliação periódica de resultados desproporcionais, o que o script cumpre na parte de cobertura; as checagens de resultado por região e de acesso ao registro continuam adiadas para depois do MVP.
 
-`[HIPÓTESE — sugestão do assistente, não decidida]` Para reduzir o risco sem voltar à revisão humana, o próprio script pode **interromper a atualização** quando encontrar sinais de mudança na base: colunas ausentes ou renomeadas, queda brusca da cobertura total ou uma circunscrição que some de um mês para o outro. Nesse caso o app continuaria com a base anterior. Fica para o grupo decidir ao implementar o script (`TODO.md` T20).
+`[HIPÓTESE — sugestão do assistente, não decidida]` Para reduzir o risco sem voltar à revisão humana, o próprio script pode **interromper a atualização** quando encontrar sinais de mudança na base: colunas ausentes ou renomeadas, queda brusca da cobertura total ou uma circunscrição que some de um mês para o outro. Nesse caso o app continuaria com a base anterior. Fica para o grupo decidir ao implementar o script (`TODO.md` T21).
 
 ## Apresentação da confiança dos dados
 

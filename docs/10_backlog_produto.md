@@ -3,7 +3,7 @@ titulo: Backlog do produto VoltaSegura
 projeto: VoltaSegura
 atualizado: 2026-11-11
 tipo: backlog-produto
-fonte: "Consolidação das decisões de docs/03, 04, 05, 07, 08 e 06 até a versão 1.28 de docs/06"
+fonte: "Consolidação das decisões de docs/03, 04, 05, 07, 08 e 06 até a versão 1.30 de docs/06"
 convencao_status: "[DECISÃO] direcionamento atual do grupo · [HIPÓTESE] precisa ser testada · [EM ABERTO] não apresentar como resolvido"
 ---
 
@@ -45,7 +45,7 @@ Este documento reúne **tudo o que define o produto**: visão, proposta de valor
 | **Público inicial** | Estudantes universitários que voltam para casa à noite usando transporte público e caminhadas. | `[DECISÃO]` | `docs/03` §3 |
 | **Abrangência** | Município de São Paulo inteiro, sem campus ou bairro obrigatório. A comparação de cada trajeto depende da cobertura dos dados. | `[DECISÃO]` | `docs/03` §3 |
 | **Persona** | **Ágatha Santos, 24 anos**: estudante universitária do período noturno; usa ônibus, metrô e caminhadas; sai da faculdade tarde; nem sempre conhece todos os trechos. Necessidade principal: entender as diferenças entre rotas e escolher com mais informação, sem depender só do menor tempo ou distância. **Proto-persona**, não validada com usuários. | `[DECISÃO de nome]` · perfil `[HIPÓTESE]` | `docs/03` §3 |
-| **Instituições no piloto** | Nenhuma. Não citar universidade como parceira ou candidata. | `[DECISÃO]` | `docs/06` (1.26) |
+| **Instituições no piloto** | Nenhuma. Não citar universidade como parceira ou candidata. | `[DECISÃO]` | `docs/06` (1.28) |
 | **Públicos futuros** | Trabalhadores noturnos, frequentadores de eventos, turistas, outros usuários de transporte público. Não priorizar agora. | `[HIPÓTESE]` | `docs/03` §3 |
 
 ## 3. Benchmarking
@@ -65,7 +65,7 @@ Este documento reúne **tudo o que define o produto**: visão, proposta de valor
 
 | Item | Conteúdo | Status | Origem |
 |---|---|---|---|
-| **Modelo** | B2B2C: o estudante usa; instituições contratam para a comunidade. Mantido como modelo futuro, mesmo sem instituição no piloto. No pitch: "modelo a validar". | `[HIPÓTESE]` | `docs/03` §8, `docs/06` (1.28) |
+| **Modelo** | B2B2C: o estudante usa; instituições contratam para a comunidade. Mantido como modelo futuro, mesmo sem instituição no piloto. No pitch: "modelo a validar". | `[HIPÓTESE]` | `docs/03` §8, `docs/06` (1.30) |
 | **Receitas a validar** | Licença institucional recorrente; planos para empresas com turnos noturnos; pacotes por evento; depois, API ou painéis agregados. | `[HIPÓTESE]` | `docs/03` §8 |
 | **Princípio comercial** | Não vender dados pessoais nem trajetos individuais; patrocinadores não alteram resultados. | `[DECISÃO]` | `docs/03` §6 e §8 |
 | **Custos a considerar** | Infraestrutura (servidor do OTP2, banco, processamento), manutenção das bases, desenvolvimento, segurança e LGPD, auditoria da metodologia. Custo de hospedagem só depois de medir o OTP2. | `[EM ABERTO]` | `docs/03` §8, `docs/04` §6.2 |
@@ -82,7 +82,7 @@ Este documento reúne **tudo o que define o produto**: visão, proposta de valor
 | DT-06 | **Conta**: só trechos a pé; corredor de ±100 m (sensibilidade em ±50 e ±150 m); `N` = boletins no corredor; `L` = km a pé; `D = N/L`. | `[DECISÃO]` | `docs/08` |
 | DT-07 | **Regra de destaque**: cobertura ≥ 80% por alternativa e diferença ≤ 10 p.p.; `N_X + N_Y ≥ 10`; destacar só se uma alternativa tiver `N` **e** `D` menores e teste binomial exato bilateral com `p < 0,05` nas três larguras. Sem pesos arbitrários. | `[DECISÃO]` · validação em trajetos reais `[EM ABERTO]` | `docs/08` |
 | DT-08 | **Privacidade**: conta obrigatória só com e-mail e identificador; login por e-mail e senha ou Google; consultas descartadas após o cálculo; logs sem coordenadas nem vínculo com a conta; histórico só no aparelho; GPS opcional; exclusão da conta pelo app; exclusão e incidentes operados só pelos desenvolvedores internos. | `[DECISÃO]` · base legal e revisão jurídica `[EM ABERTO]` | `docs/03` §6 |
-| DT-09 | **Revisão de vieses automática**: script de cobertura por circunscrição e subprefeitura antes do piloto e a cada atualização; bloqueio só por "dados insuficientes"; pesos e limites nunca mudam sozinhos. | `[DECISÃO]` · script `[EM ABERTO]` (T20) | `docs/08` |
+| DT-09 | **Revisão de vieses automática**: script de cobertura por circunscrição e subprefeitura antes do piloto e a cada atualização; bloqueio só por "dados insuficientes"; pesos e limites nunca mudam sozinhos. | `[DECISÃO]` · script `[EM ABERTO]` (T21) | `docs/08` |
 | DT-10 | **Percepção relatada por usuários fora do MVP**: nenhum relato vira dado no app. | `[DECISÃO]` | `docs/06` §3 |
 | DT-11 | **App**: React Native com TypeScript e Expo Router; consome API ou mock e salva em banco (exigência da entrega Mobile). | `[DECISÃO]` (rubrica) | `docs/02` §5 |
 | DT-12 | **Backends SOA e C#, ESP32 e Risco Cidadão** atendem às disciplinas e não definem o produto. Arquitetura SOA × C# despriorizada. | `[DECISÃO]` · arquitetura `[EM ABERTO]` | `docs/06` §3 |
@@ -288,7 +288,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 | RNF-06 | Não transferir ao usuário a responsabilidade por uma ocorrência. | Nenhum texto sugere culpa do usuário pela escolha | `docs/03` §6, `docs/05` |
 | RNF-07 | Acessibilidade no app (critério da rubrica de Mobile). | Rótulos de acessibilidade, contraste e tamanho de toque nas telas | `docs/02` §5 |
 | RNF-08 | Dados de exemplo identificados como tal (ex.: tempos 32/38 min do mockup). | Telas e slides com aviso de exemplo | `docs/05` |
-| RNF-09 | Não afirmar conformidade com a LGPD: o aviso de privacidade é minuta acadêmica, sem revisão jurídica. | Nenhum texto do app, pitch ou slides diz "em conformidade com a LGPD" | `docs/06` (1.31) |
+| RNF-09 | Não afirmar conformidade com a LGPD: o aviso de privacidade é minuta acadêmica, sem revisão jurídica. | Nenhum texto do app, pitch ou slides diz "em conformidade com a LGPD" | `docs/06` (1.33) |
 
 ## 8. Fora do escopo do MVP
 
@@ -342,4 +342,4 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 | Data | Versão | Mudança | Responsável |
 |---|---|---|---|
-| 11/11/2026 | 1.0 | Criação do backlog a partir das decisões registradas até a versão 1.28 de `docs/06`: visão, público, benchmarking, negócio, decisões técnicas, 6 épicos com 20 features e 20 histórias com critérios de aceite, requisitos não funcionais, fora do escopo, roadmap e guia para o Azure Boards | Lucas Simidu + assistente |
+| 11/11/2026 | 1.0 | Criação do backlog a partir das decisões registradas até a versão 1.30 de `docs/06`: visão, público, benchmarking, negócio, decisões técnicas, 6 épicos com 20 features e 20 histórias com critérios de aceite, requisitos não funcionais, fora do escopo, roadmap e guia para o Azure Boards | Lucas Simidu + assistente |
