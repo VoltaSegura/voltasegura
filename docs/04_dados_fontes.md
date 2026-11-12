@@ -110,6 +110,11 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
   - Intervalos declarados: de 1 a 15 min no Metrô 1/2, de 4 a 8 min na CPTM 09/11 e de 20 a 30 min na CPTM 13.
   - **Exceções**: **Metrô 6** só tem janela das 10h00 às 14h59; **Metrô 17 (17A/17W)**, das 09h00 às 15h59. À noite, o roteamento não oferecerá essas linhas.
   - `[EM ABERTO]` Conferir se essas janelas refletem a operação real (por exemplo, operação parcial de linhas recentes) ou uma lacuna do feed. Até lá, trajetos noturnos que dependeriam delas podem sair diferentes da realidade.
+  - *Conferido na imprensa em 11/11/2026 (sem fonte oficial do Metrô consultada):*
+    - **Metrô 6-Laranja: o feed reflete a operação real.** A linha abriu em 3/7/2026 em operação assistida, com seis estações (João Paulo I–Perdizes), de segunda a sexta, das 10h às 15h, por 180 dias (até cerca do fim de 2026). Fontes: [Diário do Transporte, 30/6/2026](https://diariodotransporte.com.br/2026/06/30/linha-6-laranja-inicia-operacao-assistida-nesta-semana-com-viagens-gratuitas-investimento-total-e-de-r-19-bilhoes/), [Band, 26/6/2026](https://www.band.com.br/noticias/linha-6-laranja-abre-na-proxima-semana-com-6-estacoes-e-horario-reduzido-202606261454).
+    - **Metrô 17-Ouro: o feed está desatualizado.** O 9h–16h vigorou a partir de 1/7/2026. Desde 30/9/2026, a linha opera de segunda a sábado, das 6h às 22h. O feed `101126` ainda traz o horário antigo, então o roteamento deixa de oferecer a linha entre 16h e 22h, embora ela funcione. Fonte: [Diário do Transporte, 29/9/2026](https://diariodotransporte.com.br/2026/09/29/monotrilho-da-linha-17-ouro-passa-a-funcionar-das-6h-as-22h-a-partir-desta-quarta-feira-30/).
+    - Às 23h nenhuma das duas opera, nem no feed nem na realidade.
+  - `[DECISÃO — 11/11/2026]` **Aceitar o GTFS como vem e avisar.** O feed oficial não é editado; a defasagem entra nas limitações do bloco "Sobre os dados" (`docs/08`), e a cada novo download do GTFS confere-se se as janelas das linhas 6 e 17 mudaram.
 
 ## 6. Roteamento multimodal `[DECISÃO de direção — 11/11/2026 · validação técnica EM ABERTO]`
 
@@ -130,6 +135,7 @@ O produto depende da qualidade e cobertura das bases. **Antes de constar no MVP*
 `[EM ABERTO — evidência necessária]` Antes de depender do OTP2, executar um teste local:
 
 - [ ] Instalar o Java exigido pela versão do OTP2 escolhida. As versões recentes pedem Java 21 (confirmar na documentação oficial). A máquina de testes tem Java 8 e 16 GB de RAM.
+  - *Conferido em 11/11/2026*: a versão atual é a **OTP 2.10.0** (Maven Central), e a documentação oficial pede **Java 25 ou superior**, não 21. Roteiro do teste, com responsável (Lucas Simidu), em [`scripts/otp2/README.md`](../scripts/otp2/README.md).
 - [ ] Montar o grafo com o GTFS da SPTrans e o OSM de São Paulo; medir memória, tempo de montagem e tamanho do grafo.
 - [ ] Consultar 2–3 trajetos reais em regiões diferentes; conferir se o itinerário traz a geometria dos trechos a pé, as baldeações e horários plausíveis.
 - [ ] Registrar a atribuição exigida pela licença do OSM (ODbL) e confirmar a licença do OTP2 na versão usada.

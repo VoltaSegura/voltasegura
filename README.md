@@ -18,13 +18,13 @@
 |---|---|
 | **Nome da CitizenTech** | **VoltaSegura** (ex-"CitizenTech"; produto renomeado em 10/11/2026) |
 | **Cidade e bairro** | Município de São Paulo — todos os bairros no escopo planejado do piloto `[DECISÃO]`; comparação por trajeto depende de cobertura e qualidade dos dados locais |
-| **Cidadão beneficiado** | Estudante universitário do período noturno que retorna para casa por transporte público e caminhadas (persona de trabalho: Marina, 22)`[validar via entrevistas]` |
+| **Cidadão beneficiado** | Estudante universitário do período noturno que retorna para casa por transporte público e caminhadas (persona de trabalho: Ágatha Santos, 24 — proto-persona, não validada com usuários) |
 | **Problema, em uma frase** | Apps de mobilidade priorizam tempo e distância, mas não oferecem visão integrada das condições urbanas que influenciam a percepção de segurança no deslocamento, dificultando a escolha consciente entre trajetos |
 | **Como funciona** | O usuário informa origem, destino, horário (ida e, se aplicável, volta); a plataforma consulta fontes de mobilidade, segurança e infraestrutura; compara alternativas por tempo, conexões, indicadores de exposição e confiabilidade dos dados; e o usuário decide com contexto |
 | **O que cada parte faz** | Ver tabela de disciplinas abaixo |
 | **Link do repositório** | https://github.com/VoltaSegura/voltasegura |
 | **Indicador de impacto** | `[EM ABERTO]` — proposições: utilidade percebida da comparação, intenção de uso recorrente, adesão ao planejamento ida-volta |
-| **ODS conectados** | **ODS 11** (cidades e comunidades sustentáveis) e **ODS 10** (redução das desigualdades) — justificativas `[EM ABERTO]` |
+| **ODS conectados** | **ODS 11 — Cidades e comunidades sustentáveis** (metas 11.2 e 11.7): o VoltaSegura ajuda quem volta à noite de transporte público e a pé a comparar alternativas de trajeto com informação transparente, baseada em registros oficiais dos trechos caminhados. Apoia uma decisão informada, sem prometer segurança, e reaproveita dados abertos (SSP-SP, SPTrans, GeoSampa). |
 
 > ⚠️ **Regra de comunicação**: o produto **não garante segurança, não prevê crimes e não classifica bairros** como seguros/perigosos. Comunica **exposições estimadas**, comparativas e contextualizadas, com indicação de confiança dos dados. Ver [`docs/05_regras_linguagem_etica.md`](docs/05_regras_linguagem_etica.md).
 
@@ -73,6 +73,7 @@ Toda a documentação viva está em [`docs/`](docs/). O ponto de entrada para ag
 | [`docs/07_classificacao_ssp_app.md`](docs/07_classificacao_ssp_app.md) | Categorias SSP-SP selecionadas para o app e regras de apresentação |
 | [`docs/08_metodologia_comparacao_mvp.md`](docs/08_metodologia_comparacao_mvp.md) | Regra inicial de comparação de trajetos e validações pendentes |
 | [`docs/09_fluxo_trabalho_ia.md`](docs/09_fluxo_trabalho_ia.md) | Fluxo para agentes, registro de decisões e verificação da base |
+| [`docs/10_backlog_produto.md`](docs/10_backlog_produto.md) | Backlog do produto: visão, benchmarking, decisões técnicas e histórias de usuário com critérios de aceite (base do Azure Boards) |
 
 ## Convenções da equipe
 

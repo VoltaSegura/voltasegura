@@ -81,6 +81,8 @@ Campos da ficha:
 
 Cada projeto deve **identificar os ODS conectados e explicar de que forma contribui** para suas metas. O briefing lista: ODS 2, 3, 4, 9, 10, 11, 13. Para o **VoltaSegura** (mobilidade e segurança noturna), os fortes candidatos são **ODS 11** (cidades e comunidades sustentáveis) e **ODS 10** (redução das desigualdades) — a confirmação e a justificativa são tarefa do grupo `[EM ABERTO]`.
 
+`[DECISÃO — 11/11/2026]` **ODS conectado: somente o ODS 11** (o ODS 10 não será usado). Metas: **11.2** (transporte público seguro e acessível, com atenção a pessoas em situação de vulnerabilidade e mulheres) e **11.7** (acesso a espaços públicos seguros e inclusivos). Justificativa: o VoltaSegura ajuda quem volta à noite de transporte público e a pé a comparar alternativas de trajeto com informação transparente, baseada em registros oficiais dos trechos caminhados. Apoia uma decisão informada, sem prometer segurança, e reaproveita dados abertos (SSP-SP, SPTrans, GeoSampa). O texto está na Ficha do `README.md`.
+
 ## 8. Referências sugeridas pelo briefing
 
 - UN-Habitat — diretrizes para cidades inteligentes centradas nas pessoas.
