@@ -1,0 +1,6 @@
+@VoltaSegura.Servicos_HostAddress = http://localhost:5031
+
+GET {{VoltaSegura.Servicos_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

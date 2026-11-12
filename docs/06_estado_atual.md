@@ -25,6 +25,7 @@ atualizacao: "A cada mudança: registrar data, mudança, motivo, evidência e re
 - [x] **Fechado o bloqueio da pergunta de ML**: escala territorial-temporal individual disponível nas duas fontes principais (SSP-SP e Infosiga); granularidade por distrito era o último risco de inviabilidade da Fase 0 → superado antes do prazo da Fase 1.
 - [x] **Notebook de ML executado com dados reais (10/11/2026)**: pergunta "frequência relativa de BOs de roubo/furto por bairro × dia × faixa horária (SSP-SP 2026, 274.990 BOs na capital, 375.984 células de grade)" com RandomForestRegressor sobre `log1p(contagem)`; grade de 27 combinações de 3 hiperparâmetros com TimeSeriesSplit(3) **só no treino** (treino meses 1–4, teste 5–6). Resultado: **R² teste 0,61 / RMSE teste 1,08× treino** (generalização saudável) — resposta quantitativa para comparação relativa, sem rótulo territorial. Contraprova do Infosiga por logradouro **não generaliza** (R² teste −0,41; 78% dos logradouros com <5 sinistros em ~11 anos) → achado direto para o produto: marcar "dados insuficientes", nunca silêncio. Achados de qualidade: 39,8% dos BOs do recorte sem hora utilizável; 47% dos bairros com <10 BOs/2026. Artefatos: `src/ml/` (notebook executado, `etl.py`, `RELATORIO_ML.md`, figuras).
 - [x] Mockup (tempos 32 min / 38 min) permanece como **exemplo visual**, não como algoritmo validado.
+- [x] **Arquitetura SOA×C# fechada (11/11/2026)**: uma única solution .NET 8 em `src/csharp-backend/` com **domínio/infraestrutura/migrações únicos** e duas APIs — `VoltaSegura.Api` (entrega C#) e `VoltaSegura.Servicos` (entrega SOA). Motivo: evita duplicar domínio/BD/migrações no prazo de 8 dias e atende as duas rubricas com focos distintos (POO vs. estruturação de domínio); OTP2 entra como serviço externo real atrás da interface `IRoteador` (com mock determinístico enquanto o item 22 está em aberto). Regras dos itens 8/11/12/16/23 implementadas no domínio (teste binomial exato, estabilidade de corredor, auditoria sem coordenadas). 14 testes xUnit passando; migração inicial aplicada. Evidência: `src/csharp-backend/` (solution completa).
 
 ## 2. Hipóteses que precisam de validação `[HIPÓTESE]`
 
@@ -51,7 +52,7 @@ atualizacao: "A cada mudança: registrar data, mudança, motivo, evidência e re
 - [ ] **Fechamento da marca em andamento (10/11/2026, v8–v10)** `[EM ABERTO]`: lockups v8 em dourado — v8·1 limpo (escolhido pelo grupo como base do logo oficial) e v8·2 com tagline "MOBILIDADE NOTURNA" (uso em pitch); v9 readiciona a pessoa andando da referência — walker dourado em espaço negativo (v9·1) e walker em ciano como viajante destacado (v9·2, versão "storytelling" para slides/pitch; ícone do app segue v7·1 puro). **v10 — fechamento premium concluído (10/11/2026)**: PNG final 1024×1024 no `gpt-image-2.5-sunburst` (`design/v10/v10_1_premium_png.png`, adesão ao v8·1 e grafia exata) + SVG vetorial real no `recraft-v4.1-vector` (`design/v10/v10_2_premium_svg.svg`, curvas verdadeiras); teste 48px aprovado. Gasto acumulado da marca: ~US$ 0,53. Pendente: **aprovação formal do grupo** (não apresentar como marca fechada até lá) e checagens de marca/domínio do item acima.
 - [ ] Qual instituição pode participar do primeiro piloto?
 - [ ] ODS conectados e suas justificativas no formato exigido pela FIAP (candidatos fortes: ODS 11 e 10).
-- [ ] Arquitetura: SOA e C# serão o mesmo serviço ou módulos distintos?
+- [x] ~~Arquitetura: SOA e C# serão o mesmo serviço ou módulos distintos?~~ **FECHADO (11/11/2026)**: mesma solution, módulos distintos (domínio/infra únicos, duas APIs). Ver decisão detalhada na seção 1.
 
 ## 4. Próximas ações do grupo (backlog)
 
@@ -68,8 +69,8 @@ atualizacao: "A cada mudança: registrar data, mudança, motivo, evidência e re
 
 | Entrega FIAP | O que o VoltaSegura fornece | Status |
 |---|---|---|
-| SOA (backend) | API de rotas, comparação e exposição estimada | `[HIPÓTESE arquitetural]` |
-| C#/.NET | Backend principal (POO, EF Core, Web API) | decidir sobreposição com SOA |
+| SOA (backend) | API de rotas, comparação e exposição estimada — projeto `VoltaSegura.Servicos` da solution | ✅ esqueleto funcional (12/11) |
+| C#/.NET | Backend principal (POO, EF Core, Web API) — projeto `VoltaSegura.Api` da mesma solution | ✅ esqueleto funcional (12/11); decidido: mesma solution, módulos distintos |
 | IA & ML | **Entrega pronta**: notebook executado com dados reais SSP-SP + Infosiga (27 combinações, CV só no treino, R² teste 0,61; contraprova honesta) + `RELATORIO_ML.md` | ✅ notebook executado — falta vídeo do pitch |
 | Mobile/Expo | App do estudante noturno: jornada ida → volta | aderência à Fase 1 do roadmap |
 | Operating Systems | Host Linux da aplicação web (provisionamento automatizado) | n/a — execução |
@@ -84,5 +85,6 @@ atualizacao: "A cada mudança: registrar data, mudança, motivo, evidência e re
 | 09/11/2026 | 0.1 | Consolidação da ideia original, feedback do professor, novo posicionamento, público inicial, metodologia proposta, fontes de dados, riscos éticos, concorrência, modelo de negócio, roadmap e plano de validação | Documento Vivo original | grupo |
 | 10/11/2026 | 0.2 | Conversão para base de conhecimento em markdown para agentes (`docs/`); **renomeação do produto: CitizenTech → VoltaSegura** (motivo: evitar conflito com o app "Citizen" e com o nome do tema da GS; por decisão do grupo) | docx v0.1 + pdf briefing + decisão do grupo | (preencher) |
 | 10/11/2026 | 0.3 | **Logo v1 (2 rascunhos)**: conceito "V formado por rota com pino", paleta preto/laranja, exclusões éticas (sem escudo/cadeado — `docs/05`); prompts versionados em `design/prompts/`; geração via OpenRouter Image API registrada em `prompts.md` | `design/`, `prompts.md` | assistente + grupo |
+| 11/11/2026 | 0.4 | **Verificação dos READMEs contra o PDF oficial** (5 correções: ml/soa/csharp/mobile/cybersecurity) + **decisão de arquitetura SOA×C#** (mesma solution, módulos distintos) + **solution .NET 8 estruturada** em `src/csharp-backend/` (Domain/Infrastructure/Api/Servicos/Tests; 14 testes; migração inicial; regras dos itens 8/11/12/16/23 no código) | `src/csharp-backend/`, `prompts.md`, PDF FIAP | assistente + grupo |
 
 > Próximas versões: registrar data, mudança realizada, motivo, evidência utilizada, decisão tomada e responsável. Não apagar decisões antigas sem registrar o que mudou e por quê.

@@ -8,7 +8,10 @@ Estudo de ML sobre o problema do VoltaSegura, com **dados reais e públicos** (n
 - `etl.py` — carga/consolidação das fontes reais com cache de parquet (`dados/cache/`, fora do git, regenerável);
 - `dados/README.md` — fonte, link, período e SHA256 de cada conjunto de dados;
 - `requirements.txt`;
-- `RELATORIO_ML.md` — relatório (2–4 páginas) com métricas treino/teste, overfitting, limitações e conclusão para o cidadão.
+- `RELATORIO_ML.md` — relatório (2–4 páginas) com métricas treino/teste, overfitting, limitações e conclusão para o cidadão;
+- **Vídeo de até 5 min no YouTube (não listado)** — enviar junto com o link do repo (requisito do PDF, p. 31). Nota: o PDF é internamente inconsistente quanto ao tamanho do relatório (p. 31: "2 a 4 páginas"; p. 33: "2 páginas") — manter 2–4 páginas, que é o máximo do intervalo e cobre ambos.
+
+Requisitos do PDF: dados simulados **não** são aceitos; ao menos 10 combinações de 3 hiperparâmetros com validação cruzada só no treino; métricas treino/teste lado a lado com gráficos e discussão de overfitting.
 
 ## Resultado em uma linha `[HIPÓTESE validada nos dados de 2026]`
 

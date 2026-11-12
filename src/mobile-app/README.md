@@ -6,7 +6,7 @@ App do cidadão (estudante do período noturno): consulta rotas, compara alterna
 
 ## Requisitos do README da disciplina (neste app)
 
-1. Ficha da CitizenTech (link/copiar do README raiz);
+1. Ficha da CitizenTech — **copiar no corpo deste README**, não apenas linkar (PDF p. 34: "O README com a Ficha da CitizenTech" — como o espelho de entrega é um repo separado, o link para fora pode não ser lido pelo professor);
 2. Instruções para rodar o app;
 3. Prints das telas;
 4. Link do vídeo de até 3 min.

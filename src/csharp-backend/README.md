@@ -1,15 +1,66 @@
-# VoltaSegura — Backend C#/.NET
+# VoltaSegura — Solution .NET do Backend
 
-Camada de backend em C#/.NET: POO, Interfaces, Injeção de Dependência, Entity Framework Core, LINQ, APIs REST, programação assíncrona e testes unitários.
+Backend do VoltaSegura em C#/.NET 8: uma única solution com **domínio compartilhado** e **duas APIs** — a entrega de **C# Software Development** (esta pasta) e a de **SOA e Web Services** (documentada em [`src/soa-backend`](../soa-backend), mesma solution).
 
-> ⚠️ Em construção. Ver rubrica em [`docs/02_entregas_disciplinas.md`](../../docs/02_entregas_disciplinas.md). Decidir a sobreposição com `src/soa-backend` (mesmo serviço ou módulos distintos) — ponto em aberto registrado em [`docs/06_estado_atual.md`](../../docs/06_estado_atual.md).
+## Estrutura
 
-## Rubrica
+| Projeto | Papel | Disciplina |
+|---|---|---|
+| `VoltaSegura.Domain` | Entidades, interfaces e **regras de negócio puras** (regra de comparação D = N/km, teste binomial exato bilateral, estabilidade de corredor) | C# (POO) / SOA (domínio) |
+| `VoltaSegura.Infrastructure` | EF Core + SQLite, migrações versionadas, adaptador OTP2, mock de roteamento, repositório de ocorrências | ambas |
+| `VoltaSegura.Api` | Web API de consultas (ocorrências agregadas, trajetos salvos) | **C#** |
+| `VoltaSegura.Servicos` | API de orquestração de serviços (comparação de trajetos, situação dos dados, auditoria) | **SOA** |
+| `VoltaSegura.Tests` | Testes xUnit do núcleo estatístico e das regras de comparação | ambas |
 
-| Critério | Pontos |
-|---|---|
-| POO | 3,0 |
-| Web API | 2,5 |
-| EF Core + LINQ | 1,5 |
-| Async/Await | 1,0 |
-| Qualidade do código | 2,0 |
+## Como executar
+
+Requisitos: .NET SDK 8.
+
+```bash
+cd src/csharp-backend
+
+# 1. Restaurar, compilar e criar/atualizar o banco (migrações)
+dotnet build
+dotnet ef database update --project VoltaSegura.Infrastructure --startup-project VoltaSegura.Api
+# (o banco SQLite fica em dados/voltasegura.db — fora do git)
+
+# 2. API de consultas (entrega C#) — Swagger em /swagger
+dotnet run --project VoltaSegura.Api
+
+# 3. Serviço de comparação (entrega SOA) — Swagger em /swagger
+dotnet run --project VoltaSegura.Servicos
+
+# 4. Testes automatizados
+dotnet test
+```
+
+## Exemplo de uso
+
+```bash
+# Comparar duas alternativas de volta (banco vazio → resposta honesta "DadosInsuficientes")
+curl -X POST http://localhost:5000/api/comparacoes/trajetos \
+  -H "Content-Type: application/json" \
+  -d '{"origem":{"latitude":-23.56,"longitude":-46.65},"destino":{"latitude":-23.55,"longitude":-46.63},"sentido":"volta"}'
+```
+
+## Decisões incorporadas (itens do grupo, 11/11/2026)
+
+- **Recorte SSP-SP** (item 8): Furto, Roubo e Trânsito; só `FURTO - OUTROS`/`ROUBO - OUTROS` na comparação.
+- **Regra de comparação** (itens 11/12): só trechos caminhados; N = boletins distintos (`NUM_BO`+`ANO_BO`+delegacia); D = N/km; destaque só se a mesma rota tem N e D menores; divergente não gera preferência.
+- **Estabilidade** (item 16): corredor testado em ±50/±100/±150 m — resultado que muda = dados insuficientes.
+- **Roteamento** (item 14): `IRoteador` com adaptador OTP2 (GTFS SPTrans + OSM); mock determinístico enquanto o OTP2 não está ativo (item 22).
+- **Privacidade** (item 23): auditoria de consultas **sem** coordenadas, endereços ou identificadores.
+- **Linguagem** (`docs/05`): "exposição estimada", nunca "rota segura"; bloco "Sobre os dados" em toda resposta; banco vazio → dados insuficientes, nunca silêncio.
+
+## Próximos passos
+
+- [ ] ETL para carga das ocorrências SSP-SP no banco (fonte: `src/ml/etl.py`, mesmas fontes).
+- [ ] Ativar `Otp2Roteador` (item 22) e trocar o registro de DI no `Program.cs`.
+- [ ] Evidências da aplicação (prints) para o README de entrega.
+- [ ] Preencher os nomes dos integrantes abaixo.
+
+## Integrantes
+
+> Preencher com os nomes da equipe (exigência do PDF FIAP, p. 27/30).
+
+- (preencher)
