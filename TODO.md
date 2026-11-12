@@ -52,14 +52,15 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | ID | Disciplina | Entrega | Status | Depende do core | Responsável |
 |---|---|---|---|---|---|
 | T04 | IA & Machine Learning | Notebook e relatório prontos; vídeo de até 5 min | EM DESENVOLVIMENTO | T13 (janela de 12 meses de dados) | a definir |
-| T05 | SOA & Web Services | Backend REST, banco, migrações, Swagger, testes | PENDENTE | T01.17 (arquitetura), T12, `docs/08` | a definir |
-| T06 | C# Software Development | Backend .NET (POO, EF Core, Web API, async, testes) | PENDENTE | T01.17 (arquitetura), `docs/08` | a definir |
+| T05 | SOA & Web Services | Backend REST, banco, migrações, Swagger, testes | EM DESENVOLVIMENTO | T01.17 (arquitetura), T12, `docs/08` | a definir |
+| T06 | C# Software Development | Backend .NET (POO, EF Core, Web API, async, testes) | EM DESENVOLVIMENTO | T01.17 (arquitetura), `docs/08` | a definir |
 | T07 | Mobile & IoT | App Expo com a jornada ida e volta, vídeo de até 3 min | PENDENTE | `docs/08` (3 telas e bloco "Sobre os dados"), T12, T15, T01.7 | Lucas Simidu |
 | T08 | Operating Systems | Provisionamento Linux automatizado, vídeo de até 7 min | PENDENTE | T05/T06 (aplicação a hospedar) | a definir |
 | T09 | Physical Computing | Circuito ESP32 no Wokwi, vídeo de até 4 min, `.txt` | PENDENTE | nenhuma (ESP32 fora do produto, decisão de 11/11) | a definir |
 | T10 | Testing, Compliance & QA | Features e Test Cases no Azure Boards, PDF | PENDENTE | T02 (backlog em `docs/10`), `docs/08` | a definir |
 | T11 | Cybersecurity | Módulo PII, Taint Analysis, Risco Cidadão, ZIP | PENDENTE | T01.3 (privacidade), T01.6 (Risco Cidadão) | a definir |
 | T18 | Envio final (todas) | Conferir e enviar cada disciplina até 19/11 23h55 | PENDENTE | T04 a T11 | a definir |
+| T20 | Alinhar backend ao `docs/07`/`docs/08` | Rubricas elegíveis, faixa do dia, cobertura e frases fixas | EM DESENVOLVIMENTO | `docs/07`, `docs/08` | a definir |
 
 ---
 
@@ -91,7 +92,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [ ] 14. Marca: aprovação formal do fechamento v8–v10. *Pulada em 11/11: as imagens ficam com o grupo; marcar quando o grupo aprovar (T15).*
 - [x] 15. Instituição do primeiro piloto: decidido em 11/11 que **não haverá instituição participante**.
 - [x] 16. ODS: decidido em 11/11 **somente o ODS 11** (metas 11.2 e 11.7), com justificativa na Ficha do `README.md` e em `docs/01` §7.
-- [ ] 17. Arquitetura: SOA e C# no mesmo serviço ou módulos distintos (despriorizado; ver T05/T06)
+- [x] 17. Arquitetura: SOA e C# no mesmo serviço ou módulos distintos (despriorizado; ver T05/T06) — *Fechado para as entregas em 11–12/11/2026: mesma solution .NET com domínio/infra únicos e duas APIs (`VoltaSegura.Api` e `VoltaSegura.Servicos`), evidência `src/csharp-backend/`. Como questão de produto segue despriorizada; ver `docs/06` §3.*
 - [x] 18. Hipóteses revisadas em 11/11: B2B2C mantido como hipótese de modelo futuro; valor para estudantes segue "a validar"; bases suficientes via T12; diferenciação via T17; persona padronizada como **Ágatha Santos, 24** (proto-persona).
 - [x] 19. Backlog: decidido em 11/11 um arquivo próprio com todas as características do produto, base do Azure Boards (`docs/10_backlog_produto.md`, ver T02).
 
@@ -446,3 +447,5 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 11/11/2026 | LGPD operacional (`docs/06` §3): login por e-mail e senha e Google; exclusão e incidentes com desenvolvedores internos; dados acessíveis ao usuário. Base legal e revisão jurídica seguem abertas. Backlog (`docs/10`, F1.1 e DT-08) atualizado. | assistente (a pedido do Lucas) |
 | 11/11/2026 | LGPD operacional fechada: sem revisão jurídica nesta fase (MVP acadêmico); aviso como minuta e sem afirmar conformidade com a LGPD (RNF-09 no backlog). | assistente (a pedido do Lucas) |
 | 12/11/2026 | T14 encerrada por decisão do grupo (sem pesquisa com usuários nem instituições nesta fase). Limpeza de textos desatualizados em `docs/06` e `docs/08`. | assistente (a pedido do Lucas) |
+| 12/11/2026 | T01.17 concluída (arquitetura: mesma solution .NET, duas APIs). T05/T06 passam a EM DESENVOLVIMENTO: solution estruturada, migração + ETL com 278.961 boletins reais, 17 testes passando, APIs no ar com Swagger. Criada T20 (alinhar backend ao docs/07/docs/08). | assistente + grupo |
+| 12/11/2026 | Merge com a `main`: T20 do colega (alinhar backend) mantida; a tarefa do script de cobertura passou a T21. Versões desta rodada no `docs/06` renumeradas para 1.17–1.34. Backlog (`docs/10`, DT-12) atualizado com a arquitetura das entregas. | assistente (a pedido do Lucas) |

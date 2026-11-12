@@ -1,0 +1,13 @@
+# Artefatos de build .NET
+bin/
+obj/
+*.user
+*.suo
+
+# Banco de dados local de desenvolvimento (regenerável via migrations + ETL)
+dados/
+*.db
+*.db-shm
+*.db-wal
+
+# Migrações ficam versionadas (rubrica SOA) — não ignorar VoltaSegura.Infrastructure/Migrations/

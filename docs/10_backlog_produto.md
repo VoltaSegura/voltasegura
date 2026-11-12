@@ -85,7 +85,7 @@ Este documento reúne **tudo o que define o produto**: visão, proposta de valor
 | DT-09 | **Revisão de vieses automática**: script de cobertura por circunscrição e subprefeitura antes do piloto e a cada atualização; bloqueio só por "dados insuficientes"; pesos e limites nunca mudam sozinhos. | `[DECISÃO]` · script `[EM ABERTO]` (T21) | `docs/08` |
 | DT-10 | **Percepção relatada por usuários fora do MVP**: nenhum relato vira dado no app. | `[DECISÃO]` | `docs/06` §3 |
 | DT-11 | **App**: React Native com TypeScript e Expo Router; consome API ou mock e salva em banco (exigência da entrega Mobile). | `[DECISÃO]` (rubrica) | `docs/02` §5 |
-| DT-12 | **Backends SOA e C#, ESP32 e Risco Cidadão** atendem às disciplinas e não definem o produto. Arquitetura SOA × C# despriorizada. | `[DECISÃO]` · arquitetura `[EM ABERTO]` | `docs/06` §3 |
+| DT-12 | **Backends SOA e C#, ESP32 e Risco Cidadão** atendem às disciplinas e não definem o produto. Para as entregas, SOA e C# ficam na **mesma solution .NET 8** (`src/csharp-backend/`), com domínio e infraestrutura únicos e duas APIs: `VoltaSegura.Api` (C#) e `VoltaSegura.Servicos` (SOA); o OTP2 entra atrás da interface `IRoteador`, com mock enquanto o teste local não roda. | `[DECISÃO]` (12/11/2026, para as entregas) | `docs/06` §1 e §3 |
 
 ## 6. Épicos, features e histórias de usuário
 
@@ -323,7 +323,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - Validação da regra em trajetos reais, que depende do teste do OTP2 (DT-01, DT-07).
 - Termos de redistribuição do GTFS e uso da Olho Vivo (Lucas Simidu, T07).
 - Inclusão do passo a passo no protótipo (F2.4).
-- Indicador "Risco Cidadão" e arquitetura SOA × C# (disciplinas).
+- Indicador "Risco Cidadão" (disciplina de Cybersecurity).
 - Atualização do benchmarking (seção 3, T17).
 
 ## 11. Como levar este backlog ao Azure Boards (T10)
@@ -342,4 +342,5 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 | Data | Versão | Mudança | Responsável |
 |---|---|---|---|
+| 12/11/2026 | 1.1 | DT-12 atualizada com a arquitetura das entregas fechada na `main` (mesma solution .NET, duas APIs) | Lucas Simidu + assistente |
 | 11/11/2026 | 1.0 | Criação do backlog a partir das decisões registradas até a versão 1.30 de `docs/06`: visão, público, benchmarking, negócio, decisões técnicas, 6 épicos com 20 features e 20 histórias com critérios de aceite, requisitos não funcionais, fora do escopo, roadmap e guia para o Azure Boards | Lucas Simidu + assistente |

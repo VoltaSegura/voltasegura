@@ -2,16 +2,43 @@
 
 API REST de planejamento e comparação de trajetos (ida e volta) com indicação de **exposição estimada** e **confiança dos dados**.
 
-> ⚠️ Em construção — parte da Global Solution FIAP 2026.2. Ver rubrica e entregáveis em [`docs/02_entregas_disciplinas.md`](../../docs/02_entregas_disciplinas.md) e regras de linguagem em [`docs/05_regras_linguagem_etica.md`](../../docs/05_regras_linguagem_etica.md).
+> A implementação vive na solution .NET em [`src/csharp-backend`](../csharp-backend) (decisão do grupo, item 37: **mesma solution, módulos distintos**). Este módulo corresponde ao projeto `VoltaSegura.Servicos` + `VoltaSegura.Domain`/`Infrastructure` compartilhados.
 
-## Escopo previsto `[HIPÓTESE arquitetural]`
+## Rubrica
 
-- Estruturação do domínio (rotas, trechos, alternativas, indicadores) — 3,0 pts
-- Conexão com banco de dados — 3,0 pts
-- Migrações — 1,5 pts
-- Documentação automática (Swagger) — 1,5 pts
-- Testes automatizados — 1,0 pts
+| Critério | Pontos | Onde está |
+|---|---|---|
+| Estruturação do domínio | 3,0 | `VoltaSegura.Domain` — entidades + regras de comparação como código (itens 11/12/16) |
+| Conexão com banco de dados | 3,0 | `VoltaSegura.Infrastructure` — EF Core sobre o mesmo banco das duas APIs |
+| Migrações | 1,5 | `VoltaSegura.Infrastructure/Migrations/` (versionadas) |
+| Documentação automática (Swagger) | 1,5 | `VoltaSegura.Servicos` — `/swagger` |
+| Testes automatizados | 1,0 | `VoltaSegura.Tests` (14 testes do núcleo estatístico) |
+
+## Serviços orquestrados (SOA real)
+
+- **Roteamento**: OpenTripPlanner 2 em servidor próprio (item 14) via interface `IRoteador` + adaptador `Otp2Roteador`; mock determinístico enquanto o OTP2 não está ativo (item 22).
+- **Exposição estimada**: contagem N no corredor caminhado (Haversine, raio ±50/±100/±150 m), D = N/km, teste binomial exato bilateral a 5%.
+- **Estabilidade**: resultado que muda com a largura do corredor → dados insuficientes (item 16).
+- **Auditoria**: `RegistroConsulta` sem coordenadas nem identificadores (item 23).
 
 ## Como executar
 
-Instruções serão adicionadas quando a stack for definida.
+```bash
+cd src/csharp-backend
+dotnet build
+dotnet ef database update --project VoltaSegura.Infrastructure --startup-project VoltaSegura.Api
+dotnet run --project VoltaSegura.Servicos   # Swagger em /swagger
+dotnet test                                  # testes automatizados
+```
+
+## Entregáveis (PDF FIAP, p. 27)
+
+- Repositório GitHub com o código completo (solution espelhada via `scripts/sync_mirrors.sh`);
+- README com instruções de execução, descrição da solução e **nomes dos integrantes**;
+- Documentação dos endpoints (Swagger ou equivalente);
+- **Evidências da aplicação** (prints/execução).
+- Entrega no Teams: **link do GitHub**, por um integrante.
+
+## Integrantes
+
+- (preencher)
