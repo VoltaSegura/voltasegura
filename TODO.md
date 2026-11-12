@@ -2,7 +2,7 @@
 
 Lista viva de tarefas do projeto. Entrega final das disciplinas: **19/11/2026, 23h55**.
 
-**Última atualização:** 11/11/2026
+**Última atualização:** 12/11/2026
 
 ## Regras de steering (obrigatórias para agentes de IA)
 
@@ -51,14 +51,15 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | ID | Disciplina | Entrega | Status | Depende do core | Responsável |
 |---|---|---|---|---|---|
 | T04 | IA & Machine Learning | Notebook e relatório prontos; vídeo de até 5 min | EM DESENVOLVIMENTO | T13 (janela de 12 meses de dados) | a definir |
-| T05 | SOA & Web Services | Backend REST, banco, migrações, Swagger, testes | PENDENTE | T01.17 (arquitetura), T12, `docs/08` | a definir |
-| T06 | C# Software Development | Backend .NET (POO, EF Core, Web API, async, testes) | PENDENTE | T01.17 (arquitetura), `docs/08` | a definir |
+| T05 | SOA & Web Services | Backend REST, banco, migrações, Swagger, testes | EM DESENVOLVIMENTO | T01.17 (arquitetura), T12, `docs/08` | a definir |
+| T06 | C# Software Development | Backend .NET (POO, EF Core, Web API, async, testes) | EM DESENVOLVIMENTO | T01.17 (arquitetura), `docs/08` | a definir |
 | T07 | Mobile & IoT | App Expo com a jornada ida e volta, vídeo de até 3 min | PENDENTE | `docs/08` (3 telas e bloco "Sobre os dados"), T12, T15 | a definir |
 | T08 | Operating Systems | Provisionamento Linux automatizado, vídeo de até 7 min | PENDENTE | T05/T06 (aplicação a hospedar) | a definir |
 | T09 | Physical Computing | Circuito ESP32 no Wokwi, vídeo de até 4 min, `.txt` | PENDENTE | T01.10 (função do ESP32) | a definir |
 | T10 | Testing, Compliance & QA | Features e Test Cases no Azure Boards, PDF | PENDENTE | T02 (backlog), `docs/08` | a definir |
 | T11 | Cybersecurity | Módulo PII, Taint Analysis, Risco Cidadão, ZIP | PENDENTE | T01.3 (privacidade), T01.6 (Risco Cidadão) | a definir |
 | T18 | Envio final (todas) | Conferir e enviar cada disciplina até 19/11 23h55 | PENDENTE | T04 a T11 | a definir |
+| T20 | Alinhar backend ao `docs/07`/`docs/08` | Rubricas elegíveis, faixa do dia, cobertura e frases fixas | EM DESENVOLVIMENTO | `docs/07`, `docs/08` | a definir |
 
 ---
 
@@ -90,7 +91,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [ ] 14. Marca: aprovação formal do fechamento v8–v10
 - [ ] 15. Instituição do primeiro piloto
 - [ ] 16. ODS conectados e justificativas no formato da FIAP (candidatos: 11 e 10)
-- [ ] 17. Arquitetura: SOA e C# no mesmo serviço ou módulos distintos (despriorizado; ver T05/T06)
+- [x] 17. Arquitetura: SOA e C# no mesmo serviço ou módulos distintos (despriorizado; ver T05/T06) — *Fechado para as entregas em 11–12/11/2026: mesma solution .NET com domínio/infra únicos e duas APIs (`VoltaSegura.Api` e `VoltaSegura.Servicos`), evidência `src/csharp-backend/`. Como questão de produto segue despriorizada; ver `docs/06` §3.*
 - [ ] 18. Hipóteses a validar (valor para estudantes, interesse das universidades, bases suficientes, diferenciação, persona Marina ou Ágatha)
 - [ ] 19. Backlog do grupo (ver T02)
 
@@ -403,3 +404,4 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 11/11/2026 | Registrado o teste 1 do Lucas Simidu (ida e volta casa ↔ FIAP Paulista via Vila Sônia e Oscar Freire) em T12 e atualizado T01.1. Horários, alternativas e execução seguem pendentes. | assistente (a pedido do Lucas) |
 | 11/11/2026 | T01.3 concluída: privacidade do MVP decidida (pacote mínimo com conta obrigatória). T01.2 (OTP2) pulada por ser questão técnica sem responsável. Impactos anotados em T05 (autenticação), T07 (cadastro e login) e T11 (PII da conta). | assistente (a pedido do Lucas) |
 | 11/11/2026 | T01.4 segue em aberto: registrada a proposta de Lucas Simidu de automatizar a revisão de vieses (opções A, B e C), a ser avaliada pelo grupo. | assistente (a pedido do Lucas) |
+| 12/11/2026 | T01.17 concluída (arquitetura: mesma solution .NET, duas APIs). T05/T06 passam a EM DESENVOLVIMENTO: solution estruturada, migração + ETL com 278.961 boletins reais, 17 testes passando, APIs no ar com Swagger. Criada T20 (alinhar backend ao docs/07/docs/08). | assistente + grupo |
