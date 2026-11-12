@@ -2,7 +2,7 @@
 
 Lista viva de tarefas do projeto. Entrega final das disciplinas: **19/11/2026, 23h55**.
 
-**Última atualização:** 11/11/2026
+**Última atualização:** 12/11/2026
 
 ## Regras de steering (obrigatórias para agentes de IA)
 
@@ -36,15 +36,16 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | ID | Tarefa | Status | Responsável | Prazo |
 |---|---|---|---|---|
 | T01 | Fechar os pontos em aberto do estado atual (`docs/06`) | EM DESENVOLVIMENTO | a definir | antes de 19/11 |
-| T02 | Construir o backlog do VoltaSegura | PENDENTE | a definir | a definir |
+| T02 | Construir o backlog do VoltaSegura | EM DESENVOLVIMENTO | a definir | a definir |
 | T03 | Arquitetar o vídeo pitch (até 4 min) | PENDENTE | a definir | 19/11 23h55 |
-| T12 | Roteamento: teste local do OpenTripPlanner 2 | PENDENTE | a definir | a definir |
+| T12 | Roteamento: teste local do OpenTripPlanner 2 | EM DESENVOLVIMENTO | Lucas Simidu | a definir |
 | T13 | Dados: SSP-SP 2025 e janela de 12 meses | PENDENTE | a definir | a definir |
-| T14 | Pesquisa com estudantes noturnos e universidades | PENDENTE | a definir | a definir |
+| T14 | Pesquisa com estudantes noturnos e universidades | CONCLUÍDO (fora desta fase) | grupo | 11/11 |
 | T15 | Marca: fechamento e checagens | EM DESENVOLVIMENTO | a definir | a definir |
 | T16 | Slides da apresentação | PENDENTE | a definir | a definir |
 | T17 | Benchmarking atualizado | PENDENTE | a definir | a definir |
 | T19 | Base de conhecimento e dados já entregues | CONCLUÍDO | grupo | 11/11 |
+| T20 | Script automático de cobertura por região (revisão de vieses) | PENDENTE | a definir | antes do piloto |
 
 ### Parte B — Entregas de disciplinas (prazo de todas: 19/11/2026, 23h55)
 
@@ -53,10 +54,10 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | T04 | IA & Machine Learning | Notebook e relatório prontos; vídeo de até 5 min | EM DESENVOLVIMENTO | T13 (janela de 12 meses de dados) | a definir |
 | T05 | SOA & Web Services | Backend REST, banco, migrações, Swagger, testes | PENDENTE | T01.17 (arquitetura), T12, `docs/08` | a definir |
 | T06 | C# Software Development | Backend .NET (POO, EF Core, Web API, async, testes) | PENDENTE | T01.17 (arquitetura), `docs/08` | a definir |
-| T07 | Mobile & IoT | App Expo com a jornada ida e volta, vídeo de até 3 min | PENDENTE | `docs/08` (3 telas e bloco "Sobre os dados"), T12, T15 | a definir |
+| T07 | Mobile & IoT | App Expo com a jornada ida e volta, vídeo de até 3 min | PENDENTE | `docs/08` (3 telas e bloco "Sobre os dados"), T12, T15, T01.7 | Lucas Simidu |
 | T08 | Operating Systems | Provisionamento Linux automatizado, vídeo de até 7 min | PENDENTE | T05/T06 (aplicação a hospedar) | a definir |
-| T09 | Physical Computing | Circuito ESP32 no Wokwi, vídeo de até 4 min, `.txt` | PENDENTE | T01.10 (função do ESP32) | a definir |
-| T10 | Testing, Compliance & QA | Features e Test Cases no Azure Boards, PDF | PENDENTE | T02 (backlog), `docs/08` | a definir |
+| T09 | Physical Computing | Circuito ESP32 no Wokwi, vídeo de até 4 min, `.txt` | PENDENTE | nenhuma (ESP32 fora do produto, decisão de 11/11) | a definir |
+| T10 | Testing, Compliance & QA | Features e Test Cases no Azure Boards, PDF | PENDENTE | T02 (backlog em `docs/10`), `docs/08` | a definir |
 | T11 | Cybersecurity | Módulo PII, Taint Analysis, Risco Cidadão, ZIP | PENDENTE | T01.3 (privacidade), T01.6 (Risco Cidadão) | a definir |
 | T18 | Envio final (todas) | Conferir e enviar cada disciplina até 19/11 23h55 | PENDENTE | T04 a T11 | a definir |
 
@@ -74,25 +75,25 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 **Andamento (19 perguntas):**
 
-- [ ] 1. Validar a regra de comparação em trajetos reais. *Em andamento: teste 1 do Lucas Simidu definido (11/11, ver T12); faltam horários, alternativas a comparar, outros testes e quem roda a regra.*
-- [ ] 2. Teste local do OTP2 (ver T12). *Pulado em 11/11: questão técnica; falta um responsável técnico do grupo para executar.*
+- [ ] 1. Validar a regra de comparação em trajetos reais. *Em andamento: teste 1 do Lucas Simidu redefinido (11/11, ver T12): ida trabalho → FIAP às 18h, volta FIAP → casa às 23h, alternativas geradas pelo OTP2. Faltam a execução (depende do OTP2), outros testes em outras regiões e quem roda a regra.*
+- [ ] 2. Teste local do OTP2 (ver T12). *Pulado em 11/11 por falta de responsável; retomado no mesmo dia: Lucas Simidu assumiu a execução. Roteiro e scripts em `scripts/otp2/`. Falta rodar e anotar as medições.*
 - [x] 3. Privacidade, retenção e LGPD da localização: decidido em 11/11 para o MVP (pacote mínimo com conta obrigatória, `docs/03` §6). Falta: responsável por acesso e exclusão, provedor de login, base legal e revisão jurídica (continuam em `docs/06`).
-- [ ] 4. Vieses entre regiões (indicar o responsável pela metodologia). *Proposta de Lucas Simidu em avaliação (11/11): automatizar a revisão; o grupo ainda precisa escolher entre A, B e C (`docs/08`).*
-- [ ] 5. Teste das mensagens de incerteza (proposta preliminar com 5 estudantes; levar ao grupo)
+- [x] 4. Vieses entre regiões: decidido em 11/11 pela **opção B** (revisão totalmente automática, sem responsável humano; `docs/08`). Implementação em T20.
+- [x] 5. Teste das mensagens de incerteza: decidido em 11/11 que **não será feito nesta fase**; metodologia registrada em `docs/08` ("Teste de compreensão das mensagens") para uso futuro.
 - [ ] 6. Indicador "Risco Cidadão" (despriorizado; ver T11)
-- [ ] 7. GTFS/SPTrans: termos de redistribuição e ligação de IDs com a Olho Vivo
-- [ ] 8. API Olho Vivo: cadência real, limites e termos de uso
-- [ ] 9. Metrô 6 e 17: horários só de dia no feed (operação real ou lacuna?)
-- [ ] 10. Função do circuito ESP32 (ver T09)
-- [ ] 11. PL 1.169/2025: verificar tramitação antes de citar
-- [ ] 12. Marca: checagens de marca, domínio e anterioridade
-- [ ] 13. Marca: manter ou não a sombra da dobra do S
-- [ ] 14. Marca: aprovação formal do fechamento v8–v10
-- [ ] 15. Instituição do primeiro piloto
-- [ ] 16. ODS conectados e justificativas no formato da FIAP (candidatos: 11 e 10)
+- [ ] 7. GTFS/SPTrans: termos de redistribuição e ligação de IDs com a Olho Vivo. *Em aberto, com Lucas Simidu (11/11): será tratada na entrega de Mobile (T07), onde ficam as questões técnicas do app.*
+- [ ] 8. API Olho Vivo: cadência real, limites e termos de uso. *Em aberto, com Lucas Simidu (11/11): tratada na entrega de Mobile (T07); rodar `scripts/olhovivo_cadencia.py` se o app usar tempo real.*
+- [x] 9. Metrô 6 e 17: conferido em 11/11 (Linha 6 = operação real; Linha 17 = feed desatualizado). Decidido aceitar o GTFS como vem e avisar no bloco "Sobre os dados" (`docs/04` §5, `docs/08`).
+- [x] 10. Função do circuito ESP32: decidido em 11/11 que o ESP32 **não faz parte do produto**, só da entrega de Physical Computing; a função do circuito é definida na T09.
+- [x] 11. PL 1.169/2025: verificado em 11/11 (aguardando despacho na Câmara desde 04/11/2025; não é lei). Redação para slides em `docs/03`.
+- [ ] 12. Marca: checagens de marca, domínio e anterioridade. *11/11: domínio escolhido `voltasegura.app` (livre, ainda não registrado); nenhum app homônimo na web. Faltam registrar o domínio e fazer a busca no INPI (classes 9 e 42).*
+- [x] 13. Marca: sombra da dobra do S **descartada** em 11/11 (identidade chapada). Os arquivos de imagem ficam com o grupo.
+- [ ] 14. Marca: aprovação formal do fechamento v8–v10. *Pulada em 11/11: as imagens ficam com o grupo; marcar quando o grupo aprovar (T15).*
+- [x] 15. Instituição do primeiro piloto: decidido em 11/11 que **não haverá instituição participante**.
+- [x] 16. ODS: decidido em 11/11 **somente o ODS 11** (metas 11.2 e 11.7), com justificativa na Ficha do `README.md` e em `docs/01` §7.
 - [ ] 17. Arquitetura: SOA e C# no mesmo serviço ou módulos distintos (despriorizado; ver T05/T06)
-- [ ] 18. Hipóteses a validar (valor para estudantes, interesse das universidades, bases suficientes, diferenciação, persona Marina ou Ágatha)
-- [ ] 19. Backlog do grupo (ver T02)
+- [x] 18. Hipóteses revisadas em 11/11: B2B2C mantido como hipótese de modelo futuro; valor para estudantes segue "a validar"; bases suficientes via T12; diferenciação via T17; persona padronizada como **Ágatha Santos, 24** (proto-persona).
+- [x] 19. Backlog: decidido em 11/11 um arquivo próprio com todas as características do produto, base do Azure Boards (`docs/10_backlog_produto.md`, ver T02).
 
 **Pronto quando:** nenhum item da seção 3 de `docs/06` estiver como `[EM ABERTO]` sem justificativa, e o histórico tiver uma linha por mudança.
 
@@ -100,7 +101,8 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ## T02 — Construir o backlog do VoltaSegura
 
-**Status:** PENDENTE
+**Status:** EM DESENVOLVIMENTO (versão 1.0 criada em `docs/10_backlog_produto.md`; falta revisão do grupo e atualizar o benchmarking com a T17)
+**Formato decidido (11/11/2026):** arquivo de backlog do produto com **todas** as características (proposta de valor, benchmarking, decisões técnicas e de código, histórias de usuário com critérios de aceite). É a base para criar as Features e os Test Cases no Azure Boards (T10). O andamento das tarefas continua neste `TODO.md`.
 **Tipo:** Core do projeto
 **Referência:** `docs/06_estado_atual.md`, seção 4; `docs/03_projeto_documento_vivo.md` (roadmap, Fase 1).
 
@@ -155,26 +157,29 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ## T12 — Roteamento: teste local do OpenTripPlanner 2
 
-**Status:** PENDENTE
+**Status:** EM DESENVOLVIMENTO (roteiro e scripts prontos; execução com Lucas Simidu)
 **Tipo:** Core do projeto
 **Referência:** `docs/04` §6.2–6.3.
 
 **Decisão já tomada:** OTP2 em servidor próprio com GTFS SPTrans + OpenStreetMap.
+**Responsável pela execução:** Lucas Simidu (11/11/2026).
+**Roteiro:** [`scripts/otp2/README.md`](scripts/otp2/README.md): Java 25 (exigido pelo OTP 2.10.0), download e recorte do OSM, montagem do grafo, servidor e consulta do teste 1 com saída em GeoJSON dos trechos a pé; tabela de medições a preencher no passo 7.
 - [ ] Subir o OTP2 (Java 21) com o grafo de SP e medir memória e tempo
 - [ ] Rodar 2 ou 3 trajetos reais em partes distintas do município e obter a geometria dos trechos a pé
 - [ ] Estimar o custo de hospedagem a partir do consumo medido
+- [ ] A cada novo download do GTFS, conferir se as janelas das linhas Metrô 6 e 17 mudaram (decisão de 11/11, `docs/04` §5)
 - [ ] Rodar a regra de comparação nesses trajetos (alimenta T01.1)
 
 **Testes do piloto** (cada teste agrupa os trajetos de ida e volta; novos testes podem ser acrescentados):
 
 | Teste | Autor | Trajeto | Origem → destino | Horário e faixa do dia | Alternativas X/Y | Status |
 |---|---|---|---|---|---|---|
-| Teste 1 | Lucas Simidu | 1 (ida) | Residência do Lucas → Metrô Vila Sônia (Linha 4–Amarela) → saída em Oscar Freire → FIAP Paulista | a definir | a definir | PENDENTE |
-| Teste 1 | Lucas Simidu | 2 (volta) | FIAP Paulista → Metrô Oscar Freire → Vila Sônia → residência do Lucas | a definir | a definir | PENDENTE |
+| Teste 1 | Lucas Simidu | 1 (ida) | Trabalho do Lucas → FIAP Paulista | saída às 18h · noite | geradas pelo OTP2 | PENDENTE (execução) |
+| Teste 1 | Lucas Simidu | 2 (volta) | FIAP Paulista → residência do Lucas | saída por volta das 23h · noite (trecho a pé depois de 0h conta como madrugada) | geradas pelo OTP2 | PENDENTE (execução) |
 
-- Definido em 11/11/2026 pelo Lucas (registro em `docs/06`, seção 3, item de validação em trajetos reais).
-- O endereço da residência **não** entra no repositório (dado pessoal): usar um ponto de referência aproximado.
-- Pendente do teste 1: horário e faixa do dia de cada trajeto; alternativas X e Y em cada sentido (a regra compara alternativas, ida e volta não são alternativas entre si); executar depois do OTP2.
+- Definido em 11/11/2026 pelo Lucas e redefinido no mesmo dia (versão 1.15 de `docs/06`): a primeira versão (casa ↔ FIAP via Metrô Vila Sônia e Oscar Freire) foi substituída; o percurso agora sai do roteamento.
+- Os endereços de trabalho e residência **não** entram no repositório (dados pessoais): usar pontos de referência aproximados.
+- Pendente do teste 1: executar depois do OTP2 e definir quem roda a regra.
 - Lembrete: a regra conta só os trechos caminhados. `docs/08` pede trajetos de diferentes regiões, então outros testes serão necessários.
 
 ---
@@ -192,14 +197,14 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ## T14 — Pesquisa com estudantes noturnos e universidades
 
-**Status:** PENDENTE
+**Status:** CONCLUÍDO (encerrada por decisão do grupo em 11/11/2026: sem entrevistas, testes com usuários nem instituições nesta fase; evidência em `docs/06`, versões 1.18, 1.26 e 1.28)
 **Tipo:** Core do projeto
 **Referência:** `docs/03` §12; `docs/06` §2.
-- [ ] Roteiro das entrevistas (sem dados pessoais nas anotações)
-- [ ] Entrevistar estudantes do período noturno e possíveis parceiros universitários
-- [ ] Registrar resultados e atualizar as hipóteses em `docs/06`
-- [ ] Padronizar a persona (Marina, 22 ou Ágatha Santos, 24)
-- [ ] Teste de compreensão das mensagens de incerteza (ver T01.5)
+- [ ] ~~Roteiro das entrevistas (sem dados pessoais nas anotações)~~ Fora desta fase.
+- [ ] ~~Entrevistar estudantes do período noturno e possíveis parceiros universitários~~ Fora desta fase.
+- [x] Hipóteses revistas sem pesquisa (T01.18, 11/11)
+- [x] Padronizar a persona: Ágatha Santos, 24, proto-persona (11/11)
+- [ ] ~~Teste de compreensão das mensagens de incerteza (ver T01.5)~~ Fora desta fase (decisão de 11/11/2026); metodologia em `docs/08`.
 
 ---
 
@@ -211,10 +216,11 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [x] Nome definido (VoltaSegura), monograma "VS" e paleta com dourado `#FFC53D`
 - [x] PNG e SVG premium gerados (`design/v10/`), teste a 48 px aprovado
 - [ ] Aprovação formal do grupo do fechamento v8–v10
-- [ ] Decidir a sombra da dobra do S
+- [x] Decidir a sombra da dobra do S: descartada (11/11)
 - [ ] Checagens de marca, domínio e anterioridade
 - [ ] Alinhar a paleta dos slides (preto e laranja da apresentação ou dourado da marca)
-
+- [ ] Registrar o domínio `voltasegura.app` (escolhido em 11/11; responsável a definir)
+- [ ] Busca de marca no INPI, classes 9 e 42 (busca.inpi.gov.br)
 ---
 
 ## T16 — Slides da apresentação
@@ -241,13 +247,28 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 **Status:** CONCLUÍDO
 **Tipo:** Core do projeto
 - [x] Base de conhecimento em `docs/` (01 a 09), `AGENTS.md` e `prompts.md`
-- [x] Ficha da CitizenTech preenchida no `README.md` (indicador de impacto e ODS seguem em aberto, ver T01)
+- [x] Ficha da CitizenTech preenchida no `README.md` (indicador de impacto segue em aberto; ODS 11 justificado em 11/11, ver T01)
 - [x] Renomeação para VoltaSegura (10/11)
 - [x] Auditoria das fontes e token da Olho Vivo validado (10/11)
 - [x] Datasets SSP-SP 2026 e Infosiga adquiridos, com catálogo (10/11)
 - [x] Recorte das ocorrências e apresentação no app (`docs/07`)
 - [x] Metodologia de comparação, parâmetros de calibração e auditoria (`docs/08`, `src/ml/dados/AUDITORIA_CALIBRACAO_SSP_2026.md`)
 - [x] Decisões de roteamento (OTP2), confiança dos dados, "dados insuficientes", percepção de usuários e exclusões do MVP
+
+---
+
+## T20 — Script automático de cobertura por região (revisão de vieses)
+
+**Status:** PENDENTE
+**Tipo:** Core do projeto
+**Referência:** `docs/08`, "Revisão de vieses entre regiões" (decisão de 11/11/2026, opção B).
+
+- [ ] Script que mede, por circunscrição de delegacia e por subprefeitura, a fração de boletins elegíveis com coordenada válida e período, partindo de `src/ml/auditar_calibracao_ssp.py`
+- [ ] Gerar o relatório publicado com a metodologia, antes do piloto e a cada atualização da base da SSP-SP
+- [ ] Rodar uma vez antes do piloto (mínimo para o MVP)
+- [ ] Decidir se o script interrompe a atualização ao detectar mudança na base (colunas ausentes, queda brusca da cobertura, circunscrição sumida): hipótese em `docs/08`
+
+**Pronto quando:** o script rodar sobre a base atual, o relatório estiver publicado junto da metodologia e a decisão sobre as travas estiver registrada.
 
 ---
 
@@ -299,6 +320,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 ## T07 — Mobile & IoT
 
 **Status:** PENDENTE (só existe o README em `src/mobile-app/`)
+**Responsável:** Lucas Simidu (indicado em 11/11/2026)
 **Tipo:** Entrega de disciplina (Mobile & IoT)
 **Referência:** `docs/02` §5.
 
@@ -309,6 +331,8 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [ ] Consumo de API ou mock e banco local
 - [ ] README com a Ficha, instruções e prints
 - [ ] Vídeo de até 3 min com o app rodando
+- [ ] GTFS/SPTrans (T01.7, atribuída ao Lucas em 11/11): conferir os termos de redistribuição no cadastro do Portal do Desenvolvedor ou pelo SP156 e testar a ligação de IDs com a Olho Vivo (precisa do token)
+- [ ] API Olho Vivo (T01.8, atribuída ao Lucas em 11/11): se o app usar tempo real, medir a cadência com `scripts/olhovivo_cadencia.py` (precisa do token) e confirmar limites e termos de uso
 
 ---
 
@@ -333,8 +357,8 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 **Tipo:** Entrega de disciplina (Physical Computing)
 **Referência:** `docs/02` §7; `docs/06` §3 (ESP32).
 
-**Bloqueio:** função do ESP32 no VoltaSegura ainda `[EM ABERTO]`. A entrega exige que o circuito agregue valor à solução, não seja projeto paralelo.
-- [ ] Definir a função do circuito (hipótese anterior: sensor de ambiente ou iluminação em parada)
+**Decisão de 11/11/2026:** o ESP32 não faz parte do produto; existe só para esta entrega (`docs/06`). Não há mais bloqueio do core. A rubrica (`docs/02` §7) ainda pede que o circuito se relacione com o problema do grupo, o que deve ser justificado no vídeo.
+- [ ] Definir a função do circuito dentro da entrega (hipótese anterior, não adotada para o produto: sensor de ambiente ou iluminação em parada)
 - [ ] Montar o circuito e o código no Wokwi
 - [ ] Vídeo de até 4 min
 - [ ] Arquivo `.txt` com os nomes dos integrantes
@@ -349,7 +373,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 **Escopo previsto:** Features com critérios de aceite e Test Cases funcionais (positivos e negativos) no Azure Boards. Peso: 50% Features, 50% Test Cases.
 - [ ] Criar o projeto no Azure Boards e incluir o professor como Admin
-- [ ] Features do MVP com critérios de aceite (fluxo Planejar, Analisar, Comparar, Decidir, Revisar)
+- [ ] Features do MVP com critérios de aceite, a partir de `docs/10_backlog_produto.md` (seção 11 explica a conversão)
 - [ ] Test Cases com objetivo, preparação, inputs, outputs esperados e passos
 - [ ] Prints de todas as telas em um documento único e PDF com o link do projeto
 
@@ -403,3 +427,22 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 11/11/2026 | Registrado o teste 1 do Lucas Simidu (ida e volta casa ↔ FIAP Paulista via Vila Sônia e Oscar Freire) em T12 e atualizado T01.1. Horários, alternativas e execução seguem pendentes. | assistente (a pedido do Lucas) |
 | 11/11/2026 | T01.3 concluída: privacidade do MVP decidida (pacote mínimo com conta obrigatória). T01.2 (OTP2) pulada por ser questão técnica sem responsável. Impactos anotados em T05 (autenticação), T07 (cadastro e login) e T11 (PII da conta). | assistente (a pedido do Lucas) |
 | 11/11/2026 | T01.4 segue em aberto: registrada a proposta de Lucas Simidu de automatizar a revisão de vieses (opções A, B e C), a ser avaliada pelo grupo. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.1 e T12: teste 1 redefinido pelo Lucas (ida trabalho → FIAP às 18h, volta FIAP → casa às 23h, faixa noite; alternativas X/Y geradas pelo OTP2). Endereços não registrados. Execução segue pendente. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T12 → EM DESENVOLVIMENTO: Lucas Simidu assumiu o teste local do OTP2 (T01.2 retomada). Criados `scripts/otp2/` (roteiro, preparo dos dados, consulta do teste 1) e regras no `.gitignore`. Corrigido o requisito de Java para 25 (OTP 2.10.0). Medições ainda não feitas. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.4 concluída: revisão de vieses totalmente automática (opção B), sem responsável humano. Criada a T20 (script de cobertura por região). | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.5 concluída: teste de compreensão das mensagens fora desta fase; metodologia preservada em `docs/08`. Item correspondente da T14 marcado como fora do escopo. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.7 segue em aberto, atribuída a Lucas Simidu e ligada à T07 (Mobile), que passa a ter Lucas como responsável. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.8 segue em aberto, atribuída a Lucas Simidu e ligada à T07 (Mobile). | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.9 concluída: Linha 6 com horário real reduzido, Linha 17 com feed desatualizado; aceitar o GTFS e avisar. Conferência a cada download acrescentada à T12. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.10 concluída: ESP32 fora do produto, só para a entrega de Physical Computing. T09 deixa de depender do core. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.11 concluída: tramitação do PL 1.169/2025 verificada na Câmara e registrada em `docs/03` e `docs/06`. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.12 em andamento: checagem de domínios e de nomes na web feita; domínio `voltasegura.app` escolhido. Registro do domínio e busca no INPI acrescentados à T15. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.13 concluída: sombra da dobra do S descartada. Nova pendência na T15: produzir a versão sem sombra. | assistente (a pedido do Lucas) |
+| 11/11/2026 | Removida da T15, a pedido do Lucas, a tarefa de produzir o logo sem sombra: o grupo cuida dos arquivos de imagem por conta própria. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.14 pulada (imagens com o grupo). T01.15 concluída: piloto sem instituição participante. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.16 concluída: somente o ODS 11, justificado na Ficha do README e em `docs/01` §7. | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.18 concluída: hipóteses revisadas e persona padronizada como Ágatha Santos, 24 (README, AGENTS, `docs/03`, relatório e notebook de ML atualizados). | assistente (a pedido do Lucas) |
+| 11/11/2026 | T01.19 concluída e T02 → EM DESENVOLVIMENTO: criado o backlog do produto `docs/10_backlog_produto.md` (20 features, 20 histórias com critérios de aceite), base da T10. | assistente (a pedido do Lucas) |
+| 11/11/2026 | LGPD operacional (`docs/06` §3): login por e-mail e senha e Google; exclusão e incidentes com desenvolvedores internos; dados acessíveis ao usuário. Base legal e revisão jurídica seguem abertas. Backlog (`docs/10`, F1.1 e DT-08) atualizado. | assistente (a pedido do Lucas) |
+| 11/11/2026 | LGPD operacional fechada: sem revisão jurídica nesta fase (MVP acadêmico); aviso como minuta e sem afirmar conformidade com a LGPD (RNF-09 no backlog). | assistente (a pedido do Lucas) |
+| 12/11/2026 | T14 encerrada por decisão do grupo (sem pesquisa com usuários nem instituições nesta fase). Limpeza de textos desatualizados em `docs/06` e `docs/08`. | assistente (a pedido do Lucas) |

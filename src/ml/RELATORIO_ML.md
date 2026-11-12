@@ -145,7 +145,7 @@ na interface, sem nunca prometer "rota segura" (docs/05). O modelo do Infosiga
 por logradouro não generalizou — e é essa a mensagem ao usuário: onde os dados
 não sustentam estimativa, o produto **diz** "insuficiente", nunca silencia.
 O padrão por faixa horária (madrugada como feature dominante na contraprova)
-valida a janela noturna da persona (Marina, 22) para a próxima fase.
+valida a janela noturna da persona (Ágatha Santos, 24) para a próxima fase.
 
 **Próximo passo da Fase 1**: combinar iluminação pública (GeoSampa, já
 validada ao vivo) e posições de ônibus em tempo real (Olho Vivo, já

@@ -76,11 +76,11 @@ Para cada rota `r`:
 1. **Resultado por região**: rodar a regra em lote em muitos pares de origem e destino (por exemplo, com r5py, `docs/04` §6.3) e medir, por subprefeitura, com que frequência os trechos a pé da região aparecem na alternativa *não* destacada. Uma região evitada de forma consistente indica efeito desproporcional a revisar.
 2. **Acesso ao registro**: acompanhar por região a proporção de boletins pela delegacia eletrônica, como indício de subnotificação desigual. Onde registrar é mais difícil, há menos boletins, e a região pode parecer favorável sem ser.
 
-`[EM ABERTO]` Quem assume o papel de **responsável pela metodologia** (executar e publicar a revisão): a indicar pelo grupo.
+`[EM ABERTO]` Quem assume o papel de **responsável pela metodologia** (executar e publicar a revisão): a indicar pelo grupo. *(Substituído pela decisão de 11/11/2026 abaixo: não haverá responsável humano.)*
 
-`[EM ABERTO — proposta em avaliação, 11/11/2026]` **Proposta de Lucas Simidu: automatizar a revisão de vieses.** Origem: Lucas perguntou se não seria possível dispensar a revisão humana ("nós bateríamos nos dados e atualizaríamos os vieses do app a partir dessas atualizações") e pediu a opinião do assistente. Registrado a pedido dele, que estava sem o grupo. **O grupo ainda não avaliou esta proposta: a decisão acima continua valendo até que decida.**
+~~`[EM ABERTO — proposta em avaliação, 11/11/2026]`~~ *Resolvida em 11/11/2026 pela opção B (decisão abaixo); texto preservado como registro.* **Proposta de Lucas Simidu: automatizar a revisão de vieses.** Origem: Lucas perguntou se não seria possível dispensar a revisão humana ("nós bateríamos nos dados e atualizaríamos os vieses do app a partir dessas atualizações") e pediu a opinião do assistente. Registrado a pedido dele, que estava sem o grupo. **O grupo ainda não avaliou esta proposta: a decisão acima continua valendo até que decida.**
 
-Parecer do assistente (Claude) sobre a pergunta:
+Parecer do assistente sobre a pergunta:
 
 - **O que pode ser automático:** (a) a checagem de cobertura por circunscrição, com um script que mede, a cada atualização da base, a proporção de boletins com coordenada e horário utilizáveis em cada região; (b) a consequência, porque a regra de "dados insuficientes" (cobertura abaixo de 80% ou diferença acima de 10 p.p. entre as rotas) já bloqueia a comparação sozinha, sem aprovação de ninguém; (c) o relatório a cada atualização, no modelo de `src/ml/auditar_calibracao_ssp.py`.
 - **O que a automação não resolve:** (1) ela *detecta*, não *corrige* o viés: o efeito prático é bloquear a comparação ("dados insuficientes") naquela região; (2) ela só vê o que foi programado para medir, então uma mudança no formato da SSP, na geocodificação ou um padrão novo pode passar batido ou gerar alarme falso; (3) responsabilidade: os princípios de `docs/03` §6 (itens 3, 4 e 8) falam em avaliar resultados desproporcionais e sinalizar vieses, e um processo sem pessoa responsável tende a não ser feito.
@@ -89,6 +89,16 @@ Parecer do assistente (Claude) sobre a pergunta:
 - **Opções apresentadas ao Lucas:** **A.** checagem automática com bloqueio automático e conferência humana curta só nas atualizações (recomendada pelo assistente); **B.** totalmente automático, sem responsável (desaconselhada pelos pontos 2 e 3); **C.** manter a decisão atual, com revisão humana completa a cada atualização.
 - **Impacto na decisão atual:** a opção A ou B alteraria a frase "Uma diferença encontrada leva a revisão humana, não a ajuste automático de pesos ou limites", passando a permitir o bloqueio automático por "dados insuficientes" (sem ajuste de pesos). Isso só vale depois que o grupo decidir.
 - **Pendente:** escolha do grupo entre A, B e C e, se for A, o nome de quem faz a conferência (a indicar).
+
+`[DECISÃO — 11/11/2026, Lucas Simidu pelo grupo]` **Opção B: revisão de vieses totalmente automática, sem responsável humano.** Substitui, para a revisão de vieses, a frase "Uma diferença encontrada leva a revisão humana, não a ajuste automático de pesos ou limites" da decisão acima. Como fica:
+
+1. Um script mede a cobertura por circunscrição e por subprefeitura antes do piloto e a cada atualização da base da SSP-SP e gera o relatório publicado com a metodologia.
+2. A consequência é só o bloqueio que a regra já prevê: abaixo de 80% de cobertura ou com diferença acima de 10 p.p. entre as alternativas, a comparação vira "dados insuficientes". **Pesos e limites não são ajustados automaticamente**; mudá-los continua exigindo nova decisão registrada.
+3. Não há conferência humana do relatório nem responsável nomeado pela metodologia.
+
+Riscos aceitos com esta escolha (parecer do assistente, mantido como registro): a automação só detecta o que foi programada para medir; mudanças de formato da SSP, de geocodificação ou padrões novos podem passar sem alerta; e não há quem responda pelo processo. `docs/03` §6 (princípio 8) pede avaliação periódica de resultados desproporcionais, o que o script cumpre na parte de cobertura; as checagens de resultado por região e de acesso ao registro continuam adiadas para depois do MVP.
+
+`[HIPÓTESE — sugestão do assistente, não decidida]` Para reduzir o risco sem voltar à revisão humana, o próprio script pode **interromper a atualização** quando encontrar sinais de mudança na base: colunas ausentes ou renomeadas, queda brusca da cobertura total ou uma circunscrição que some de um mês para o outro. Nesse caso o app continuaria com a base anterior. Fica para o grupo decidir ao implementar o script (`TODO.md` T20).
 
 ## Apresentação da confiança dos dados
 
@@ -101,7 +111,26 @@ Parecer do assistente (Claude) sobre a pergunta:
    - "Sem diferença clara entre os registros", com `N`, `D` e `L` visíveis.
    - "Dados insuficientes", sempre com o motivo: menos de 10 registros no total; cobertura abaixo de 80% ou diferença de cobertura acima de 10 p.p.; ou resultado que muda com a largura do corredor.
 4. **Limitações fixas**: subnotificação (zero registro não significa ausência de ocorrência); coordenadas que podem ser pontos de referência; contagem que inclui todos os tipos de local; apenas furtos e roubos "outros" considerados (`docs/07`).
+   - `[DECISÃO — 11/11/2026]` Acrescentar: **as alternativas usam os horários programados publicados pela SPTrans, que podem não refletir mudanças recentes de operação** (exemplo verificado: Linha 17-Ouro, `docs/04` §5).
 
-`[EM ABERTO]` Redação final e teste de compreensão das frases com usuários (item correspondente em `docs/06`).
+`[EM ABERTO]` Redação final e teste de compreensão das frases com usuários (item correspondente em `docs/06`). *(Teste de compreensão: ver a decisão de 11/11/2026 abaixo. A redação final continua em aberto.)*
+
+### Teste de compreensão das mensagens (metodologia registrada, não executada)
+
+`[DECISÃO — 11/11/2026, Lucas Simidu pelo grupo]` **O teste com usuários não será feito nesta fase** (MVP e entrega da GS). A metodologia fica registrada aqui para ser aplicada quando o produto avançar, porque é nesse tipo de teste que se encontra a maior parte dos erros de interpretação.
+
+Consequências enquanto o teste não acontecer:
+
+- As três frases fixas e o bloco "Sobre os dados" são **redação proposta, não validada com usuários**. Pitch, slides e entregas devem apresentá-las assim e citar o teste como próximo passo planejado, nunca como feito.
+- As regras de `docs/05` continuam sendo a única proteção contra leituras como garantia ou transferência de culpa; a redação deve segui-las à risca.
+
+Metodologia (proposta preliminar de 11/11/2026, preservada):
+
+1. **Participantes:** 5 estudantes do período noturno, referência de testes de usabilidade de Nielsen. Alternativa discutida: 8 a 10 participantes, com mais tempo de agendamento.
+2. **Material:** as três telas de resultado ("menor exposição estimada", "sem diferença clara", "dados insuficientes"), com o bloco "Sobre os dados".
+3. **Roteiro:** uma pergunta aberta ("o que o app está te dizendo?") e três diretas: "se for pela rota destacada, você está segura?"; "se acontecer algo na outra rota, de quem é a responsabilidade?"; "o que significa não ter registros?".
+4. **Critério:** **uma única** leitura como garantia, como transferência de culpa ou como "zero registros = seguro" obriga a reescrever a mensagem e testar de novo.
+5. **Privacidade:** respostas anotadas sem nome nem dados pessoais.
+6. **Pré-requisito:** protótipo com as três telas (`TODO.md` T07).
 
 `[DECISÃO]` Para avaliar o piloto municipal, testar trajetos de diferentes regiões e fazer auditoria de cobertura na cidade inteira. A presença de registros em São Paulo não comprova qualidade homogênea em seus bairros ou horários.

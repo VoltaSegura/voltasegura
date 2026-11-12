@@ -50,10 +50,11 @@ Ajudar o usuário a entender as diferenças entre trajetos possíveis — não a
 
 **Abrangência do piloto `[DECISÃO — 11/11/2026]`**: todo o município de São Paulo. O lançamento não fica restrito a um campus ou bairro; a comparação de cada trajeto depende de cobertura e qualidade suficientes, que podem variar dentro da cidade. Trajetos reais em partes diferentes do município servirão como testes iniciais, complementados por avaliação de cobertura em toda a cidade.
 
-### Persona de trabalho: **Marina, 22 anos** `[HIPÓTESE — validar via entrevistas]`
+### Persona de trabalho: **Ágatha Santos, 24 anos** `[DECISÃO de nome — 11/11/2026 · perfil HIPÓTESE, sem pesquisa]`
 - Estudante universitária do período noturno; usa ônibus, metrô e caminhadas; sai da faculdade tarde; nem sempre conhece bem todos os trechos.
 - **Necessidade principal**: entender as diferenças entre rotas e escolher com mais informação, sem depender só do menor tempo/distância.
 - Obs.: a ficha inicial registrava "Ágatha Santos, 24 anos" — padronizar nome/idade após pesquisa com estudantes.
+- `[DECISÃO — 11/11/2026]` Persona padronizada como **Ágatha Santos, 24 anos** (antes "Marina, 22"). Como o grupo não fará pesquisa com usuários nesta fase, o perfil é uma **proto-persona**: construída pelo grupo, não validada com estudantes, e deve ser apresentada assim.
 
 ### Públicos futuros (não priorizar agora)
 Trabalhadores noturnos · frequentadores de eventos · turistas · outros usuários de transporte público.
@@ -127,6 +128,8 @@ Limitação aceita pela decisão: sem armazenar consultas, a adoção no piloto 
 
 `[EM ABERTO]` Responsáveis por acesso e exclusão; provedor de login (e-mail e senha ou Google); base legal exata e revisão jurídica do aviso de privacidade; reavaliar os contadores agregados (opção B) depois do piloto.
 
+`[DECISÃO — 11/11/2026]` (1) **Login por e-mail e senha e também pelo Google**; no Google, pedir só o e-mail e o identificador, sem nome nem foto. (2) **Exclusão de contas e resposta a incidentes: só os desenvolvedores internos do projeto.** (3) **Os dados da conta ficam acessíveis ao próprio usuário** no app; o servidor guarda e-mail e identificador enquanto a conta existir. `[EM ABERTO]` se o grupo quer guardar outras informações além de e-mail e identificador (isso mudaria a decisão de privacidade acima); base legal; revisão jurídica do aviso de privacidade. `[DECISÃO — 11/11/2026]` **Sem revisão jurídica nesta fase**, porque o MVP é acadêmico. Consequências: o aviso de privacidade do protótipo é uma minuta, sem revisão jurídica; nenhum material (app, pitch, slides, entregas) afirma que o produto está "em conformidade com a LGPD"; a revisão jurídica volta a ser obrigatória antes de qualquer uso real. Até o grupo dizer o contrário, o servidor guarda só e-mail e identificador.
+
 > A plataforma apoia a decisão do usuário; **não transfere a ele a responsabilidade por uma ocorrência**. Avisos e termos de uso não substituem projeto responsável, segurança da informação e análise jurídica.
 
 ## 7. Concorrência e diferenciação `[HIPÓTESE de diferenciação — testar]`
@@ -142,6 +145,7 @@ Limitação aceita pela decisão: sem armazenar consultas, a adoção no piloto 
 
 ### Contexto regulatório `[verificar antes de usar em slides]`
 - **PL 1.169/2025**: propõe regras para identificação de áreas de alto risco em apps de navegação. Tramitação encerrada no Senado e enviada à Câmara em 05/11/2025 — **verificar novamente a tramitação; não descrever como lei vigente**.
+  - *Verificado em 11/11/2026* na [ficha da Câmara](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2581912): recebido em **04/11/2025** (não 05/11) e, desde então, **"Aguardando Despacho do Presidente da Câmara dos Deputados"**, sem comissão nem relator designados. Não é lei. O texto aprovado no Senado (substitutivo do relator na CSP, aprovado em caráter terminativo em 21/10/2025) troca o bloqueio obrigatório de rotas por alertas e não obriga os aplicativos a incorporar as informações ([Agência Senado](https://www12.senado.leg.br/noticias/materias/2025/10/21/vai-a-camara-compartilhamento-de-dados-de-seguranca-com-aplicativos-de-mapas)). Redação sugerida para slides: "projeto de lei aprovado no Senado em 2025, aguardando despacho na Câmara (situação verificada em 11/11/2026)". Como o PL fala em "áreas de alto risco", citá-lo como contexto do debate, sem adotar essa linguagem (`docs/05`).
 
 ### Nome do projeto `[DECISÃO — renomeado em 10/11/2026]`
 O produto passa a se chamar **VoltaSegura**. O nome resolve o conflito de identidade com o app **Citizen** e dialoga com o propósito (planejamento da **volta** para casa com **segura**nça informacional). Checagens de marca, domínio e busca de anterioridade para "VoltaSegura" continuam `EM ABERTO` — confirmar antes de uso comercial.
