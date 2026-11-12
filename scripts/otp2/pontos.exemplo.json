@@ -1,0 +1,15 @@
+{
+  "_leia_me": "Copie para pontos.local.json (fora do git) e preencha com pontos de referencia APROXIMADOS (ex.: uma esquina perto), nunca o endereco exato. Formato: [latitude, longitude]. Hora de saida no formato HH:MM.",
+  "teste1_ida": {
+    "descricao": "Trabalho do Lucas -> FIAP Paulista",
+    "origem": [null, null],
+    "destino": [null, null],
+    "hora": "18:00"
+  },
+  "teste1_volta": {
+    "descricao": "FIAP Paulista -> residencia do Lucas",
+    "origem": [null, null],
+    "destino": [null, null],
+    "hora": "23:00"
+  }
+}

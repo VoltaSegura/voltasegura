@@ -41,3 +41,8 @@ utils/ssp/*.PNG
 
 # ---- cache de ML (regenerável via src/ml/etl.py) ----
 src/ml/dados/cache/
+
+# ---- Teste local do OTP2 (scripts/otp2/README.md) ----
+# jar, GTFS, OSM, graph.obj e saidas com coordenadas pessoais
+scripts/otp2/dados/
+scripts/otp2/pontos.local.json
