@@ -29,6 +29,7 @@ Você é um agente trabalhando neste repositório. Toda a base de conhecimento e
 | 7 | `docs/07_classificacao_ssp_app.md` | Recorte das naturezas SSP-SP e apresentação no app | Ao trabalhar com categorias, dados de ocorrências ou telas correspondentes |
 | 8 | `docs/08_metodologia_comparacao_mvp.md` | Conta inicial de comparação de trajetos e condições para exibir resultados | Ao trabalhar com cálculo, API, UX ou testes de exposição estimada |
 | 9 | `docs/09_fluxo_trabalho_ia.md` | Rotina para mudanças de estado, revisão das pendências e checagem da base | Ao iniciar uma tarefa com IA ou registrar uma decisão |
+| 10 | `docs/10_backlog_produto.md` | Backlog do produto: visão, proposta de valor, benchmarking, decisões técnicas, épicos, features e histórias com critérios de aceite | Ao criar Features e Test Cases (Azure Boards) ou ao mudar o que o produto faz |
 
 ## Estrutura do repositório
 
@@ -39,7 +40,7 @@ Você é um agente trabalhando neste repositório. Toda a base de conhecimento e
 | `CLAUDE.md` | Complemento curto para o Claude Code (ambiente, comandos, rotina de fechamento); remete a este arquivo |
 | `TODO.md` | Lista viva de tarefas (status, detalhes e histórico); agentes devem mantê-la atualizada |
 | `prompts.md` | Registro obrigatório de uso de IA |
-| `docs/` | Base de conhecimento (01–09) |
+| `docs/` | Base de conhecimento (01–10) |
 | `src/soa-backend/` | API REST (SOA/Web Services) |
 | `src/csharp-backend/` | Backend C#/.NET |
 | `src/ml/` | Notebook de ML + relatório (dados reais) |
@@ -59,7 +60,7 @@ Você é um agente trabalhando neste repositório. Toda a base de conhecimento e
 - **Idioma**: português (BR), tom profissional.
 - **Conflito entre documentos**: regras de ética/linguagem (`05`) > regras da FIAP (`01`) > projeto (`03`) > dados (`04`).
 - **Termo canônico do produto**: "exposição estimada" (nunca "segurança garantida", "rota segura", "área perigosa").
-- **Público inicial**: estudantes universitários do período noturno (persona: Marina, 22 anos — validar via entrevistas).
+- **Público inicial**: estudantes universitários do período noturno (persona: Ágatha Santos, 24 anos — proto-persona, não validada com usuários).
 - **Modelo comercial a validar**: B2B2C começando por universidades.
 - **Commits**: mensagens convencionais (feat/fix/docs/chore) em português.
 
