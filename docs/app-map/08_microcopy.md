@@ -21,6 +21,7 @@
 | `comum.linha_dados` | Dados: {fonte}, {periodo} |
 | `comum.linha_dados_indisponivel` | Comparação de registros indisponível |
 | `comum.ordenadas_por_tempo` | {n} opções · ordenadas por tempo |
+| `comum.exposicao_primeiro` | {n} opções · menor exposição estimada primeiro |
 | `comum.uma_opcao` | 1 opção encontrada |
 
 ## Modos e faixas
@@ -272,6 +273,8 @@ Atenção ao `motivo.cobertura`: fala de **cobertura dos dados** na região, nã
 
 ## TL-13 · Aviso de privacidade
 
+*(13/11/2026: `aviso.localizacao` revisto e `aviso.compartilhar` acrescentado, D-20 e D-21.)*
+
 | Chave | Texto |
 |---|---|
 | `aviso.titulo` | Aviso de privacidade |
@@ -279,13 +282,61 @@ Atenção ao `motivo.cobertura`: fala de **cobertura dos dados** na região, nã
 | `aviso.pedimos_titulo` / `aviso.pedimos` | O que pedimos / Só e-mail e senha (ou o identificador do Google). |
 | `aviso.nao_guardamos_titulo` / `aviso.nao_guardamos` | O que não guardamos / Origens, destinos e horários das consultas: usados só para calcular e descartados. |
 | `aviso.celular_titulo` / `aviso.celular` | O que fica só no celular / Histórico e locais salvos, se você ligar. |
-| `aviso.localizacao_titulo` / `aviso.localizacao` | Localização / Só quando você toca em "usar minha localização". |
+| `aviso.localizacao_titulo` / `aviso.localizacao` | Localização / Só quando você toca em "usar minha localização" ou enquanto compartilha sua volta. |
+| `aviso.compartilhar_titulo` / `aviso.compartilhar` | Compartilhar minha volta / Se você compartilhar, o trajeto e sua última posição ficam no servidor só durante o compartilhamento e são apagados ao terminar. Só quem tem o link e o app vê. |
 | `aviso.mapa_titulo` / `aviso.mapa` | Mapa / O mapa de fundo é carregado de um serviço externo, que vê a região exibida. |
 | `aviso.excluir_titulo` / `aviso.excluir` | Excluir a conta / Em Configurações › Excluir conta. |
 
+## TL-14 · Compartilhar minha volta (Depende do tempo)
+
+| Chave | Texto |
+|---|---|
+| `compartilhar.botao_tl08` | Compartilhar minha volta |
+| `compartilhar.ver` | Ver compartilhamento |
+| `compartilhar.titulo` | Compartilhar minha volta |
+| `compartilhar.verao` | A pessoa que receber o link vai ver, pelo app VoltaSegura: |
+| `compartilhar.item_trajeto` | o trajeto desta opção |
+| `compartilhar.item_posicao` | sua posição durante a viagem |
+| `compartilhar.item_chegada` | a chegada estimada: {hora} |
+| `compartilhar.termina` | Termina quando você chegar, quando tocar em Parar ou às {hora} (tempo máximo). |
+| `compartilhar.privacidade` | Sua localização é usada só durante o compartilhamento e apagada do servidor ao fim. |
+| `compartilhar.precisa_app` | A pessoa precisa ter o app. |
+| `compartilhar.confirmar` | Compartilhar o link |
+| `compartilhar.iniciando` | Iniciando… |
+| `compartilhar.sem_permissao` | Sem acesso à localização em segundo plano. A pessoa verá só o trajeto e a chegada estimada, sem sua posição. |
+| `compartilhar.so_trajeto` | Compartilhar só o trajeto |
+| `compartilhar.permitir` | Permitir nas configurações |
+| `compartilhar.mensagem_link` | Acompanhe minha volta pelo VoltaSegura: {link} |
+| `compartilhar.indicador` | Compartilhando sua volta |
+| `compartilhar.indicador_sem_rede` | Compartilhando · sem conexão |
+| `compartilhar.parar` | Parar |
+| `compartilhar.parar_completo` | Parar de compartilhar |
+| `compartilhar.ativo_desde` | Ativo desde {hora} |
+| `compartilhar.ultima_enviada` | Última posição enviada {hora} |
+| `compartilhar.reenviar` | Enviar o link de novo |
+| `compartilhar.tempo_acabando` | O compartilhamento termina em {min} min. |
+| `compartilhar.estender` | Estender 30 min |
+| `compartilhar.encerrado` | Compartilhamento encerrado. Sua localização não é mais enviada e o link expirou. |
+| `compartilhar.encerrado_chegou` | Compartilhamento encerrado: você chegou. |
+| `compartilhar.erro` | Não foi possível iniciar o compartilhamento agora. |
+
+## TL-15 · Acompanhar viagem (Depende do tempo)
+
+| Chave | Texto |
+|---|---|
+| `acompanhar.titulo` | Acompanhando uma viagem |
+| `acompanhar.em_andamento` | Em andamento |
+| `acompanhar.chegada` | Chegada estimada {hora} |
+| `acompanhar.atualizacao` | Última atualização {hora} (há {min} min) |
+| `acompanhar.so_trajeto` | Esta viagem foi compartilhada sem a posição ao vivo: você vê o trajeto e a chegada estimada. |
+| `acompanhar.chegou` | Chegou ao destino às {hora}. O acompanhamento terminou. |
+| `acompanhar.encerrado` | O compartilhamento foi encerrado. |
+| `acompanhar.terminou` | Este compartilhamento terminou. |
+| `acompanhar.instalar` | Para acompanhar esta viagem, instale o VoltaSegura. |
+
 ## Varredura de termos proibidos
 
-Feita em 13/11/2026 por script local sobre **762 linhas**: a coluna de texto de todas as entradas deste catálogo e todas as linhas dos wireframes de `04_telas/`. O nome do produto "VoltaSegura" foi desconsiderado. Refazer a cada mudança de texto; na Frente 2, a mesma varredura vira um teste automático sobre o arquivo de textos do app (`docs/plano_app.md` §5.2).
+Feita em 13/11/2026 por script local sobre **894 linhas** (refeita após o acréscimo do compartilhamento): a coluna de texto de todas as entradas deste catálogo e todas as linhas dos wireframes de `04_telas/`. O nome do produto "VoltaSegura" foi desconsiderado. Refazer a cada mudança de texto; na Frente 2, a mesma varredura vira um teste automático sobre o arquivo de textos do app (`docs/plano_app.md` §5.2).
 
 | Termo procurado (`docs/05`, RNF-01, RNF-09, D-12) | Ocorrências em texto de tela |
 |---|---|

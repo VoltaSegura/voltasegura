@@ -67,6 +67,7 @@
   .card .dur { font-size:17px; font-weight:600; }
   .focos { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:2px; }
   .foco { border:1px solid var(--borda); border-radius:6px; padding:0 6px; font-size:12px; font-weight:600; }
+  .foco.exp { background:var(--acao); color:var(--acao-texto); border-color:var(--acao); }
   .ex { position:absolute; right:8px; top:8px; border:1px solid var(--borda); border-radius:6px; padding:0 5px; font-size:10px; font-weight:600; color:var(--texto2); }
   .ex.inl { position:static; display:inline-block; }
   .linha-dados { color:var(--dado); font-size:13px; }
@@ -90,6 +91,10 @@
   .spin { width:36px; height:36px; border:4px solid var(--superficie2); border-top-color:var(--acao); border-radius:50%; margin:0 auto; }
   .centro { flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px; text-align:center; }
   .mira { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:28px; color:var(--acao); }
+  .indic-glob { background:var(--superficie2); border-bottom:1px solid var(--borda); padding:8px 12px; font-size:13px; display:flex; align-items:center; gap:6px; }
+  .indic-glob .pt { color:var(--acao); }
+  .indic-glob .par { margin-left:auto; color:var(--acao-link); font-weight:600; text-decoration:underline; }
+  .dep { display:inline-block; border:1px dashed var(--borda); border-radius:6px; padding:0 6px; font-size:11px; color:var(--texto2); margin-left:4px; }
   footer.pg { max-width:1400px; margin:24px auto; padding:0 16px 32px; color:var(--texto2); font-size:13px; }
 </style>
 </head>
@@ -109,6 +114,8 @@
 <div class="grade" id="g-resultado"></div>
 <h2 class="grupo">Detalhes e "Por que esta rota?" (TL-08, TL-09) — variantes</h2>
 <div class="grade" id="g-porque"></div>
+<h2 class="grupo">Compartilhamento (TL-14, TL-15) <span class="dep">Depende do tempo</span></h2>
+<div class="grade" id="g-compartilhar"></div>
 <h2 class="grupo">Dados e configurações</h2>
 <div class="grade" id="g-dados"></div>
 
@@ -131,7 +138,7 @@ function mapa(h, opts = {}) {
   return `<div class="mapa" style="height:${h}px"><svg viewBox="0 0 280 190" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mapa do trajeto">${ruas}${linhas}</svg>${opts.mira ? '<span class="mira">✛</span>' : ''}<span class="attr">© OpenStreetMap contributors · SPTrans</span></div>`;
 }
 function card(focos, dur, km, trocas, modos, sel = false, saida = '') {
-  return `<div class="card${sel ? ' sel' : ''}">${EX}<div class="focos">${focos.map(f => `<span class="foco">${f}</span>`).join('')}</div>
+  return `<div class="card${sel ? ' sel' : ''}">${EX}<div class="focos">${focos.map(f => `<span class="foco${f.startsWith('◆') ? ' exp' : ''}">${f}</span>`).join('')}</div>
     <div><span class="dur">${dur}</span> · ${km} a pé · ${trocas}</div><div class="t2">${modos}</div>${saida ? `<div class="t2">Saída prevista ${saida}</div>` : ''}</div>`;
 }
 const LINHA = '<div class="linha-dados">Dados: SSP-SP, jan–set/2026 ›</div><div class="t2">Horários previstos (GTFS)</div>';
@@ -157,7 +164,8 @@ document.getElementById('g-conta').innerHTML = [
     <div class="h">O que pedimos</div><div class="t2">Só e-mail e senha (ou o identificador do Google).</div>
     <div class="h">O que não guardamos</div><div class="t2">Origens, destinos e horários das consultas: usados só para calcular e descartados.</div>
     <div class="h">O que fica só no celular</div><div class="t2">Histórico e locais salvos, se você ligar.</div>
-    <div class="h">Localização</div><div class="t2">Só quando você toca em "usar minha localização".</div>
+    <div class="h">Localização</div><div class="t2">Só quando você toca em "usar minha localização" ou enquanto compartilha sua volta.</div>
+    <div class="h">Compartilhar minha volta</div><div class="t2">Trajeto e última posição ficam no servidor só durante o compartilhamento e são apagados ao terminar.</div>
     <div class="h">Mapa</div><div class="t2">O mapa de fundo é carregado de um serviço externo, que vê a região exibida.</div></div>`),
 ].join('');
 
@@ -180,8 +188,8 @@ document.getElementById('g-planejar').innerHTML = [
 document.getElementById('g-resultado').innerHTML = [
   cel('TL-07', '<b>Sem foco de exposição</b> (caso mais comum: sem diferença clara, mistos, insuficiente ou L = 0)', cab('Volta · saída 23:00') + mapa(220) + `<div class="sheet"><div class="alca"></div>
     <div class="t2">2 opções · ordenadas por tempo</div>${card(['Menor tempo'], ...B.Bm, true, '23:04')}${card(['Menos caminhada'], ...B.C, false, '23:02')}${LINHA}</div>`),
-  cel('TL-07', '<b>Com foco de exposição</b> (conclusivo: a rota venceu cada uma das outras)', cab('Volta · saída 23:00') + mapa(170) + `<div class="sheet"><div class="alca"></div>
-    <div class="t2">3 opções · ordenadas por tempo</div>${card(['Menor tempo'], ...B.Bm, true)}${card(['Menos caminhada'], ...B.C)}${card(['◆ Menor exposição estimada'], ...B.A)}<div class="linha-dados">Dados: SSP-SP, jan–set/2026 ›</div></div>`),
+  cel('TL-07', '<b>Com foco de exposição</b> (conclusivo): <b>prioridade</b>, a rota vem primeiro, selecionada e com o mapa no trajeto dela (D-23)', cab('Volta · saída 23:00') + mapa(170, { sel: 'M30 150 L60 150 L60 70 L180 70 L180 40 L250 40', outra: 'M30 150 L30 95 L120 95 L120 40 L250 40' }) + `<div class="sheet"><div class="alca"></div>
+    <div class="t2">3 opções · menor exposição estimada primeiro</div>${card(['◆ Menor exposição estimada'], ...B.A, true)}${card(['Menor tempo'], ...B.Bm)}${card(['Menos caminhada'], ...B.C)}<div class="linha-dados">Dados: SSP-SP, jan–set/2026 ›</div></div>`),
   cel('TL-07', '<b>Com outra opção</b> (a mesma rota venceu tempo e caminhada; D-16)', cab('Volta · saída 23:00') + mapa(220, { outra: 'M30 150 L30 120 L170 120 L170 40 L250 40' }) + `<div class="sheet"><div class="alca"></div>
     <div class="t2">2 opções · ordenadas por tempo</div>${card(['Menor tempo', 'Menos caminhada'], '32 min', '0,5 km', '0 troca', 'a pé → Metrô L4 → a pé', true)}${card(['Outra opção'], '35 min', '0,8 km', '1 troca', 'a pé → 702U → Metrô L2 → a pé')}${LINHA}</div>`),
   cel('TL-07', '<b>Uma rota</b> (uma candidata só; sem comparação)', cab('Ida · saída 05:10') + mapa(240, { outra: '' }) + `<div class="sheet"><div class="alca"></div>
@@ -199,12 +207,34 @@ document.getElementById('g-porque').innerHTML = [
     <div class="trecho"><b>② Ônibus 702U · 9 min</b><div class="t2">Embarque 23:02 (previsto)<br>Ponto Exemplo A → Ponto Exemplo B</div></div>
     <div class="trecho"><b>③ Metrô L2 · 14 min</b><div class="t2">Embarque 23:15 (previsto)</div></div>
     <div class="trecho" style="border-color:transparent"><b>④ A pé · 350 m · 6 min</b><div class="t2">Até o destino</div><span class="bpq">Por que esta rota?</span></div>
-    <div class="linha-dados">Dados: SSP-SP, jan–set/2026 ›</div></div>`),
-  cel('TL-09', '<b>Conclusivo</b> · rota com o foco', pbase('600 m', 'Menor exposição estimada entre as alternativas avaliadas: nos registros considerados, esta opção teve menos furtos e roubos perto dos trechos a pé.', ptab(4, '0,9', '4,4', '91%'), '<div><span class="foco">◆ Menor exposição estimada</span></div>')),
+    <div class="linha-dados">Dados: SSP-SP, jan–set/2026 ›</div><div class="btn s">Compartilhar minha volta</div></div>`),
+  cel('TL-09', '<b>Conclusivo</b> · rota com o foco', pbase('600 m', 'Menor exposição estimada entre as alternativas avaliadas: nos registros considerados, esta opção teve menos furtos e roubos perto dos trechos a pé.', ptab(4, '0,9', '4,4', '91%'), '<div><span class="foco exp">◆ Menor exposição estimada</span></div>')),
   cel('TL-09', '<b>Conclusivo</b> · rota sem o foco', pbase('1,2 km', 'Entre as opções avaliadas, outra teve menor exposição estimada: <span class="link">◆ Menor exposição estimada ›</span>', ptab(25, '1,4', '17,9', '90%'))),
   cel('TL-09', '<b>Sem diferença clara</b> (inclui mistos)', pbase('1,2 km', 'Os registros não mostram diferença clara entre as opções.', ptab(6, '1,4', '4,3', '88%'))),
   cel('TL-09', '<b>Dados insuficientes</b> · motivo amostra', pbase('1,2 km', 'Dados insuficientes para comparar as opções. Motivo: poucos registros no total.', ptab(null, '1,4', null, '88%') + '<div class="t2">(sem ordenar as opções)</div>')),
   cel('TL-09', '<b>Não aplicável</b> (uma opção sem trecho a pé)', pbase('1,2 km', 'Uma das opções não tem trecho a pé, então os registros não foram comparados desta vez.', ptab(6, '1,4', '4,3', '88%'))),
+].join('');
+
+const IND = '<div class="indic-glob"><span class="pt">●</span>Compartilhando sua volta<span class="par">Parar</span></div>';
+function mapaPos(h) {
+  return mapa(h, { outra: '' }).replace('</svg>', '<circle cx="120" cy="70" r="8" fill="var(--dado)" stroke="var(--fundo)" stroke-width="3"/></svg>');
+}
+document.getElementById('g-compartilhar').innerHTML = [
+  cel('TL-14', 'Confirmar (explica o que o contato verá e quando termina)', cab('Compartilhar minha volta', '✕') + `<div class="corpo"><div>A pessoa que receber o link vai ver, pelo app VoltaSegura:</div>
+    <ul class="lista"><li>o trajeto desta opção</li><li>sua posição durante a viagem</li><li>a chegada estimada: 23:36 <span class="ex inl">EXEMPLO</span></li></ul>
+    <div class="t2">Termina quando você chegar, quando tocar em Parar ou às 00:06 (tempo máximo).</div>
+    <div class="aviso info">Sua localização é usada só durante o compartilhamento e apagada do servidor ao fim.</div>
+    <div class="t2">A pessoa precisa ter o app.</div><div class="btn p">Compartilhar o link</div><div class="link" style="text-align:center">Cancelar</div></div>`),
+  cel('TL-14', 'Permissão de segundo plano negada (só trajeto)', cab('Compartilhar minha volta', '✕') + `<div class="corpo"><div class="aviso info">Sem acesso à localização em segundo plano. A pessoa verá só o trajeto e a chegada estimada, sem sua posição.</div>
+    <div class="btn p">Compartilhar só o trajeto</div><div class="link" style="text-align:center">Permitir nas configurações</div></div>`),
+  cel('TL-07 + indicador', 'Indicador global durante a sessão (sempre visível, com Parar)', IND + cab('Volta · saída 23:00') + mapa(190) + `<div class="sheet"><div class="alca"></div>
+    <div class="t2">2 opções · ordenadas por tempo</div>${card(['Menor tempo'], ...B.Bm, true)}${card(['Menos caminhada'], ...B.C)}</div>`),
+  cel('TL-14', 'Sessão ativa', IND + cab('Compartilhando', '✕') + `<div class="corpo"><div class="tab"><span>Ativo desde</span><span>23:04</span><span>Chegada estimada</span><span>23:36</span><span>Última posição enviada</span><span>23:12</span></div><span class="ex inl">EXEMPLO</span>
+    <div class="btn s">Enviar o link de novo</div><div class="btn s" style="color:var(--erro);border-color:var(--erro)">Parar de compartilhar</div></div>`),
+  cel('TL-15', 'Acompanhar (contato) · em andamento', cab('Acompanhando uma viagem') + mapaPos(260) + `<div class="corpo"><div><b>Em andamento</b> <span class="ex inl">EXEMPLO</span></div>
+    <div class="tab"><span>Chegada estimada</span><span>23:36</span><span>Última atualização</span><span>23:12 (há 1 min)</span></div>
+    <div class="t2">a pé → Metrô L4 → a pé</div><div class="t2">Horários previstos (GTFS)</div></div>`),
+  cel('TL-15', 'Acompanhar · chegou', cab('Acompanhando uma viagem') + mapa(200, { outra: '' }) + `<div class="corpo"><div><b>✓ Chegou ao destino às 23:35.</b></div><div class="t2">O acompanhamento terminou.</div></div>`),
 ].join('');
 
 document.getElementById('g-dados').innerHTML = [

@@ -7,7 +7,7 @@
 ## Princípios deste produto
 
 1. **Sem semântica de segurança na cor.** Não existe verde de "seguro" nem vermelho de "perigoso"; nenhuma rota, trecho ou número usa cor de alerta (RNF-04, `docs/plano_app.md` §4.5).
-2. **Os rótulos de foco são neutros.** "Menor tempo", "Menos caminhada", "Menor exposição estimada" e "Outra opção" usam o mesmo estilo; o foco de exposição se diferencia só pelo ícone ◆ e pelo texto.
+2. **O foco de exposição tem prioridade visual (D-23).** "Menor exposição estimada" usa o rótulo **em destaque**: preenchido com `cor.acao`, texto `cor.acao.texto` e ícone ◆. Ele aparece no primeiro card, já selecionado. "Menor tempo", "Menos caminhada" e "Outra opção" ficam neutros (borda `cor.borda`). O destaque é de prioridade, não de segurança: nada de verde, check, escudo ou "recomendada".
 3. **A cor nunca carrega sozinha um significado.** Sempre há texto ou ícone junto.
 4. **Dourado é marca e ação, ciano é dado.** O dourado indica ação principal e a rota selecionada no mapa. O ciano indica informação sobre os dados (linha "Sobre os dados", links de dados).
 5. **A cor de erro serve só para erro de formulário e de sistema**, nunca para rota, trecho ou registro de ocorrência.

@@ -40,12 +40,20 @@
 | `MapaTrajeto` | resultado (rotas) · seleção (mira fixa) · faixa (TL-08) | carregando · erro de carregamento | `cor.rota.selecionada` (traço contínuo, 6 px), `cor.rota.outra` (tracejado, 4 px), início ● e fim ■ | Rótulo-resumo do mapa; **tudo o que o mapa mostra também está em texto** | TL-05, TL-07, TL-08 |
 | `Atribuicao` | mapa · fontes | — | `tipo.apoio`, `cor.texto2` | Texto legível, não imagem | TL-05, TL-07, TL-10 |
 | `CardRota` | normal · selecionado (barra lateral `cor.acao` 4 px + texto "selecionada" no rótulo) | pressionado | `cor.superficie`, `raio.medio`, `tipo.destaque` (duração) | Um único elemento para o leitor de tela, com rótulo completo (TL-07) | TL-07 |
-| `RotuloFoco` | Menor tempo · Menos caminhada · ◆ Menor exposição estimada · Outra opção | — | **Mesmo estilo para todos**: borda `cor.borda`, texto `cor.texto`, `tipo.rotulo`, `raio.pequeno` | Lido como parte do card ("Menor tempo") | TL-07, TL-08, TL-09, TL-11 |
+| `RotuloFoco` | **destaque** (◆ Menor exposição estimada: preenchido `cor.acao`, texto `cor.acao.texto`) · neutro (Menor tempo · Menos caminhada · Outra opção: borda `cor.borda`, texto `cor.texto`) (D-23) | — | `tipo.rotulo`, `raio.pequeno` | Lido como parte do card ("Menor tempo") | TL-07, TL-08, TL-09, TL-11 |
 | `ListaTrechos` / `ItemTrecho` | a pé · ônibus · metrô · trem | selecionado | Linha vertical de ligação; ícone + nome do modo | Lista ordenada: "Trecho 1 de 4, a pé, 250 metros" | TL-08 |
 | `Indicativo` | conclusivo (rota com foco) · conclusivo (rota sem foco) · sem diferença · insuficiente · não aplicável · indisponível | — | `cor.superficie2`, borda `cor.borda`; **sem cor de alerta, sem ícone de perigo** | Lido logo depois do título | TL-09 |
 | `TabelaNumeros` | — | valor ausente ("não aplicável", "dados insuficientes") | Rótulo à esquerda (`cor.texto2`), valor à direita (`cor.texto`) | Lido como pares "rótulo: valor" | TL-09, TL-10 |
 | `LinhaSobreOsDados` | — | normal · indisponível | `cor.dado`, ícone ⓘ, › | "Dados: SSP-SP, janeiro a setembro de 2026. Abrir Sobre os dados" | TL-07, TL-08 |
 | `LinhaCategoria` | com detalhes (expansível) · simples | recolhida · expandida | `tipo.corpo`; parcela da comparação marcada em texto | "Furto, 7 registros, recolhido" | TL-11 |
+
+## Compartilhamento (Depende do tempo, D-22)
+
+| Componente | Variantes | Estados | Tokens | Acessibilidade | Telas |
+|---|---|---|---|---|---|
+| `IndicadorCompartilhamento` | normal · sem conexão | ativo (sempre visível com a sessão) | Faixa no topo, `cor.superficie2`, ponto ● em `cor.acao` + texto, botão "Parar" | Anunciado ao aparecer; "Parar" com alvo ≥ 48 dp; **não pode ser ocultado** (D-20) | Todas as telas de `(app)` com sessão ativa |
+| `MarcadorPosicao` | posição atual · posição antiga (sem atualização recente) | — | Círculo ◉ em `cor.dado` com contorno `cor.fundo`; **não é marcador de ocorrência** | Equivalente em texto ("Última atualização 23:12") | TL-15 |
+| `EstadoViagem` | em andamento · chegou · encerrado · terminou | — | `tipo.corpo.forte`; ✓ só com texto | Anunciado quando muda | TL-15 |
 
 ## Feedback
 
@@ -60,5 +68,6 @@
 
 - Nenhum componente de **nota, estrela, barra de nível, termômetro ou semáforo** (RNF-04).
 - Nenhum **marcador de ocorrência** ou mancha de calor no `MapaTrajeto` (US-15 AC4).
-- `Indicativo`, `RotuloFoco` e `CardRota` **não** mudam de cor conforme o caso da comparação.
+- `Indicativo` e `CardRota` **não** mudam de cor conforme o caso da comparação. O `RotuloFoco` só muda no foco de exposição, que tem prioridade (D-23), e usa a cor de ação, nunca verde ou vermelho.
 - `cor.erro` só em `Aviso` de erro, `CampoTexto` com erro e ação destrutiva.
+- `MarcadorPosicao` e `EstadoViagem` **nunca** usam cor de alerta, nem quando a posição está desatualizada (RNF-06).

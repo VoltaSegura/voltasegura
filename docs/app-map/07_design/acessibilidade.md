@@ -54,6 +54,8 @@ Marque na Fatia 4 da Frente 2. "Leitor" = testado com VoiceOver ou TalkBack.
 | TL-11 | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] parcela comparada em texto | — | Linhas expansíveis com estado |
 | TL-12 | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] destrutivo por texto | [ ] erro ao excluir | Diálogo com foco em "Cancelar" |
 | TL-13 | [ ] | [ ] | — | [ ] | [ ] | — | — | Seções como cabeçalhos |
+| TL-14 | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] ativo por texto, não só pelo ● | [ ] indicador, tempo máximo, encerrado | Indicador global sempre alcançável; "Parar" ≥ 48 dp |
+| TL-15 | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] estado por texto | [ ] mudança de estado | Posição com equivalente em texto |
 
 ## Ferramentas sugeridas para a Frente 2 `[HIPÓTESE]`
 
