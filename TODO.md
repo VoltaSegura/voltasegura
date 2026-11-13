@@ -147,6 +147,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [ ] Escolher as entregas que entram (app, API, ML, dashboard de Cybersecurity, circuito ESP32), de acordo com o que estiver pronto
 - [ ] Montar o roteiro com tempos por bloco, somando no máximo 4 min
 - [ ] Storyboard simples (telas e demonstrações a gravar)
+- [ ] Modelo de receita: proposta de assinatura individual (freemium) em discussão no grupo (`Claude outputs/proposta_premium_voltasegura.md`, fora do git); decidir antes do pitch se entra como "modelo a validar"
 - [ ] Decidir a paleta dos slides (preto e laranja da apresentação ou dourado da marca; ver T15)
 - [ ] Gravar, editar, subir no YouTube e conferir o link
 - [ ] Colocar o link na tarefa de Testing (ver T18)
@@ -333,6 +334,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [x] Mapeamento, Fase 4: rastreabilidade e fechamento. *13/11: `docs/app-map/10_rastreabilidade.md` (76 AC + 9 RNF, conferido por script) e `00_LEIA-ME.md` com a definição de pronto; backlog revisado (`docs/10` v1.5). Roteiro do vídeo adiado por decisão do Lucas (D-18).*
 - [ ] Revisão de pontos de design com o Lucas antes de estilizar as telas (PL-19)
 - [ ] Conciliar o contrato da API esperado pelo app com o backend (PL-18)
+- [ ] **Compartilhar trajeto e localização ao vivo** (F2.5/US-21, D-19 a D-22). **Depende do tempo:** construir por último; se o prazo apertar, fica para depois. Mapeamento feito em 13/11 (FL-15, FL-16, TL-14, TL-15, FN-15, FN-16); faltam a revisão do Lucas das telas novas, a checagem do GPS em segundo plano no Expo Go (PL-24) e o endpoint no backend (PL-18)
 - [x] Resolver as pendências do mapeamento que bloqueavam telas: PL-01, PL-02, PL-04, PL-08, PL-13, PL-14 e PL-15 (D-08 a D-14, 13/11)
 - [x] Resolver PL-16 (candidatas aos focos) e PL-17 (consulta com uma rota só): D-15 e D-16, 13/11
 - [ ] Cadastro e login (conta obrigatória; consentimento e aviso de privacidade no cadastro; exclusão da conta pelo app; `docs/03` §6). *13/11: por endpoints do backend (D-03); implementação pendente fora deste plano (PL-05).*
@@ -465,3 +467,5 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 13/11/2026 | Mapeamento do app (T07), Fase 2 em rascunho: 13 especificações de tela com wireframes por estado, navegação (Expo Router), catálogo de funcionalidades com o contrato esperado da API (PL-18, a conciliar com o backend) e dados por tela. Aguarda revisão do Lucas para marcar as telas como `pronta`. | assistente (a pedido do Lucas) |
 | 13/11/2026 | Mapeamento do app (T07): Fase 2 aprovada pelo Lucas (D-17, telas `pronta`). Fase 3 em rascunho: tokens (contraste WCAG calculado), componentes, acessibilidade, mockups HTML (26 telas, 0 erros de JS no teste) e catálogo de textos (varredura limpa). | assistente (a pedido do Lucas) |
 | 13/11/2026 | Mapeamento do app (T07) fechado: Fases 3 e 4 concluídas (validação do Lucas, D-18); `docs/10` v1.5 (revisão de consistência com D-01 a D-17); matriz de rastreabilidade com 76 AC + 9 RNF, que também serve à T10. Abertas: revisão de design (PL-19) e contrato da API (PL-18). Roteiro do vídeo adiado. | assistente (a pedido do Lucas) |
+| 13/11/2026 | Compartilhamento de trajeto e localização ao vivo planejado como feature nativa, MVP "Depende do tempo" (D-19 a D-22): `docs/10` v1.6, `docs/03` §6, `docs/06` 1.41 e mapeamento (FL-15, FL-16, TL-14, TL-15, FN-15, FN-16, mockups e rastreabilidade com 86 AC). Proposta de premium registrada como pendência do pitch (T03). | assistente (a pedido do Lucas) |
+| 13/11/2026 | Mapeamento do app (T07): prioridade do resultado passa a ser a menor exposição estimada (D-23, revê a D-10): rota com esse foco primeiro, selecionada e com rótulo em destaque; sem o foco, ordem por tempo. `docs/10` v1.7, `docs/06` 1.42, TL-07, fluxos, design, textos e mockups. | assistente (a pedido do Lucas) |
