@@ -2,7 +2,7 @@
 
 Lista viva de tarefas do projeto. Entrega final das disciplinas: **19/11/2026, 23h55**.
 
-**Última atualização:** 12/11/2026
+**Última atualização:** 13/11/2026
 
 ## Regras de steering (obrigatórias para agentes de IA)
 
@@ -54,7 +54,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | T04 | IA & Machine Learning | Notebook e relatório prontos; vídeo de até 5 min | EM DESENVOLVIMENTO | T13 (janela de 12 meses de dados) | a definir |
 | T05 | SOA & Web Services | Backend REST, banco, migrações, Swagger, testes | EM DESENVOLVIMENTO | T01.17 (arquitetura), T12, `docs/08` | a definir |
 | T06 | C# Software Development | Backend .NET (POO, EF Core, Web API, async, testes) | EM DESENVOLVIMENTO | T01.17 (arquitetura), `docs/08` | a definir |
-| T07 | Mobile & IoT | App Expo com a jornada ida e volta, vídeo de até 3 min | PENDENTE | `docs/08` (3 telas e bloco "Sobre os dados"), T12, T15, T01.7 | Lucas Simidu |
+| T07 | Mobile & IoT | App Expo com a jornada ida e volta, vídeo de até 3 min | EM DESENVOLVIMENTO | `docs/08` (bloco "Sobre os dados"; resultado revisto em `docs/app-map` D-01), T12, T15, T01.7 | Lucas Simidu |
 | T08 | Operating Systems | Provisionamento Linux automatizado, vídeo de até 7 min | PENDENTE | T05/T06 (aplicação a hospedar) | a definir |
 | T09 | Physical Computing | Circuito ESP32 no Wokwi, vídeo de até 4 min, `.txt` | PENDENTE | nenhuma (ESP32 fora do produto, decisão de 11/11) | a definir |
 | T10 | Testing, Compliance & QA | Features e Test Cases no Azure Boards, PDF | PENDENTE | T02 (backlog em `docs/10`), `docs/08` | a definir |
@@ -320,14 +320,23 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ## T07 — Mobile & IoT
 
-**Status:** PENDENTE (só existe o README em `src/mobile-app/`)
+**Status:** EM DESENVOLVIMENTO (13/11/2026: mapeamento do app iniciado em `docs/app-map/`, com as Fases 0 e 1 do plano `docs/plano_app.md` feitas; o código do app ainda não existe)
 **Responsável:** Lucas Simidu (indicado em 11/11/2026)
 **Tipo:** Entrega de disciplina (Mobile & IoT)
-**Referência:** `docs/02` §5.
+**Referência:** `docs/02` §5; plano `docs/plano_app.md`; mapeamento `docs/app-map/`.
 
 **Escopo previsto:** app React Native (TypeScript) com Expo Router para a jornada ida e volta do estudante noturno; consumir API ou mock; salvar em banco; acessibilidade.
-- [ ] Cadastro e login (conta obrigatória; consentimento e aviso de privacidade no cadastro; exclusão da conta pelo app; `docs/03` §6)
-- [ ] Telas e navegação (inclui as três telas de resultado: "menor exposição estimada", "sem diferença clara", "dados insuficientes")
+- [x] Mapeamento, Fase 0: decisões D-00 a D-07 registradas (`docs/app-map/01_decisoes.md`, 13/11)
+- [x] Mapeamento, Fase 1: story map e fluxogramas FL-01 a FL-14 em rascunho, com os 17 diagramas Mermaid validados (`docs/app-map/02_story_map.md`, `docs/app-map/03_fluxogramas/`, 13/11)
+- [x] Mapeamento, Fase 2: telas, navegação, funcionalidades (com o contrato esperado de conta, D-03) e dados por tela. *13/11: TL-01 a TL-13, `05_navegacao.md`, `06_funcionalidades.md` (FN-01 a FN-14 e contrato esperado da API, PL-18) e `09_dados_por_tela.md`; aprovados pelo Lucas (D-17), telas `pronta`.*
+- [x] Mapeamento, Fase 3: design (tokens, componentes, acessibilidade, mockups) e microcopy, com varredura de termos. *13/11: `07_design/` e `08_microcopy.md`; varredura com 0 termos proibidos em 762 linhas; validados pelo Lucas (D-18), com pontos de design a rever (PL-19).*
+- [x] Mapeamento, Fase 4: rastreabilidade e fechamento. *13/11: `docs/app-map/10_rastreabilidade.md` (76 AC + 9 RNF, conferido por script) e `00_LEIA-ME.md` com a definição de pronto; backlog revisado (`docs/10` v1.5). Roteiro do vídeo adiado por decisão do Lucas (D-18).*
+- [ ] Revisão de pontos de design com o Lucas antes de estilizar as telas (PL-19)
+- [ ] Conciliar o contrato da API esperado pelo app com o backend (PL-18)
+- [x] Resolver as pendências do mapeamento que bloqueavam telas: PL-01, PL-02, PL-04, PL-08, PL-13, PL-14 e PL-15 (D-08 a D-14, 13/11)
+- [x] Resolver PL-16 (candidatas aos focos) e PL-17 (consulta com uma rota só): D-15 e D-16, 13/11
+- [ ] Cadastro e login (conta obrigatória; consentimento e aviso de privacidade no cadastro; exclusão da conta pelo app; `docs/03` §6). *13/11: por endpoints do backend (D-03); implementação pendente fora deste plano (PL-05).*
+- [ ] Telas e navegação. *13/11: o resultado deixou de ser três telas; agora é mapa + container por trechos + "Por que esta rota?", com o selo só no caso conclusivo (D-01).*
 - [ ] Bloco "Sobre os dados" (`docs/08`)
 - [ ] Consumo de API ou mock e banco local
 - [ ] README com a Ficha, instruções e prints
@@ -374,7 +383,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 **Escopo previsto:** Features com critérios de aceite e Test Cases funcionais (positivos e negativos) no Azure Boards. Peso: 50% Features, 50% Test Cases.
 - [ ] Criar o projeto no Azure Boards e incluir o professor como Admin
-- [ ] Features do MVP com critérios de aceite, a partir de `docs/10_backlog_produto.md` (seção 11 explica a conversão)
+- [ ] Features do MVP com critérios de aceite, a partir de `docs/10_backlog_produto.md` (seção 11 explica a conversão). *13/11: a matriz `docs/app-map/10_rastreabilidade.md` já lista um teste previsto (positivo ou negativo) por AC, base para os Test Cases.*
 - [ ] Test Cases com objetivo, preparação, inputs, outputs esperados e passos
 - [ ] Prints de todas as telas em um documento único e PDF com o link do projeto
 
@@ -450,3 +459,9 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 12/11/2026 | T01.17 concluída (arquitetura: mesma solution .NET, duas APIs). T05/T06 passam a EM DESENVOLVIMENTO: solution estruturada, migração + ETL com 278.961 boletins reais, 17 testes passando, APIs no ar com Swagger. Criada T20 (alinhar backend ao docs/07/docs/08). | assistente + grupo |
 | 12/11/2026 | Merge com a `main`: T20 do colega (alinhar backend) mantida; a tarefa do script de cobertura passou a T21. Versões desta rodada no `docs/06` renumeradas para 1.17–1.34. Backlog (`docs/10`, DT-12) atualizado com a arquitetura das entregas. | assistente (a pedido do Lucas) |
 | 12/11/2026 | **T20 CONCLUÍDA**: backend alinhado ao docs/07/docs/08 — recorte por `NATUREZA_APURADA` (só FURTO - OUTROS 172.852 e ROUBO - OUTROS 62.365 em N), faixa pela HORA_OCORRENCIA_BO com fallback DESC_PERIODO (sem faixa: 0,9%), cobertura real por circunscrição (docs/08 §64) e frases fixas (§§99–102). Migração regenerada + recarga (278.687 boletins); 20 testes passando; APIs ao vivo e smoke test OK. Evidência: `src/csharp-backend/` (commit deste dia), README do backend, `docs/06` §1.35. | assistente + grupo |
+| 13/11/2026 | T07 → EM DESENVOLVIMENTO: mapeamento do app iniciado em `docs/app-map/` (plano `docs/plano_app.md`). Fase 0: decisões D-00 a D-07 do Lucas (resultado com mapa, container por trechos e "Por que esta rota?"; pontos por mapa, GPS ou locais salvos; conta por endpoints do backend; F2.4 no MVP; fora do município bloqueado). Fase 1: story map e 14 fluxogramas. 15 pendências registradas. `docs/10` v1.2 e `docs/06` 1.36. | assistente (a pedido do Lucas) |
+| 13/11/2026 | Mapeamento do app (T07), segunda rodada: decisões D-08 a D-14 (pendências PL-01, PL-02, PL-04, PL-08, PL-13 a PL-15 resolvidas; criadas PL-16 e PL-17). Rotas com foco (até 3). FL-06 e FL-07 reescritos; `docs/08` com a regra para três ou mais candidatas; `docs/10` v1.3; `docs/06` 1.37. | assistente (a pedido do Lucas) |
+| 13/11/2026 | Mapeamento do app (T07): PL-16 e PL-17 resolvidas (D-15: até 5 candidatas; D-16: "outra opção" quando sobra uma rota só). FL-06 e FL-07 ajustados; `docs/08`, `docs/10` v1.4, `docs/06` 1.38. | assistente (a pedido do Lucas) |
+| 13/11/2026 | Mapeamento do app (T07), Fase 2 em rascunho: 13 especificações de tela com wireframes por estado, navegação (Expo Router), catálogo de funcionalidades com o contrato esperado da API (PL-18, a conciliar com o backend) e dados por tela. Aguarda revisão do Lucas para marcar as telas como `pronta`. | assistente (a pedido do Lucas) |
+| 13/11/2026 | Mapeamento do app (T07): Fase 2 aprovada pelo Lucas (D-17, telas `pronta`). Fase 3 em rascunho: tokens (contraste WCAG calculado), componentes, acessibilidade, mockups HTML (26 telas, 0 erros de JS no teste) e catálogo de textos (varredura limpa). | assistente (a pedido do Lucas) |
+| 13/11/2026 | Mapeamento do app (T07) fechado: Fases 3 e 4 concluídas (validação do Lucas, D-18); `docs/10` v1.5 (revisão de consistência com D-01 a D-17); matriz de rastreabilidade com 76 AC + 9 RNF, que também serve à T10. Abertas: revisão de design (PL-19) e contrato da API (PL-18). Roteiro do vídeo adiado. | assistente (a pedido do Lucas) |
