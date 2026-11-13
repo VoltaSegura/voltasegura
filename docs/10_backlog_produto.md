@@ -81,7 +81,7 @@ Este documento reúne **tudo o que define o produto**: visão, proposta de valor
 | DT-05 | **Período histórico**: 12 meses mais recentes pela data da ocorrência; no MVP, jan–set/2026 com aviso até auditar 2025. **Faixa do dia**: os quatro períodos da SSP (madrugada 0–5h, manhã 6–11h, tarde 12–17h, noite 18–23h); cada trecho a pé usa o período em que será percorrido. | `[DECISÃO]` | `docs/08` |
 | DT-06 | **Conta**: só trechos a pé; corredor de ±100 m (sensibilidade em ±50 e ±150 m); `N` = boletins no corredor; `L` = km a pé; `D = N/L`. | `[DECISÃO]` | `docs/08` |
 | DT-07 | **Regra de destaque**: cobertura ≥ 80% por alternativa e diferença ≤ 10 p.p.; `N_X + N_Y ≥ 10`; destacar só se uma alternativa tiver `N` **e** `D` menores e teste binomial exato bilateral com `p < 0,05` nas três larguras. Sem pesos arbitrários. | `[DECISÃO]` · validação em trajetos reais `[EM ABERTO]` | `docs/08` |
-| DT-08 | **Privacidade**: conta obrigatória só com e-mail e identificador; login por e-mail e senha ou Google; consultas descartadas após o cálculo; logs sem coordenadas nem vínculo com a conta; histórico só no aparelho; GPS opcional; exclusão da conta pelo app; exclusão e incidentes operados só pelos desenvolvedores internos. | `[DECISÃO]` · base legal e revisão jurídica `[EM ABERTO]` | `docs/03` §6 |
+| DT-08 | **Privacidade**: conta obrigatória só com e-mail e identificador; login por e-mail e senha ou Google; consultas descartadas após o cálculo; logs sem coordenadas nem vínculo com a conta; histórico só no aparelho; GPS opcional; exclusão da conta pelo app; exclusão e incidentes operados só pelos desenvolvedores internos. **Exceção (13/11/2026, F2.5):** durante uma sessão de compartilhamento, GPS em segundo plano e guarda temporária de trajeto e última posição no servidor, apagados ao encerrar. | `[DECISÃO]` · base legal e revisão jurídica `[EM ABERTO]` | `docs/03` §6 |
 | DT-09 | **Revisão de vieses automática**: script de cobertura por circunscrição e subprefeitura antes do piloto e a cada atualização; bloqueio só por "dados insuficientes"; pesos e limites nunca mudam sozinhos. | `[DECISÃO]` · script `[EM ABERTO]` (T21) | `docs/08` |
 | DT-10 | **Percepção relatada por usuários fora do MVP**: nenhum relato vira dado no app. | `[DECISÃO]` | `docs/06` §3 |
 | DT-11 | **App**: React Native com TypeScript e Expo Router; consome API ou mock e salva em banco (exigência da entrega Mobile). | `[DECISÃO]` (rubrica) | `docs/02` §5 |
@@ -137,7 +137,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 - **AC1.** Dado o campo de origem, quando tocar em "usar minha localização", então o app pede permissão de GPS (se ainda não concedida) e preenche a origem.
 - **AC2.** Dado a permissão negada, então o usuário consegue escolher a origem normalmente, no mapa, num local salvo ou num ponto de exemplo. *(13/11/2026: antes "digitar a origem"; revisto pela D-02, que não prevê busca de endereço.)*
-- **AC3.** O app não lê a localização em segundo plano nem fora dessa ação.
+- **AC3.** O app não lê a localização em segundo plano nem fora dessa ação. **Exceção** `[DECISÃO — 13/11/2026]` (D-20): durante uma sessão de compartilhamento ativa (F2.5), com indicador visível e botão de parar.
 
 ### E2 — Planejamento do trajeto
 
@@ -166,7 +166,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - **AC2.** Dado que o roteamento não encontra alternativa no horário (sem serviço), então o app informa que não há alternativa de transporte público e não exibe comparação.
 - **AC3.** Os horários exibidos são programados (GTFS) e o app os identifica como previstos, não em tempo real.
 - **AC4.** Com só uma alternativa disponível, o app a exibe sem comparação de exposição estimada.
-- **AC5.** `[DECISÃO — 13/11/2026]` (`docs/app-map/01_decisoes.md`, D-10 e D-12) O app exibe **até 3 rotas**, cada uma a melhor das candidatas em pelo menos um foco: **menor tempo total**, **menos caminhada** e, só quando a regra do `docs/08` conclui (F3.2 AC6), **menor exposição estimada entre as alternativas avaliadas**. Uma rota que vence dois focos aparece uma vez, com os dois rótulos. Os cards ficam ordenados por tempo total, com o rótulo "ordenadas por tempo". O rótulo "por segurança" é proibido (`docs/05`). Entram como candidatas até 5 alternativas devolvidas pelo roteamento (D-15). Se os focos resultarem numa rota só, havendo duas ou mais candidatas, a segunda mais rápida aparece sem foco como "outra opção" (D-16).
+- **AC5.** `[DECISÃO — 13/11/2026]` (`docs/app-map/01_decisoes.md`, D-10 e D-12) O app exibe **até 3 rotas**, cada uma a melhor das candidatas em pelo menos um foco: **menor tempo total**, **menos caminhada** e, só quando a regra do `docs/08` conclui (F3.2 AC6), **menor exposição estimada entre as alternativas avaliadas**. Uma rota que vence dois focos aparece uma vez, com os dois rótulos. **Prioridade da menor exposição estimada (D-23):** quando existir, a rota com esse foco aparece **primeiro**, já selecionada no mapa e com o rótulo em destaque; as demais seguem por tempo total, com o rótulo "menor exposição estimada primeiro". Sem esse foco, os cards ficam ordenados por tempo total, com o rótulo "ordenadas por tempo". *(13/11/2026: antes "sempre por tempo", D-10.)* O rótulo "por segurança" é proibido (`docs/05`). Entram como candidatas até 5 alternativas devolvidas pelo roteamento (D-15). Se os focos resultarem numa rota só, havendo duas ou mais candidatas, a segunda mais rápida aparece sem foco como "outra opção" (D-16).
 
 #### F2.4 — Orientação passo a passo · MVP · Mobile · `[DECISÃO — 13/11/2026]` (`docs/app-map/01_decisoes.md`, D-04; antes "MVP a confirmar", `[HIPÓTESE]`)
 
@@ -174,6 +174,23 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 - **AC1.** Dado uma alternativa escolhida, então o app lista os trechos em ordem, com pontos de embarque e desembarque.
 - ~~`[EM ABERTO]` Confirmar se entra no protótipo da GS.~~ `[DECISÃO — 13/11/2026]` Entra no MVP como lista **só de leitura**, dentro do container de detalhes da alternativa (F3.4 AC5), sem navegação ao vivo.
+
+#### F2.5 — Compartilhar trajeto e localização ao vivo · MVP **(Depende do tempo)** · Mobile, SOA, Cyber · `[DECISÃO — 13/11/2026]` (`docs/app-map/01_decisoes.md`, D-19 a D-22; antecipa o P-02)
+
+> **Depende do tempo (D-22):** previsto para o protótipo de 19/11. Se o prazo apertar, a construção é cancelada e fica para depois, sem afetar as demais features. É **nativa e gratuita** (não entra no premium).
+
+**US-21.** Como Ágatha, quero compartilhar minha rota e minha localização com uma pessoa de confiança durante a volta, para que ela acompanhe minha viagem até eu chegar.
+
+- **AC1.** Dado uma rota escolhida, quando tocar em "Compartilhar minha volta" e confirmar, então o app inicia uma sessão e gera um **link temporário** para enviar ao contato.
+- **AC2.** Antes de iniciar, o app informa o que o contato verá (trajeto, posição atual, chegada estimada) e quando o compartilhamento termina.
+- **AC3.** Durante a sessão, um indicador fica sempre visível, com o botão "Parar". Ao parar, a posição deixa de ser enviada e o link expira.
+- **AC4.** A sessão termina sozinha na chegada ao destino ou ao fim de um tempo máximo.
+- **AC5.** O GPS em segundo plano só é usado com a sessão ativa (exceção ao US-05 AC3, D-20). Com a permissão de localização negada, o app compartilha só o trajeto, sem posição ao vivo `[HIPÓTESE]`.
+- **AC6.** O link **só abre no app VoltaSegura** (D-21). Sem o app, a pessoa recebe a orientação para instalar. No app, o contato vê o trajeto, a última posição com o horário da atualização, a chegada estimada e o estado da sessão (em andamento, chegou, encerrada).
+- **AC7.** Quando a sessão termina, o servidor apaga trajeto e posições e o link deixa de funcionar.
+- **AC8.** O contato não vê dados da conta de quem compartilha nem os números da comparação de exposição `[HIPÓTESE]`.
+- **AC9.** Nenhum texto apresenta o compartilhamento como garantia de segurança nem transfere responsabilidade a quem acompanha (RNF-01, RNF-06).
+- `[EM ABERTO]` Tempo máximo da sessão, frequência de atualização da posição, critério de chegada e se o contato precisa estar logado para abrir o link (`docs/app-map/12_pendencias_e_lacunas.md`, PL-20 a PL-23).
 
 ### E3 — Comparação de exposição estimada
 
@@ -274,6 +291,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - **AC1.** O servidor usa origem, destino e horário só para calcular a resposta e não os grava em banco.
 - **AC2.** Os logs técnicos não contêm coordenadas, endereços nem o identificador da conta.
 - **AC3.** O roteamento roda em servidor próprio; a consulta não é enviada a serviços externos de mapas.
+- **AC4.** `[DECISÃO — 13/11/2026]` (D-21) A única exceção ao AC1 é a sessão de compartilhamento (F2.5): o trajeto compartilhado e a última posição ficam no servidor **só enquanto a sessão durar** e são apagados ao encerrar; os logs continuam sem coordenadas (AC2).
 
 #### F6.2 — Nada de registros individuais no app · MVP · SOA, Cyber · `[DECISÃO]` (`docs/08`)
 
@@ -318,7 +336,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 | ID | Item | Fase |
 |---|---|---|
 | P-01 | Tempo real de transporte com fonte confiável; replanejamento diante de mudanças operacionais | Fase 2 |
-| P-02 | Compartilhamento opcional de trajeto, com consentimento e controles de privacidade | Fase 2 |
+| P-02 | ~~Compartilhamento opcional de trajeto, com consentimento e controles de privacidade~~ **Antecipado para o MVP em 13/11/2026 como F2.5** (Depende do tempo) | ~~Fase 2~~ MVP |
 | P-03 | Indicadores urbanos adicionais (ex.: iluminação pública do GeoSampa) | Fase 3 |
 | P-04 | Preferências de mobilidade e acessibilidade | Fase 3 |
 | P-05 | Parcerias, integrações institucionais e API sob demanda; outras cidades | Fase 4 |
@@ -333,6 +351,8 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - ~~Inclusão do passo a passo no protótipo (F2.4).~~ Resolvido em 13/11/2026: entra no MVP, só leitura (D-04).
 - Endpoints de cadastro, login e exclusão no backend (F1.1 a F1.3): decidido em 13/11/2026 que o app usa endpoints do backend (D-03); o contrato esperado fica em `docs/app-map/` e a implementação está pendente (PL-05).
 - Lacunas do mapeamento do app em `docs/app-map/12_pendencias_e_lacunas.md`. Em 13/11/2026 foram resolvidas PL-01, PL-02, PL-04, PL-08 e PL-13 a PL-15 (D-08 a D-14). PL-16 e PL-17 também foram resolvidas no mesmo dia (D-15: até 5 candidatas; D-16: "outra opção"). **Seguem abertas:** mapa base externo (PL-03), endpoints de conta (PL-05), Google no Expo Go (PL-06), regras de senha (PL-07), nome do ponto escolhido no mapa (PL-09), cópia para o espelho (PL-10), limite do município no aparelho (PL-11), comportamento sem rede (PL-12) e **contrato da API esperado pelo app**, a conciliar com o backend (PL-18).
+- Compartilhamento (F2.5): tempo máximo da sessão, frequência de atualização, critério de chegada, login do contato e GPS em segundo plano no Expo Go (`docs/app-map` PL-20 a PL-24).
+- Modelo de receita: proposta de assinatura individual (freemium) em discussão no grupo; ver seção 4. Nada decidido.
 - Indicador "Risco Cidadão" (disciplina de Cybersecurity).
 - Atualização do benchmarking (seção 3, T17).
 
@@ -352,6 +372,8 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 | Data | Versão | Mudança | Responsável |
 |---|---|---|---|
+| 13/11/2026 | 1.7 | F2.3 AC5 revisto: a menor exposição estimada passa a ser a prioridade do resultado (D-23); com esse foco, a rota vem primeiro, já selecionada e com rótulo em destaque; sem ele, a ordem segue por tempo. IDs mantidos | Lucas Simidu + assistente |
+| 13/11/2026 | 1.6 | Nova F2.5 / US-21 (compartilhar trajeto e localização ao vivo; nativa e gratuita; MVP "Depende do tempo"; D-19 a D-22); exceções registradas em DT-08, US-05 AC3 e novo US-19 AC4; P-02 antecipado; seção 10 com as pendências do compartilhamento e a proposta de receita em discussão. IDs mantidos | Lucas Simidu + assistente |
 | 13/11/2026 | 1.5 | Revisão de consistência com as decisões D-01 a D-17: US-05 AC2 (escolher, não digitar, D-02); novos US-04 AC5 (locais salvos só no aparelho) e US-06 AC5 (formas de escolher o ponto); US-12 AC1 anotado (limiar só no servidor); F3.4 AC5 (botão só em trechos a pé, D-08) e AC6 (pendências resolvidas, "rótulo de foco"); RNF-01 com "por segurança"; seção 8 com busca de endereço externa e navegação ao vivo; seção 10 atualizada (provedor de login já decidido, pendências abertas, PL-18). IDs mantidos | Lucas Simidu + assistente |
 | 13/11/2026 | 1.4 | F2.3 AC5 completado: até 5 candidatas (D-15) e "outra opção" quando os focos resultam numa rota só (D-16); seção 10 atualizada. IDs mantidos | Lucas Simidu + assistente |
 | 13/11/2026 | 1.3 | Segunda rodada do mapeamento (D-08 a D-14): F2.3 AC5 (até 3 rotas com foco: menor tempo, menos caminhada, menor exposição estimada; ordem por tempo); F3.2 AC2 anotado (mistos = indicativo de "sem diferença clara") e AC6 (três ou mais candidatas: vencer cada uma; `L = 0` sem destaque); F4.1 AC1 e AC4 anotados (linha fixa no container; indicativo curto); F4.2 AC1 revisto (totais por rota em "Dados considerados"). IDs mantidos | Lucas Simidu + assistente |
