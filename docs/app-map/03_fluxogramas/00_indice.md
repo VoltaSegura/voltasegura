@@ -19,6 +19,8 @@
 | TL-11 | Dados considerados: detalhes por categoria |
 | TL-12 | Configurações: histórico local, excluir conta, aviso de privacidade |
 | TL-13 | Aviso de privacidade (minuta acadêmica) |
+| TL-14 | Compartilhar minha volta: confirmar e sessão ativa (Depende do tempo) |
+| TL-15 | Acompanhar viagem (quem recebe o link; Depende do tempo) |
 
 ## Mapa geral
 
@@ -36,6 +38,8 @@ flowchart TD
     FL07 --> FL14["FL-14 Passo a passo"]
     FL07 --> FL08["FL-08 Planejar a volta"]
     FL08 --> FL06
+    FL14 --> FL15["FL-15 Compartilhar minha volta"]
+    FL15 -. "link" .-> FL16["FL-16 Acompanhar (contato)"]
     FL12["FL-12 Excluir conta"]
     FL13["FL-13 Erros globais e sem rede"]
 ```
@@ -58,6 +62,8 @@ flowchart TD
 | FL-12 | Excluir conta | US-03 | [FL-12](FL-12_excluir_conta.md) |
 | FL-13 | Erros globais e sem rede | RNF, PL-12 | [FL-13](FL-13_erros_globais.md) |
 | FL-14 | Passo a passo | US-09, D-04 | [FL-14](FL-14_passo_a_passo.md) |
+| FL-15 | Compartilhar minha volta (Depende do tempo) | US-21, D-19 a D-22 | [FL-15](FL-15_compartilhar.md) |
+| FL-16 | Acompanhar uma viagem (contato; Depende do tempo) | US-21 AC6–AC8, D-21 | [FL-16](FL-16_acompanhar.md) |
 
 ## Cobertura dos AC do MVP
 

@@ -26,7 +26,10 @@ flowchart TD
     UMA --> DEC
     COMP --> DEC["Decidir: Ágatha escolhe a alternativa"]
     DEC --> PASSO["Ver o passo a passo (FL-14)"]
-    PASSO --> VOLTA{"Planejar a volta?"}
+    PASSO --> COMP2{"Compartilhar com um contato?"}
+    COMP2 -- "sim" --> SHARE["Compartilhar minha volta: trajeto + localização ao vivo (FL-15)"]
+    COMP2 -- "não" --> VOLTA
+    SHARE --> VOLTA{"Planejar a volta?"}
     VOLTA -- "sim" --> REV["Revisar: volta invertida com novo horário (FL-08)"]
     REV --> BUSCA
     VOLTA -- "não" --> FIM(["Fim"])
@@ -54,6 +57,7 @@ Sessão ativa → planejar ida → duas ou mais alternativas → comparação �
 - Sem sessão: entra pelo FL-03 ou cria conta pelo FL-02.
 - Usa um trajeto do histórico local (FL-11), se ativado.
 - Uma única alternativa: aparece sem comparação (US-08 AC4).
+- Compartilhar a viagem com um contato (FL-15); o contato acompanha pelo app (FL-16). **Depende do tempo** (D-22).
 
 ## Erros e exceções
 

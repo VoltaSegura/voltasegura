@@ -53,10 +53,10 @@ A atividade 7 é transversal: fica disponível em qualquer momento, pelas config
 | Passo | Tarefa | US / AC | Fluxo | Fatia |
 |---|---|---|---|---|
 | 3.1 Ver a lista | Ver até 3 rotas, cada uma com o seu foco: menor tempo, menos caminhada ou menor exposição estimada (D-12) | US-08, D-12 | FL-06 | MVP |
-| | Ver duração, caminhada, baldeações e trechos de cada rota, ordenadas por tempo (D-10) | US-08 AC1 | FL-06 | MVP |
+| | Ver duração, caminhada, baldeações e trechos de cada rota; a de menor exposição estimada primeiro e já selecionada, quando existir, e as demais por tempo (D-23) | US-08 AC1, AC5 | FL-06 | MVP |
 | | Ver os horários identificados como previstos (programados) | US-08 AC3 | FL-06 | MVP |
 | 3.2 Ver no mapa | Ver o trajeto inteiro da alternativa selecionada (D-01) | US-08, D-01 | FL-06 | MVP |
-| | Trocar de alternativa tocando no card | D-01, D-10 | FL-06 | MVP |
+| | Trocar de alternativa tocando no card | D-01, D-23 | FL-06 | MVP |
 | 3.3 Casos sem comparação | Ver aviso de que não há transporte público no horário | US-08 AC2 | FL-06 | MVP |
 | | Ver a única alternativa sem comparação | US-08 AC4 | FL-06 | MVP |
 
@@ -80,6 +80,16 @@ A atividade 7 é transversal: fica disponível em qualquer momento, pelas config
 |---|---|---|---|---|
 | 5.1 Escolher | Escolher a alternativa (decisão da usuária, sem escolha automática) | US-13, US-11 AC5 | FL-07 | MVP |
 | 5.2 Ver o passo a passo | Ver os trechos em ordem com embarque e desembarque (D-04) | US-09 AC1 | FL-14 | MVP |
+| 5.3 Compartilhar a viagem | Enviar a um contato o link com trajeto e localização ao vivo (D-19, D-21) | US-21 AC1–AC2, AC5 | FL-15 | MVP (Depende do tempo) |
+| | Ver o indicador "Compartilhando" e parar quando quiser | US-21 AC3 | FL-15 | MVP (Depende do tempo) |
+| | Ter a sessão encerrada sozinha na chegada ou no tempo máximo | US-21 AC4, AC7 | FL-15 | MVP (Depende do tempo) |
+
+### Atividade do contato (outro ator)
+
+| Passo | Tarefa | US / AC | Fluxo | Fatia |
+|---|---|---|---|---|
+| C.1 Abrir o link | Abrir no app (ou ser orientado a instalar) e entrar | US-21 AC6, PL-23 | FL-16 | MVP (Depende do tempo) |
+| C.2 Acompanhar | Ver trajeto, última posição, chegada estimada e estado até "Chegou" | US-21 AC6, AC8 | FL-16 | MVP (Depende do tempo) |
 
 ### 6. Planejar a volta
 
@@ -101,7 +111,7 @@ A atividade 7 é transversal: fica disponível em qualquer momento, pelas config
 
 **Itens de backend, sem tela própria:** F5.1 (US-17), F5.2 (US-18) e F6.1/F6.2 (US-19, US-20). Eles aparecem nas telas só como consequência: data de atualização (US-18 AC3), cobertura e "dados insuficientes" (US-17 AC3), nada de coordenadas individuais (US-20).
 
-**Fatia Posterior (`docs/10` §9, não entra nas telas do MVP):** P-01 tempo real e replanejamento; P-02 compartilhamento de trajeto; P-03 iluminação pública; P-04 preferências de mobilidade e acessibilidade; P-05 parcerias e outras cidades; P-06 teste de compreensão das mensagens.
+**Fatia Posterior (`docs/10` §9, não entra nas telas do MVP):** P-01 tempo real e replanejamento; ~~P-02 compartilhamento de trajeto~~ (antecipado como F2.5, passo 5.3); P-03 iluminação pública; P-04 preferências de mobilidade e acessibilidade; P-05 parcerias e outras cidades; P-06 teste de compreensão das mensagens.
 
 ## Requisitos transversais em todas as telas
 

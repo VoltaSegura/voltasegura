@@ -1,6 +1,6 @@
 # FL-07 · Comparação, foco de exposição e "Por que esta rota?"
 
-- **Status:** rascunho · **Status das regras:** regra de par `[DECISÃO]` (DT-03 a DT-07, `docs/08`); três ou mais candidatas, `L = 0` e mistos `[DECISÃO — 13/11/2026]` (D-11 a D-13); apresentação `[DECISÃO]` (D-01, D-08 a D-10, D-14); candidatas `[DECISÃO]` (D-15: até 5)
+- **Status:** rascunho · **Status das regras:** regra de par `[DECISÃO]` (DT-03 a DT-07, `docs/08`); três ou mais candidatas, `L = 0` e mistos `[DECISÃO — 13/11/2026]` (D-11 a D-13); apresentação `[DECISÃO]` (D-01, D-08, D-09, D-14, D-23); candidatas `[DECISÃO]` (D-15: até 5)
 - **Ator e gatilho:** o FL-06 recebe duas ou mais candidatas.
 - **Pré-condições:** resposta da API com as candidatas e os resultados da comparação. **O app não calcula estatística:** só exibe o que a API devolve.
 - **Pós-condições:** Ágatha vê as rotas com os seus focos, entende os motivos e escolhe.
@@ -50,7 +50,7 @@ Com exatamente duas candidatas, a Parte 2 é a própria regra de par.
 
 ```mermaid
 flowchart TD
-    R(["Rotas exibidas"]) --> CARDS["TL-07: cards por tempo com rótulos de foco; linha fixa Sobre os dados (D-09)"]
+    R(["Rotas exibidas"]) --> CARDS["TL-07: rota com foco de exposição primeiro e selecionada (D-23), demais por tempo; linha fixa Sobre os dados (D-09)"]
     CARDS --> CARD["Toca num card: TL-08 com os trechos em ordem"]
     CARD --> TIPO{"Tipo do trecho"}
     TIPO -- "ônibus, metrô ou trem" --> SEMB["Sem botão: modo, linha, embarque, desembarque, horário previsto"]

@@ -1,6 +1,6 @@
 # FL-06 · Alternativas com foco
 
-- **Status:** rascunho · **Status das regras:** `[DECISÃO]` (US-08, DT-01, DT-02, D-01, D-10, D-12, D-15, D-16)
+- **Status:** rascunho · **Status das regras:** `[DECISÃO]` (US-08, DT-01, DT-02, D-01, D-12, D-15, D-16, D-23)
 - **Ator e gatilho:** consulta válida enviada pelo FL-04 ou pelo FL-08.
 - **Pré-condições:** sessão ativa; consulta validada.
 - **Pós-condições:** TL-07 exibida com **até 3 rotas**, cada uma com o seu foco; ou aviso de que não há transporte público no horário.
@@ -25,7 +25,10 @@ flowchart TD
     JUNTA --> SO{"Sobrou uma rota só?"}
     SO -- "sim" --> OUTRA["Acrescenta a segunda mais rápida, sem foco, como outra opção (D-16)"]
     SO -- "não" --> LISTA
-    OUTRA --> LISTA["TL-07: até 3 cards ordenados por tempo, com o rótulo ordenadas por tempo; mapa abre na primeira"]
+    OUTRA --> PRI{"Alguma rota tem o foco Menor exposição estimada?"}
+    PRI -- "sim" --> LEXP["TL-07: essa rota primeiro e já selecionada, rótulo em destaque; demais por tempo (D-23)"]
+    PRI -- "não" --> LISTA["TL-07: até 3 cards ordenados por tempo; mapa abre na primeira"]
+    LEXP --> TROCA
     LISTA --> TROCA["Toca em outro card: o mapa troca o trajeto em destaque"]
     TROCA --> LISTA
     LISTA --> DET["Toca no card: TL-08 detalhes e trechos (FL-14)"]
@@ -42,6 +45,8 @@ flowchart TD
 
 | Outra opção (D-16) | "Outra opção" | Só quando os focos resultam numa rota só e há duas ou mais candidatas: a segunda mais rápida, sem foco |
 
+**Ordem (D-23):** a rota com o foco de exposição, quando existe, vem primeiro e já selecionada, com o rótulo em destaque; as demais, por tempo. Sem esse foco, todas por tempo.
+
 **Candidatas:** até 5 alternativas devolvidas pelo roteamento (D-15). Uma rota que vence dois focos aparece **uma vez com os dois rótulos**. Com duas ou mais candidatas, a consulta mostra 2 ou 3 rotas, nunca uma só (D-16).
 
 ## Passos
@@ -49,7 +54,7 @@ flowchart TD
 | Nº | Ação da usuária | Resposta do app | Tela | Dado/serviço |
 |---|---|---|---|---|
 | 1 | — | Mostra "buscando alternativas" | TL-06 | API |
-| 2 | — | Desenha no mapa o trajeto inteiro da primeira rota (a mais rápida); as outras em traço claro | TL-07 | Resposta da API |
+| 2 | — | Desenha no mapa o trajeto inteiro da primeira rota (a de menor exposição estimada, se houver; senão, a mais rápida); as outras em traço claro | TL-07 | Resposta da API |
 | 3 | Lê os cards | Cada card: rótulo(s) de foco, duração total, caminhada, baldeações, modos e linhas, horário previsto | TL-07 | Resposta da API |
 | 4 | Toca em outro card | Troca o trajeto em destaque no mapa | TL-07 | Local |
 | 5 | Abre os detalhes | Mostra os trechos em ordem | TL-08 | Resposta da API |
