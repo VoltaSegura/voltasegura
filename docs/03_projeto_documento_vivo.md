@@ -119,6 +119,13 @@ A conta torna e-mail e identificador dados pessoais: exige base legal, aviso de 
 
 Limitação aceita pela decisão: sem armazenar consultas, a adoção no piloto é medida por entrevistas e não por dados de uso.
 
+`[DECISÃO — 13/11/2026, Lucas Simidu]` **Compartilhamento de trajeto e localização ao vivo** (nativo e gratuito; `docs/app-map/01_decisoes.md` D-19 a D-22). Cria duas exceções, válidas só durante uma sessão de compartilhamento iniciada pela usuária:
+
+- **Item 5:** o GPS é lido em segundo plano enquanto a sessão está ativa, com indicador visível, botão de parar e encerramento automático na chegada ou ao fim de um tempo máximo.
+- **Item 2:** o servidor guarda temporariamente o trajeto e a última posição da sessão para o contato acompanhar pelo app, que é obrigatório para quem recebe, e apaga tudo ao encerrar. Os logs continuam sem coordenadas (item 3).
+
+Fora da sessão, as regras acima valem como estão. A construção está marcada como "Depende do tempo" para a entrega de 19/11.
+
 **Alternativas avaliadas (não adotadas no MVP):**
 
 | Opção | O que muda em relação ao pacote mínimo | Implicações |
