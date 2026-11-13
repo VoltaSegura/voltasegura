@@ -67,8 +67,9 @@
 
 | Campo | Origem | Regra |
 |---|---|---|
-| Quantidade de opções | API (`rotas.length`) | "1 opção encontrada" / "N opções · ordenadas por tempo" |
-| Ordem dos cards | Local (ordenação por `duracaoMin`) | Crescente; empate → menor `caminhadaKm` `[HIPÓTESE]` |
+| Quantidade de opções | API (`rotas.length`) | "1 opção encontrada" / "N opções · menor exposição estimada primeiro" (com `MENOR_EXPOSICAO`) / "N opções · ordenadas por tempo" (sem ele) |
+| Ordem dos cards | Local | **D-23:** rota com `MENOR_EXPOSICAO` primeiro; demais por `duracaoMin` crescente (empate → menor `caminhadaKm`, `[HIPÓTESE]`) |
+| Rota selecionada ao abrir | Local | A primeira da ordem acima (a de menor exposição estimada, se houver) |
 | Rótulos de foco | API (`focos`) | `MENOR_TEMPO` → "Menor tempo"; `MENOS_CAMINHADA` → "Menos caminhada"; `MENOR_EXPOSICAO` → "◆ Menor exposição estimada"; `OUTRA_OPCAO` → "Outra opção" |
 | Duração, km a pé, trocas | API (`duracaoMin`, `caminhadaKm`, `trocas`) | Formatos comuns |
 | Sequência de modos | API (`trechos[].modo`, `linha`) | "a pé → Metrô L4 → a pé" |
@@ -108,7 +109,7 @@
 |---|---|---|
 | Fonte e período | API (`sobreOsDados.fonte`, `periodo`) | "SSP-SP, boletins de ocorrência de jan–set/2026 (9 meses)" |
 | Atualização das bases | API (`sobreOsDados.atualizacao`) | "atualizada em dd/mm/aaaa" (US-18 AC3) |
-| Cobertura por rota | API (`rotas[].exposicao.cobertura`) | Rótulo de foco + percentual |
+| Cobertura por rota | API (`rotas[].exposicao.cobertura`) | Rótulo de foco + percentual; mesma ordem dos cards da TL-07 (D-23) |
 | Situação | API (`caso`, `motivo`) + Fixo | Mesmos textos da TL-09 |
 | Limitações (5) | Fixo | Texto de `docs/08`/US-14 AC5 em linguagem simples |
 | Créditos | Fixo | SSP-SP (CC-BY 4.0), SPTrans (GTFS), © OpenStreetMap contributors (ODbL) |
@@ -117,7 +118,7 @@
 
 | Campo | Origem | Regra |
 |---|---|---|
-| Abas de rota | API (`rotas[].focos`) | Rótulo de foco |
+| Abas de rota | API (`rotas[].focos`) | Rótulo de foco; mesma ordem dos cards da TL-07 (D-23) |
 | Contexto (área, fonte, período, faixa) | API + Fixo | "Registros perto dos trechos a pé desta opção" |
 | Furto, Roubo, Trânsito e parcelas | API (`rotas[].categorias`) | `null` → "dados insuficientes"; nomes das naturezas conforme `docs/07` |
 | Panorama municipal | API (`panoramaMunicipal`) | Só na subtela; aviso fixo obrigatório |
@@ -137,3 +138,25 @@
 | Campo | Origem | Regra |
 |---|---|---|
 | Todo o conteúdo | Fixo | Disponível sem rede |
+
+## TL-14 · Compartilhar minha volta (Depende do tempo)
+
+| Campo | Origem | Regra |
+|---|---|---|
+| Chegada estimada | API (`rotas[].chegadaPrevista`) | Formato de horário; `EXEMPLO` no mock |
+| Horário de término (tempo máximo) | Local (chegada + 30 min, PL-20) | Formato de horário |
+| Link | API (`POST /api/compartilhamentos` → `link`) | Não exibido; vai direto para a folha de compartilhar |
+| "Ativo desde", "última posição enviada" | Local (relógio + envios) | Formato de horário |
+| Indicador global | Local (sessão ativa) | Sempre visível com a sessão ativa |
+
+## TL-15 · Acompanhar viagem (Depende do tempo)
+
+| Campo | Origem | Regra |
+|---|---|---|
+| Estado | API (`estado`) | `ATIVO` → "Em andamento"; `CHEGOU` → "Chegou ao destino às {hora}"; `ENCERRADO` → "O compartilhamento foi encerrado." |
+| Trajeto no mapa e modos | API (`trajeto`) | Como na TL-07; sem marcadores de ocorrência |
+| Posição | API (`posicao`) | `MarcadorPosicao`; `null` com `aoVivo: false` → aviso "só trajeto" |
+| Última atualização | API (`posicao.em`) | "23:12 (há 1 min)" |
+| Chegada estimada | API (`trajeto.chegadaPrevista`) | Formato de horário |
+| Link expirado | API (`404`/`410`) | "Este compartilhamento terminou." |
+

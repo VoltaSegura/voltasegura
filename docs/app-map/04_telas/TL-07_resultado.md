@@ -1,8 +1,8 @@
 # TL-07 · Resultado (mapa + container)
 
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/resultado`
-- **Objetivo:** mostrar **até 3 rotas**, cada uma com o seu foco. Em cima, um mapa com o trajeto inteiro da rota selecionada; embaixo, um container com os cards, ordenados por tempo. Momento: **Comparar** e **Decidir** (`docs/03` §4).
-- **US/AC e funcionalidades cobertas:** US-08 AC1, AC3–AC5; US-11 AC1–AC6; US-12 AC3; US-13 AC1–AC6; US-14 AC1 (linha fixa); US-16 AC1 · FN-08 · decisões D-01, D-09, D-10, D-12, D-13, D-16 · **RNF aplicáveis:** RNF-01 a RNF-04, RNF-06 a RNF-08
+- **Objetivo:** mostrar **até 3 rotas**, cada uma com o seu foco. Em cima, um mapa com o trajeto inteiro da rota selecionada; embaixo, um container com os cards. **Prioridade: menor exposição estimada (D-23).** Quando existe, essa rota vem primeiro e já selecionada; sem ela, os cards vêm por tempo. Momento: **Comparar** e **Decidir** (`docs/03` §4).
+- **US/AC e funcionalidades cobertas:** US-08 AC1, AC3–AC5; US-11 AC1–AC6; US-12 AC3; US-13 AC1–AC6; US-14 AC1 (linha fixa); US-16 AC1 · FN-08 · decisões D-01, D-09, D-12, D-13, D-16, D-23 (revê a D-10) · **RNF aplicáveis:** RNF-01 a RNF-04, RNF-06 a RNF-08
 - **Entradas:** TL-06 (sucesso). Parâmetros: a resposta da consulta (rotas, focos, situação, sobre os dados).
 - **Saídas:** TL-08 (detalhes da rota), TL-10 (sobre os dados), TL-04 (planejar a volta ou nova consulta).
 
@@ -51,26 +51,33 @@ Três candidatas para a volta da faculdade às 23h. Os tempos vêm do mockup e a
 └──────────────────────────────┘
 ```
 
-**Estado com foco de exposição** (CONCLUSIVO: A venceu B e C pela regra do `docs/08`, D-12)
+**Estado com foco de exposição** (CONCLUSIVO: A venceu B e C pela regra do `docs/08`, D-12). **A rota A vem primeiro, já selecionada, e o mapa abre no trajeto dela (D-23).**
 
 ```
-│ 3 opções · ordenadas por tempo│
 │┌────────────────────────────┐│
-││▌[Menor tempo]      EXEMPLO ││
-││▌32 min · 1,4 km a pé · 0 troca│
+││   MAPA: trajeto da rota A  ││
+││   (forte); B e C claras    ││
+│└────────────────────────────┘│
+│ 3 opções · menor exposição   │
+│ estimada primeiro            │
+│┌────────────────────────────┐│
+││▌[■◆ Menor exposição ■]     ││
+││▌[■  estimada        ■] EXEMPLO│
+││▌38 min · 0,9 km a pé · 0 troca│
+││▌a pé → 875A → a pé        ›││
+│└────────────────────────────┘│
+│┌────────────────────────────┐│
+││ [Menor tempo]      EXEMPLO ││
+││ 32 min · 1,4 km a pé · 0 troca│
 │└────────────────────────────┘│
 │┌────────────────────────────┐│
 ││ [Menos caminhada]  EXEMPLO ││
 ││ 35 min · 0,6 km a pé · 1 troca│
 │└────────────────────────────┘│
-│┌────────────────────────────┐│
-││ [◆ Menor exposição         ││
-││    estimada]       EXEMPLO ││
-││ 38 min · 0,9 km a pé · 0 troca│
-││ a pé → 875A → a pé        ›││
-│└────────────────────────────┘│
 │ Dados: SSP-SP, jan–set/2026 ›│
 ```
+
+`[■ … ■]` = rótulo em destaque (preenchido com `cor.acao`, texto `cor.acao.texto`). Os demais rótulos seguem neutros.
 
 **Estado com outra opção** (B é a mais rápida e a de menos caminhada; sem foco de exposição; D-16)
 
@@ -107,7 +114,7 @@ Três candidatas para a volta da faculdade às 23h. Os tempos vêm do mockup e a
 1. `Cabecalho` com voltar e o resumo (sentido · horário de saída; **sem** endereço)
 2. `MapaTrajeto`: rota selecionada com traço forte, demais com traço claro, início ● e fim ■, `Atribuicao` OSM e SPTrans
 3. `Container` (bottom sheet) com alça
-4. `Texto` "N opções · ordenadas por tempo" (D-10)
+4. `Texto` "N opções · menor exposição estimada primeiro" (com o foco de exposição) ou "N opções · ordenadas por tempo" (sem ele) (D-23)
 5. `CardRota` × até 3, com `RotuloFoco` (um ou dois), tempo, km a pé, trocas, sequência de modos, saída prevista e marca `EXEMPLO` quando for dado de exemplo
 6. `LinhaSobreOsDados` fixa (D-09)
 7. `Texto` "Horários previstos (GTFS)" (US-08 AC3)
@@ -152,7 +159,7 @@ Nenhuma validação. Erros de rede ficam na TL-06.
 - **Proibidos:** "rota segura", "mais segura", "por segurança", verde/vermelho de seguro/perigoso, nota, estrelas, escala, semáforo (RNF-01, RNF-04).
 - **Nenhum número de ocorrência** na tela principal (D-14); nada de marcadores de ocorrência no mapa (US-15 AC4).
 - O foco de exposição só aparece no caso CONCLUSIVO (D-12); ausência de registro nunca vira foco (RNF-03, D-13).
-- Todas as rotas têm o mesmo peso visual, exceto pelos rótulos. A ordem é sempre por tempo (D-10), e o app não escolhe pela usuária (US-11 AC5).
+- **Prioridade da menor exposição estimada (D-23):** com esse foco, a rota vem primeiro, já selecionada e com o rótulo em destaque. Sem ele, ordem por tempo. Em qualquer caso, todas as rotas ficam visíveis e selecionáveis, sem "recomendada", nota ou escala: o app não escolhe pela usuária (US-11 AC5).
 
 ## Critérios de pronto da tela
 
@@ -160,7 +167,8 @@ Nenhuma validação. Erros de rede ficam na TL-06.
 - [ ] Horários identificados como previstos (US-08 AC3).
 - [ ] Até 3 rotas, cada uma com pelo menos um foco, ou "Outra opção" (D-12, D-16).
 - [ ] Foco de exposição só no caso CONCLUSIVO; nunca com `L = 0` (D-12, D-13).
-- [ ] Ordem por tempo com o rótulo visível (D-10).
+- [ ] Com o foco de exposição: essa rota em primeiro, selecionada, mapa no trajeto dela e rótulo em destaque; demais por tempo (D-23).
+- [ ] Sem o foco de exposição: ordem por tempo com "ordenadas por tempo" (D-23).
 - [ ] Uma candidata só: sem comparação (US-08 AC4).
 - [ ] Linha "Sobre os dados" sempre visível (D-09, US-14 AC1).
 - [ ] Tempo e registros nunca combinados numa nota (US-11 AC5, US-13 AC1).

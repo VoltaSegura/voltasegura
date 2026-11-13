@@ -1,6 +1,6 @@
 # Índice das telas
 
-- **Status do conjunto:** **pronta**: aprovada por Lucas Simidu em 13/11/2026 (D-17). A Frente 2 pode implementar as telas (`docs/plano_app.md` §1). Mudanças daqui em diante seguem pela `12_pendencias_e_lacunas.md`.
+- **Status do conjunto:** TL-01 a TL-13 **pronta**: aprovadas por Lucas Simidu em 13/11/2026 (D-17); TL-08 e TL-13 receberam acréscimos do compartilhamento (D-19 a D-21). TL-14 e TL-15 são novas, em rascunho, aguardando revisão. A Frente 2 pode implementar as telas (`docs/plano_app.md` §1). Mudanças daqui em diante seguem pela `12_pendencias_e_lacunas.md`.
 - **Template:** `docs/plano_app.md` §4.3.
 - **Textos:** os textos dos wireframes são **propostos** e ainda não foram validados com usuários (US-13 AC4). O catálogo final com chaves fica no `08_microcopy.md` (Fase 3).
 - **Componentes:** os nomes são provisórios até `07_design/componentes.md` (Fase 3).
@@ -14,13 +14,15 @@
 | TL-04 | Planejar | `/(app)/planejar` | FL-04, FL-05, FL-08, FL-11 | US-04, US-05, US-06, US-07 | pronta |
 | TL-05 | Escolher ponto no mapa | `/(app)/escolher-ponto` (modal) | FL-05 | US-05, US-06, D-02 | pronta |
 | TL-06 | Buscando e avisos | `/(app)/buscando` | FL-06, FL-13 | US-08 AC2 | pronta |
-| TL-07 | Resultado (mapa + container) | `/(app)/resultado` | FL-06, FL-07 | US-08, US-11, US-13, D-01, D-09, D-10, D-12, D-16 | pronta |
+| TL-07 | Resultado (mapa + container) | `/(app)/resultado` | FL-06, FL-07 | US-08, US-11, US-13, D-01, D-09, D-12, D-16, D-23 | pronta (prioridade revista pela D-23) |
 | TL-08 | Detalhes da rota (trechos) | `/(app)/resultado/[rotaId]` | FL-07, FL-14 | US-09 AC1, US-08 AC1, AC3 | pronta |
 | TL-09 | Por que esta rota? | `/(app)/por-que/[rotaId]/[trechoId]` (modal) | FL-07 | US-10, US-11, US-12, D-08, D-11, D-13 | pronta |
 | TL-10 | Sobre os dados | `/(app)/sobre-os-dados` | FL-09 | US-14 AC1–AC5, US-16, US-18 AC3 | pronta |
 | TL-11 | Dados considerados | `/(app)/dados-considerados` | FL-10 | US-15 AC1–AC4, D-14 | pronta |
 | TL-12 | Configurações | `/(app)/configuracoes` | FL-11, FL-12 | US-03, US-04 | pronta |
 | TL-13 | Aviso de privacidade | `/aviso-privacidade` | FL-02 | US-01 AC6, RNF-09 | pronta |
+| TL-14 | Compartilhar minha volta (**Depende do tempo**) | `/(app)/compartilhar/[rotaId]` (modal) + indicador global | FL-15 | US-21 AC1–AC5, AC7, AC9 | rascunho (nova, D-19) |
+| TL-15 | Acompanhar viagem (**Depende do tempo**) | `/(app)/acompanhar/[token]` | FL-16 | US-21 AC6–AC8 | rascunho (nova, D-19) |
 
 ## Variantes do resultado e onde ficam
 
@@ -35,6 +37,10 @@ Todas as linhas da matriz de casos do FL-07 têm uma variante desenhada:
 | Uma candidata só | TL-07 estado "uma rota" |
 | Rota única depois dos focos (D-16) | TL-07 estado "com outra opção" |
 | Sem serviço no horário | TL-06 estado "sem transporte público" |
+
+## Compartilhamento (Depende do tempo, D-22)
+
+Enquanto houver uma sessão ativa, **todas as telas de `(app)`** mostram o indicador global "● Compartilhando sua volta · Parar" no topo (TL-14, US-21 AC3).
 
 ## Regras comuns a todas as telas
 

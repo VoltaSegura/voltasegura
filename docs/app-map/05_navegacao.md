@@ -26,7 +26,11 @@ app/
     │   └── [rotaId]/[trechoId].tsx   TL-09 (modal)
     ├── sobre-os-dados.tsx      TL-10
     ├── dados-considerados.tsx  TL-11 (?rotaId=)
-    └── configuracoes.tsx       TL-12
+    ├── configuracoes.tsx       TL-12
+    ├── compartilhar/
+    │   └── [rotaId].tsx        TL-14 (modal; Depende do tempo)
+    └── acompanhar/
+        └── [token].tsx         TL-15 (aberta pelo link; Depende do tempo)
 ```
 
 ## Mapa de navegação
@@ -58,6 +62,10 @@ flowchart LR
     TL04 --> TL12["TL-12 Configurações"]
     TL12 --> TL13
     TL12 --> TL01
+    TL08 --> TL14["TL-14 Compartilhar"]
+    TL14 --> TL08
+    LINK(["Link temporário"]) --> TL15["TL-15 Acompanhar"]
+    LINK --> TL03
 ```
 
 ## Transições e comportamento de voltar
@@ -74,6 +82,8 @@ flowchart LR
 | TL-07/08/09 → TL-10 → TL-11 | pilha | volta à origem |
 | TL-07/TL-08 → TL-04 ("Planejar a volta") | pilha, com `sentido=volta` e pontos invertidos | volta ao resultado anterior |
 | TL-12 → TL-01 (sair ou excluir) | **substitui** tudo | — |
+| TL-08 → TL-14 | modal | fecha para a TL-08; a sessão de compartilhamento continua ativa |
+| Link temporário → TL-15 | **deep link** no app; sem sessão, passa pela TL-03 e volta ao link (PL-23); sem o app, página de instalação | volta à TL-04 do contato |
 | Qualquer tela de (app) com sessão expirada | vai para TL-03 guardando a rota | depois do login, retorna à rota guardada |
 
 No Android, o botão físico de voltar segue a coluna "Voltar".
@@ -89,9 +99,12 @@ No Android, o botão físico de voltar segue a coluna "Voltar".
 | Conectividade | Contexto | Avisos de FL-13 |
 | Modo `mock`/`api` | Configuração do app | Camada de serviços |
 | Histórico e locais salvos | Banco local (FN-13) | TL-04, TL-05, TL-12 |
+| Sessão de compartilhamento ativa (id, link, início, tempo máximo) | Memória + armazenamento seguro, para retomar se o app for reaberto `[HIPÓTESE]` | Indicador global em todas as telas de `(app)`, TL-14 |
+| Tarefa de localização em segundo plano | Sistema (só com sessão ativa, D-20) | FN-15 |
 
 ## Guardas
 
 - Sem sessão, qualquer rota de `(app)` redireciona para TL-01 (US-02 AC3).
 - Com sessão, abrir o app leva direto à TL-04.
+- **Indicador global de compartilhamento:** enquanto a sessão estiver ativa, fica fixo no topo de todas as telas de `(app)` e não pode ser escondido (D-20).
 - TL-07 a TL-11 sem resposta em memória (ex.: o app foi reaberto) redirecionam para TL-04 `[HIPÓTESE]`.

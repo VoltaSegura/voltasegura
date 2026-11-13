@@ -4,7 +4,8 @@
 - **Objetivo:** mostrar a rota dividida em trechos, em ordem, com embarque e desembarque. É o passo a passo **só de leitura** (D-04). Os trechos a pé têm o botão "Por que esta rota?" (D-08).
 - **US/AC e funcionalidades cobertas:** US-09 AC1; US-08 AC1, AC3; US-10 AC5 · FN-09 · **RNF aplicáveis:** RNF-01, RNF-07, RNF-08
 - **Entradas:** TL-07 (toque em › num card). Parâmetro: `rotaId`.
-- **Saídas:** TL-09 (por que esta rota?), TL-07 (voltar), TL-04 (planejar a volta).
+- **Saídas:** TL-09 (por que esta rota?), TL-07 (voltar), TL-04 (planejar a volta), TL-14 (compartilhar minha volta; Depende do tempo).
+- **Revisão de 13/11/2026 (D-19):** acrescentado o botão "Compartilhar minha volta" (US-21 AC1). O resto da tela segue aprovado (D-17).
 
 ## Wireframe
 
@@ -40,9 +41,12 @@
 │                              │
 │ Horários previstos (GTFS)    │
 │ Dados: SSP-SP, jan–set/2026 ›│
+│ [ Compartilhar minha volta ] │
 │ [ Planejar a volta ]         │
 └──────────────────────────────┘
 ```
+
+**Estado compartilhando:** o indicador global "● Compartilhando sua volta · Parar" fica no topo (TL-14), e o botão vira "Ver compartilhamento".
 
 **Estado trecho selecionado:** ao tocar num trecho, o mapa destaca só aquele trecho e o item ganha a marca "selecionado".
 
@@ -52,7 +56,7 @@
 
 ## Estrutura e componentes
 
-`MapaTrajeto` (faixa) · `Cabecalho` com voltar, rótulo(s) de foco e resumo · `ListaTrechos` com `ItemTrecho` (ícone do modo, número, linha, duração, distância a pé, embarque e desembarque, horário previsto) · `BotaoPorQue` (só em trecho a pé) · `Texto` horários previstos · `LinhaSobreOsDados` · `Botao` secundário.
+`MapaTrajeto` (faixa) · `Cabecalho` com voltar, rótulo(s) de foco e resumo · `ListaTrechos` com `ItemTrecho` (ícone do modo, número, linha, duração, distância a pé, embarque e desembarque, horário previsto) · `BotaoPorQue` (só em trecho a pé) · `Texto` horários previstos · `LinhaSobreOsDados` · `Botao` secundário "Compartilhar minha volta" (Depende do tempo) · `Botao` secundário "Planejar a volta".
 
 ## Conteúdo e dados
 
@@ -65,6 +69,7 @@ Trechos da rota selecionada (`09_dados_por_tela.md`, TL-08). Nenhum número de o
 | Toca num trecho | Destaca no mapa | TL-08 |
 | "Por que esta rota?" (trecho a pé) | Abre os motivos | TL-09 |
 | Linha "Dados: …" | Abre o bloco | TL-10 |
+| "Compartilhar minha volta" | Abre a confirmação do compartilhamento | TL-14 |
 | "Planejar a volta" | Inverte e muda o sentido | TL-04 |
 | Voltar | Recolhe o container | TL-07 |
 

@@ -5,6 +5,7 @@
 - **US/AC e funcionalidades cobertas:** US-01 AC6 · FN-12 · **RNF aplicáveis:** RNF-05, RNF-07, RNF-09
 - **Entradas:** TL-01, TL-02, TL-12.
 - **Saídas:** volta à tela de origem.
+- **Revisão de 13/11/2026 (D-20, D-21):** acrescentada a seção "Compartilhar minha volta" e ajustada a seção "Localização". Cobre também US-21 AC2 e US-19 AC4.
 
 ## Wireframe
 
@@ -32,7 +33,17 @@
 │                              │
 │ Localização                  │
 │ Só quando você toca em "usar │
-│ minha localização".          │
+│ minha localização" ou        │
+│ enquanto compartilha sua     │
+│ volta.                       │
+│                              │
+│ Compartilhar minha volta     │
+│ Se você compartilhar, o      │
+│ trajeto e sua última posição │
+│ ficam no servidor só durante │
+│ o compartilhamento e são     │
+│ apagados ao terminar. Só quem│
+│ tem o link e o app vê.       │
 │                              │
 │ Mapa                         │
 │ O mapa de fundo é carregado  │

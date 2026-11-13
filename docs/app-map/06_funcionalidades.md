@@ -15,13 +15,15 @@
 | FN-05 | Planejar e validar a consulta | TL-04 | US-06 AC1–AC4 | Limite do município (PL-11) |
 | FN-06 | Planejar a volta | TL-04, TL-07, TL-08 | US-07 AC1–AC2 | FN-05 |
 | FN-07 | Buscar alternativas e focos | TL-06, TL-07 | US-08 AC1–AC4, US-11, D-12, D-15, D-16 | Endpoint de consulta |
-| FN-08 | Exibir o resultado (mapa + container) | TL-07 | US-08, US-11 AC5, US-13, D-01, D-09, D-10 | FN-07 |
+| FN-08 | Exibir o resultado (mapa + container) | TL-07 | US-08, US-11 AC5, US-13, D-01, D-09, D-23 | FN-07 |
 | FN-09 | Detalhes da rota (passo a passo) | TL-08 | US-09 AC1, D-04 | FN-07 |
 | FN-10 | Por que esta rota? | TL-09 | US-10, US-11 AC1–AC4, US-12, D-08, D-11, D-13 | FN-07 |
 | FN-11 | Sobre os dados e Dados considerados | TL-10, TL-11 | US-14, US-15, US-16, US-18 AC3, D-14 | FN-07 |
 | FN-12 | Aviso de privacidade | TL-13 | US-01 AC6, RNF-09 | — |
 | FN-13 | Histórico local e locais salvos | TL-04, TL-05, TL-12 | US-04 AC1–AC4 | Banco local |
 | FN-14 | Erros globais e sem rede | TL-02, TL-03, TL-04, TL-06, TL-12 | FL-13, PL-12 | — |
+| FN-15 | Compartilhar minha volta (**Depende do tempo**) | TL-08, TL-14, indicador global | US-21 AC1–AC5, AC7, AC9; US-05 AC3; US-19 AC4 | Endpoint de compartilhamento (PL-18), GPS em segundo plano (PL-24) |
+| FN-16 | Acompanhar viagem (**Depende do tempo**) | TL-15 | US-21 AC6–AC8 | Endpoint de compartilhamento (PL-18), deep link |
 
 ## Regras comuns
 
@@ -166,8 +168,8 @@ Resposta `200`:
 
 ## FN-08 · Exibir o resultado
 
-- **Regras:** mapa com o trajeto inteiro da rota selecionada (D-01); cards por tempo com o rótulo (D-10); linha fixa "Sobre os dados" (D-09); nada de números de ocorrência (D-14); foco não depende de cor (RNF-07); uma rota só: sem comparação (US-08 AC4).
-- **Testes previstos:** a ordem é sempre por tempo; o foco de exposição só aparece com `caso = CONCLUSIVO`; a linha de dados está sempre presente; varredura de termos proibidos.
+- **Regras:** mapa com o trajeto inteiro da rota selecionada (D-01); **prioridade da menor exposição estimada**: com esse foco, a rota vem primeiro, já selecionada e com rótulo em destaque, e as demais por tempo; sem ele, todas por tempo (D-23); linha fixa "Sobre os dados" (D-09); nada de números de ocorrência (D-14); foco não depende de cor (RNF-07); uma rota só: sem comparação (US-08 AC4).
+- **Testes previstos:** com `MENOR_EXPOSICAO`, essa rota é a primeira, vem selecionada e o mapa abre nela; sem esse foco, a ordem é por tempo; o foco de exposição só aparece com `caso = CONCLUSIVO`; a linha de dados está sempre presente; varredura de termos proibidos.
 
 ## FN-09 · Detalhes da rota
 
@@ -208,3 +210,39 @@ A sessão (token) fica no armazenamento seguro, não nesse banco.
 
 - **Regras:** FL-13. Mensagens sem código técnico nem culpa (RNF-06); dados digitados preservados; sem resultado antigo como se fosse atual.
 - **Testes previstos:** sem rede, nada é enviado e o aviso aparece; tempo esgotado e erro do servidor têm "Tentar de novo"; sessão expirada leva ao login e retorna.
+
+## FN-15 · Compartilhar minha volta (Depende do tempo, D-22)
+
+- **Regras:**
+  - explicar antes o que será compartilhado e até quando (US-21 AC2);
+  - GPS em segundo plano só com a sessão ativa, com indicador global e "Parar" (D-20);
+  - encerramento na chegada (PL-22), em "Parar" ou no tempo máximo (PL-20);
+  - sem permissão de segundo plano, compartilha só o trajeto (US-21 AC5, `[HIPÓTESE]`);
+  - o servidor guarda trajeto e última posição só durante a sessão e apaga ao encerrar (D-21, US-19 AC4);
+  - logs sem coordenadas (US-19 AC2).
+- **Contrato esperado `[HIPÓTESE]`** (PL-18):
+
+| Chamada | Corpo | Respostas |
+|---|---|---|
+| `POST /api/compartilhamentos` (com token) | `{ "trajeto": { "geometria": "polyline", "trechos": [ { "modo", "linha", "partidaPrevista" } ], "chegadaPrevista": "ISO-8601", "destino": { "lat", "lon" } }, "aoVivo": true }` | `201 { "id": "…", "link": "https://…/a/<token>", "expiraEm": "ISO-8601" }` |
+| `PUT /api/compartilhamentos/{id}/posicao` | `{ "lat": …, "lon": …, "em": "ISO-8601" }` | `204` · `410` (sessão encerrada ou expirada) |
+| `PATCH /api/compartilhamentos/{id}` | `{ "expiraEm": "ISO-8601" }` (estender, PL-20) | `200` |
+| `DELETE /api/compartilhamentos/{id}` | — (parar ou chegou: `{ "motivo": "PAROU" \| "CHEGOU" }`) | `204`; o servidor apaga trajeto e posições |
+
+- **Observações:**
+  - O servidor guarda só a **última** posição, não o histórico do percurso `[HIPÓTESE]`.
+  - O `destino` vai no trajeto para o critério de chegada (PL-22). Ele é parte do que a usuária decidiu compartilhar.
+  - Envio de posição a cada 30 s ou 50 m (PL-21).
+- **Testes previstos:**
+  - positivo: iniciar, receber o link e parar (o link expira);
+  - negativo: permissão negada leva a "só trajeto";
+  - chegada encerra sozinha;
+  - nenhuma leitura de GPS em segundo plano fora da sessão;
+  - logs sem coordenadas.
+
+## FN-16 · Acompanhar viagem (Depende do tempo, D-22)
+
+- **Regras:** o link só abre no app (D-21); exige sessão (PL-23, `[HIPÓTESE]`); mostra trajeto, última posição com horário, chegada estimada e estado (US-21 AC6); não mostra dados da conta nem da comparação de quem compartilha (US-21 AC8); nada fica no aparelho depois do fim `[HIPÓTESE]`.
+- **Contrato esperado `[HIPÓTESE]`:** `GET /api/compartilhamentos/a/{token}` (com token da conta do contato) → `200 { "estado": "ATIVO" | "CHEGOU" | "ENCERRADO", "aoVivo": true, "trajeto": { "geometria", "trechos", "chegadaPrevista" }, "posicao": { "lat", "lon", "em" } | null }` · `404`/`410` (expirado ou inexistente, sem dados). Atualização por consulta periódica (ex.: a cada 30 s) `[HIPÓTESE]`.
+- **Testes previstos:** positivo (link ativo mostra a viagem e depois "Chegou"); negativos (link expirado mostra "terminou" sem dados; sem o app leva à página de instalação; sem sessão passa pelo login); a resposta não contém e-mail nem dados da comparação.
+
