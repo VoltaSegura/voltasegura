@@ -1,7 +1,7 @@
 # Matriz de rastreabilidade
 
 - **Status:** rascunho (Fase 4, 13/11/2026)
-- **Fonte:** `docs/10_backlog_produto.md` **v1.5** (76 AC em US-01 a US-20, mais RNF-01 a RNF-09).
+- **Fonte:** `docs/10_backlog_produto.md` **v1.6** (86 AC em US-01 a US-21, mais RNF-01 a RNF-09). Atualizada em 13/11/2026 com o compartilhamento (US-21, US-19 AC4).
 - **Como ler:** cada critério de aceite → fluxo → tela → funcionalidade/componente → **teste previsto**.
   - Tipo: **+** = positivo, **−** = negativo (caixa-preta, como pede a entrega de QA, `docs/02` §8).
   - Onde: **App** = testável na interface (mock ou API) · **API** = testável chamando o servidor · **Backend** = regra interna do servidor, fora do app.
@@ -31,7 +31,7 @@
 | US-04 AC5 | Locais salvos só no aparelho | FL-05, FL-11 | TL-05, TL-12 | FN-04, FN-13 | T-04.5 Salvar "Faculdade" no mapa: aparece em locais salvos, pode ser renomeado e apagado, e não é enviado | + | App |
 | US-05 AC1 | GPS sob demanda preenche | FL-05 | TL-04 | FN-04 | T-05.1 "Usar minha localização" pede permissão e preenche a origem | + | App |
 | US-05 AC2 | Permissão negada não bloqueia | FL-05 | TL-04 | FN-04 | T-05.2 Negar a permissão: mapa e locais salvos seguem disponíveis | − | App |
-| US-05 AC3 | Sem leitura em segundo plano | FL-05, FL-14 | TL-04, TL-08 | FN-04 | T-05.3 O app não pede permissão de segundo plano nem lê a posição fora da ação | − | App |
+| US-05 AC3 | Sem leitura em segundo plano (exceção: compartilhamento ativo, D-20) | FL-05, FL-14, FL-15 | TL-04, TL-08, TL-14 | FN-04, FN-15 | T-05.3 Sem sessão de compartilhamento, o app não lê a posição em segundo plano; a permissão de segundo plano só é pedida ao iniciar um compartilhamento | − | App |
 
 ## E2 — Planejamento do trajeto
 
@@ -48,8 +48,17 @@
 | US-08 AC2 | Sem serviço no horário | FL-06 | TL-06 | FN-07 (`rotas: []`) | T-08.2 Fixture `sem_servico`: aviso e nenhuma comparação | − | App |
 | US-08 AC3 | Horários previstos | FL-06 | TL-07, TL-08 | FN-08 | T-08.3 Todo horário vem com "previsto" ou o aviso "Horários previstos (GTFS)" | + | App |
 | US-08 AC4 | Uma rota, sem comparação | FL-06 | TL-07 | FN-08 | T-08.4 Fixture `uma_rota`: sem foco e com "não há comparação" | − | App |
-| US-08 AC5 | Até 3 rotas com foco, ordem por tempo, outra opção | FL-06 | TL-07 | FN-07, FN-08 · `RotuloFoco` | T-08.5a Fixture `conclusivo`: 3 cards, por tempo, com os rótulos certos · T-08.5b Fixture `outra_opcao`: rota com dois rótulos + "Outra opção" · T-08.5c Nenhum card diz "por segurança" | + / − | App |
+| US-08 AC5 | Até 3 rotas com foco, prioridade da menor exposição estimada, outra opção | FL-06 | TL-07 | FN-07, FN-08 · `RotuloFoco` | T-08.5a Fixture `conclusivo`: 3 cards; o de menor exposição estimada primeiro, selecionado, mapa no trajeto dele e rótulo em destaque; demais por tempo (D-23) · T-08.5d Fixture `sem_diferenca`: ordem por tempo · T-08.5b Fixture `outra_opcao`: rota com dois rótulos + "Outra opção" · T-08.5c Nenhum card diz "por segurança" | + / − | App |
 | US-09 AC1 | Passo a passo em ordem | FL-14 | TL-08 | FN-09 · `ListaTrechos` | T-09.1 Trechos na ordem de `ordem`, com embarque e desembarque | + | App |
+| US-21 AC1 | Compartilhar gera link temporário | FL-15 | TL-08 → TL-14 | FN-15 | T-21.1 Confirmar o compartilhamento cria a sessão e abre a folha de compartilhar com o link | + | App + API |
+| US-21 AC2 | Explica o que o contato verá e quando termina | FL-15 | TL-14 | FN-15 | T-21.2 A confirmação lista trajeto, posição, chegada estimada e o horário de término | + | App |
+| US-21 AC3 | Indicador sempre visível com Parar | FL-15 | TL-14 + todas de `(app)` | FN-15 · `IndicadorCompartilhamento` | T-21.3 Com sessão ativa, o indicador aparece em todas as telas; "Parar" encerra e o link expira | + | App + API |
+| US-21 AC4 | Encerra na chegada ou no tempo máximo | FL-15 | TL-14 | FN-15 (PL-20, PL-22) | T-21.4 Simular chegada ao destino e tempo máximo: a sessão encerra sozinha e avisa | + | App |
+| US-21 AC5 | GPS em segundo plano só na sessão; negado → só trajeto | FL-15 | TL-14 | FN-15 | T-21.5 Negar a permissão de segundo plano: compartilha só o trajeto; fora da sessão, nenhuma leitura em segundo plano | − | App |
+| US-21 AC6 | Link só abre no app; contato vê trajeto, posição, chegada e estado | FL-16 | TL-15 | FN-16 | T-21.6a Sem o app, página de instalação · T-21.6b Com o app, TL-15 mostra os quatro itens | + / − | App + API |
+| US-21 AC7 | Ao encerrar, servidor apaga e link para de funcionar | FL-15, FL-16 | TL-14, TL-15 | FN-15, FN-16 | T-21.7 Depois de parar, abrir o link mostra "terminou" e a API responde 404/410 sem dados | − | App + API |
+| US-21 AC8 | Contato não vê dados da conta nem da comparação | FL-16 | TL-15 | FN-16 | T-21.8 A resposta e a TL-15 não contêm e-mail nem números de exposição | − | App + API |
+| US-21 AC9 | Sem promessa de proteção nem culpa de quem acompanha | FL-15, FL-16 | TL-14, TL-15 | `08_microcopy.md` | T-21.9 Varredura dos textos `compartilhar.*` e `acompanhar.*`: 0 termos proibidos | − | App |
 
 ## E3 — Comparação de exposição estimada
 
@@ -65,7 +74,7 @@
 | US-11 AC2 | Mistos sem destaque | FL-07 | TL-07, TL-09 | FN-10 (D-11) | T-11.2 Fixture `mistos`: sem foco de exposição, indicativo de "sem diferença clara" | − | App |
 | US-11 AC3 | `p ≥ 0,05` sem destaque | FL-07 | TL-07, TL-09 | FN-10 | T-11.3 Fixture `sem_diferenca`: sem foco, indicativo e N, L, D visíveis | − | App |
 | US-11 AC4 | Muda com a largura: sem destaque | FL-07 | TL-09 | FN-10 | T-11.4 Fixture `insuficiente_largura`: sem foco, motivo em linguagem simples | − | App |
-| US-11 AC5 | App não escolhe, sem nota única | FL-07 | TL-07 | FN-08 | T-11.5 Nenhuma tela mostra nota, estrela, escala ou "recomendada"; todas as rotas têm o mesmo peso visual | − | App |
+| US-11 AC5 | App não escolhe, sem nota única | FL-07 | TL-07 | FN-08 | T-11.5 Nenhuma tela mostra nota, estrela, escala ou "recomendada"; mesmo com a prioridade da D-23, todas as rotas ficam visíveis e selecionáveis | − | App |
 | US-11 AC6 | 3+ candidatas: vencer cada uma; `L = 0` sem destaque | FL-07 | TL-07 | FN-07 | T-11.6 (Backend) com 3 candidatas, sem vitória em todos os pares, nenhum foco de exposição · T-11.6-App fixture `nao_aplicavel` sem foco | − | Backend + App |
 | US-12 AC1 | Menos de 10 registros: insuficiente | FL-07 | TL-09, TL-10 | FN-10 | T-12.1 Fixture `insuficiente_amostra`: "poucos registros no total", sem ordenar e sem mostrar "10" | − | App |
 | US-12 AC2 | Cobertura baixa: insuficiente | FL-07 | TL-09, TL-10 | FN-10 | T-12.2 Fixture `insuficiente_cobertura`: motivo de cobertura sem qualificar a região | − | App |
@@ -106,6 +115,7 @@
 | US-19 AC1 | Consulta não gravada | TL-06 (texto de privacidade) | T-19.1 Após consultar, nada da consulta no banco do servidor | − | Backend |
 | US-19 AC2 | Logs sem coordenadas nem conta | App também não loga | T-19.2 Logs do servidor e do app sem coordenadas, endereços ou e-mail | − | Backend + App |
 | US-19 AC3 | Sem serviços externos de mapas | Sem busca de endereço (US-06 AC5) | T-19.3 (Backend) roteamento próprio · T-19.3-App nenhuma chamada com origem/destino a terceiros | − | Backend + App |
+| US-19 AC4 | Compartilhamento: dados só durante a sessão | TL-13, TL-14 (textos de privacidade) | T-19.4 Depois de encerrar, nada da sessão no banco do servidor; o servidor guardou só a última posição | − | Backend + API |
 | US-20 AC1 | Só agregados | Contrato FN-07 | T-20.1 A resposta não contém coordenadas nem campos de boletins | − | API |
 | US-20 AC2 | Recortes identificáveis ocultos | TL-11 "dados insuficientes" | T-20.2 Contagem `null` exibida como "dados insuficientes", nunca 0 | − | App + API |
 
@@ -127,6 +137,6 @@
 
 | Item | Total | Com fluxo | Com tela | Com teste previsto |
 |---|---|---|---|---|
-| AC de US-01 a US-16 (com tela) | 65 | 65 | 63 (US-10 AC2 e AC3 são só backend) | 65 |
-| AC de US-17 a US-20 (backend e proteção) | 11 | — | reflexo indicado | 11 |
+| AC de US-01 a US-16 e US-21 (com tela) | 74 | 74 | 72 (US-10 AC2 e AC3 são só backend) | 74 |
+| AC de US-17 a US-20 (backend e proteção) | 12 | — | reflexo indicado | 12 |
 | RNF | 9 | — | — | 9 |
