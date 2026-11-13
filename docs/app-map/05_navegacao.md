@@ -2,6 +2,7 @@
 
 - **Status:** rascunho (Fase 2, 13/11/2026)
 - **Base:** Expo Router (DT-11). As rotas são **previstas** e podem ser ajustadas na construção. Uma mudança de rota deve ser anotada aqui e na tela correspondente.
+- **Construção (13/11/2026):** a árvore abaixo foi implementada como está, mas dentro de `src/mobile-app/src/app/` (e não em `app/`), para manter o código que não é rota fora da pasta de rotas. As URLs não mudam. Detalhes em `src/mobile-app/ARQUITETURA.md`.
 
 ## Árvore de rotas
 

@@ -78,6 +78,8 @@
 4. Apontamento de onde a IA contribuiu no código (arquivos/PRs).
 5. Validação humana: seu time revisou e entende o que foi gerado? (obrigatório marcar ✅ quando revisado)
 
+| 2026-11-13 | Lucas Simidu | Claude Code (Claude Opus 5.5) | Setup básico do app mobile (T07, Frente 2) | Pedido: criar a base React Native + TypeScript + Expo Router. Criado em `src/mobile-app/` do monorepo (o sync apaga o que for feito só no espelho): projeto Expo SDK 58 gerado com `create-expo-app` (template blank-typescript), Expo Router instalado conforme a documentação do SDK 58, rotas de `docs/app-map/05_navegacao.md` em `src/app/` com telas provisórias e `Stack.Protected` como guarda de sessão (sessão provisória em memória), tokens de `07_design/tokens.md`, configuração `mock\|api`, ESLint. Verificado: lint, `tsc`, `expo-doctor` e `expo export` (Android e web). Não verificado: rodar no celular (Node 20.17 abaixo do mínimo 22.13) | `src/mobile-app/`, `docs/app-map/05_navegacao.md`, `TODO.md`, `prompts.md` |
+
 ## Lembrete do combinado da equipe
 
 > "Permitida para aprender e revisar. Registrem os prompts em um arquivo `prompts.md` e saibam explicar cada linha."

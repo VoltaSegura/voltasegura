@@ -321,10 +321,10 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ## T07 — Mobile & IoT
 
-**Status:** EM DESENVOLVIMENTO (13/11/2026: mapeamento do app iniciado em `docs/app-map/`, com as Fases 0 e 1 do plano `docs/plano_app.md` feitas; o código do app ainda não existe)
+**Status:** EM DESENVOLVIMENTO (13/11/2026: mapeamento fechado em `docs/app-map/`; esqueleto do app criado em `src/mobile-app/` com navegação e telas provisórias; telas reais, serviços, banco e sessão ainda não existem)
 **Responsável:** Lucas Simidu (indicado em 11/11/2026)
 **Tipo:** Entrega de disciplina (Mobile & IoT)
-**Referência:** `docs/02` §5; plano `docs/plano_app.md`; mapeamento `docs/app-map/`.
+**Referência:** `docs/02` §5; plano `docs/plano_app.md`; mapeamento `docs/app-map/`; **painel detalhado de status e progresso em `src/mobile-app/todo-mobile.md`** (entregas da disciplina, infraestrutura, FN-01 a FN-16, telas, fixtures, RNF).
 
 **Escopo previsto:** app React Native (TypeScript) com Expo Router para a jornada ida e volta do estudante noturno; consumir API ou mock; salvar em banco; acessibilidade.
 - [x] Mapeamento, Fase 0: decisões D-00 a D-07 registradas (`docs/app-map/01_decisoes.md`, 13/11)
@@ -332,6 +332,9 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [x] Mapeamento, Fase 2: telas, navegação, funcionalidades (com o contrato esperado de conta, D-03) e dados por tela. *13/11: TL-01 a TL-13, `05_navegacao.md`, `06_funcionalidades.md` (FN-01 a FN-14 e contrato esperado da API, PL-18) e `09_dados_por_tela.md`; aprovados pelo Lucas (D-17), telas `pronta`.*
 - [x] Mapeamento, Fase 3: design (tokens, componentes, acessibilidade, mockups) e microcopy, com varredura de termos. *13/11: `07_design/` e `08_microcopy.md`; varredura com 0 termos proibidos em 762 linhas; validados pelo Lucas (D-18), com pontos de design a rever (PL-19).*
 - [x] Mapeamento, Fase 4: rastreabilidade e fechamento. *13/11: `docs/app-map/10_rastreabilidade.md` (76 AC + 9 RNF, conferido por script) e `00_LEIA-ME.md` com a definição de pronto; backlog revisado (`docs/10` v1.5). Roteiro do vídeo adiado por decisão do Lucas (D-18).*
+- [x] Esqueleto do app (Frente 2, `docs/plano_app.md` §5.1). *13/11: Expo SDK 58 + TypeScript + Expo Router em `src/mobile-app/`, árvore de rotas de `05_navegacao.md` (em `src/app/`) com telas provisórias e guarda de sessão, tokens de `07_design/tokens.md`, modo `mock|api` por `EXPO_PUBLIC_API_MODE`, ESLint. Lint, typecheck e `expo-doctor` (18/18) passando; bundles Android e web compilam (`expo export`). Ainda não aberto no celular. Evidência: `src/mobile-app/ARQUITETURA.md`.*
+- [ ] Atualizar o Node.js para 22.13 ou mais novo na máquina de desenvolvimento (o Expo SDK 58 não suporta o Node 20.17 instalado hoje; o CLI roda com aviso) e abrir o app vazio no celular pelo Expo Go
+- [ ] Camada `services/` com modo `mock|api` e fixtures por caso do FL-07; sessão no `expo-secure-store`; banco local `expo-sqlite` (FN-13)
 - [ ] Revisão de pontos de design com o Lucas antes de estilizar as telas (PL-19)
 - [ ] Conciliar o contrato da API esperado pelo app com o backend (PL-18)
 - [ ] **Compartilhar trajeto e localização ao vivo** (F2.5/US-21, D-19 a D-22). **Depende do tempo:** construir por último; se o prazo apertar, fica para depois. Mapeamento feito em 13/11 (FL-15, FL-16, TL-14, TL-15, FN-15, FN-16); faltam a revisão do Lucas das telas novas, a checagem do GPS em segundo plano no Expo Go (PL-24) e o endpoint no backend (PL-18)
@@ -469,3 +472,5 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 13/11/2026 | Mapeamento do app (T07) fechado: Fases 3 e 4 concluídas (validação do Lucas, D-18); `docs/10` v1.5 (revisão de consistência com D-01 a D-17); matriz de rastreabilidade com 76 AC + 9 RNF, que também serve à T10. Abertas: revisão de design (PL-19) e contrato da API (PL-18). Roteiro do vídeo adiado. | assistente (a pedido do Lucas) |
 | 13/11/2026 | Compartilhamento de trajeto e localização ao vivo planejado como feature nativa, MVP "Depende do tempo" (D-19 a D-22): `docs/10` v1.6, `docs/03` §6, `docs/06` 1.41 e mapeamento (FL-15, FL-16, TL-14, TL-15, FN-15, FN-16, mockups e rastreabilidade com 86 AC). Proposta de premium registrada como pendência do pitch (T03). | assistente (a pedido do Lucas) |
 | 13/11/2026 | Mapeamento do app (T07): prioridade do resultado passa a ser a menor exposição estimada (D-23, revê a D-10): rota com esse foco primeiro, selecionada e com rótulo em destaque; sem o foco, ordem por tempo. `docs/10` v1.7, `docs/06` 1.42, TL-07, fluxos, design, textos e mockups. | assistente (a pedido do Lucas) |
+| 13/11/2026 | T07: esqueleto do app criado em `src/mobile-app/` (Expo SDK 58, TypeScript, Expo Router, rotas de `05_navegacao.md` com telas provisórias, tokens, modo `mock\|api`, ESLint); lint, typecheck e `expo-doctor` ok. Novas pendências: Node 22.13+ na máquina e camada de serviços/banco/sessão. | assistente (a pedido do Lucas) |
+| 13/11/2026 | T07: criado o painel `src/mobile-app/todo-mobile.md` com o status detalhado do app (entregas da disciplina, infraestrutura, funcionalidades, telas, fixtures, RNF, pendências e cronograma); a T07 passa a apontar para ele. | assistente (a pedido do Lucas) |
