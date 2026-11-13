@@ -1,7 +1,7 @@
 ---
 titulo: Regra inicial de comparação de trajetos — MVP
 projeto: VoltaSegura
-atualizado: 2026-11-11
+atualizado: 2026-11-13
 tipo: decisao-metodologica
 fonte: "Decisão do grupo em 11/11/2026; docs/03, docs/05, docs/07 e catálogo SSP-SP 2026"
 ---
@@ -49,6 +49,14 @@ Para cada rota `r`:
 `[DECISÃO]` Se **ambas** as alternativas passarem nas verificações de cobertura, qualidade e privacidade, a comparação criminal só aponta X como tendo **menor exposição estimada entre as alternativas avaliadas** quando `N_X < N_Y` **e** `D_X < D_Y`. Para apontar Y, usar a condição simétrica. Sem essa concordância, mostrar os dois números e “indicadores mistos; não há conclusão por ocorrências registradas”. Nenhum peso arbitrário mistura `N_r`, `D_r`, tempo ou outros fatores, e o app não escolhe a rota pelo usuário.
 
 `[DECISÃO]` Zero registro não significa segurança. Mesmo quando as duas desigualdades ocorrerem, a frase comparativa é condicionada à suficiência dos dados e descreve apenas os registros considerados. Sem evidência suficiente ou publicação responsável, retornar “dados insuficientes”, sem atribuir vantagem à ausência de dados.
+
+`[DECISÃO — 13/11/2026, Lucas Simidu]` **Três ou mais alternativas, alternativa sem trecho a pé e indicadores mistos** (mapeamento do app, `docs/app-map/01_decisoes.md` D-11 a D-13):
+
+1. **Três ou mais candidatas:** a regra acima continua sendo aplicada **em pares**. Uma alternativa só é apontada como de **menor exposição estimada entre as alternativas avaliadas** se a comparação em par sair a favor dela **contra cada uma das outras** candidatas. Basta um par não concluir para nenhuma alternativa ser apontada. O app exibe até 3 rotas, cada uma com um foco (menor tempo total, menos caminhada e, só nesse caso, menor exposição estimada), sem misturar critérios numa nota.
+2. **Alternativa sem trecho a pé (`L = 0`):** `N = 0` por construção e o teste binomial não se aplica. Quando alguma candidata tem `L = 0`, **nenhuma** alternativa é apontada naquela consulta, e o indicador aparece como "não aplicável" (regra de `L_r = 0` acima). Zero registro não vira vantagem.
+3. **Indicadores mistos:** a regra continua tratando "mistos" como caso próprio (sem destaque, com os números). Na tela, mistos e "sem diferença clara entre os registros" usam o **mesmo indicativo**. As frases de situação não aparecem na tela principal do app, só um indicativo curto dentro de "Por que esta rota?" (D-01).
+
+`[DECISÃO — 13/11/2026, Lucas Simidu]` Entram como candidatas **até 5 alternativas** devolvidas pelo roteamento para a consulta (`docs/app-map/01_decisoes.md` D-15). A regra de "vencer cada uma das outras" considera as 5.
 
 ## Verificações antes de exibir uma comparação
 
