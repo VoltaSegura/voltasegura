@@ -1,5 +1,7 @@
 # TL-01 · Abertura
 
+> **Revisão D-29 (14/11/2026):** imagem em tela cheia (`heroAbertura`, placeholder até o Lucas informar a foto), marca e frase por cima, botões embaixo.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(auth)/`
 - **Objetivo:** apresentar o app e levar a usuária a entrar ou criar conta. É o início da jornada, quando não há sessão.
 - **US/AC e funcionalidades cobertas:** US-02 AC3 (conta obrigatória) · FN-01, FN-02 · **RNF aplicáveis:** RNF-01, RNF-07, RNF-09

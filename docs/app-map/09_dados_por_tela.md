@@ -26,7 +26,7 @@
 | Campo | Origem | Regra |
 |---|---|---|
 | Logo, frase, botões | Fixo | — |
-| Aviso de conta excluída / sessão expirada | Local (parâmetro de navegação) | Só quando vier do FL-12 / FL-13 |
+| Aviso de conta excluída (adiado, D-25) / sessão expirada | Local (parâmetro de navegação) | Só quando vier do FL-12 / FL-13 |
 
 ## TL-02 · Criar conta / TL-03 · Entrar
 
@@ -131,7 +131,7 @@
 | Histórico ligado | Local (`preferencias.historico_ligado`) | Padrão desligado |
 | Trajetos salvos | Local (`historico`) | "Origem → Destino"; mais recente primeiro |
 | Locais salvos | Local (`locais_salvos`) | Nome |
-| Resultado da exclusão | API (`DELETE /api/conta`) | `204` → TL-01; erro → aviso, nada apagado |
+| Resultado da exclusão (adiado, D-25) | API (`DELETE /api/conta`) | `204` → TL-01; erro → aviso, nada apagado |
 
 ## TL-13 · Aviso de privacidade
 

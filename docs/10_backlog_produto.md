@@ -113,9 +113,11 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - **AC2.** Dado senha incorreta ou e-mail inexistente, quando entrar, então o acesso é negado com mensagem genérica, sem revelar qual dos dois está errado.
 - **AC3.** Dado um usuário sem sessão, quando tentar consultar trajetos, então o app pede login (conta obrigatória).
 
-#### F1.3 — Exclusão da conta pelo app · MVP · Mobile, SOA, Cyber
+#### F1.3 — Exclusão da conta pelo app · MVP (adiada, D-25) · Mobile, SOA, Cyber
 
 **US-03.** Como Ágatha, quero excluir minha conta pelo próprio app, para que o servidor não guarde mais nada sobre mim.
+
+> **Adiada por ora pela D-25 (14/11/2026):** fora do MVP; critérios preservados para retomada.
 
 - **AC1.** Dado um usuário logado, quando escolher excluir a conta e confirmar, então e-mail e identificador são apagados do servidor e a sessão é encerrada.
 - **AC2.** Dado uma conta excluída, quando tentar entrar com o mesmo e-mail e senha, então o acesso é negado.
@@ -372,6 +374,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 | Data | Versão | Mudança | Responsável |
 |---|---|---|---|
+| 14/11/2026 | 1.8 | US-03 / F1.3 (exclusão de conta) adiada por ora pela D-25: fora do MVP, critérios preservados; IDs mantidos | Lucas Simidu + assistente |
 | 13/11/2026 | 1.7 | F2.3 AC5 revisto: a menor exposição estimada passa a ser a prioridade do resultado (D-23); com esse foco, a rota vem primeiro, já selecionada e com rótulo em destaque; sem ele, a ordem segue por tempo. IDs mantidos | Lucas Simidu + assistente |
 | 13/11/2026 | 1.6 | Nova F2.5 / US-21 (compartilhar trajeto e localização ao vivo; nativa e gratuita; MVP "Depende do tempo"; D-19 a D-22); exceções registradas em DT-08, US-05 AC3 e novo US-19 AC4; P-02 antecipado; seção 10 com as pendências do compartilhamento e a proposta de receita em discussão. IDs mantidos | Lucas Simidu + assistente |
 | 13/11/2026 | 1.5 | Revisão de consistência com as decisões D-01 a D-17: US-05 AC2 (escolher, não digitar, D-02); novos US-04 AC5 (locais salvos só no aparelho) e US-06 AC5 (formas de escolher o ponto); US-12 AC1 anotado (limiar só no servidor); F3.4 AC5 (botão só em trechos a pé, D-08) e AC6 (pendências resolvidas, "rótulo de foco"); RNF-01 com "por segurança"; seção 8 com busca de endereço externa e navegação ao vivo; seção 10 atualizada (provedor de login já decidido, pendências abertas, PL-18). IDs mantidos | Lucas Simidu + assistente |

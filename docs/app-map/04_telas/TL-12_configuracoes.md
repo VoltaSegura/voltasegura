@@ -1,7 +1,10 @@
 # TL-12 · Configurações
 
+> **Revisão D-29 (14/11/2026):** configurações em grupos (Conta, Lugares salvos, Privacidade) com ícone redondo por linha. **Lugares salvos** listados com apagar (só no aparelho). Histórico de trajetos segue `[EM ABERTO]`.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/configuracoes`
-- **Objetivo:** controlar o histórico local e os locais salvos, ler o aviso de privacidade, sair e excluir a conta.
+- **Objetivo:** controlar o histórico local e os locais salvos, ler o aviso de privacidade, sair e excluir a conta. **Excluir conta: adiado (D-25), fora do MVP por ora.**
+> **Adiado (D-25).** `[DECISÃO — 14/11/2026]` O botão e o fluxo "Excluir conta" (wireframes, estados, ações e critérios de US-03 abaixo) saem do MVP por ora; o texto fica preservado para retomada. O restante da tela segue pronto.
 - **US/AC e funcionalidades cobertas:** US-03 AC1–AC3; US-04 AC1–AC5 · FN-03, FN-12, FN-13 · **RNF aplicáveis:** RNF-05, RNF-07, RNF-09
 - **Entradas:** ⚙ na TL-04.
 - **Saídas:** TL-13, TL-01 (sair ou conta excluída), TL-04 (usar um trajeto salvo).

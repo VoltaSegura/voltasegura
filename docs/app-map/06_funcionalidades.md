@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | FN-01 | Cadastro com aviso de privacidade | TL-02, TL-13 | US-01 AC1–AC6 | Endpoint de conta (PL-05) |
 | FN-02 | Login, sessão e saída | TL-01, TL-03, TL-12 | US-02 AC1–AC3 | Endpoint de sessão (PL-05) |
-| FN-03 | Excluir conta | TL-12 | US-03 AC1–AC3 | Endpoint de conta (PL-05) |
+| FN-03 | Excluir conta — **adiado (D-25)** | TL-12 | US-03 AC1–AC3 | Endpoint de conta (PL-05) |
 | FN-04 | Escolher ponto (GPS, mapa, local salvo, exemplo) | TL-04, TL-05 | US-05 AC1–AC3, US-06 | GPS, mapa base (PL-03) |
 | FN-05 | Planejar e validar a consulta | TL-04 | US-06 AC1–AC4 | Limite do município (PL-11) |
 | FN-06 | Planejar a volta | TL-04, TL-07, TL-08 | US-07 AC1–AC2 | FN-05 |
@@ -59,7 +59,9 @@
 
 - **Testes previstos:** positivo (login válido abre TL-04); negativos (senha errada, e-mail inexistente, conta excluída: mesma mensagem); sem sessão, consultar leva ao login.
 
-## FN-03 · Excluir conta
+## FN-03 · Excluir conta (adiado, D-25)
+
+> **Adiado (D-25).** `[DECISÃO — 14/11/2026]` Fora do MVP por ora: o Neon Auth gerenciado não oferece exclusão e ela exigiria endpoint próprio. Conteúdo preservado.
 
 - **Regras:** confirmação obrigatória (AC1, AC3); o servidor apaga e-mail e identificador (AC1); localmente, o app apaga sessão, histórico e locais `[HIPÓTESE]`.
 - **Contrato esperado `[HIPÓTESE]`:** `DELETE /api/conta` (com token) → `204` · `401`. Erro de rede: nada é dado como excluído.

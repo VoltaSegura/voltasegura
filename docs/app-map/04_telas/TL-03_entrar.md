@@ -1,5 +1,7 @@
 # TL-03 · Entrar
 
+> **Revisão D-29 (14/11/2026):** topo com imagem de borda curva (`heroEntrar`), botão voltar redondo e título sobre a imagem; sem cabeçalho nativo.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(auth)/entrar`
 - **Objetivo:** abrir a sessão com e-mail e senha (ou Google). Momento: início da jornada.
 - **US/AC e funcionalidades cobertas:** US-02 AC1–AC3, US-03 AC2 · FN-02 · **RNF aplicáveis:** RNF-07

@@ -17,7 +17,7 @@
 | TL-09 | "Por que esta rota?" (D-01, PL-01) |
 | TL-10 | Sobre os dados e fontes |
 | TL-11 | Dados considerados: detalhes por categoria |
-| TL-12 | Configurações: histórico local, excluir conta, aviso de privacidade |
+| TL-12 | Configurações: histórico local, excluir conta (adiado, D-25), aviso de privacidade |
 | TL-13 | Aviso de privacidade (minuta acadêmica) |
 | TL-14 | Compartilhar minha volta: confirmar e sessão ativa (Depende do tempo) |
 | TL-15 | Acompanhar viagem (quem recebe o link; Depende do tempo) |
@@ -40,7 +40,7 @@ flowchart TD
     FL08 --> FL06
     FL14 --> FL15["FL-15 Compartilhar minha volta"]
     FL15 -. "link" .-> FL16["FL-16 Acompanhar (contato)"]
-    FL12["FL-12 Excluir conta"]
+    FL12["FL-12 Excluir conta (adiado, D-25)"]
     FL13["FL-13 Erros globais e sem rede"]
 ```
 
@@ -59,7 +59,7 @@ flowchart TD
 | FL-09 | Sobre os dados e fontes | US-14, US-16 | [FL-09](FL-09_sobre_os_dados.md) |
 | FL-10 | Detalhes por categoria | US-15 | [FL-10](FL-10_detalhes_categorias.md) |
 | FL-11 | Histórico local | US-04 | [FL-11](FL-11_historico_local.md) |
-| FL-12 | Excluir conta | US-03 | [FL-12](FL-12_excluir_conta.md) |
+| FL-12 | Excluir conta — **adiado (D-25)** | US-03 | [FL-12](FL-12_excluir_conta.md) |
 | FL-13 | Erros globais e sem rede | RNF, PL-12 | [FL-13](FL-13_erros_globais.md) |
 | FL-14 | Passo a passo | US-09, D-04 | [FL-14](FL-14_passo_a_passo.md) |
 | FL-15 | Compartilhar minha volta (Depende do tempo) | US-21, D-19 a D-22 | [FL-15](FL-15_compartilhar.md) |
