@@ -1,0 +1,20 @@
+/** [HIPÓTESE] Textos de apresentação das TL-08 a TL-12, pendentes de revisão. */
+export const hipotesesDetalhes = {
+  trechoNumerado: (indice: number, total: number) => `Trecho ${indice} de ${total}`,
+  trechoSelecionado: 'selecionado',
+  desembarque: 'Desembarque',
+  porQueAcessivel: (indice: number) => `Por que esta rota? Trecho ${indice}, a pé`,
+  faixaAusente: 'Faixa do dia deste trecho: dados insuficientes.',
+  qualidadeDados: 'Qualidade dos dados desta opção',
+  fecharExplicacao: 'Voltar aos detalhes da rota',
+  verOpcao: (indice: number) => `Ver opção ${indice} na comparação`,
+  opcao: (indice: number) => `Opção ${indice}`,
+  opcaoComFoco: (indice: number, focos: string) => `Opção ${indice} · ${focos}`,
+  dataAusente: 'dados insuficientes',
+  faixaMista: (faixas: string) => `Faixas dos trechos a pé: ${faixas}.`,
+  faixaNaoInformada: 'Faixa dos trechos a pé: dados insuficientes.',
+  totaisCategoria: 'Totais por categoria nesta opção',
+  avisoRecorteAntes: 'Só "furto – outros" e "roubo – outros" entram na comparação. Os totais a seguir incluem outros tipos.',
+  saindo: 'Saindo…',
+  creditosFontes: 'SSP-SP (CC-BY 4.0) · SPTrans (GTFS). O mapa base usa Google Maps ou Apple Maps, conforme a plataforma.',
+} as const;

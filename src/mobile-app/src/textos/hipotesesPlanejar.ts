@@ -1,0 +1,21 @@
+/** [HIPÓTESE] Microcopy da revisão TL-04/TL-06, pendente de validação editorial. */
+export const hipotesesPlanejar = {
+  ajudaPontos: 'Escolha cada ponto no mapa, pela localização atual ou com um exemplo da demonstração.',
+  escolherMetodo: 'Como escolher o ponto?',
+  escolherMapa: 'Escolher no mapa',
+  origemDefinida: 'Origem definida. Escolha o destino.',
+  destinoDefinido: 'Destino definido.',
+  pontosInvertidos: 'Origem e destino invertidos.',
+  erroHora: 'Informe a hora no formato HH:mm.',
+  diaSaida: 'Dia da saída',
+  saidaInvalida: 'Confira o horário da saída no planejamento.',
+  usarEstePonto: 'Usar este ponto',
+  pontoMarcado: 'Ponto marcado. Use este ponto para confirmar.',
+  mapaIndisponivel: 'Mapa indisponível neste dispositivo. Use sua localização ou um ponto de exemplo.',
+  campoInvalido: 'Não foi possível identificar o campo. Volte ao planejamento e escolha origem ou destino.',
+  buscarResumo: (sentido: string, hora: string) => `Sua ${sentido.toLowerCase()}. Saída às ${hora}.`,
+  alternativasEncontradas: 'Alternativas encontradas.',
+  retornoHorario: 'Voltar ao horário',
+  sessaoExpirada: 'Sua sessão terminou. Entre novamente para continuar.',
+  semRede: 'Sem conexão para consultar alternativas. Verifique a internet e tente de novo.',
+} as const;
