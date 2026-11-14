@@ -43,3 +43,4 @@ yarn-error.*
 # variáveis de ambiente (o .gitignore da raiz ignora .env.*; aqui liberamos só o exemplo)
 .env
 !.env.example
+.neon

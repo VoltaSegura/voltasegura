@@ -25,7 +25,15 @@
       "expo-router",
       "expo-status-bar",
       "expo-sqlite",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Permitir que o VoltaSegura use sua localização quando você tocar em Usar minha localização."
+        }
+      ],
+      "expo-font",
+      "expo-asset"
     ],
     "scheme": "voltasegura",
     "experiments": {
