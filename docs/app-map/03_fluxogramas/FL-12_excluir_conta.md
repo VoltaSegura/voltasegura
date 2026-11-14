@@ -1,6 +1,8 @@
 # FL-12 · Excluir conta
 
-- **Status:** rascunho · **Status das regras:** `[DECISÃO]` (US-03, DT-08, D-03)
+> **Adiado (D-25).** `[DECISÃO — 14/11/2026]` A exclusão de conta está fora do MVP por ora (Neon Auth não oferece exclusão; exigiria endpoint próprio). Conteúdo preservado para retomada.
+
+- **Status:** adiado (D-25) · rascunho · **Status das regras:** `[DECISÃO]` (US-03, DT-08, D-03)
 - **Ator e gatilho:** Ágatha abre Configurações → Excluir conta.
 - **Pré-condições:** sessão ativa.
 - **Pós-condições:** conta apagada no servidor e sessão encerrada; ou nada apagado, se ela cancelar.

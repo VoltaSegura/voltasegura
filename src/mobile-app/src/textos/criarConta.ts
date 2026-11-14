@@ -1,0 +1,20 @@
+// Fonte: docs/app-map/08_microcopy.md (TL-02 · Criar conta)
+export const criarConta = {
+  titulo: 'Criar conta',
+  apoio: 'Pedimos só o necessário: e-mail e senha.',
+  email: 'E-mail',
+  senha: 'Senha',
+  mostrarSenha: 'Mostrar senha',
+  ocultarSenha: 'Ocultar senha',
+  aceite: 'Li e aceito o aviso de privacidade (minuta acadêmica)',
+  lerAviso: 'Ler aviso',
+  botao: 'Criar conta',
+  botaoCarregando: 'Criando…',
+  ou: 'ou',
+  google: 'Continuar com Google',
+  jaTenho: 'Já tenho conta · Entrar',
+  erroEmail: 'Informe um e-mail válido.',
+  erroSenha: 'Informe uma senha.',
+  erroAceite: 'Para criar a conta, aceite o aviso de privacidade.',
+  erroEmailExistente: 'Já existe uma conta com este e-mail.',
+} as const;

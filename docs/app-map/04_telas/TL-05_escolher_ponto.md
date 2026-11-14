@@ -1,5 +1,7 @@
 # TL-05 · Escolher ponto no mapa
 
+> **Revisão D-29 (14/11/2026):** mapa em **tela cheia** com pino fixo no centro; por cima, busca por texto (só ao tocar em Buscar, mín. 3 letras, limitada a São Paulo, geocodificador do sistema) e voltar; botão de localização em ícone; painel inferior com ponto escolhido, **salvar este lugar** (nome + tipo, até 10, só no aparelho), lugares salvos em chips e "Usar este ponto". **Sem pontos de exemplo.** `[HIPÓTESE]` o aviso de privacidade deve citar a busca. Detalhes: `docs/redesign/08_home_busca_locais_arquitetura.md`.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/escolher-ponto` (modal; parâmetro `campo=origem|destino`)
 - **Objetivo:** escolher origem ou destino tocando no mapa, sem busca de endereço externa (D-02).
 - **US/AC e funcionalidades cobertas:** US-06 AC5, US-04 AC5 (salvar local no aparelho), US-16 AC1 · FN-04, FN-13 · **RNF aplicáveis:** RNF-02, RNF-07

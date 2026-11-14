@@ -8,6 +8,8 @@ Esta pasta transforma o backlog (`docs/10_backlog_produto.md`, v1.6) em fluxos, 
 
 **Acréscimo de 13/11/2026:** **compartilhar trajeto e localização ao vivo** (D-19 a D-22). É feature nativa e gratuita, marcada **"Depende do tempo"**: entra no MVP se o prazo permitir. Ela gerou FL-15, FL-16, TL-14, TL-15, FN-15, FN-16 e a US-21. As telas novas aguardam revisão do Lucas.
 
+**Adiado em 14/11/2026 (D-25):** `[DECISÃO — 14/11/2026]` a exclusão de conta fica fora do MVP por ora. FL-12, a parte de exclusão da TL-12 e FN-03 (US-03) estão **adiados** e preservados para retomada; contas e login seguem pelo Neon Auth (D-24).
+
 ## Regras desta pasta
 
 - **Fonte única de funcionalidades:** `docs/10`. Nada é inventado aqui: tudo o que o backlog não cobre vai para `12_pendencias_e_lacunas.md`.
@@ -43,7 +45,7 @@ Esta pasta transforma o backlog (`docs/10_backlog_produto.md`, v1.6) em fluxos, 
 | `04_telas/` (TL-01 a TL-15) | 2 | TL-01 a TL-13 pronta (D-17; TL-08 e TL-13 com acréscimos do compartilhamento); TL-14 e TL-15 rascunho |
 | `05_navegacao.md` | 2 | pronta (D-17) |
 | `06_funcionalidades.md` (FN-01 a FN-16, com o contrato esperado da API) | 2 | pronta (D-17); contrato a conciliar (PL-18) |
-| `07_design/` (tokens, componentes, acessibilidade, `mockups/index.html` com 32 telas) | 3 | validada (D-18); pontos de design a rever (PL-19) |
+| `07_design/` (tokens, componentes, acessibilidade, `mockups/index.html` com 32 telas) | 3 | validada (D-18); **revisão de design PL-19 aplicada em 13/11/2026** (`tokens.md` R-01 a R-15), aguardando a aprovação visual do Lucas |
 | `08_microcopy.md` (catálogo + varredura: 0 termos proibidos em 894 linhas) | 3 | validada (D-18) |
 | `09_dados_por_tela.md` | 2 | pronta (D-17) |
 | `10_rastreabilidade.md` (86 AC + 9 RNF) | 4 | pronta |

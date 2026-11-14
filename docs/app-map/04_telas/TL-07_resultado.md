@@ -107,13 +107,13 @@ Três candidatas para a volta da faculdade às 23h. Os tempos vêm do mockup e a
 │ Dados: SSP-SP, jan–set/2026 ›│
 ```
 
-**Estado container expandido:** ao arrastar a alça para cima, o container ocupa a tela e o mapa encolhe para uma faixa. O conteúdo é o mesmo.
+**Estado container expandido:** ao tocar em "Expandir lista", o painel ocupa a tela e o mapa encolhe para uma faixa. O conteúdo é o mesmo. *Revisão de design PL-19 (13/11/2026, `[HIPÓTESE]`): o painel é fixo, sem alça nem gesto de arrastar (`07_design/tokens.md` R-08); a aparência atual está no `07_design/mockups/index.html`.*
 
 ## Estrutura e componentes
 
 1. `Cabecalho` com voltar e o resumo (sentido · horário de saída; **sem** endereço)
-2. `MapaTrajeto`: rota selecionada com traço forte, demais com traço claro, início ● e fim ■, `Atribuicao` OSM e SPTrans
-3. `Container` (bottom sheet) com alça
+2. `MapaTrajeto`: rota selecionada **acesa** (traço forte com halo), demais tracejadas, início ○ e fim ■, `Atribuicao` (texto do mapa base em aberto, PL-25)
+3. `Container` (painel fixo, sem alça; botão "Expandir lista")
 4. `Texto` "N opções · menor exposição estimada primeiro" (com o foco de exposição) ou "N opções · ordenadas por tempo" (sem ele) (D-23)
 5. `CardRota` × até 3, com `RotuloFoco` (um ou dois), tempo, km a pé, trocas, sequência de modos, saída prevista e marca `EXEMPLO` quando for dado de exemplo
 6. `LinhaSobreOsDados` fixa (D-09)
@@ -130,7 +130,7 @@ Rotas, focos, tempos, trechos e geometria vêm da resposta da API; a linha "Sobr
 |---|---|---|
 | Toca num card | Seleciona: o mapa destaca o trajeto (1º toque); abre os detalhes (toque em ›) | TL-07 / TL-08 |
 | Toca numa rota no mapa | Seleciona o card correspondente | TL-07 |
-| Arrasta a alça | Expande ou recolhe o container | TL-07 |
+| Toca em "Expandir lista" | Expande ou recolhe o painel | TL-07 |
 | Toca na linha "Dados: …" | Abre o bloco completo | TL-10 |
 | "Planejar a volta" | Inverte origem e destino, sentido volta | TL-04 |
 | Voltar | Volta ao planejamento com os campos mantidos | TL-04 |

@@ -4,258 +4,377 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VoltaSegura — Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+  /* Tokens de 07_design/tokens.md (revisão PL-19, 13/11/2026). */
   :root {
-    --fundo:#0D1B2A; --superficie:#15263A; --superficie2:#1E3350; --mapa:#1B2B3D; --rua:#24384F;
+    --fundo:#0D1B2A; --superficie:#15263A; --superficie2:#1E3350;
+    --mapa:#16263A; --rua:#22364F; --quadra:#1A2C41;
     --texto:#F8F9FA; --texto2:#B8C2CC; --acao:#FFC53D; --acao-texto:#0D1B2A; --acao-link:#FFC53D;
-    --dado:#4ECDC4; --erro:#FF9B8F; --borda:#5A7393; --rota-sel:#FFC53D; --rota-outra:#8FA3B8;
-    --pagina:#08121C;
+    --dado:#4ECDC4; --erro:#FF9B8F; --borda:#5A7393; --divisoria:#24384F;
+    --rota-sel:#FFC53D; --rota-halo:rgba(255,197,61,.28); --rota-outra:#8FA3B8;
+    --pagina:#08121C; --moldura:#000;
   }
   body.claro {
-    --fundo:#F8F9FA; --superficie:#FFFFFF; --superficie2:#EEF1F4; --mapa:#EEF1F4; --rua:#D5DCE3;
+    --fundo:#F8F9FA; --superficie:#FFFFFF; --superficie2:#EEF1F4;
+    --mapa:#E9EDF1; --rua:#FFFFFF; --quadra:#DFE5EB;
     --texto:#0D1B2A; --texto2:#4A5A6A; --acao:#FFC53D; --acao-texto:#0D1B2A; --acao-link:#8A5A00;
-    --dado:#0B6E69; --erro:#B3261E; --borda:#8796A6; --rota-sel:#0D1B2A; --rota-outra:#6B7E93;
-    --pagina:#DDE3E9;
+    --dado:#0B6E69; --erro:#B3261E; --borda:#8796A6; --divisoria:#DDE3E9;
+    --rota-sel:#0D1B2A; --rota-halo:rgba(255,197,61,.55); --rota-outra:#6B7E93;
+    --pagina:#CFD8E0; --moldura:#1B1B1B;
   }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--pagina); color:var(--texto); font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
-  header.pg { padding:24px 16px 8px; max-width:1400px; margin:0 auto; }
-  header.pg h1 { margin:0 0 4px; font-size:24px; }
-  header.pg p { margin:4px 0; color:var(--texto2); font-size:14px; max-width:900px; }
-  .aviso-pg { display:inline-block; border:1px solid var(--borda); border-radius:6px; padding:2px 8px; font-size:13px; font-weight:600; color:var(--texto2); }
-  .tema { margin-top:8px; background:var(--superficie); color:var(--texto); border:1px solid var(--borda); border-radius:12px; padding:8px 14px; font:inherit; cursor:pointer; min-height:44px; }
-  h2.grupo { max-width:1400px; margin:24px auto 0; padding:0 16px; font-size:18px; color:var(--texto2); }
-  .grade { max-width:1400px; margin:0 auto; padding:12px 16px 8px; display:flex; flex-wrap:wrap; gap:24px; }
+  body { margin:0; background:var(--pagina); color:var(--texto);
+    font:16px/1.5 "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  :focus-visible { outline:2px solid var(--acao); outline-offset:2px; }
+
+  /* Página */
+  .pg-cab { max-width:1400px; margin:0 auto; padding:28px 16px 8px; }
+  .pg-cab h1 { margin:0; font-size:28px; line-height:36px; font-weight:800; }
+  .pg-cab p { margin:8px 0 0; color:var(--texto2); font-size:15px; max-width:72ch; }
+  .pg-acoes { margin-top:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .pg-btn { background:var(--superficie); color:var(--texto); border:1px solid var(--borda); border-radius:14px; padding:10px 16px; font:inherit; font-weight:600; min-height:48px; cursor:pointer; }
+  .grupo { max-width:1400px; margin:32px auto 0; padding:0 16px; }
+  .grupo h2 { margin:0; font-size:20px; line-height:28px; font-weight:700; }
+  .grupo p { margin:2px 0 0; color:var(--texto2); font-size:14px; max-width:72ch; }
+  .grade { max-width:1400px; margin:0 auto; padding:16px 16px 8px; display:flex; flex-wrap:wrap; gap:28px; }
   figure { margin:0; }
-  figcaption { font-size:13px; color:var(--texto2); margin-top:6px; max-width:300px; }
+  figcaption { font-size:13px; line-height:18px; color:var(--texto2); margin-top:8px; max-width:300px; }
   figcaption b { color:var(--texto); }
-  .cel { width:300px; height:620px; background:var(--fundo); border:10px solid #000; border-radius:36px; overflow:hidden; position:relative; display:flex; flex-direction:column; font-size:14px; }
-  .cab { display:flex; align-items:center; gap:8px; padding:14px 14px 8px; font-weight:600; font-size:16px; }
-  .cab .ic { color:var(--texto2); width:24px; text-align:center; }
-  .cab .dir { margin-left:auto; color:var(--texto2); }
-  .corpo { padding:4px 14px 14px; overflow:hidden; flex:1; display:flex; flex-direction:column; gap:8px; }
-  .t2 { color:var(--texto2); font-size:13px; }
-  .tit { font-size:22px; font-weight:700; text-align:center; margin:0; }
-  .rot { font-weight:600; font-size:13px; margin-bottom:-4px; }
-  .campo { background:var(--superficie2); border:1px solid var(--borda); border-radius:10px; padding:9px 10px; min-height:40px; color:var(--texto2); display:flex; justify-content:space-between; }
+  .pg-rod { max-width:1400px; margin:32px auto; padding:0 16px 40px; color:var(--texto2); font-size:13px; max-width:72ch; }
+
+  /* Celular */
+  .cel { width:300px; height:620px; background:var(--fundo); border:10px solid var(--moldura); border-radius:38px; overflow:hidden; position:relative; display:flex; flex-direction:column; font-size:14px; line-height:20px; }
+  .cab { display:flex; align-items:center; gap:4px; min-height:52px; padding:6px 8px 4px 4px; }
+  .cab .ib { width:44px; height:44px; display:grid; place-items:center; color:var(--texto); flex:none; }
+  .cab .tt { display:flex; flex-direction:column; min-width:0; }
+  .cab .tt b { font-size:17px; line-height:22px; font-weight:700; }
+  .cab .tt span { font-size:13px; line-height:18px; color:var(--texto2); }
+  .cab .dir { margin-left:auto; }
+  .corpo { padding:4px 16px 16px; overflow:hidden; flex:1; display:flex; flex-direction:column; gap:10px; }
+  .t2 { color:var(--texto2); font-size:13px; line-height:18px; }
+  .rot { font-weight:600; font-size:14px; margin-bottom:-6px; }
+  .h { font-weight:700; font-size:14px; margin-top:6px; }
+  svg.ic { width:20px; height:20px; flex:none; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+  /* Entradas e ações */
+  .campo { background:var(--superficie2); border:1px solid var(--borda); border-radius:12px; padding:0 12px; min-height:48px; color:var(--texto2); display:flex; align-items:center; justify-content:space-between; gap:8px; }
   .campo.cheio { color:var(--texto); }
-  .campo.err { border-color:var(--erro); }
-  .err-txt { color:var(--erro); font-size:13px; }
-  .btn { border-radius:12px; padding:11px; text-align:center; font-weight:600; min-height:44px; }
+  .campo.err { border-color:var(--erro); border-width:2px; }
+  .err-txt { color:var(--erro); font-size:13px; line-height:18px; display:flex; gap:6px; align-items:flex-start; }
+  .btn { border-radius:14px; padding:12px; text-align:center; font-weight:700; min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px; }
   .btn.p { background:var(--acao); color:var(--acao-texto); }
   .btn.s { border:1px solid var(--borda); color:var(--texto); }
   .btn.d { color:var(--erro); }
-  .link { color:var(--acao-link); text-decoration:underline; font-size:13px; }
+  .btn.d.borda { border:1px solid var(--erro); }
+  .link { color:var(--acao-link); text-decoration:underline; text-underline-offset:3px; font-size:14px; min-height:32px; display:inline-flex; align-items:center; }
   .link.dado { color:var(--dado); }
-  .sep { text-align:center; color:var(--texto2); font-size:12px; }
-  .caixa { display:flex; gap:8px; font-size:13px; align-items:flex-start; }
-  .caixa i { width:18px; height:18px; border:2px solid var(--borda); border-radius:4px; flex:none; margin-top:2px; }
-  .aviso { background:var(--superficie2); border:1px solid var(--borda); border-radius:10px; padding:9px 10px; font-size:13px; }
-  .aviso.info::before { content:"ⓘ "; color:var(--dado); }
-  .aviso.erro::before { content:"⚠ "; color:var(--erro); }
-  .seg { display:flex; border:1px solid var(--borda); border-radius:10px; overflow:hidden; }
-  .seg span { flex:1; text-align:center; padding:8px; }
-  .seg .on { background:var(--acao); color:var(--acao-texto); font-weight:600; }
-  .mapa { background:var(--mapa); position:relative; flex:none; }
-  .mapa svg { display:block; width:100%; height:100%; }
-  .attr { position:absolute; right:6px; bottom:4px; font-size:9px; color:var(--texto2); background:var(--fundo); opacity:.9; padding:0 4px; border-radius:4px; }
-  .sheet { background:var(--superficie); border-radius:20px 20px 0 0; flex:1; padding:6px 12px 12px; display:flex; flex-direction:column; gap:8px; overflow:hidden; border-top:1px solid var(--borda); }
-  .alca { width:40px; height:4px; background:var(--borda); border-radius:2px; margin:2px auto 2px; }
-  .card { background:var(--fundo); border:1px solid var(--borda); border-radius:12px; padding:8px 10px; position:relative; }
-  body.claro .card { background:var(--superficie2); }
-  .card.sel { border-left:4px solid var(--rota-sel); }
-  .card .dur { font-size:17px; font-weight:600; }
-  .focos { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:2px; }
-  .foco { border:1px solid var(--borda); border-radius:6px; padding:0 6px; font-size:12px; font-weight:600; }
-  .foco.exp { background:var(--acao); color:var(--acao-texto); border-color:var(--acao); }
-  .ex { position:absolute; right:8px; top:8px; border:1px solid var(--borda); border-radius:6px; padding:0 5px; font-size:10px; font-weight:600; color:var(--texto2); }
-  .ex.inl { position:static; display:inline-block; }
-  .linha-dados { color:var(--dado); font-size:13px; }
-  .linha-dados::before { content:"ⓘ "; }
-  .trecho { border-left:2px solid var(--borda); margin-left:8px; padding:0 0 6px 12px; position:relative; }
-  .trecho::before { content:""; position:absolute; left:-7px; top:2px; width:12px; height:12px; border-radius:50%; background:var(--fundo); border:2px solid var(--texto2); }
-  .trecho b { font-size:14px; }
-  .bpq { display:inline-block; border:1px solid var(--borda); color:var(--dado); border-radius:10px; padding:3px 10px; font-size:12px; margin-top:3px; }
-  .bpq::before { content:"ⓘ "; }
-  .indic { background:var(--superficie2); border:1px solid var(--borda); border-radius:10px; padding:9px 10px; font-size:13px; }
-  .tab { display:grid; grid-template-columns:1fr auto; gap:2px 8px; font-size:13px; }
+  .ou { display:flex; align-items:center; gap:10px; color:var(--texto2); font-size:13px; }
+  .ou::before, .ou::after { content:""; flex:1; height:1px; background:var(--divisoria); }
+  .caixa { display:flex; gap:10px; font-size:13px; line-height:18px; align-items:flex-start; }
+  .caixa i { width:20px; height:20px; border:2px solid var(--borda); border-radius:5px; flex:none; margin-top:1px; }
+  .aviso { background:var(--superficie2); border-radius:12px; padding:10px 12px; font-size:13px; line-height:18px; display:flex; gap:8px; align-items:flex-start; }
+  .aviso.info { color:var(--texto); } .aviso.info svg { color:var(--dado); }
+  .aviso.erro { color:var(--texto); box-shadow:inset 3px 0 0 var(--erro); } .aviso.erro svg { color:var(--erro); }
+  .aviso.minuta { background:transparent; border:1px dashed var(--borda); }
+  .seg { display:flex; background:var(--superficie2); border-radius:12px; padding:3px; gap:3px; }
+  .seg span { flex:1; text-align:center; padding:9px 6px; border-radius:9px; font-weight:600; color:var(--texto2); }
+  .seg .on { background:var(--acao); color:var(--acao-texto); }
+  .linha-nav { display:flex; align-items:center; justify-content:space-between; min-height:48px; border-bottom:1px solid var(--divisoria); }
+  .inter { display:flex; justify-content:space-between; align-items:center; min-height:48px; }
+  .sw { width:44px; height:26px; border-radius:13px; border:2px solid var(--borda); position:relative; flex:none; }
+  .sw::after { content:""; position:absolute; left:3px; top:3px; width:16px; height:16px; border-radius:50%; background:var(--texto2); }
+  .spin { width:40px; height:40px; border:4px solid var(--superficie2); border-top-color:var(--acao); border-radius:50%; margin:0 auto; animation:gira 1s linear infinite; }
+  @keyframes gira { to { transform:rotate(360deg); } }
+  .centro { flex:1; display:flex; flex-direction:column; justify-content:center; gap:12px; text-align:center; }
+
+  /* Selos */
+  .ex { display:inline-block; border:1px dashed var(--borda); border-radius:6px; padding:0 6px; font-size:11px; line-height:16px; font-weight:700; letter-spacing:.02em; color:var(--texto2); vertical-align:middle; }
+  .foco { display:inline-flex; align-items:center; gap:4px; border:1px solid var(--borda); border-radius:6px; padding:1px 7px; font-size:13px; line-height:18px; font-weight:600; color:var(--texto); }
+  .foco.exp { background:var(--acao); color:var(--acao-texto); border-color:var(--acao); font-weight:700; }
+  .lin { display:inline-flex; align-items:center; justify-content:center; min-width:30px; height:22px; padding:0 7px; border-radius:11px; font-size:12px; font-weight:800; letter-spacing:.01em; }
+  .lin.onibus { border:1.5px solid var(--borda); color:var(--texto); }
+
+  /* Sequência de modos */
+  .seq { display:flex; align-items:center; flex-wrap:nowrap; gap:3px; color:var(--texto2); white-space:nowrap; }
+  .seq .liga { width:6px; height:2px; background:var(--borda); border-radius:1px; }
+  .seq .pe { display:inline-flex; align-items:center; gap:2px; font-size:12px; color:var(--texto2); }
+  .seq svg.ic { width:18px; height:18px; }
+
+  /* Mapa */
+  .mapa { background:var(--mapa); position:relative; flex:none; overflow:hidden; }
+  .mapa svg.m { display:block; width:100%; height:100%; }
+  .attr { position:absolute; right:6px; bottom:4px; font-size:9px; line-height:14px; color:var(--texto2); background:var(--fundo); padding:0 5px; border-radius:4px; }
+  .mira { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); color:var(--acao); }
+  .mira svg { width:36px; height:36px; stroke:currentColor; stroke-width:2.5; fill:none; }
+
+  /* Painel do resultado (fixo, sem arrastar) */
+  .painel { background:var(--superficie); flex:1; display:flex; flex-direction:column; overflow:hidden; border-top:1px solid var(--divisoria); }
+  .painel-cab { display:flex; justify-content:space-between; align-items:center; padding:8px 16px 4px; gap:8px; }
+  .painel-cab .t2 { flex:1; }
+  .painel-cab .link { font-size:13px; }
+  .opcao { position:relative; padding:10px 16px 10px 20px; border-bottom:1px solid var(--divisoria); display:grid; grid-template-columns:auto 1fr; column-gap:14px; row-gap:4px; }
+  .opcao.sel { background:var(--superficie2); }
+  .opcao.sel::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--acao); }
+  .opcao .focos { grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+  .opcao .focos .ex { margin-left:auto; }
+  .dur { font-size:30px; line-height:32px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
+  .dur small { font-size:15px; font-weight:700; margin-left:2px; letter-spacing:0; }
+  .opcao .meta { display:flex; flex-direction:column; justify-content:center; font-size:13px; line-height:18px; color:var(--texto2); }
+  .opcao .meta b { color:var(--texto); font-weight:600; }
+  .opcao .seq { grid-column:1 / -1; }
+  .opcao .selec { font-size:12px; color:var(--texto2); font-weight:600; }
+  .opcoes { flex:1; overflow:hidden; }
+  .painel .linha-dados { border-top:1px solid var(--divisoria); background:var(--superficie); flex:none; }
+  .linha-dados { display:flex; align-items:center; gap:8px; color:var(--dado); font-size:13px; line-height:18px; min-height:48px; padding:0 16px; }
+  .linha-dados span { flex:1; }
+
+  /* Trechos (TL-08) */
+  .trechos { list-style:none; margin:0; padding:0; }
+  .trecho { display:grid; grid-template-columns:28px 1fr; column-gap:10px; position:relative; padding-bottom:10px; }
+  .trecho::before { content:""; position:absolute; left:13px; top:26px; bottom:0; width:2px; background:var(--divisoria); }
+  .trecho:last-child::before { display:none; }
+  .trecho .no { width:28px; height:28px; border-radius:50%; background:var(--superficie2); display:grid; place-items:center; color:var(--texto); }
+  .trecho .no svg.ic { width:16px; height:16px; }
+  .trecho b { font-size:14px; line-height:20px; display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  .bpq { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--borda); color:var(--dado); border-radius:12px; padding:0 12px; min-height:36px; font-size:13px; font-weight:600; margin-top:4px; }
+  .bpq svg.ic { width:16px; height:16px; }
+
+  /* Por que esta rota? */
+  .indic { background:var(--superficie2); border-radius:12px; padding:10px 12px; font-size:14px; line-height:20px; }
+  .tab { display:grid; grid-template-columns:1fr auto; font-size:14px; line-height:20px; }
+  .tab span { padding:5px 0; border-bottom:1px solid var(--divisoria); }
   .tab span:nth-child(odd) { color:var(--texto2); }
-  .lista li { margin:2px 0; }
-  ul.lista { margin:0; padding-left:18px; font-size:12.5px; }
-  .h { font-weight:600; margin-top:4px; }
-  .cat { display:flex; justify-content:space-between; border-bottom:1px solid var(--superficie2); padding:5px 0; }
-  .cat.sub { padding-left:12px; font-size:13px; color:var(--texto2); }
-  .inter { display:flex; justify-content:space-between; align-items:center; }
-  .sw { width:40px; height:22px; border-radius:11px; border:2px solid var(--borda); position:relative; }
-  .sw::after { content:""; position:absolute; left:2px; top:2px; width:14px; height:14px; border-radius:50%; background:var(--texto2); }
-  .spin { width:36px; height:36px; border:4px solid var(--superficie2); border-top-color:var(--acao); border-radius:50%; margin:0 auto; }
-  .centro { flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px; text-align:center; }
-  .mira { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:28px; color:var(--acao); }
-  .indic-glob { background:var(--superficie2); border-bottom:1px solid var(--borda); padding:8px 12px; font-size:13px; display:flex; align-items:center; gap:6px; }
-  .indic-glob .pt { color:var(--acao); }
-  .indic-glob .par { margin-left:auto; color:var(--acao-link); font-weight:600; text-decoration:underline; }
-  .dep { display:inline-block; border:1px dashed var(--borda); border-radius:6px; padding:0 6px; font-size:11px; color:var(--texto2); margin-left:4px; }
-  footer.pg { max-width:1400px; margin:24px auto; padding:0 16px 32px; color:var(--texto2); font-size:13px; }
+  .tab span:nth-child(even) { font-weight:700; font-variant-numeric:tabular-nums; text-align:right; }
+  ul.lista { margin:0; padding-left:18px; font-size:13px; line-height:18px; color:var(--texto2); }
+  ul.lista li { margin:3px 0; }
+  .cat { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--divisoria); min-height:40px; }
+  .cat b { font-variant-numeric:tabular-nums; }
+  .cat.sub { padding-left:14px; font-size:13px; color:var(--texto2); min-height:34px; }
+
+  /* Compartilhamento */
+  .indic-glob { background:var(--superficie2); border-bottom:1px solid var(--divisoria); padding:0 8px 0 14px; min-height:44px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px; }
+  .indic-glob .pt { width:8px; height:8px; border-radius:50%; background:var(--acao); flex:none; }
+  .indic-glob .par { margin-left:auto; color:var(--acao-link); text-decoration:underline; min-height:44px; display:flex; align-items:center; padding:0 6px; }
+  .dep { display:inline-block; border:1px dashed var(--borda); border-radius:6px; padding:0 6px; font-size:12px; font-weight:600; color:var(--texto2); margin-left:6px; vertical-align:middle; }
+
+  /* Abertura: a rota acesa (único movimento orquestrado do app) */
+  .abertura { flex:1; display:flex; flex-direction:column; }
+  .abertura .cena { flex:1; position:relative; background:var(--mapa); overflow:hidden; }
+  .abertura .cena svg { width:100%; height:100%; display:block; }
+  .acende { stroke-dasharray:640; stroke-dashoffset:640; animation:acende 1.6s cubic-bezier(.6,0,.2,1) .3s forwards; }
+  @keyframes acende { to { stroke-dashoffset:0; } }
+  @media (prefers-reduced-motion: reduce) { .acende { animation:none; stroke-dashoffset:0; } .spin { animation:none; } }
+  .abertura .txt { padding:20px 20px 16px; display:flex; flex-direction:column; gap:10px; }
+  .marca { font-size:30px; line-height:36px; font-weight:800; letter-spacing:-.02em; margin:0; }
+  .frase { margin:0; font-size:16px; line-height:24px; color:var(--texto2); }
 </style>
 </head>
 <body>
-<header class="pg">
+<header class="pg-cab">
   <h1>VoltaSegura · Mockups das telas</h1>
-  <p><span class="aviso-pg">REFERÊNCIA VISUAL · DADOS DE EXEMPLO</span></p>
-  <p>Mockups estáticos das especificações de <code>docs/app-map/04_telas/</code>, com os tokens de <code>07_design/tokens.md</code> e os textos de <code>08_microcopy.md</code>. Não é código do app. Tempos 32/38 min vêm do mockup do grupo; contagens são inventadas para ilustrar (RNF-08). Textos propostos, não validados com usuários.</p>
-  <button class="tema" type="button" onclick="document.body.classList.toggle('claro')">Alternar tema claro/escuro</button>
+  <p>Referência visual das especificações de <code>docs/app-map/04_telas/</code>, com os tokens de <code>07_design/tokens.md</code> depois da revisão de design (PL-19, proposta de 13/11/2026). Não é código do app. Todo número aqui é de exemplo (RNF-08): os tempos 32 e 38 min vêm do mockup do grupo e as contagens foram inventadas para ilustrar. Os textos ainda não foram validados com usuários.</p>
+  <div class="pg-acoes">
+    <button class="pg-btn" type="button" onclick="document.body.classList.toggle('claro')">Alternar tema claro e escuro</button>
+    <span class="ex">EXEMPLO</span><span class="t2">marca todo dado de exemplo</span>
+  </div>
 </header>
 
-<h2 class="grupo">Conta</h2>
+<section class="grupo"><h2>Conta</h2><p>Abertura com a rota acesa, o único movimento automático do app. Ele desliga com a opção de reduzir movimento do sistema.</p></section>
 <div class="grade" id="g-conta"></div>
-<h2 class="grupo">Planejar</h2>
+<section class="grupo"><h2>Planejar</h2></section>
 <div class="grade" id="g-planejar"></div>
-<h2 class="grupo">Resultado (TL-07) — variantes</h2>
+<section class="grupo"><h2>Resultado (TL-07)</h2><p>Mapa fixo em cima e lista de opções embaixo, sem arrastar. Só a rota selecionada fica acesa. O halo marca a seleção, não a exposição.</p></section>
 <div class="grade" id="g-resultado"></div>
-<h2 class="grupo">Detalhes e "Por que esta rota?" (TL-08, TL-09) — variantes</h2>
+<section class="grupo"><h2>Detalhes e "Por que esta rota?" (TL-08, TL-09)</h2></section>
 <div class="grade" id="g-porque"></div>
-<h2 class="grupo">Compartilhamento (TL-14, TL-15) <span class="dep">Depende do tempo</span></h2>
+<section class="grupo"><h2>Compartilhamento (TL-14, TL-15) <span class="dep">Depende do tempo</span></h2></section>
 <div class="grade" id="g-compartilhar"></div>
-<h2 class="grupo">Dados e configurações</h2>
+<section class="grupo"><h2>Dados e configurações</h2></section>
 <div class="grade" id="g-dados"></div>
 
-<footer class="pg">Gerado na Fase 3 do mapeamento (13/11/2026). Nenhum marcador de ocorrência no mapa; nenhuma cor de alerta em rotas ou trechos; foco de exposição só no caso conclusivo.</footer>
+<p class="pg-rod">Fase 3 do mapeamento, revisada em 13/11/2026 (PL-19, proposta aguardando a aprovação do Lucas). Regras que continuam valendo: nenhum marcador de ocorrência no mapa; nenhuma cor de alerta em rota, trecho ou número; as cores das linhas aparecem só no selo da linha; o foco de exposição aparece só no caso conclusivo.</p>
 
 <script>
+/* Ícones de traço (referência visual; no app: @expo/vector-icons, família MaterialCommunityIcons). */
+const I = {
+  voltar:'<path d="M15 18l-6-6 6-6"/>', fechar:'<path d="M6 6l12 12M18 6L6 18"/>', ajustes:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+  seta:'<path d="M9 6l6 6-6 6"/>', info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>', alerta:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
+  inverter:'<path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/>', local:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>',
+  mapa:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>', olho:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  pe:'<circle cx="13" cy="4" r="2"/><path d="M10 21l2-6-3-3 1-5 4 3 3 1M9 12l-2 4"/>', onibus:'<rect x="5" y="3" width="14" height="15" rx="2"/><path d="M5 11h14M8 21v-3M16 21v-3"/><circle cx="8.5" cy="14.5" r=".5"/><circle cx="15.5" cy="14.5" r=".5"/>',
+  metro:'<rect x="6" y="3" width="12" height="14" rx="3"/><path d="M6 11h12M9 21l1.5-4M15 21l-1.5-4"/>', trem:'<rect x="5" y="3" width="14" height="13" rx="2"/><path d="M5 10h14M8 20l2-4M16 20l-2-4M7 22h10"/>',
+  mira:'<circle cx="12" cy="12" r="7"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/>', ok:'<path d="M5 12l5 5 9-10"/>',
+};
+const ic = (n, cls = 'ic') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${I[n]}</svg>`;
 const EX = '<span class="ex">EXEMPLO</span>';
-function cel(id, legenda, html) { return `<figure><div class="cel">${html}</div><figcaption><b>${id}</b> · ${legenda}</figcaption></figure>`; }
-function cab(t, esq = '←', dir = '') { return `<div class="cab"><span class="ic">${esq}</span>${t}${dir ? `<span class="dir">${dir}</span>` : ''}</div>`; }
+
+/* Cores oficiais das linhas (tokens.md, "Linhas de transporte"); texto escolhido por contraste ≥ 4,5:1. */
+const LIN = { L1:['#0455A1','#FFFFFF'], L2:['#007E5E','#FFFFFF'], L3:['#EE372F','#000000'], L4:['#FFD400','#0D1B2A'], L5:['#9B3894','#FFFFFF'], L15:['#9E9E9E','#0D1B2A'],
+  L7:['#CA016B','#FFFFFF'], L8:['#97A098','#0D1B2A'], L9:['#01A9A7','#0D1B2A'], L10:['#049FC3','#0D1B2A'], L11:['#F68368','#0D1B2A'], L12:['#133C8D','#FFFFFF'], L13:['#00B352','#0D1B2A'] };
+const lin = id => LIN[id] ? `<span class="lin" style="background:${LIN[id][0]};color:${LIN[id][1]}">${id}</span>` : `<span class="lin onibus">${id}</span>`;
+/* Sequência: ['pe','4 min'] | ['onibus','875A'] | ['metro','L4'] | ['trem','L9'] */
+const seq = passos => `<div class="seq">${passos.map(([m, v]) => m === 'pe' ? `<span class="pe">${ic('pe')}${v || ''}</span>` : `${ic(m)}${lin(v)}`).join('<span class="liga"></span>')}</div>`;
+
+function cel(id, legenda, html) { return `<figure><div class="cel">${html}</div><figcaption><b>${id}</b>: ${legenda}</figcaption></figure>`; }
+function cab(titulo, { esq = 'voltar', sub = '', dir = '' } = {}) {
+  return `<div class="cab">${esq ? `<span class="ib">${ic(esq)}</span>` : '<span style="width:12px"></span>'}<div class="tt"><b>${titulo}</b>${sub ? `<span>${sub}</span>` : ''}</div>${dir ? `<span class="ib dir">${ic(dir)}</span>` : ''}</div>`;
+}
+
+const SEL = 'M24 164 L24 104 L118 104 L118 44 L262 44';
+const OUT = 'M24 164 L88 164 L88 132 L214 132 L214 44 L262 44';
 function mapa(h, opts = {}) {
-  const sel = opts.sel || 'M30 150 L30 95 L120 95 L120 40 L250 40';
-  const outra = opts.outra === undefined ? 'M30 150 L90 150 L90 120 L210 120 L210 40 L250 40' : opts.outra;
-  const ruas = [20,60,100,140,180,220,260].map(x => `<line x1="${x}" y1="0" x2="${x}" y2="200" stroke="var(--rua)" stroke-width="3"/>`).join('')
-             + [30,70,110,150].map(y => `<line x1="0" y1="${y}" x2="300" y2="${y}" stroke="var(--rua)" stroke-width="3"/>`).join('');
-  const linhas = opts.mira ? '' : `${outra ? `<path d="${outra}" fill="none" stroke="var(--rota-outra)" stroke-width="4" stroke-dasharray="7 6" stroke-linejoin="round"/>` : ''}
+  const sel = opts.sel || SEL;
+  const outra = opts.outra === undefined ? OUT : opts.outra;
+  const H = Math.max(196, Math.round(290 * h / 280)), dy = Math.round((H - 196) / 2);
+  const quadras = [];
+  for (let x = 0; x < 300; x += 47) for (let y = -dy - 37 + ((dy + 37) % 37 ? 0 : 0); y < H; y += 37) quadras.push(`<rect x="${x + 6}" y="${y + 6}" width="35" height="25" rx="2" fill="var(--quadra)"/>`);
+  const ruas = [3,50,97,144,191,238,285].map(x => `<line x1="${x}" y1="${-dy}" x2="${x}" y2="${H}" stroke="var(--rua)" stroke-width="5"/>`).join('')
+             + [...Array(Math.ceil(H / 37) + 4).keys()].map(i => 3 + (i - Math.ceil(dy / 37) - 1) * 37).map(y => `<line x1="0" y1="${y}" x2="300" y2="${y}" stroke="var(--rua)" stroke-width="5"/>`).join('');
+  const rotas = opts.mira ? '' : `
+      ${outra ? `<path d="${outra}" fill="none" stroke="var(--fundo)" stroke-width="7" stroke-linejoin="round"/><path d="${outra}" fill="none" stroke="var(--rota-outra)" stroke-width="4" stroke-dasharray="8 6" stroke-linejoin="round"/>` : ''}
+      <path d="${sel}" fill="none" stroke="var(--rota-halo)" stroke-width="16" stroke-linejoin="round" stroke-linecap="round"/>
       <path d="${sel}" fill="none" stroke="var(--fundo)" stroke-width="9" stroke-linejoin="round"/>
       <path d="${sel}" fill="none" stroke="var(--rota-sel)" stroke-width="5" stroke-linejoin="round"/>
-      <circle cx="30" cy="150" r="7" fill="var(--texto)" stroke="var(--fundo)" stroke-width="2"/>
-      <rect x="243" y="33" width="14" height="14" fill="var(--texto)" stroke="var(--fundo)" stroke-width="2"/>`;
-  return `<div class="mapa" style="height:${h}px"><svg viewBox="0 0 280 190" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mapa do trajeto">${ruas}${linhas}</svg>${opts.mira ? '<span class="mira">✛</span>' : ''}<span class="attr">© OpenStreetMap contributors · SPTrans</span></div>`;
+      <circle cx="24" cy="164" r="7" fill="var(--fundo)" stroke="var(--texto)" stroke-width="3"/>
+      <rect x="255" y="37" width="14" height="14" rx="2" fill="var(--texto)" stroke="var(--fundo)" stroke-width="2"/>
+      ${opts.extra || ''}`;
+  return `<div class="mapa" style="height:${h}px"><svg class="m" viewBox="0 0 290 ${H}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mapa do trajeto selecionado"><g transform="translate(0 ${dy})">${quadras.join('')}${ruas}${rotas}</g></svg>${opts.mira ? `<span class="mira">${ic('mira', 'x')}</span>` : ''}<span class="attr">Atribuição do mapa base: a definir (PL-25)</span></div>`;
 }
-function card(focos, dur, km, trocas, modos, sel = false, saida = '') {
-  return `<div class="card${sel ? ' sel' : ''}">${EX}<div class="focos">${focos.map(f => `<span class="foco${f.startsWith('◆') ? ' exp' : ''}">${f}</span>`).join('')}</div>
-    <div><span class="dur">${dur}</span> · ${km} a pé · ${trocas}</div><div class="t2">${modos}</div>${saida ? `<div class="t2">Saída prevista ${saida}</div>` : ''}</div>`;
+
+function opcao({ focos = [], dur, km, trocas, passos, sel = false, saida = '' }) {
+  const f = focos.map(x => x === 'exp' ? '<span class="foco exp">◆ Menor exposição estimada</span>' : `<span class="foco">${x}</span>`).join('');
+  return `<div class="opcao${sel ? ' sel' : ''}"><div class="focos">${f}${sel ? '<span class="selec">selecionada</span>' : ''}${EX}</div>
+    <div class="dur">${dur}<small>min</small></div><div class="meta"><span><b>${km}</b> a pé</span><span>${trocas}</span>${saida ? `<span>Sai às ${saida} (previsto)</span>` : ''}</div>${seq(passos)}</div>`;
 }
-const LINHA = '<div class="linha-dados">Dados: SSP-SP, jan–set/2026 ›</div><div class="t2">Horários previstos (GTFS)</div>';
-const B = { A:['38 min','0,9 km','0 troca','a pé → Ônibus 875A → a pé'], Bm:['32 min','1,4 km','0 troca','a pé → Metrô L4 → a pé'], C:['35 min','0,6 km','1 troca','a pé → 702U → Metrô L2 → a pé'] };
+const LINHA = `<div class="linha-dados">${ic('info')}<span>Dados: SSP-SP, jan. a set. de 2026<br><span class="t2">Horários previstos (GTFS)</span></span>${ic('seta')}</div>`;
+const R = {
+  A:{ dur:'38', km:'0,9 km', trocas:'Sem troca', passos:[['pe','5 min'],['onibus','875A'],['pe','4 min']] },
+  B:{ dur:'32', km:'1,4 km', trocas:'Sem troca', passos:[['pe','9 min'],['metro','L4'],['pe','8 min']] },
+  C:{ dur:'35', km:'0,6 km', trocas:'1 troca', passos:[['pe','4 min'],['onibus','702U'],['metro','L2'],['pe','6 min']] },
+};
+const painel = (titulo, corpo, rodape = LINHA) => `<div class="painel"><div class="painel-cab"><span class="t2">${titulo}</span><span class="link">Expandir lista</span></div><div class="opcoes">${corpo}</div>${rodape}</div>`;
 
 document.getElementById('g-conta').innerHTML = [
-  cel('TL-01', 'Abertura', `<div class="corpo centro"><div style="font-size:44px;color:var(--acao);font-weight:800">VS</div><p class="tit">VoltaSegura</p>
-    <p class="t2">Compare as opções de trajeto antes de sair, na ida e na volta.</p><div class="btn p">Criar conta</div><div class="btn s">Entrar</div><div class="link">Aviso de privacidade</div></div>`),
-  cel('TL-02', 'Criar conta · estado inicial', cab('Criar conta') + `<div class="corpo"><div class="t2">Pedimos só o necessário: e-mail e senha.</div>
-    <div class="rot">E-mail</div><div class="campo"></div><div class="rot">Senha</div><div class="campo"><span></span><span>👁</span></div>
-    <div class="caixa"><i></i><span>Li e aceito o aviso de privacidade (minuta acadêmica) · <span class="link">Ler aviso</span></span></div>
-    <div class="btn p">Criar conta</div><div class="sep">ou</div><div class="btn s">Continuar com Google</div><div class="link">Já tenho conta · Entrar</div></div>`),
-  cel('TL-02', 'Criar conta · erros por campo e aceite', cab('Criar conta') + `<div class="corpo">
-    <div class="rot">E-mail</div><div class="campo cheio err">agatha@exemplo</div><div class="err-txt">⚠ Informe um e-mail válido.</div>
-    <div class="rot">Senha</div><div class="campo err"></div><div class="err-txt">⚠ Informe uma senha.</div>
-    <div class="caixa"><i style="border-color:var(--erro)"></i><span>Li e aceito o aviso de privacidade (minuta acadêmica)</span></div>
-    <div class="err-txt">⚠ Para criar a conta, aceite o aviso de privacidade.</div><div class="btn p">Criar conta</div></div>`),
-  cel('TL-03', 'Entrar · acesso negado (mensagem genérica)', cab('Entrar') + `<div class="corpo">
-    <div class="aviso erro">E-mail ou senha não conferem.</div>
-    <div class="rot">E-mail</div><div class="campo cheio">agatha@exemplo.com</div><div class="rot">Senha</div><div class="campo cheio"><span>••••••••</span><span>👁</span></div>
-    <div class="btn p">Entrar</div><div class="sep">ou</div><div class="btn s">Continuar com Google</div><div class="link">Não tem conta? Criar conta</div></div>`),
-  cel('TL-13', 'Aviso de privacidade (minuta)', cab('Aviso de privacidade') + `<div class="corpo"><div class="aviso info">Minuta acadêmica, sem revisão jurídica.</div>
-    <div class="h">O que pedimos</div><div class="t2">Só e-mail e senha (ou o identificador do Google).</div>
-    <div class="h">O que não guardamos</div><div class="t2">Origens, destinos e horários das consultas: usados só para calcular e descartados.</div>
+  cel('TL-01', 'Abertura. A rota se acende uma vez ao abrir.', `<div class="abertura"><div class="cena"><svg viewBox="0 0 280 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      ${[20,80,140,200,260].map(x => `<line x1="${x}" y1="0" x2="${x}" y2="300" stroke="var(--rua)" stroke-width="6"/>`).join('')}${[40,110,180,250].map(y => `<line x1="0" y1="${y}" x2="280" y2="${y}" stroke="var(--rua)" stroke-width="6"/>`).join('')}
+      <path d="M20 290 L20 250 L140 250 L140 110 L260 110 L260 40" fill="none" stroke="var(--rota-halo)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" class="acende"/>
+      <path d="M20 290 L20 250 L140 250 L140 110 L260 110 L260 40" fill="none" stroke="var(--rota-sel)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="acende"/>
+      <rect x="252" y="30" width="16" height="16" rx="2" fill="var(--texto)"/></svg></div>
+    <div class="txt"><p class="marca">VoltaSegura</p><p class="frase">Compare as opções de trajeto antes de sair, na ida e na volta.</p>
+    <div class="btn p">Criar conta</div><div class="btn s">Entrar</div><span class="link" style="align-self:center">Aviso de privacidade</span></div></div>`),
+  cel('TL-02', 'Criar conta, estado inicial', cab('Criar conta') + `<div class="corpo"><div class="t2">Pedimos só e-mail e senha.</div>
+    <div class="rot">E-mail</div><div class="campo"></div><div class="rot">Senha</div><div class="campo"><span></span>${ic('olho')}</div>
+    <div class="caixa"><i></i><span>Li e aceito o aviso de privacidade (minuta acadêmica). <span class="link" style="min-height:0">Ler o aviso</span></span></div>
+    <div class="btn p">Criar conta</div><div class="ou">ou</div><div class="btn s">Continuar com Google</div><span class="link" style="align-self:center">Já tenho conta</span></div>`),
+  cel('TL-02', 'Criar conta, erros por campo e aceite', cab('Criar conta') + `<div class="corpo">
+    <div class="rot">E-mail</div><div class="campo cheio err">agatha@exemplo</div><div class="err-txt">${ic('alerta')}Informe um e-mail válido.</div>
+    <div class="rot">Senha</div><div class="campo err"></div><div class="err-txt">${ic('alerta')}Informe uma senha.</div>
+    <div class="caixa"><i style="border-color:var(--erro)"></i><span>Li e aceito o aviso de privacidade (minuta acadêmica).</span></div>
+    <div class="err-txt">${ic('alerta')}Para criar a conta, aceite o aviso de privacidade.</div><div class="btn p">Criar conta</div></div>`),
+  cel('TL-03', 'Entrar, acesso negado (mensagem genérica)', cab('Entrar') + `<div class="corpo">
+    <div class="aviso erro">${ic('alerta')}<span>E-mail ou senha não conferem.</span></div>
+    <div class="rot">E-mail</div><div class="campo cheio">agatha@exemplo.com</div><div class="rot">Senha</div><div class="campo cheio"><span>••••••••</span>${ic('olho')}</div>
+    <div class="btn p">Entrar</div><div class="ou">ou</div><div class="btn s">Continuar com Google</div><span class="link" style="align-self:center">Criar conta</span></div>`),
+  cel('TL-13', 'Aviso de privacidade (minuta)', cab('Aviso de privacidade') + `<div class="corpo" style="gap:4px"><div class="aviso minuta">${ic('info')}<span>Minuta acadêmica, sem revisão jurídica.</span></div>
+    <div class="h">O que pedimos</div><div class="t2">Só e-mail e senha, ou o identificador do Google.</div>
+    <div class="h">O que não guardamos</div><div class="t2">Origens, destinos e horários das consultas. Eles servem só para calcular e são descartados.</div>
     <div class="h">O que fica só no celular</div><div class="t2">Histórico e locais salvos, se você ligar.</div>
-    <div class="h">Localização</div><div class="t2">Só quando você toca em "usar minha localização" ou enquanto compartilha sua volta.</div>
+    <div class="h">Localização</div><div class="t2">Só quando você toca em "Usar minha localização" ou enquanto compartilha sua volta.</div>
     <div class="h">Compartilhar minha volta</div><div class="t2">Trajeto e última posição ficam no servidor só durante o compartilhamento e são apagados ao terminar.</div>
-    <div class="h">Mapa</div><div class="t2">O mapa de fundo é carregado de um serviço externo, que vê a região exibida.</div></div>`),
+    <div class="h">Mapa</div><div class="t2">O mapa de fundo vem de um serviço externo, que vê a região exibida.</div></div>`),
 ].join('');
 
 document.getElementById('g-planejar').innerHTML = [
-  cel('TL-04', 'Planejar · inicial (ida)', cab('VoltaSegura', '', '⚙') + `<div class="corpo"><div class="seg"><span class="on">Ida</span><span>Volta</span></div>
-    <div class="rot">De onde</div><div class="campo">Escolher origem <span>›</span></div><div class="t2" style="text-align:center">⇅ inverter</div>
-    <div class="rot">Para onde</div><div class="campo">Escolher destino <span>›</span></div>
-    <div class="rot">Saída</div><div class="campo cheio">Hoje, 23:00 <span>›</span></div><div class="btn p">Ver alternativas</div><div class="link">Recentes (no aparelho)</div></div>`),
-  cel('TL-04', 'Planejar · opções de ponto', cab('Escolher origem', '✕') + `<div class="corpo"><div class="btn s">◎ Usar minha localização</div><div class="btn s">Escolher no mapa</div>
-    <div class="h">Locais salvos no aparelho</div><div class="t2">· Faculdade<br>· Casa</div><div class="h">Pontos de exemplo <span class="ex inl">EXEMPLO</span></div><div class="t2">· Exemplo: Av. Paulista<br>· Exemplo: Estação Sé</div></div>`),
-  cel('TL-04', 'Planejar · fora da área e campo faltante', cab('VoltaSegura', '', '⚙') + `<div class="corpo"><div class="seg"><span>Ida</span><span class="on">Volta</span></div>
-    <div class="rot">De onde</div><div class="campo cheio">Ponto escolhido no mapa <span>›</span></div>
-    <div class="aviso info">Este ponto está fora da área atendida (município de São Paulo). Nada foi enviado.</div>
-    <div class="rot">Para onde</div><div class="campo err">Escolher destino <span>›</span></div><div class="err-txt">⚠ Escolha o destino.</div><div class="btn p">Ver alternativas</div></div>`),
-  cel('TL-05', 'Escolher ponto no mapa', cab('Escolher origem', '✕') + mapa(380, { mira: true }) + `<div class="corpo"><div class="t2">Arraste o mapa para pôr o ponto na mira.</div><div class="btn p">Usar este ponto</div></div>`),
-  cel('TL-06', 'Buscando', cab('Volta · saída 23:00') + `<div class="corpo centro"><div class="spin"></div><div>Buscando alternativas…</div><div class="t2">Origem e destino são usados só para este cálculo.</div><div class="btn s">Cancelar</div></div>`),
-  cel('TL-06', 'Sem transporte público no horário', cab('Ida · saída 03:30') + `<div class="corpo centro"><div class="aviso info">Não há alternativa de transporte público neste horário.</div><div class="btn p">Mudar o horário</div></div>`),
+  cel('TL-04', 'Planejar, estado inicial (ida)', cab('VoltaSegura', { esq: '', dir: 'ajustes' }) + `<div class="corpo"><div class="seg"><span class="on">Ida</span><span>Volta</span></div>
+    <div class="rot">De onde</div><div class="campo">Escolher origem ${ic('seta')}</div>
+    <div style="display:flex;justify-content:flex-end;margin:-6px 0"><span class="ib" style="width:44px;height:36px;display:grid;place-items:center;color:var(--texto2)" aria-label="Inverter origem e destino">${ic('inverter')}</span></div>
+    <div class="rot" style="margin-top:-10px">Para onde</div><div class="campo">Escolher destino ${ic('seta')}</div>
+    <div class="rot">Saída</div><div class="campo cheio">Hoje, 23:00 ${ic('seta')}</div><div class="btn p">Ver alternativas</div><span class="link" style="align-self:center">Recentes neste celular</span></div>`),
+  cel('TL-04', 'Planejar, opções de ponto', cab('Escolher origem', { esq: 'fechar' }) + `<div class="corpo"><div class="btn s">${ic('local')}Usar minha localização</div><div class="btn s">${ic('mapa')}Escolher no mapa</div>
+    <div class="h">Salvos neste celular</div><div class="linha-nav"><span>Faculdade</span>${ic('seta')}</div><div class="linha-nav"><span>Casa</span>${ic('seta')}</div>
+    <div class="h">Pontos de exemplo ${EX}</div><div class="linha-nav"><span>Av. Paulista</span>${ic('seta')}</div><div class="linha-nav"><span>Estação Sé</span>${ic('seta')}</div></div>`),
+  cel('TL-04', 'Planejar, fora da área e campo faltante', cab('VoltaSegura', { esq: '', dir: 'ajustes' }) + `<div class="corpo"><div class="seg"><span>Ida</span><span class="on">Volta</span></div>
+    <div class="rot">De onde</div><div class="campo cheio">Ponto escolhido no mapa ${ic('seta')}</div>
+    <div class="aviso info">${ic('info')}<span>Este ponto está fora da área atendida (município de São Paulo). Nada foi enviado.</span></div>
+    <div class="rot">Para onde</div><div class="campo err">Escolher destino ${ic('seta')}</div><div class="err-txt">${ic('alerta')}Escolha o destino.</div><div class="btn p">Ver alternativas</div></div>`),
+  cel('TL-05', 'Escolher ponto no mapa', cab('Escolher origem', { esq: 'fechar' }) + mapa(390, { mira: true }) + `<div class="corpo"><div class="t2">Arraste o mapa até o ponto ficar na mira.</div><div class="btn p">Usar este ponto</div></div>`),
+  cel('TL-06', 'Buscando', cab('Sua volta', { sub: 'Saída às 23:00' }) + `<div class="corpo centro"><div class="spin"></div><div style="font-weight:600">Buscando alternativas</div><div class="t2">Origem e destino servem só para este cálculo.</div><div class="btn s">Cancelar</div></div>`),
+  cel('TL-06', 'Sem transporte público no horário', cab('Sua ida', { sub: 'Saída às 03:30' }) + `<div class="corpo centro"><div class="aviso info" style="text-align:left">${ic('info')}<span>Não há transporte público neste horário.</span></div><div class="btn p">Mudar o horário</div></div>`),
 ].join('');
 
 document.getElementById('g-resultado').innerHTML = [
-  cel('TL-07', '<b>Sem foco de exposição</b> (caso mais comum: sem diferença clara, mistos, insuficiente ou L = 0)', cab('Volta · saída 23:00') + mapa(220) + `<div class="sheet"><div class="alca"></div>
-    <div class="t2">2 opções · ordenadas por tempo</div>${card(['Menor tempo'], ...B.Bm, true, '23:04')}${card(['Menos caminhada'], ...B.C, false, '23:02')}${LINHA}</div>`),
-  cel('TL-07', '<b>Com foco de exposição</b> (conclusivo): <b>prioridade</b>, a rota vem primeiro, selecionada e com o mapa no trajeto dela (D-23)', cab('Volta · saída 23:00') + mapa(170, { sel: 'M30 150 L60 150 L60 70 L180 70 L180 40 L250 40', outra: 'M30 150 L30 95 L120 95 L120 40 L250 40' }) + `<div class="sheet"><div class="alca"></div>
-    <div class="t2">3 opções · menor exposição estimada primeiro</div>${card(['◆ Menor exposição estimada'], ...B.A, true)}${card(['Menor tempo'], ...B.Bm)}${card(['Menos caminhada'], ...B.C)}<div class="linha-dados">Dados: SSP-SP, jan–set/2026 ›</div></div>`),
-  cel('TL-07', '<b>Com outra opção</b> (a mesma rota venceu tempo e caminhada; D-16)', cab('Volta · saída 23:00') + mapa(220, { outra: 'M30 150 L30 120 L170 120 L170 40 L250 40' }) + `<div class="sheet"><div class="alca"></div>
-    <div class="t2">2 opções · ordenadas por tempo</div>${card(['Menor tempo', 'Menos caminhada'], '32 min', '0,5 km', '0 troca', 'a pé → Metrô L4 → a pé', true)}${card(['Outra opção'], '35 min', '0,8 km', '1 troca', 'a pé → 702U → Metrô L2 → a pé')}${LINHA}</div>`),
-  cel('TL-07', '<b>Uma rota</b> (uma candidata só; sem comparação)', cab('Ida · saída 05:10') + mapa(240, { outra: '' }) + `<div class="sheet"><div class="alca"></div>
-    <div class="t2">1 opção encontrada</div>${card([], ...B.Bm, true)}<div class="t2">Só uma opção neste horário: não há comparação.</div>${LINHA}</div>`),
+  cel('TL-07', '<b>Sem foco de exposição</b>, o caso mais comum (sem diferença clara, mistos, dados insuficientes ou L = 0)', cab('Sua volta', { sub: 'Saída às 23:00' }) + mapa(200) +
+    painel('2 opções, ordenadas por tempo', opcao({ focos:['Menor tempo'], ...R.B, sel:true, saida:'23:04' }) + opcao({ focos:['Menos caminhada'], ...R.C, saida:'23:02' }))),
+  cel('TL-07', '<b>Com foco de exposição</b> (conclusivo). A rota vem primeiro, já selecionada e acesa no mapa (D-23).', cab('Sua volta', { sub: 'Saída às 23:00' }) + mapa(150, { sel:'M24 164 L50 164 L50 77 L191 77 L191 44 L262 44', outra:SEL }) +
+    painel('3 opções, com a de menor exposição estimada primeiro', opcao({ focos:['exp'], ...R.A, sel:true }) + opcao({ focos:['Menor tempo'], ...R.B }) + opcao({ focos:['Menos caminhada'], ...R.C }))),
+  cel('TL-07', '<b>Com outra opção</b>: a mesma rota venceu tempo e caminhada (D-16)', cab('Sua volta', { sub: 'Saída às 23:00' }) + mapa(200, { outra:'M24 164 L24 132 L167 132 L167 44 L262 44' }) +
+    painel('2 opções, ordenadas por tempo', opcao({ focos:['Menor tempo','Menos caminhada'], dur:'32', km:'0,5 km', trocas:'Sem troca', passos:[['pe','4 min'],['metro','L4'],['pe','3 min']], sel:true }) + opcao({ focos:['Outra opção'], ...R.C, dur:'35', km:'0,8 km' }))),
+  cel('TL-07', '<b>Uma rota</b>: uma candidata só, sem comparação', cab('Sua ida', { sub: 'Saída às 05:10' }) + mapa(230, { outra:'' }) +
+    painel('1 opção encontrada', opcao({ ...R.B, sel:true }) + '<div class="t2" style="padding:8px 16px">Só uma opção neste horário: não há comparação.</div>')),
 ].join('');
 
-const ptab = (r, km, d, c) => `<div class="t2">Nesta rota (todos os trechos a pé) <span class="ex inl">EXEMPLO</span></div><div class="tab">${r !== null ? `<span>Registros considerados</span><span>${r}</span>` : ''}<span>Km a pé</span><span>${km}</span>${d !== null ? `<span>Registros por km a pé</span><span>${d}</span>` : ''}<span>Cobertura dos dados</span><span>${c}</span></div>`;
-const pbase = (dist, ind, tab, foco = '') => cab('Por que esta rota?', '✕') + `<div class="corpo"><div><b>Trecho 1 · a pé · ${dist}</b></div>${foco}
-  <div class="t2">Os trechos a pé entram na contagem de registros; os trechos em ônibus, metrô ou trem, não.</div>
+const ptab = (r, km, d, c) => `<div class="t2" style="display:flex;justify-content:space-between;align-items:center">Nesta rota, somando os trechos a pé ${EX}</div><div class="tab">${r !== null ? `<span>Registros considerados</span><span>${r}</span>` : ''}<span>Km a pé</span><span>${km}</span>${d !== null ? `<span>Registros por km a pé</span><span>${d}</span>` : ''}<span>Cobertura dos dados</span><span>${c}</span></div>`;
+const pbase = (dist, ind, tab, foco = '') => cab('Por que esta rota?', { esq: 'fechar' }) + `<div class="corpo" style="gap:8px"><div style="display:flex;gap:8px;align-items:center;font-weight:700">${ic('pe')}Trecho 1, a pé, ${dist}</div>${foco}
+  <div class="t2">Só os trechos a pé entram na contagem de registros. Ônibus, metrô e trem ficam de fora.</div>
   <div class="t2">Faixa do dia deste trecho: <b style="color:var(--texto)">noite (18h–23h)</b></div><div class="indic">${ind}</div>${tab}
-  <div class="t2">Zero ou poucos registros não querem dizer que nada aconteceu.</div><div class="link dado">Sobre os dados</div><div class="link dado">Dados considerados</div></div>`;
+  <div class="t2">Zero ou poucos registros não querem dizer que nada aconteceu.</div><div style="display:flex;gap:16px"><span class="link dado">Sobre os dados</span><span class="link dado">Dados considerados</span></div></div>`;
 document.getElementById('g-porque').innerHTML = [
-  cel('TL-08', 'Detalhes da rota (passo a passo; botão só nos trechos a pé)', mapa(110) + cab('<span class="foco">Menos caminhada</span>') + `<div class="corpo" style="gap:4px"><div class="t2">35 min · 0,6 km a pé · 1 troca <span class="ex inl">EXEMPLO</span></div>
-    <div class="trecho"><b>① A pé · 250 m · 4 min</b><div class="t2">Da origem até o ponto</div><span class="bpq">Por que esta rota?</span></div>
-    <div class="trecho"><b>② Ônibus 702U · 9 min</b><div class="t2">Embarque 23:02 (previsto)<br>Ponto Exemplo A → Ponto Exemplo B</div></div>
-    <div class="trecho"><b>③ Metrô L2 · 14 min</b><div class="t2">Embarque 23:15 (previsto)</div></div>
-    <div class="trecho" style="border-color:transparent"><b>④ A pé · 350 m · 6 min</b><div class="t2">Até o destino</div><span class="bpq">Por que esta rota?</span></div>
-    <div class="linha-dados">Dados: SSP-SP, jan–set/2026 ›</div><div class="btn s">Compartilhar minha volta</div></div>`),
-  cel('TL-09', '<b>Conclusivo</b> · rota com o foco', pbase('600 m', 'Menor exposição estimada entre as alternativas avaliadas: nos registros considerados, esta opção teve menos furtos e roubos perto dos trechos a pé.', ptab(4, '0,9', '4,4', '91%'), '<div><span class="foco exp">◆ Menor exposição estimada</span></div>')),
-  cel('TL-09', '<b>Conclusivo</b> · rota sem o foco', pbase('1,2 km', 'Entre as opções avaliadas, outra teve menor exposição estimada: <span class="link">◆ Menor exposição estimada ›</span>', ptab(25, '1,4', '17,9', '90%'))),
+  cel('TL-08', 'Detalhes da rota: passo a passo, com o botão só nos trechos a pé', mapa(110) + cab('35 min, 1 troca', { sub: '0,6 km a pé' }) + `<div class="corpo" style="gap:6px;padding-top:0"><div style="display:flex;gap:4px;align-items:center"><span class="foco">Menos caminhada</span>${EX}</div>
+    <ol class="trechos">
+      <li class="trecho"><span class="no">${ic('pe')}</span><div><b>A pé, 250 m, 4 min</b><div class="t2">Da origem até o ponto</div><span class="bpq">${ic('info')}Por que esta rota?</span></div></li>
+      <li class="trecho"><span class="no">${ic('onibus')}</span><div><b>Ônibus ${lin('702U')} 9 min</b><div class="t2">Embarque às 23:02 (previsto). Ponto Exemplo A até Ponto Exemplo B</div></div></li>
+      <li class="trecho"><span class="no">${ic('metro')}</span><div><b>Metrô ${lin('L2')} 14 min</b><div class="t2">Embarque às 23:15 (previsto)</div></div></li>
+      <li class="trecho"><span class="no">${ic('pe')}</span><div><b>A pé, 350 m, 6 min</b><div class="t2">Até o destino</div><span class="bpq">${ic('info')}Por que esta rota?</span></div></li>
+    </ol><div class="btn s">Compartilhar minha volta</div></div>`),
+  cel('TL-09', '<b>Conclusivo</b>, rota com o foco', pbase('600 m', 'Menor exposição estimada entre as alternativas avaliadas: nos registros considerados, esta opção teve menos furtos e roubos perto dos trechos a pé.', ptab(4, '0,9', '4,4', '91%'), '<div><span class="foco exp">◆ Menor exposição estimada</span></div>')),
+  cel('TL-09', '<b>Conclusivo</b>, rota sem o foco', pbase('1,2 km', 'Entre as opções avaliadas, outra teve menor exposição estimada. <span class="link" style="min-height:0">Ver a opção com ◆</span>', ptab(25, '1,4', '17,9', '90%'))),
   cel('TL-09', '<b>Sem diferença clara</b> (inclui mistos)', pbase('1,2 km', 'Os registros não mostram diferença clara entre as opções.', ptab(6, '1,4', '4,3', '88%'))),
-  cel('TL-09', '<b>Dados insuficientes</b> · motivo amostra', pbase('1,2 km', 'Dados insuficientes para comparar as opções. Motivo: poucos registros no total.', ptab(null, '1,4', null, '88%') + '<div class="t2">(sem ordenar as opções)</div>')),
-  cel('TL-09', '<b>Não aplicável</b> (uma opção sem trecho a pé)', pbase('1,2 km', 'Uma das opções não tem trecho a pé, então os registros não foram comparados desta vez.', ptab(6, '1,4', '4,3', '88%'))),
+  cel('TL-09', '<b>Dados insuficientes</b>, motivo amostra', pbase('1,2 km', 'Dados insuficientes para comparar as opções. Motivo: poucos registros no total.', ptab(null, '1,4', null, '88%'))),
+  cel('TL-09', '<b>Não aplicável</b>: uma opção sem trecho a pé', pbase('1,2 km', 'Uma das opções não tem trecho a pé, então os registros não foram comparados desta vez.', ptab(6, '1,4', '4,3', '88%'))),
 ].join('');
 
-const IND = '<div class="indic-glob"><span class="pt">●</span>Compartilhando sua volta<span class="par">Parar</span></div>';
-function mapaPos(h) {
-  return mapa(h, { outra: '' }).replace('</svg>', '<circle cx="120" cy="70" r="8" fill="var(--dado)" stroke="var(--fundo)" stroke-width="3"/></svg>');
-}
+const IND = '<div class="indic-glob"><span class="pt"></span>Compartilhando sua volta<span class="par">Parar</span></div>';
+const mapaPos = h => mapa(h, { outra:'', extra:'<circle cx="118" cy="74" r="8" fill="var(--dado)" stroke="var(--fundo)" stroke-width="3"/>' });
 document.getElementById('g-compartilhar').innerHTML = [
-  cel('TL-14', 'Confirmar (explica o que o contato verá e quando termina)', cab('Compartilhar minha volta', '✕') + `<div class="corpo"><div>A pessoa que receber o link vai ver, pelo app VoltaSegura:</div>
-    <ul class="lista"><li>o trajeto desta opção</li><li>sua posição durante a viagem</li><li>a chegada estimada: 23:36 <span class="ex inl">EXEMPLO</span></li></ul>
-    <div class="t2">Termina quando você chegar, quando tocar em Parar ou às 00:06 (tempo máximo).</div>
-    <div class="aviso info">Sua localização é usada só durante o compartilhamento e apagada do servidor ao fim.</div>
-    <div class="t2">A pessoa precisa ter o app.</div><div class="btn p">Compartilhar o link</div><div class="link" style="text-align:center">Cancelar</div></div>`),
-  cel('TL-14', 'Permissão de segundo plano negada (só trajeto)', cab('Compartilhar minha volta', '✕') + `<div class="corpo"><div class="aviso info">Sem acesso à localização em segundo plano. A pessoa verá só o trajeto e a chegada estimada, sem sua posição.</div>
-    <div class="btn p">Compartilhar só o trajeto</div><div class="link" style="text-align:center">Permitir nas configurações</div></div>`),
-  cel('TL-07 + indicador', 'Indicador global durante a sessão (sempre visível, com Parar)', IND + cab('Volta · saída 23:00') + mapa(190) + `<div class="sheet"><div class="alca"></div>
-    <div class="t2">2 opções · ordenadas por tempo</div>${card(['Menor tempo'], ...B.Bm, true)}${card(['Menos caminhada'], ...B.C)}</div>`),
-  cel('TL-14', 'Sessão ativa', IND + cab('Compartilhando', '✕') + `<div class="corpo"><div class="tab"><span>Ativo desde</span><span>23:04</span><span>Chegada estimada</span><span>23:36</span><span>Última posição enviada</span><span>23:12</span></div><span class="ex inl">EXEMPLO</span>
-    <div class="btn s">Enviar o link de novo</div><div class="btn s" style="color:var(--erro);border-color:var(--erro)">Parar de compartilhar</div></div>`),
-  cel('TL-15', 'Acompanhar (contato) · em andamento', cab('Acompanhando uma viagem') + mapaPos(260) + `<div class="corpo"><div><b>Em andamento</b> <span class="ex inl">EXEMPLO</span></div>
-    <div class="tab"><span>Chegada estimada</span><span>23:36</span><span>Última atualização</span><span>23:12 (há 1 min)</span></div>
-    <div class="t2">a pé → Metrô L4 → a pé</div><div class="t2">Horários previstos (GTFS)</div></div>`),
-  cel('TL-15', 'Acompanhar · chegou', cab('Acompanhando uma viagem') + mapa(200, { outra: '' }) + `<div class="corpo"><div><b>✓ Chegou ao destino às 23:35.</b></div><div class="t2">O acompanhamento terminou.</div></div>`),
+  cel('TL-14', 'Confirmar: o que o contato vai ver e quando termina', cab('Compartilhar minha volta', { esq: 'fechar' }) + `<div class="corpo"><div>Quem receber o link vai ver, pelo app VoltaSegura:</div>
+    <ul class="lista"><li>o trajeto desta opção</li><li>sua posição durante a viagem</li><li>a chegada estimada, 23:36 ${EX}</li></ul>
+    <div class="t2">Termina quando você chegar, quando tocar em Parar ou às 00:06, o tempo máximo.</div>
+    <div class="aviso info">${ic('info')}<span>Sua localização é usada só durante o compartilhamento e apagada do servidor ao fim.</span></div>
+    <div class="t2">A pessoa precisa ter o app.</div><div class="btn p">Compartilhar o link</div><span class="link" style="align-self:center">Cancelar</span></div>`),
+  cel('TL-14', 'Permissão de segundo plano negada: só o trajeto', cab('Compartilhar minha volta', { esq: 'fechar' }) + `<div class="corpo"><div class="aviso info">${ic('info')}<span>Sem acesso à localização em segundo plano. A pessoa vai ver só o trajeto e a chegada estimada, sem sua posição.</span></div>
+    <div class="btn p">Compartilhar só o trajeto</div><span class="link" style="align-self:center">Permitir nas configurações</span></div>`),
+  cel('TL-07 com indicador', 'Indicador global durante a sessão, sempre visível e com Parar', IND + cab('Sua volta', { sub: 'Saída às 23:00' }) + mapa(170) +
+    painel('2 opções, ordenadas por tempo', opcao({ focos:['Menor tempo'], ...R.B, sel:true }) + opcao({ focos:['Menos caminhada'], ...R.C }))),
+  cel('TL-14', 'Sessão ativa', IND + cab('Compartilhando', { esq: 'fechar' }) + `<div class="corpo"><div class="tab"><span>Ativo desde</span><span>23:04</span><span>Chegada estimada</span><span>23:36</span><span>Última posição enviada</span><span>23:12</span></div><div>${EX}</div>
+    <div class="btn s">Enviar o link de novo</div><div class="btn d borda">Parar de compartilhar</div></div>`),
+  cel('TL-15', 'Acompanhar (contato), em andamento', cab('Acompanhando uma viagem') + mapaPos(250) + `<div class="corpo"><div style="display:flex;gap:6px;align-items:center"><b>Em andamento</b>${EX}</div>
+    <div class="tab"><span>Chegada estimada</span><span>23:36</span><span>Última atualização</span><span>23:12, há 1 min</span></div>
+    ${seq([['pe'],['metro','L4'],['pe']])}<div class="t2">Horários previstos (GTFS)</div></div>`),
+  cel('TL-15', 'Acompanhar, chegou', cab('Acompanhando uma viagem') + mapa(200, { outra:'' }) + `<div class="corpo"><div style="display:flex;gap:8px;align-items:center;font-weight:700">${ic('ok')}Chegou ao destino às 23:35.</div><div class="t2">O acompanhamento terminou.</div></div>`),
 ].join('');
 
 document.getElementById('g-dados').innerHTML = [
-  cel('TL-10', 'Sobre os dados', cab('Sobre os dados') + `<div class="corpo" style="gap:4px"><div class="h">Fonte e período</div><div class="t2">SSP-SP, boletins de ocorrência de jan–set/2026 (9 meses). Base atualizada em 30/10/2026. <span class="ex inl">EXEMPLO</span></div>
+  cel('TL-10', 'Sobre os dados', cab('Sobre os dados') + `<div class="corpo" style="gap:4px"><div class="h">Fonte e período</div><div class="t2">Boletins de ocorrência da SSP-SP de janeiro a setembro de 2026. Base atualizada em 30/10/2026. ${EX}</div>
     <div class="h">Cobertura de cada opção</div><div class="tab"><span>Menor tempo</span><span>88%</span><span>Menos caminhada</span><span>91%</span></div>
     <div class="h">Situação desta comparação</div><div class="t2">Os registros não mostram diferença clara entre as opções.</div>
-    <div class="h">Limitações</div><ul class="lista"><li>Nem toda ocorrência vira boletim: zero registro não quer dizer que nada aconteceu.</li><li>O local de um boletim pode ser um ponto de referência.</li><li>Conta todos os tipos de local.</li><li>Só furtos e roubos do tipo "outros" entram.</li><li>Horários são programados e podem não refletir mudanças recentes.</li></ul>
-    <div class="h">Créditos</div><div class="t2">SSP-SP (CC-BY 4.0) · SPTrans (GTFS) · © OpenStreetMap contributors (ODbL)</div></div>`),
-  cel('TL-11', 'Dados considerados (por rota, corredor dos trechos a pé)', cab('Dados considerados') + `<div class="corpo"><div class="seg"><span class="on">Menor tempo</span><span>Menos caminhada</span></div>
-    <div class="t2">Registros perto dos trechos a pé desta opção · SSP-SP, jan–set/2026, noite <span class="ex inl">EXEMPLO</span></div>
-    <div><div class="cat"><span>Furto</span><span>7 ˅</span></div><div class="cat sub"><span>Furto – outros (entra na comparação)</span><span>4</span></div><div class="cat sub"><span>Furto de carga</span><span>0</span></div><div class="cat sub"><span>Furto de veículo</span><span>3</span></div>
-    <div class="cat"><span>Roubo</span><span>3 ›</span></div><div class="cat"><span>Ocorrências de trânsito</span><span>1</span></div></div>
-    <div class="aviso info">Só "furto – outros" e "roubo – outros" entram na comparação. Os totais acima incluem outros tipos.</div><div class="link">Outras ocorrências contra a pessoa (município)</div></div>`),
-  cel('TL-11', 'Panorama municipal (ação deliberada)', cab('Outras ocorrências contra a pessoa') + `<div class="corpo"><div class="aviso info">Total do município de São Paulo, jan–set/2026. Não descreve a rua nem o trajeto consultado.</div>
-    <div class="cat"><span>Homicídio doloso</span><span>[n]</span></div><div class="cat"><span>Tentativa de homicídio</span><span>[n]</span></div><div class="cat"><span>Estupro</span><span>[n]</span></div><div class="cat"><span>Estupro de vulnerável</span><span>[n]</span></div>
-    <div class="t2">[n] = valor real da base, preenchido na construção.</div><div class="t2">Fonte: SSP-SP (CC-BY 4.0)</div></div>`),
-  cel('TL-12', 'Configurações (histórico desligado por padrão)', cab('Configurações') + `<div class="corpo"><div class="h">Conta</div><div class="t2">agatha@exemplo.com <span class="ex inl">EXEMPLO</span></div>
-    <div class="h">No aparelho</div><div class="inter"><span>Guardar histórico</span><span class="sw"></span></div><div class="t2">Os trajetos ficam só neste celular. Desligado: nada é salvo.</div><div class="campo cheio">Locais salvos (2) <span>›</span></div>
-    <div class="h">Privacidade</div><div class="campo cheio">Aviso de privacidade <span>›</span></div><div class="btn s">Sair</div><div class="btn d">Excluir conta</div></div>`),
-  cel('TL-12', 'Excluir conta (confirmação)', cab('Excluir conta', '✕') + `<div class="corpo centro" style="text-align:left"><div>Isto apaga do servidor seu e-mail e identificador e encerra a sessão. Histórico e locais salvos neste aparelho também são apagados.</div>
-    <div class="btn s" style="color:var(--erro);border-color:var(--erro)">Excluir conta</div><div class="btn p">Cancelar</div></div>`),
+    <div class="h">Limitações</div><ul class="lista"><li>Nem toda ocorrência vira boletim: zero registro não quer dizer que nada aconteceu.</li><li>O local de um boletim pode ser um ponto de referência.</li><li>Conta todos os tipos de local.</li><li>Só furtos e roubos do tipo "outros" entram.</li><li>Os horários são programados e podem não refletir mudanças recentes.</li></ul>
+    <div class="h">Créditos</div><div class="t2">SSP-SP (CC-BY 4.0), SPTrans (GTFS). Mapa base: a definir (PL-25).</div></div>`),
+  cel('TL-11', 'Dados considerados, por rota, perto dos trechos a pé', cab('Dados considerados') + `<div class="corpo"><div class="seg"><span class="on">Menor tempo</span><span>Menos caminhada</span></div>
+    <div class="t2">Registros perto dos trechos a pé desta opção. SSP-SP, jan. a set. de 2026, à noite. ${EX}</div>
+    <div><div class="cat"><span>Furto</span><b>7</b></div><div class="cat sub"><span>Furto, outros (entra na comparação)</span><b>4</b></div><div class="cat sub"><span>Furto de carga</span><b>0</b></div><div class="cat sub"><span>Furto de veículo</span><b>3</b></div>
+    <div class="cat"><span>Roubo</span><b>3</b></div><div class="cat"><span>Ocorrências de trânsito</span><b>1</b></div></div>
+    <div class="aviso info">${ic('info')}<span>Só "furto, outros" e "roubo, outros" entram na comparação. Os totais acima incluem outros tipos.</span></div><span class="link">Outras ocorrências contra a pessoa no município</span></div>`),
+  cel('TL-11', 'Panorama municipal (ação deliberada)', cab('Outras ocorrências contra a pessoa') + `<div class="corpo"><div class="aviso info">${ic('info')}<span>Total do município de São Paulo, jan. a set. de 2026. Não descreve a rua nem o trajeto consultado.</span></div>
+    <div><div class="cat"><span>Homicídio doloso</span><b>[n]</b></div><div class="cat"><span>Tentativa de homicídio</span><b>[n]</b></div><div class="cat"><span>Estupro</span><b>[n]</b></div><div class="cat"><span>Estupro de vulnerável</span><b>[n]</b></div></div>
+    <div class="t2">[n] é o valor real da base, preenchido na construção.</div><div class="t2">Fonte: SSP-SP (CC-BY 4.0)</div></div>`),
+  cel('TL-12', 'Configurações, com o histórico desligado por padrão', cab('Configurações') + `<div class="corpo" style="gap:4px"><div class="h">Conta</div><div class="t2">agatha@exemplo.com ${EX}</div>
+    <div class="h">Neste celular</div><div class="inter"><span>Guardar histórico</span><span class="sw"></span></div><div class="t2">Os trajetos ficam só neste celular. Desligado, nada é salvo.</div><div class="linha-nav"><span>Locais salvos (2)</span>${ic('seta')}</div>
+    <div class="h">Privacidade</div><div class="linha-nav"><span>Aviso de privacidade</span>${ic('seta')}</div><div style="height:8px"></div><div class="btn s">Sair</div><div class="btn d">Excluir conta</div></div>`),
+  cel('TL-12', 'Excluir conta (confirmação, foco em Cancelar)', cab('Excluir conta', { esq: 'fechar' }) + `<div class="corpo centro" style="text-align:left"><div>Isto apaga do servidor seu e-mail e identificador e encerra a sessão. O histórico e os locais salvos neste celular também são apagados.</div>
+    <div class="btn d borda">Excluir conta</div><div class="btn p">Cancelar</div></div>`),
 ].join('');
 </script>
 </body>

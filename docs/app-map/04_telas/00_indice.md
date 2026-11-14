@@ -19,7 +19,7 @@
 | TL-09 | Por que esta rota? | `/(app)/por-que/[rotaId]/[trechoId]` (modal) | FL-07 | US-10, US-11, US-12, D-08, D-11, D-13 | pronta |
 | TL-10 | Sobre os dados | `/(app)/sobre-os-dados` | FL-09 | US-14 AC1–AC5, US-16, US-18 AC3 | pronta |
 | TL-11 | Dados considerados | `/(app)/dados-considerados` | FL-10 | US-15 AC1–AC4, D-14 | pronta |
-| TL-12 | Configurações | `/(app)/configuracoes` | FL-11, FL-12 | US-03, US-04 | pronta |
+| TL-12 | Configurações | `/(app)/configuracoes` | FL-11, FL-12 (adiado, D-25) | US-03 (adiado, D-25), US-04 | pronta (exclusão de conta: adiado, D-25) |
 | TL-13 | Aviso de privacidade | `/aviso-privacidade` | FL-02 | US-01 AC6, RNF-09 | pronta |
 | TL-14 | Compartilhar minha volta (**Depende do tempo**) | `/(app)/compartilhar/[rotaId]` (modal) + indicador global | FL-15 | US-21 AC1–AC5, AC7, AC9 | rascunho (nova, D-19) |
 | TL-15 | Acompanhar viagem (**Depende do tempo**) | `/(app)/acompanhar/[token]` | FL-16 | US-21 AC6–AC8 | rascunho (nova, D-19) |

@@ -3,7 +3,9 @@
 - **Status:** rascunho (Fase 3, 13/11/2026)
 - **Natureza:** redação **proposta, não validada com usuários** (US-13 AC4, `docs/08`). Os textos do resultado são os de maior risco de leitura errada; ver a seção "Indicativos".
 - **Como usar:** cada chave vira uma entrada do arquivo de textos do app (Frente 2). Variáveis entre chaves: `{n}`, `{faixa}` etc. Ao mudar um texto, mudar aqui primeiro e rodar a varredura.
-- **Regras:** `docs/05` (nenhum termo proibido), RNF-06 (sem culpa da usuária), RNF-09 (sem afirmar conformidade com a LGPD), linguagem simples (`07_design/acessibilidade.md`, regra 10).
+- **Regras:** `docs/05` (nenhum termo proibido), RNF-06 (sem culpa da usuária), RNF-09 (sem afirmar conformidade com a LGPD), linguagem simples (`07_design/acessibilidade.md`, regra 13).
+
+> **Revisão de design PL-19 (13/11/2026):** os metadados da opção deixaram de ser uma frase com pontos do meio e viraram partes separadas (`resultado.km_a_pe`, `resultado.trocas`, `resultado.saida_prevista`); "0 troca" passou a "Sem troca"; o cabeçalho do resultado passou a "Sua ida/Sua volta" com subtítulo; entraram as leituras de linha e de sequência para o leitor de tela. Ver `07_design/tokens.md` R-04, R-05, R-13.
 
 ## Comuns
 
@@ -20,8 +22,8 @@
 | `comum.horarios_previstos` | Horários previstos (GTFS) |
 | `comum.linha_dados` | Dados: {fonte}, {periodo} |
 | `comum.linha_dados_indisponivel` | Comparação de registros indisponível |
-| `comum.ordenadas_por_tempo` | {n} opções · ordenadas por tempo |
-| `comum.exposicao_primeiro` | {n} opções · menor exposição estimada primeiro |
+| `comum.ordenadas_por_tempo` | {n} opções, ordenadas por tempo |
+| `comum.exposicao_primeiro` | {n} opções, com a de menor exposição estimada primeiro |
 | `comum.uma_opcao` | 1 opção encontrada |
 
 ## Modos e faixas
@@ -56,7 +58,7 @@
 | `abertura.criar_conta` | Criar conta |
 | `abertura.entrar` | Entrar |
 | `abertura.aviso` | Aviso de privacidade |
-| `abertura.conta_excluida` | Sua conta foi excluída. |
+| `abertura.conta_excluida` (adiado, D-25) | Sua conta foi excluída. |
 | `abertura.sessao_expirada` | Sua sessão terminou. Entre de novo. |
 
 ## TL-02 · Criar conta
@@ -152,8 +154,12 @@
 
 | Chave | Texto |
 |---|---|
-| `resultado.card_resumo` | {duracao} · {km} a pé · {trocas} |
-| `resultado.saida_prevista` | Saída prevista {hora} |
+| `resultado.km_a_pe` | {km} a pé |
+| `resultado.trocas` | Sem troca / 1 troca / {n} trocas |
+| `resultado.cabecalho` | Sua ida / Sua volta (subtítulo: Saída às {hora}) |
+| `resultado.sequencia_leitura` | {modo} {detalhe}, … (ex.: "A pé 9 minutos, metrô linha 4-Amarela, a pé 8 minutos") |
+| `linha.leitura` | Linha {numero}-{nome} do {metro_ou_trem} / Ônibus {numero} |
+| `resultado.saida_prevista` | Sai às {hora} (previsto) |
 | `resultado.so_uma` | Só uma opção neste horário: não há comparação. |
 | `resultado.planejar_volta` / `resultado.planejar_ida` | Planejar a volta / Planejar a ida |
 | `resultado.expandir` | Expandir lista |
@@ -264,7 +270,7 @@ Atenção ao `motivo.cobertura`: fala de **cobertura dos dados** na região, nã
 | `config.vazio_trajetos` / `config.vazio_locais` | Nenhum trajeto salvo. / Nenhum local salvo. |
 | `config.privacidade` | Privacidade |
 | `config.sair` | Sair |
-| `excluir.link` | Excluir conta |
+| `excluir.link` (adiado, D-25) | Excluir conta |
 | `excluir.titulo` | Excluir conta |
 | `excluir.explica` | Isto apaga do servidor seu e-mail e identificador e encerra a sessão. Histórico e locais salvos neste aparelho também são apagados. |
 | `excluir.botao` | Excluir conta |

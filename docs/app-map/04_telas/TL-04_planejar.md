@@ -1,5 +1,7 @@
 # TL-04 · Planejar
 
+> **Revisão D-29 (14/11/2026):** sem seletor Ida/Volta (um fluxo: origem, destino, inverter, hora; "Planejando a volta" só aparece vindo do resultado). Tocar em "De onde"/"Para onde" abre direto a TL-05. Sem lista de métodos e sem pontos de exemplo. Topo com imagem (`heroPlanejar`), configurações como ícone, cartão de origem/destino e **Lugares salvos** (cartões com imagem). Detalhes: `docs/redesign/08_home_busca_locais_arquitetura.md`. O texto abaixo é o desenho anterior e vale no que não contradiz esta faixa.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/planejar` (tela inicial com sessão)
 - **Objetivo:** informar origem, destino, horário de saída e sentido (ida ou volta) e pedir as alternativas. Momento: **Planejar** e **Revisar a jornada** (`docs/03` §4).
 - **US/AC e funcionalidades cobertas:** US-05 AC1–AC3, US-06 AC1–AC5, US-07 AC1–AC2, US-04 AC2–AC5, US-02 AC3 · FN-04, FN-05, FN-06, FN-13 · **RNF aplicáveis:** RNF-01, RNF-07, RNF-08

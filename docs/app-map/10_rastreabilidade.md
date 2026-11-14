@@ -21,9 +21,9 @@
 | US-02 AC1 | Login correto abre o planejamento | FL-03 | TL-03 → TL-04 | FN-02 | T-02.1 Login válido abre TL-04 | + | App + API |
 | US-02 AC2 | Erro genérico | FL-03 | TL-03 | FN-02 (`401`) | T-02.2 Senha errada e e-mail inexistente mostram a mesma mensagem | − | App + API |
 | US-02 AC3 | Conta obrigatória | FL-03 | TL-01/TL-03 | Guarda de rotas (`05_navegacao.md`) | T-02.3 Sem sessão, abrir uma rota de `(app)` leva à abertura | − | App |
-| US-03 AC1 | Excluir apaga e encerra | FL-12 | TL-12 → TL-01 | FN-03 · `DialogoConfirmacao` | T-03.1 Confirmar a exclusão: sessão encerrada e aviso "conta excluída" | + | App + API |
-| US-03 AC2 | Conta excluída não entra | FL-12, FL-03 | TL-03 | FN-02, FN-03 | T-03.2 Depois de excluir, login com o mesmo e-mail é negado | − | App + API |
-| US-03 AC3 | Cancelar não apaga | FL-12 | TL-12 | FN-03 | T-03.3 Cancelar a confirmação: conta continua ativa | − | App |
+| US-03 AC1 (adiado, D-25) | Excluir apaga e encerra | FL-12 | TL-12 → TL-01 | FN-03 · `DialogoConfirmacao` | T-03.1 (adiado, D-25) Confirmar a exclusão: sessão encerrada e aviso "conta excluída" | + | App + API |
+| US-03 AC2 (adiado, D-25) | Conta excluída não entra | FL-12, FL-03 | TL-03 | FN-02, FN-03 | T-03.2 (adiado, D-25) Depois de excluir, login com o mesmo e-mail é negado | − | App + API |
+| US-03 AC3 (adiado, D-25) | Cancelar não apaga | FL-12 | TL-12 | FN-03 | T-03.3 (adiado, D-25) Cancelar a confirmação: conta continua ativa | − | App |
 | US-04 AC1 | Histórico desligado não grava | FL-11 | TL-12, TL-04 | FN-13 | T-04.1 Com histórico desligado (padrão), consultar não grava nada no banco local | − | App |
 | US-04 AC2 | Ligado grava só no aparelho | FL-11, FL-04 | TL-12, TL-04 | FN-13 | T-04.2 Com histórico ligado, a consulta aparece em "Recentes" | + | App |
 | US-04 AC3 | Apagar um ou todos | FL-11 | TL-12 | FN-13 · `DialogoConfirmacao` | T-04.3 Apagar um e depois todos: somem da lista e do banco | + | App |
@@ -41,7 +41,7 @@
 | US-06 AC2 | Campo vazio não envia | FL-04 | TL-04 | FN-05 · `CampoPonto` erro | T-06.2 Destino vazio: nada enviado e campo indicado | − | App |
 | US-06 AC3 | Fora do município bloqueado | FL-04 | TL-04, TL-05 | FN-05 (PL-11) | T-06.3 Ponto fora de São Paulo: aviso de fora da área e nada enviado | − | App |
 | US-06 AC4 | Origem = destino | FL-04 | TL-04 | FN-05 | T-06.4 Mesmo ponto nos dois campos: aviso de que não há trajeto | − | App |
-| US-06 AC5 | Formas de escolher, sem busca externa | FL-05 | TL-04, TL-05 | FN-04 | T-06.5 Existem as opções mapa, localização, local salvo e exemplo; não existe campo de busca de endereço | + | App |
+| US-06 AC5 | Formas de escolher, sem busca externa | FL-05 | TL-04, TL-05 | FN-04 | T-06.5 (revisto pela D-29) Existem mapa, busca por texto, localização e local salvo; não existem pontos de exemplo na interface; a busca só consulta ao tocar em Buscar e nada é registrado em log | + | App |
 | US-07 AC1 | Volta inverte, horário próprio | FL-08 | TL-07 → TL-04 | FN-06 · `SeletorSentido` | T-07.1 "Planejar a volta" inverte origem e destino e permite outro horário | + | App |
 | US-07 AC2 | Volta usa a faixa do horário da volta | FL-08 | TL-09 | FN-06, FN-10 | T-07.2 Ida 18h e volta 23h: o "Por que esta rota?" da volta mostra "noite (18h–23h)" conforme a resposta | + | App + API |
 | US-08 AC1 | Card com duração, a pé, trocas, trechos | FL-06 | TL-07, TL-08 | FN-07, FN-08 · `CardRota` | T-08.1 Cada card mostra duração, km a pé, trocas, modos, linhas e horário previsto | + | App |
@@ -127,7 +127,7 @@
 | RNF-02 Sem rótulo de bairro | Nenhuma tela classifica território; `motivo.cobertura` fala dos dados | T-R02 Nenhum texto ou camada nomeia bairro com qualificação | App |
 | RNF-03 Zero não é vantagem | D-13, US-12 AC3 | T-R03 = T-12.3 + T-10.5 | App |
 | RNF-04 Confiança separada | Linha fixa + TL-10; sem cor de alerta | T-R04 = T-14.1; componentes sem cor por caso | App |
-| RNF-05 Privacidade e minimização | FN-01, FN-03, FN-13, contrato | T-R05 = T-01.1, T-03.1, T-04.4, T-19.2 | App + Backend |
+| RNF-05 Privacidade e minimização | FN-01, FN-03, FN-13, contrato | T-R05 = T-01.1, T-03.1 (adiado, D-25), T-04.4, T-19.2 | App + Backend |
 | RNF-06 Sem culpa da usuária | Microcopy de erro e indicativos | T-R06 Revisão dos textos de erro e resultado | App |
 | RNF-07 Acessibilidade | `07_design/acessibilidade.md` | T-R07 Checklist por tela + teste com leitor de tela no fluxo TL-04 → TL-09 | App |
 | RNF-08 Dados de exemplo rotulados | `exemplo: true` → `SeloExemplo` | T-R08 Toda fixture mostra "EXEMPLO" em cards e números | App |
@@ -140,3 +140,5 @@
 | AC de US-01 a US-16 e US-21 (com tela) | 74 | 74 | 72 (US-10 AC2 e AC3 são só backend) | 74 |
 | AC de US-17 a US-20 (backend e proteção) | 12 | — | reflexo indicado | 12 |
 | RNF | 9 | — | — | 9 |
+
+> Nota (D-25): os 3 AC de US-03 e os testes T-03.x estão adiados e continuam contados acima, pois o backlog os preserva. Os totais não foram alterados.
