@@ -1,0 +1,1 @@
+export { CampoEntrada } from './CampoEntrada';
