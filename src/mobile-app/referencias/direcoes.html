@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VoltaSegura: 3 direções premium (TL-07)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Barlow+Condensed:wght@500;700;800&family=Barlow:wght@400;600&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark}
+body{margin:0;background:#080d14;color:#ddd;font:14px system-ui;padding:24px}
+h1{font:600 18px system-ui;margin:0 0 4px}p.s{margin:0 0 24px;color:#8a97a6;max-width:900px}
+.row{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.col{width:390px}.col h2{font:700 15px system-ui;margin:0 0 4px;color:#fff}.col small{display:block;color:#8a97a6;margin-bottom:12px;line-height:1.4}
+.ph{width:390px;height:780px;border-radius:38px;overflow:hidden;position:relative;border:1px solid #223;box-shadow:0 20px 60px #0008}
+.map{position:absolute;left:0;right:0;top:0;height:330px}
+svg{display:block}
+.num{font-variant-numeric:tabular-nums}
+.ex{font:700 11px/16px system-ui;letter-spacing:.08em;border:1px dashed currentColor;border-radius:6px;padding:0 6px;opacity:.75}
+/* ===== A: Fio de luz ===== */
+.A{background:#0D1B2A;font-family:'Atkinson Hyperlegible Next',system-ui;color:#F8F9FA}
+.A .sheet{position:absolute;left:0;right:0;top:300px;bottom:0;background:linear-gradient(#15263Af0,#0D1B2A);border-radius:28px 28px 0 0;padding:18px 20px;backdrop-filter:blur(12px);border-top:1px solid #FFC53D22}
+.A .grab{width:36px;height:4px;border-radius:2px;background:#FFC53D55;margin:0 auto 14px}
+.A .tag{display:inline-flex;gap:6px;align-items:center;color:#0D1B2A;background:#FFC53D;border-radius:999px;font:700 12px/1 'Atkinson Hyperlegible Next';padding:6px 10px}
+.A .big{font:800 64px/1 Sora;letter-spacing:-2px;margin:10px 0 2px}.A .big span{font:600 18px Sora;letter-spacing:0;color:#B8C2CC;margin-left:6px}
+.A .meta{color:#B8C2CC;font-size:15px}.A .meta b{color:#F8F9FA}
+.A .fio{display:flex;align-items:center;gap:0;margin:16px 0 4px}
+.A .fio i{height:3px;flex:1;background:#FFC53D;box-shadow:0 0 14px #FFC53D}.A .fio i.d{background:repeating-linear-gradient(90deg,#8FA3B8 0 5px,transparent 5px 9px);box-shadow:none;height:2px}
+.A .fio u{width:34px;height:34px;border-radius:50%;background:#0D1B2A;border:2px solid #FFC53D;display:grid;place-items:center;text-decoration:none;font:700 11px Sora;color:#FFC53D}
+.A .op{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-top:1px solid #24384F}
+.A .op .t{font:800 26px Sora}.A .op small{color:#B8C2CC;font-size:13px}
+.A .cta{position:absolute;left:20px;right:20px;bottom:26px;height:56px;border-radius:18px;background:linear-gradient(#FFD25E,#FFC53D);color:#0D1B2A;font:700 16px Sora;display:grid;place-items:center;box-shadow:0 0 36px #FFC53D44}
+.A .dados{position:absolute;left:20px;bottom:92px;color:#4ECDC4;font-size:13px}
+/* ===== B: Painel de partidas ===== */
+.B{background:#F4F1EA;font-family:Barlow,system-ui;color:#101010}
+.B .top{height:58px;background:#101010;color:#F4F1EA;display:flex;align-items:end;padding:0 18px 8px;font:700 13px 'Barlow Condensed';letter-spacing:.14em}
+.B .lin{padding:14px 18px;border-bottom:3px solid #101010;display:grid;grid-template-columns:1fr auto;gap:4px}
+.B .lin.sel{background:#FFC53D}
+.B .dur{font:800 84px/0.9 'Barlow Condensed'}.B .dur sup{font-size:26px;font-weight:700;vertical-align:top;margin-left:4px;position:relative;top:10px}
+.B .badges{display:flex;gap:6px;margin-top:8px;align-items:center}
+.B .bd{font:800 15px 'Barlow Condensed';background:#101010;color:#F4F1EA;border-radius:4px;padding:2px 8px}.B .bd.pe{background:transparent;color:#101010;border:2px solid #101010}
+.B .r{text-align:right;font:600 14px Barlow}.B .r b{font:800 22px 'Barlow Condensed';display:block}
+.B .foco{font:800 12px 'Barlow Condensed';letter-spacing:.12em;text-transform:uppercase}
+.B .mapb{height:230px;background:#101010;position:relative}
+.B .btn{position:absolute;left:18px;right:18px;bottom:26px;height:58px;background:#101010;color:#F4F1EA;display:flex;justify-content:space-between;align-items:center;padding:0 20px;font:800 20px 'Barlow Condensed';letter-spacing:.08em;border-radius:0}
+/* ===== C: Carta noturna ===== */
+.C{background:#0a1520;font-family:'JetBrains Mono',monospace;color:#d9e6ee}
+.C .hd{position:absolute;top:16px;left:18px;right:18px;display:flex;justify-content:space-between;font-size:11px;color:#4ECDC4;letter-spacing:.1em}
+.C .card{position:absolute;left:12px;right:12px;bottom:12px;background:#0d1e2de8;border:1px solid #4ECDC444;border-radius:22px;padding:18px;backdrop-filter:blur(10px)}
+.C .tt{font:700 54px/1 Fraunces;letter-spacing:-1px;color:#fff}.C .tt em{font:500 18px Fraunces;color:#9fb3c2;font-style:italic}
+.C .ln{display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-top:1px dotted #4ECDC455;color:#9fb3c2}.C .ln b{color:#d9e6ee}
+.C .pill{display:inline-block;border:1px solid #FFC53D;color:#FFC53D;border-radius:999px;padding:3px 10px;font-size:11px;margin-bottom:8px}
+.C .go{margin-top:12px;height:50px;border-radius:14px;background:#FFC53D;color:#0a1520;display:grid;place-items:center;font:700 14px 'JetBrains Mono'}
+</style></head><body>
+<h1>VoltaSegura · TL-07 (resultado) em 3 direções</h1>
+<p class="s">Mockup estático, dados de exemplo da fixture (selo EXEMPLO). Nenhuma cor significa segurança: o dourado marca seleção e ação, nunca "melhor" ou "seguro". Direções nascidas do produto (volta noturna em SP, marca Noite + Luz do caminho), sem referências externas (P1 ainda não existe).</p>
+<div class="row">
+
+<div class="col"><h2>A · Fio de luz</h2><small>Conceito: a cidade apagada e uma linha de luz que só você acende. Assinatura: o <b>fio</b> dourado que liga origem, trechos e destino, repetido na lista. Sora (destaque) + Atkinson (texto). Marinho + dourado, vidro e brilho suave. Movimento: o fio se acende ao selecionar; mola no toque.</small>
+<div class="ph A">
+ <div class="map"><svg width="390" height="330" viewBox="0 0 390 330"><defs><radialGradient id="g" cx=".5" cy=".4" r=".8"><stop offset="0" stop-color="#16263A"/><stop offset="1" stop-color="#0a1522"/></radialGradient><filter id="b"><feGaussianBlur stdDeviation="7"/></filter></defs><rect width="390" height="330" fill="url(#g)"/>
+ <g stroke="#1d3148" stroke-width="2" fill="none"><path d="M0 90H390M0 170H390M0 250H390M70 0V330M170 0V330M270 0V330M350 0V330"/></g>
+ <path d="M60 270 C120 250 110 170 190 160 S300 120 330 70" stroke="#8FA3B8" stroke-width="3" stroke-dasharray="3 7" fill="none" opacity=".6" transform="translate(10 18)"/>
+ <path d="M60 270 C120 250 110 170 190 160 S300 120 330 70" stroke="#FFC53D" stroke-width="16" fill="none" opacity=".35" filter="url(#b)"/><path d="M60 270 C120 250 110 170 190 160 S300 120 330 70" stroke="#FFC53D" stroke-width="5" fill="none" stroke-linecap="round"/>
+ <circle cx="60" cy="270" r="9" fill="#0D1B2A" stroke="#FFC53D" stroke-width="3"/><circle cx="330" cy="70" r="9" fill="#FFC53D"/></svg></div>
+ <div class="sheet"><div class="grab"></div>
+  <span class="tag">◆ Menor exposição estimada</span> <span class="ex" style="color:#B8C2CC">EXEMPLO</span>
+  <div class="big num">38<span>min</span></div>
+  <div class="meta"><b>0,9 km</b> a pé · Sem troca · Sai às <b>23:04</b> (previsto)</div>
+  <div class="fio"><u>5'</u><i></i><u>875A</u><i></i><u>4'</u></div>
+  <div class="op"><div><div class="t num">35 min</div><small>Menor tempo · 1,4 km a pé</small></div><small>Sai 23:10</small></div>
+  <div class="op"><div><div class="t num">42 min</div><small>Menos caminhada · 0,4 km a pé</small></div><small>Sai 23:02</small></div>
+ </div><div class="dados">ⓘ Sobre os dados · SSP-SP jan–set/2026</div><div class="cta">Ver detalhes da rota</div>
+</div></div>
+
+<div class="col"><h2>B · Painel de partidas</h2><small>Conceito: a linguagem das placas e painéis do metrô de SP: tipografia condensada, tarja preta, informação em bloco. Assinatura: a <b>duração gigante</b> como número de painel. Barlow Condensed + Barlow. Papel off-white, tinta preta e um dourado. Sem vidro; contraste duro. Movimento: números que "viram" como painel.</small>
+<div class="ph B">
+ <div class="top">SUA VOLTA · SAÍDA 23:00 · EXEMPLO</div>
+ <div class="mapb"><svg width="390" height="230" viewBox="0 0 390 230"><rect width="390" height="230" fill="#101010"/><g stroke="#2a2a2a" stroke-width="3"><path d="M0 60H390M0 150H390M90 0V230M220 0V230M320 0V230"/></g><path d="M50 190 L120 190 L120 110 L250 110 L250 50 L340 50" stroke="#FFC53D" stroke-width="9" fill="none" stroke-linejoin="round"/><circle cx="50" cy="190" r="10" fill="#F4F1EA"/><rect x="330" y="40" width="20" height="20" fill="#FFC53D"/></svg></div>
+ <div class="lin sel"><div><div class="foco">◆ Menor exposição estimada</div><div class="dur num">38<sup>MIN</sup></div><div class="badges"><span class="bd pe">A PÉ 5'</span><span class="bd">875A</span><span class="bd pe">A PÉ 4'</span></div></div><div class="r"><b>0,9 km</b>a pé<b style="margin-top:8px">23:04</b>previsto</div></div>
+ <div class="lin"><div><div class="foco">Menor tempo</div><div class="dur num" style="font-size:56px">35<sup style="font-size:18px;top:6px">MIN</sup></div><div class="badges"><span class="bd pe">A PÉ 12'</span><span class="bd">L4</span><span class="bd">875A</span></div></div><div class="r"><b>1,4 km</b>a pé<b style="margin-top:8px">23:10</b>previsto</div></div>
+ <div class="lin"><div><div class="foco">Menos caminhada</div><div class="dur num" style="font-size:56px">42<sup style="font-size:18px;top:6px">MIN</sup></div></div><div class="r"><b>0,4 km</b>a pé<b style="margin-top:8px">23:02</b>previsto</div></div>
+ <div class="btn"><span>VER DETALHES</span><span>→</span></div>
+</div></div>
+
+<div class="col"><h2>C · Carta noturna</h2><small>Conceito: uma carta de navegação à noite: instrumento de precisão, calmo. Assinatura: <b>coordenadas e curvas de nível</b> no mapa e dados em monoespaçada. Fraunces (números/títulos) + JetBrains Mono. Marinho profundo, ciano de dados e dourado só no ponto de ação. Vidro fosco no cartão. Movimento: traço que se desenha, parallax leve.</small>
+<div class="ph C">
+ <div class="map" style="height:780px"><svg width="390" height="780" viewBox="0 0 390 780"><rect width="390" height="780" fill="#0a1520"/><g fill="none" stroke="#1a3347" stroke-width="1.2"><ellipse cx="260" cy="250" rx="60" ry="40"/><ellipse cx="260" cy="250" rx="110" ry="75"/><ellipse cx="260" cy="250" rx="170" ry="115"/><ellipse cx="260" cy="250" rx="240" ry="160"/><ellipse cx="80" cy="520" rx="70" ry="50"/><ellipse cx="80" cy="520" rx="140" ry="100"/></g><g stroke="#4ECDC433" stroke-width="1"><path d="M0 200H390M0 400H390M130 0V780M260 0V780"/></g><path d="M70 360 C130 340 120 270 200 250 S300 200 330 140" stroke="#FFC53D" stroke-width="3" fill="none"/><circle cx="70" cy="360" r="6" fill="none" stroke="#FFC53D" stroke-width="2"/><circle cx="330" cy="140" r="6" fill="#FFC53D"/><text x="20" y="195" fill="#4ECDC4" font-size="10" font-family="JetBrains Mono">23°33′S</text><text x="270" y="396" fill="#4ECDC4" font-size="10" font-family="JetBrains Mono">46°38′O</text></svg></div>
+ <div class="hd"><span>VOLTA · 23:00</span><span>EXEMPLO</span></div>
+ <div class="card"><span class="pill">◆ Menor exposição estimada</span>
+  <div class="tt num">38 <em>minutos</em></div>
+  <div class="ln"><span>A pé</span><b>0,9 km</b></div><div class="ln"><span>Trocas</span><b>nenhuma</b></div><div class="ln"><span>Sai (previsto)</span><b>23:04</b></div><div class="ln"><span>Outras</span><b>35 min · 42 min</b></div>
+  <div class="go">VER DETALHES</div></div>
+</div></div>
+
+</div></body></html>
