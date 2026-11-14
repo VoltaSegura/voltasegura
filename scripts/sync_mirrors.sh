@@ -69,6 +69,10 @@ clone_or_update() { # $1 = repo
 }
 
 regenerate_readme() { # $1 = mirror, $2 = dir, $3 = repo
+  if [ "$2" = "mobile-app" ]; then
+    sed -e 's#(../../docs/#(./docs/#g' -e 's#(./ARQUITETURA.md)#(./src/mobile-app/ARQUITETURA.md)#g' -e 's#(./todo-mobile.md)#(./src/mobile-app/todo-mobile.md)#g' -e 's#(../../prompts.md)#(./prompts.md)#g' "$ROOT/src/$2/README.md" > "$1/README.md"
+    return
+  fi
   cat > "$1/README.md" <<EOF
 # $3 — entrega da disciplina ${DISCIPLINAS[$2]} (VoltaSegura)
 
