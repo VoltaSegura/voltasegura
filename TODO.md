@@ -46,6 +46,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | T17 | Benchmarking atualizado | PENDENTE | a definir | a definir |
 | T19 | Base de conhecimento e dados já entregues | CONCLUÍDO | grupo | 11/11 |
 | T21 | Script automático de cobertura por região (revisão de vieses) | PENDENTE | a definir | antes do piloto |
+| T22 | Decidir a feature premium e o modelo financeiro | PENDENTE | grupo | antes do pitch (T03) |
 
 ### Parte B — Entregas de disciplinas (prazo de todas: 19/11/2026, 23h55)
 
@@ -147,7 +148,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [ ] Escolher as entregas que entram (app, API, ML, dashboard de Cybersecurity, circuito ESP32), de acordo com o que estiver pronto
 - [ ] Montar o roteiro com tempos por bloco, somando no máximo 4 min
 - [ ] Storyboard simples (telas e demonstrações a gravar)
-- [ ] Modelo de receita: proposta de assinatura individual (freemium) em discussão no grupo (`Claude outputs/proposta_premium_voltasegura.md`, fora do git); decidir antes do pitch se entra como "modelo a validar"
+- [ ] Modelo de receita no pitch: depende da **T22** (feature premium e modelo financeiro); entra como "modelo a validar"
 - [ ] Decidir a paleta dos slides (preto e laranja da apresentação ou dourado da marca; ver T15)
 - [ ] Gravar, editar, subir no YouTube e conferir o link
 - [ ] Colocar o link na tarefa de Testing (ver T18)
@@ -274,6 +275,26 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ---
 
+## T22 — Decidir a feature premium e o modelo financeiro
+
+**Status:** PENDENTE
+**Responsável:** grupo
+**Prazo:** antes do pitch (T03)
+**Tipo:** Core do projeto
+**Referência:** proposta em `Claude outputs/proposta_premium_voltasegura.md` (fora do git); `docs/03` §8; `docs/10` §4 e §9; `docs/05` (o que pode ser prometido).
+
+**Contexto (13/11/2026):** o grupo concordou que o B2B2C só com universidades é nichado demais (muitas não pagariam, sobretudo as públicas). A proposta em discussão é uma assinatura individual (freemium). O princípio proposto é "o grátis informa e o premium poupa trabalho": comparação de exposição, transparência dos dados, acessibilidade e compartilhamento de localização ficam grátis.
+
+- [ ] Decidir qual é a feature premium. Candidata principal: **"Rotina da semana"** (trajetos fixos com aviso antes de sair). Outras opções: preferências de conforto, "Volta ao vivo" (depende de fonte de tempo real) e extras do compartilhamento
+- [ ] Decidir se os extras do compartilhamento entram no premium ou se tudo do compartilhamento fica grátis (o compartilhamento básico já é nativo e gratuito, D-19)
+- [ ] Decidir o modelo financeiro: assinatura individual como receita principal? Quais canais complementares entram (empresas com turno noturno, eventos, universidades como um dos canais, painéis agregados depois)?
+- [ ] Definir como o modelo aparece no pitch e nos slides (sempre como "modelo a validar"; sem preço inventado; sem prometer segurança no premium)
+- [ ] Registrar a decisão como `[HIPÓTESE]` em `docs/03` §8, `docs/10` §4 e §9 e `docs/06` (com histórico)
+
+**Pronto quando:** feature premium e modelo financeiro decididos pelo grupo e registrados nas docs acima, com o status de hipótese.
+
+---
+
 # PARTE B — ENTREGAS DE DISCIPLINAS
 
 ## T04 — IA & Machine Learning
@@ -321,7 +342,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ## T07 — Mobile & IoT
 
-**Status:** EM DESENVOLVIMENTO (13/11/2026: mapeamento fechado em `docs/app-map/`; esqueleto do app criado em `src/mobile-app/` com navegação e telas provisórias; telas reais, serviços, banco e sessão ainda não existem)
+**Status:** EM DESENVOLVIMENTO (14/11/2026: 13 telas reais, serviços mock/API, Neon Auth e sessão implementados; 312 testes, typecheck, lint, exportações web/Android e Expo Doctor 20/20 passando. Celular, acessibilidade, prints/vídeo e sync do espelho pendentes; FN-13 em aberto.)
 **Responsável:** Lucas Simidu (indicado em 11/11/2026)
 **Tipo:** Entrega de disciplina (Mobile & IoT)
 **Referência:** `docs/02` §5; plano `docs/plano_app.md`; mapeamento `docs/app-map/`; **painel detalhado de status e progresso em `src/mobile-app/todo-mobile.md`** (entregas da disciplina, infraestrutura, FN-01 a FN-16, telas, fixtures, RNF).
@@ -335,7 +356,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [x] Esqueleto do app (Frente 2, `docs/plano_app.md` §5.1). *13/11: Expo SDK 58 + TypeScript + Expo Router em `src/mobile-app/`, árvore de rotas de `05_navegacao.md` (em `src/app/`) com telas provisórias e guarda de sessão, tokens de `07_design/tokens.md`, modo `mock|api` por `EXPO_PUBLIC_API_MODE`, ESLint. Lint, typecheck e `expo-doctor` (18/18) passando; bundles Android e web compilam (`expo export`). Ainda não aberto no celular. Evidência: `src/mobile-app/ARQUITETURA.md`.*
 - [ ] Atualizar o Node.js para 22.13 ou mais novo na máquina de desenvolvimento (o Expo SDK 58 não suporta o Node 20.17 instalado hoje; o CLI roda com aviso) e abrir o app vazio no celular pelo Expo Go
 - [ ] Camada `services/` com modo `mock|api` e fixtures por caso do FL-07; sessão no `expo-secure-store`; banco local `expo-sqlite` (FN-13)
-- [ ] Revisão de pontos de design com o Lucas antes de estilizar as telas (PL-19)
+- [ ] Revisão de pontos de design com o Lucas antes de estilizar as telas (PL-19). *13/11: revisão feita com a skill `frontend-design` e aplicada a `docs/app-map/07_design/` (tokens R-01 a R-15, componentes, acessibilidade, mockups), `08_microcopy.md` e TL-07; falta a aprovação visual do Lucas. Nova pendência PL-25 (mapa base e atribuição).*
 - [ ] Conciliar o contrato da API esperado pelo app com o backend (PL-18)
 - [ ] **Compartilhar trajeto e localização ao vivo** (F2.5/US-21, D-19 a D-22). **Depende do tempo:** construir por último; se o prazo apertar, fica para depois. Mapeamento feito em 13/11 (FL-15, FL-16, TL-14, TL-15, FN-15, FN-16); faltam a revisão do Lucas das telas novas, a checagem do GPS em segundo plano no Expo Go (PL-24) e o endpoint no backend (PL-18)
 - [x] Resolver as pendências do mapeamento que bloqueavam telas: PL-01, PL-02, PL-04, PL-08, PL-13, PL-14 e PL-15 (D-08 a D-14, 13/11)
@@ -472,5 +493,9 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 13/11/2026 | Mapeamento do app (T07) fechado: Fases 3 e 4 concluídas (validação do Lucas, D-18); `docs/10` v1.5 (revisão de consistência com D-01 a D-17); matriz de rastreabilidade com 76 AC + 9 RNF, que também serve à T10. Abertas: revisão de design (PL-19) e contrato da API (PL-18). Roteiro do vídeo adiado. | assistente (a pedido do Lucas) |
 | 13/11/2026 | Compartilhamento de trajeto e localização ao vivo planejado como feature nativa, MVP "Depende do tempo" (D-19 a D-22): `docs/10` v1.6, `docs/03` §6, `docs/06` 1.41 e mapeamento (FL-15, FL-16, TL-14, TL-15, FN-15, FN-16, mockups e rastreabilidade com 86 AC). Proposta de premium registrada como pendência do pitch (T03). | assistente (a pedido do Lucas) |
 | 13/11/2026 | Mapeamento do app (T07): prioridade do resultado passa a ser a menor exposição estimada (D-23, revê a D-10): rota com esse foco primeiro, selecionada e com rótulo em destaque; sem o foco, ordem por tempo. `docs/10` v1.7, `docs/06` 1.42, TL-07, fluxos, design, textos e mockups. | assistente (a pedido do Lucas) |
+| 13/11/2026 | Criada a T22 (Core do projeto): decidir a feature premium e o modelo financeiro do VoltaSegura, a partir da proposta de freemium enviada ao grupo. Item de receita da T03 passa a depender dela. | assistente (a pedido do Lucas) |
 | 13/11/2026 | T07: esqueleto do app criado em `src/mobile-app/` (Expo SDK 58, TypeScript, Expo Router, rotas de `05_navegacao.md` com telas provisórias, tokens, modo `mock\|api`, ESLint); lint, typecheck e `expo-doctor` ok. Novas pendências: Node 22.13+ na máquina e camada de serviços/banco/sessão. | assistente (a pedido do Lucas) |
 | 13/11/2026 | T07: criado o painel `src/mobile-app/todo-mobile.md` com o status detalhado do app (entregas da disciplina, infraestrutura, funcionalidades, telas, fixtures, RNF, pendências e cronograma); a T07 passa a apontar para ele. | assistente (a pedido do Lucas) |
+| 13/11/2026 | T07: revisão de design PL-19 feita com a skill `frontend-design` e aplicada aos documentos de design e ao mockup (proposta, aguarda a aprovação visual do Lucas); criada a PL-25. | assistente (a pedido do Lucas) |
+| 14/11/2026 | T07: handoff do app retomado; regressões corrigidas e verificadas (312 testes em 24 suítes, `tsc`, `eslint`, web/Android exportados, Expo Doctor 20/20). Próximas evidências: celular, acessibilidade e entregáveis. | Codex |
+| 14/11/2026 | T07: README mobile atualizado com Ficha completa, estado real do protótipo e execução; script de sync ajustado para preservar o conteúdo no espelho. Prints e vídeo ainda pendentes. | Codex |
