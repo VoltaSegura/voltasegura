@@ -1,7 +1,12 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
+import { View } from 'react-native';
 
+import { definirProvedorToken } from '@/services';
 import { SessaoProvider, useSessao } from '@/sessao/SessaoContext';
+import { coresEscuro, fonte } from '@/theme/tokens';
+import { useFontesPremium } from '@/theme/fontes';
 import { useTema } from '@/theme/useTema';
 
 /**
@@ -9,11 +14,26 @@ import { useTema } from '@/theme/useTema';
  * Sem sessão, qualquer rota de (app) volta para a TL-01; com sessão, o app abre na TL-04.
  */
 export default function RootLayout() {
+  const fontesProntas = useFontesPremium();
+  // Segura a primeira pintura (fundo da marca) até as fontes chegarem: evita o salto de fonte.
+  if (!fontesProntas) return <View style={{ flex: 1, backgroundColor: coresEscuro.fundo }} />;
   return (
     <SessaoProvider>
+      <LigacaoServicos />
       <Navegacao />
     </SessaoProvider>
   );
+}
+
+/** Entrega o token da sessão à camada de serviços (cabeçalho Authorization das chamadas da consulta). */
+function LigacaoServicos() {
+  const { sessao } = useSessao();
+
+  useEffect(() => {
+    definirProvedorToken(() => sessao?.token ?? null);
+  }, [sessao]);
+
+  return null;
 }
 
 function Navegacao() {
@@ -43,6 +63,7 @@ function Navegacao() {
           options={{
             headerShown: true,
             title: 'Aviso de privacidade',
+            headerTitleStyle: { fontSize: 17, fontFamily: fonte.displayMedio },
             headerStyle: { backgroundColor: cores.fundo },
             headerTintColor: cores.texto,
           }}
