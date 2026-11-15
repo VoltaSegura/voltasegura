@@ -75,7 +75,7 @@ flowchart LR
 |---|---|---|
 | TL-01 → TL-02/TL-03 | pilha | volta à TL-01 |
 | TL-02/TL-03 → TL-04 | **substitui** a pilha (auth → app) | não volta ao login |
-| TL-04 → TL-05 | modal | fecha sem mudar o campo |
+| TL-04 → TL-05 | modal em tela cheia (De onde, Para onde ou Adicionar lugar; sem menu intermediário, D-29) | fecha sem mudar o campo |
 | TL-04 → TL-06 | pilha | cancela a consulta |
 | TL-06 → TL-07 | **substitui** a TL-06 | da TL-07, volta à TL-04 com os campos mantidos |
 | TL-07 → TL-08 | expande o container (rota com parâmetro) | recolhe para a TL-07 |
@@ -99,7 +99,7 @@ No Android, o botão físico de voltar segue a coluna "Voltar".
 | Rota selecionada | Memória | TL-07, TL-08 |
 | Conectividade | Contexto | Avisos de FL-13 |
 | Modo `mock`/`api` | Configuração do app | Camada de serviços |
-| Histórico e locais salvos | Banco local (FN-13) | TL-04, TL-05, TL-12 |
+| Locais salvos | `expo-secure-store` no aparelho (FN-13, D-29); histórico de trajetos `[EM ABERTO]` | TL-04, TL-05, TL-12 |
 | Sessão de compartilhamento ativa (id, link, início, tempo máximo) | Memória + armazenamento seguro, para retomar se o app for reaberto `[HIPÓTESE]` | Indicador global em todas as telas de `(app)`, TL-14 |
 | Tarefa de localização em segundo plano | Sistema (só com sessão ativa, D-20) | FN-15 |
 

@@ -1,5 +1,8 @@
 # FL-11 · Histórico local: ligar, usar, apagar
 
+> **Nota D-29 (14/11/2026):** a parte de **locais salvos** deste fluxo foi decidida e implementada (nome + tipo, até 10, `expo-secure-store`, apagar em Configurações; ver FL-05 e FN-13). O **histórico de trajetos ("Recentes")** continua `[EM ABERTO]` e **não existe** no app.
+
+
 - **Status:** rascunho · **Status das regras:** `[DECISÃO]` (US-04, DT-08)
 - **Ator e gatilho:** Ágatha abre Configurações → Histórico, ou toca em "Recentes" em TL-04.
 - **Pré-condições:** sessão ativa.

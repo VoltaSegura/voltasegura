@@ -9,8 +9,8 @@
 | TL-01 | Abertura |
 | TL-02 | Criar conta |
 | TL-03 | Entrar |
-| TL-04 | Planejar (origem, destino, horário, ida/volta) |
-| TL-05 | Escolher ponto no mapa |
+| TL-04 | Planejar (origem, destino, horário, lugares salvos; sem seletor Ida/Volta, D-29) |
+| TL-05 | Escolher ponto: mapa em tela cheia com busca por texto, localização e lugares salvos (D-29) |
 | TL-06 | Buscando alternativas e avisos (sem serviço, fora da área, sem rede) |
 | TL-07 | Resultado: mapa com o trajeto inteiro + container com as alternativas (D-01) |
 | TL-08 | Detalhes da alternativa: trechos em ordem, ou seja, o passo a passo (D-04) |
@@ -51,8 +51,8 @@ flowchart TD
 | FL-01 | Visão geral da jornada | `docs/03` §4 | [FL-01](FL-01_visao_geral.md) |
 | FL-02 | Cadastro com aviso de privacidade | US-01 | [FL-02](FL-02_cadastro.md) |
 | FL-03 | Login e sessão | US-02 | [FL-03](FL-03_login_sessao.md) |
-| FL-04 | Planejar a ida | US-06 | [FL-04](FL-04_planejar_ida.md) |
-| FL-05 | Escolher ponto (mapa, GPS, locais) | US-05, US-06, D-02 | [FL-05](FL-05_escolher_ponto.md) |
+| FL-04 | Planejar (ida e volta, D-29) | US-06 | [FL-04](FL-04_planejar_ida.md) |
+| FL-05 | Escolher ponto (mapa, busca, localização, lugares salvos) | US-05, US-06, D-29 | [FL-05](FL-05_escolher_ponto.md) |
 | FL-06 | Alternativas com foco (até 3 rotas) | US-08, D-12 | [FL-06](FL-06_alternativas.md) |
 | FL-07 | Comparação, foco de exposição e "Por que esta rota?" | US-10 a US-13, D-01, D-08 a D-13 | [FL-07](FL-07_comparacao.md) |
 | FL-08 | Planejar a volta | US-07 | [FL-08](FL-08_planejar_volta.md) |

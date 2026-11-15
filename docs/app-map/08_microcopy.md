@@ -98,22 +98,20 @@
 
 | Chave | Texto |
 |---|---|
-| `planejar.ida` / `planejar.volta` | Ida / Volta |
+| `planejar.ida` / `planejar.volta` | Ida / Volta (**só usados em rótulos internos; a TL-04 não tem mais o seletor**, D-29) |
 | `planejar.de_onde` | De onde |
 | `planejar.para_onde` | Para onde |
 | `planejar.escolher_origem` / `planejar.escolher_destino` | Escolher origem / Escolher destino |
 | `planejar.inverter` | Inverter origem e destino |
 | `planejar.saida` / `planejar.saida_volta` | Saída / Saída da volta |
 | `planejar.ver_alternativas` | Ver alternativas |
-| `planejar.recentes` | Recentes (no aparelho) |
-| `planejar.recentes_vazio` | Nenhum trajeto salvo. Ligue o histórico em Configurações. |
+| `planejar.recentes` / `planejar.recentes_vazio` | *(histórico de trajetos fora desta versão, `[EM ABERTO]`)* |
 | `planejar.usar_localizacao` | Usar minha localização |
 | `planejar.obtendo_localizacao` | Obtendo localização… |
 | `planejar.minha_localizacao` | Minha localização |
 | `planejar.escolher_mapa` | Escolher no mapa |
 | `planejar.locais_salvos` | Locais salvos no aparelho |
-| `planejar.pontos_exemplo` | Pontos de exemplo |
-| `planejar.prefixo_exemplo` | Exemplo: {nome} |
+| `planejar.pontos_exemplo` / `planejar.prefixo_exemplo` | *(removidos da interface, D-29)* |
 | `planejar.ponto_mapa` | Ponto escolhido no mapa |
 | `planejar.erro_origem` / `planejar.erro_destino` | Escolha a origem. / Escolha o destino. |
 | `planejar.mesmo_lugar` | Origem e destino são o mesmo lugar: não há trajeto a calcular. |
@@ -127,7 +125,7 @@
 | Chave | Texto |
 |---|---|
 | `escolher_ponto.titulo_origem` / `escolher_ponto.titulo_destino` | Escolher origem / Escolher destino |
-| `escolher_ponto.instrucao` | Arraste o mapa para pôr o ponto na mira. |
+| `escolher_ponto.instrucao` | Arraste o mapa para pôr o ponto na mira. *(na tela cheia: "Arraste o mapa para pôr o pino no ponto certo.")* |
 | `escolher_ponto.usar` | Usar este ponto |
 | `escolher_ponto.salvar` | Salvar no aparelho como: |
 | `escolher_ponto.nome_exemplo` | ex.: Faculdade |
@@ -353,3 +351,25 @@ Feita em 13/11/2026 por script local sobre **894 linhas** (refeita após o acré
 | "prev" no sentido de prever crimes ("prevemos", "previsão de crime") | 0 (só "previsto" para horário programado) |
 | "conformidade", "LGPD" em contexto afirmativo | 0 |
 | "culpa", "responsabilidade sua" | 0 |
+
+## Home, mapa e lugares salvos (D-29, `[HIPÓTESE]`, fonte: `src/textos/hipotesesMapa.ts`)
+
+| Chave | Texto |
+|---|---|
+| `mapa.saudacao` / `mapa.subtitulo` | Para onde vamos? / Compare os caminhos antes de sair. |
+| `mapa.de_onde_vazio` / `mapa.para_onde_vazio` | Sua localização ou um ponto no mapa / Buscar destino ou escolher no mapa |
+| `mapa.planejando_volta` | Planejando a volta |
+| `mapa.usar_localizacao_origem` | Usar minha localização como origem |
+| `mapa.agora` / `em15` / `em30` / `em1h` | Agora / Em 15 min / Em 30 min / Em 1 h |
+| `mapa.lugares_salvos` / `lugares_vazio` | Lugares salvos / Salve casa, trabalho ou outro lugar para escolher com um toque. |
+| `mapa.adicionar_lugar` | Adicionar lugar |
+| `mapa.buscar` / `buscar_campo` / `buscar_exemplo` | Buscar / Buscar endereço ou lugar / Rua, avenida ou lugar em São Paulo |
+| `mapa.buscar_aviso` | O texto buscado é enviado ao serviço de mapas do seu celular. Só ao tocar em Buscar. |
+| `mapa.nao_achou` / `busca_indisponivel` | Não encontramos esse endereço... / A busca por texto não está disponível agora... |
+| `mapa.minha_localizacao_botao` | Ir para minha localização |
+| `mapa.ponto_escolhido` / `salvar_lugar` | Ponto escolhido / Salvar este lugar |
+| `mapa.nome_do_lugar` / `tipo_do_lugar` | Nome do lugar / Tipo do lugar |
+| `mapa.erro_nome` / `erro_limite` / `erro_salvar` | Dê um nome para salvar o lugar. / Você chegou ao limite de 10 lugares. Apague um em Configurações. / Não foi possível salvar agora. |
+| `mapa.tipo_*` | Casa / Trabalho / Estudo / Outro |
+| `mapa.lugares_secao` / `no_aparelho` | Lugares salvos / Guardados só neste aparelho, nunca enviados. |
+| `aviso.busca` / `aviso.locais` | Textos novos do Aviso de privacidade sobre a busca e os lugares salvos |

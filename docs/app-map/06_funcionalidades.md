@@ -11,7 +11,7 @@
 | FN-01 | Cadastro com aviso de privacidade | TL-02, TL-13 | US-01 AC1–AC6 | Endpoint de conta (PL-05) |
 | FN-02 | Login, sessão e saída | TL-01, TL-03, TL-12 | US-02 AC1–AC3 | Endpoint de sessão (PL-05) |
 | FN-03 | Excluir conta — **adiado (D-25)** | TL-12 | US-03 AC1–AC3 | Endpoint de conta (PL-05) |
-| FN-04 | Escolher ponto (GPS, mapa, local salvo, exemplo) | TL-04, TL-05 | US-05 AC1–AC3, US-06 | GPS, mapa base (PL-03) |
+| FN-04 | Escolher ponto (mapa, busca por texto, GPS, lugar salvo) | TL-04, TL-05 | US-05 AC1–AC3, US-06 | GPS, mapa base (PL-03) |
 | FN-05 | Planejar e validar a consulta | TL-04 | US-06 AC1–AC4 | Limite do município (PL-11) |
 | FN-06 | Planejar a volta | TL-04, TL-07, TL-08 | US-07 AC1–AC2 | FN-05 |
 | FN-07 | Buscar alternativas e focos | TL-06, TL-07 | US-08 AC1–AC4, US-11, D-12, D-15, D-16 | Endpoint de consulta |
@@ -69,9 +69,9 @@
 
 ## FN-04 · Escolher ponto
 
-- **Regras:** GPS só na ação, em primeiro plano (US-05 AC1, AC3); permissão negada não bloqueia (AC2); sem busca de endereço externa (D-02); ponto do mapa sem nome, nomeável ao salvar (PL-09); pontos de exemplo rotulados (RNF-08).
-- **Dados:** coordenada `{lat, lon}` só na memória da consulta ou no banco local, se salva.
-- **Testes previstos:** positivo (GPS concedido preenche a origem); negativo (permissão negada mantém as outras opções); ponto do mapa preenche o campo certo.
+- **Regras (revistas pela D-29):** mapa em tela cheia com pino central; **busca por texto** só ao tocar em Buscar, mínimo de 3 letras, limitada a São Paulo, pelo geocodificador do sistema (revê D-02 e US-19 AC3); GPS só na ação, em primeiro plano (US-05 AC1, AC3); permissão negada não bloqueia (AC2); lugares salvos como chips; **sem pontos de exemplo**; nome do ponto do mapa é "Ponto escolhido no mapa" (PL-09) até a Onda 3 (U2 prevê endereço legível).
+- **Dados:** coordenada `{lat, lon}` na memória da consulta; o texto da busca não é guardado.
+- **Testes:** tocar/arrastar e confirmar grava o campo certo; busca leva o mapa ao resultado; texto curto e a cada tecla não consultam; busca sem resultado e indisponível avisam; GPS concedido, negado e com falha; lugar salvo vira ponto; fora do município bloqueia (`escolher-ponto.test.tsx`).
 
 ## FN-05 · Planejar e validar a consulta
 
@@ -80,8 +80,8 @@
 
 ## FN-06 · Planejar a volta
 
-- **Regras:** inverte origem e destino (US-07 AC1); horário próprio, e a faixa do dia é a do horário da volta (AC2, DT-05; calculado pela API).
-- **Testes previstos:** positivo (volta com pontos invertidos e horário 23h usa a faixa "noite" na TL-09); a ida e a volta não se misturam.
+- **Regras (D-29):** **não há seletor Ida/Volta**; "Planejar a volta" (resultado) abre a TL-04 com origem e destino invertidos e a etiqueta "Planejando a volta" (US-07 AC1); horário próprio e faixa do dia do horário da volta (AC2, DT-05; calculado pela API); "Inverter" disponível na TL-04.
+- **Testes:** volta com pontos invertidos e horário 23h usa a faixa "noite" na TL-09; a ida e a volta não se misturam; a home não tem seletor de sentido.
 
 ## FN-07 · Buscar alternativas e focos
 
@@ -194,19 +194,11 @@ Resposta `200`:
 - **Regras:** minuta acadêmica, sem afirmar conformidade (US-01 AC6, RNF-09). Texto fixo, disponível sem rede.
 - **Testes previstos:** a primeira linha é a marca de minuta; varredura de "conformidade" e "LGPD" em contexto afirmativo.
 
-## FN-13 · Histórico local e locais salvos
+## FN-13 · Locais salvos (decidido, D-29) e histórico local (`[EM ABERTO]`)
 
-- **Regras:** desligado por padrão (US-04 AC1); só no aparelho (AC2, AC4); apagar um ou todos (AC3); locais salvos idem.
-- **Modelo do banco local `[HIPÓTESE]`** (SQLite no aparelho; nada é sincronizado):
-
-| Tabela | Colunas |
-|---|---|
-| `preferencias` | `chave` (ex.: `historico_ligado`), `valor` |
-| `locais_salvos` | `id`, `nome`, `lat`, `lon`, `criado_em` |
-| `historico` | `id`, `origem_nome`, `origem_lat`, `origem_lon`, `destino_nome`, `destino_lat`, `destino_lon`, `sentido`, `horario`, `criado_em` |
-
-A sessão (token) fica no armazenamento seguro, não nesse banco.
-- **Testes previstos:** desligado não grava; ligado grava; apagar remove; nenhuma chamada de rede leva esses dados.
+- **Locais salvos (implementado):** nome (até 30 letras) + tipo (Casa, Trabalho, Estudo, Outro) + coordenada; até 10; **só no aparelho**, no `expo-secure-store` (cifrado), chave única `voltasegura.locais`; nunca enviados nem registrados em log (US-04 AC4–AC5). Salvar na TL-05; usar na TL-04 (cartões) e na TL-05 (chips); apagar na TL-12. Renomear existe no contexto, sem tela (Onda 3A). Na web fica só em memória.
+- **Histórico de trajetos (não implementado):** desligado por padrão (US-04 AC1), só no aparelho, apagar um ou todos (AC3). O SQLite saiu (D-24); onde guardar fica em aberto.
+- **Testes:** salvar persiste e relê; nome vazio e limite recusam; renomear e apagar; nenhuma coordenada vai ao console (`locais.test.tsx`).
 
 ## FN-14 · Erros globais e sem rede
 

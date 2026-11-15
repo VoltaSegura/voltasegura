@@ -40,12 +40,12 @@
 
 | Campo | Origem | Regra |
 |---|---|---|
-| Sentido | Local | Padrão "Ida"; "Volta" quando vier do resultado |
-| Origem / destino (nome) | Local (local salvo, exemplo) ou Sistema (GPS) | GPS → "Minha localização"; mapa → "Ponto escolhido no mapa" (PL-09); exemplo → prefixo "Exemplo:" |
+| Sentido | Local (interno) | Padrão "ida"; "volta" quando vier do resultado; **não é escolhido na tela** (D-29) |
+| Origem / destino (nome) | Local (lugar salvo, busca) ou Sistema (GPS) | GPS → "Minha localização"; busca → o texto buscado; lugar salvo → o nome; mapa → "Ponto escolhido no mapa" (PL-09; U2 prevê endereço) |
 | Origem / destino (coordenada) | Local / Sistema | Não exibida |
 | Horário de saída | Sistema (agora) / Local | Formato de horário |
-| Recentes | Local (banco, `historico`) | "Origem → Destino"; só se o histórico estiver ligado ou houver itens |
-| Pontos de exemplo | Fixo | Sempre com `EXEMPLO` |
+| Lugares salvos | Local (SecureStore, `voltasegura.locais`) | Nome + tipo; até 10; nunca enviados |
+| Atalhos de horário | Sistema (relógio) | Agora, +15, +30, +60 min |
 | Aviso fora da área | Local (checagem no aparelho, PL-11) | — |
 
 ## TL-05 · Escolher ponto

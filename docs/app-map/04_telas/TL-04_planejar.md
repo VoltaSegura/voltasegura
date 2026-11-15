@@ -1,188 +1,82 @@
 # TL-04 · Planejar
 
-> **Revisão D-29 (14/11/2026):** sem seletor Ida/Volta (um fluxo: origem, destino, inverter, hora; "Planejando a volta" só aparece vindo do resultado). Tocar em "De onde"/"Para onde" abre direto a TL-05. Sem lista de métodos e sem pontos de exemplo. Topo com imagem (`heroPlanejar`), configurações como ícone, cartão de origem/destino e **Lugares salvos** (cartões com imagem). Detalhes: `docs/redesign/08_home_busca_locais_arquitetura.md`. O texto abaixo é o desenho anterior e vale no que não contradiz esta faixa.
-
-- **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/planejar` (tela inicial com sessão)
-- **Objetivo:** informar origem, destino, horário de saída e sentido (ida ou volta) e pedir as alternativas. Momento: **Planejar** e **Revisar a jornada** (`docs/03` §4).
-- **US/AC e funcionalidades cobertas:** US-05 AC1–AC3, US-06 AC1–AC5, US-07 AC1–AC2, US-04 AC2–AC5, US-02 AC3 · FN-04, FN-05, FN-06, FN-13 · **RNF aplicáveis:** RNF-01, RNF-07, RNF-08
-- **Entradas:** login (TL-03), cadastro (TL-02), "Planejar a volta" (TL-07/TL-08, com `sentido=volta` e pontos invertidos), um trajeto do histórico.
-- **Saídas:** TL-05 (escolher no mapa), TL-06 (consulta enviada), TL-12 (configurações).
+- **Status:** pronta, **revista pela D-29 em 14 e 15/11/2026** (sem Ida/Volta, mapa direto, lugares salvos, atalhos) · **Rota Expo Router:** `/(app)/planejar` (tela inicial com sessão)
+- **Objetivo:** informar origem, destino e horário de saída e pedir as alternativas. Momento: **Planejar** e **Revisar a jornada** (`docs/03` §4).
+- **US/AC e funcionalidades cobertas:** US-05 AC1–AC3, US-06 AC1–AC5, US-07 AC1–AC2, US-04 AC5, US-02 AC3 · FN-04, FN-05, FN-06, FN-13 · **RNF aplicáveis:** RNF-01, RNF-07, RNF-08
+- **Entradas:** login (TL-03), cadastro (TL-02), "Planejar a volta" (TL-07/TL-08, com `sentido=volta` e pontos invertidos), lugar salvo, volta da TL-05 com o campo preenchido.
+- **Saídas:** TL-05 (tocar em De onde ou Para onde, ou em "Adicionar lugar"), TL-06 (consulta enviada), TL-12 (ícone de configurações).
+- **Imagens (placeholders, D-29):** `heroPlanejar` (topo), `vazioLocais` (sem lugares salvos), `localCasa`/`localTrabalho`/`localEstudo`/`localOutro` (cartões).
 
 ## Wireframe
 
-**Estado inicial (ida)**
+**Estado inicial**
 
 ```
 ┌──────────────────────────────┐
-│ VoltaSegura            ⚙     │
-│ ┌────────────┬─────────────┐ │
-│ │  ● Ida     │   ○ Volta   │ │
-│ └────────────┴─────────────┘ │
-│ De onde                      │
-│ ┌──────────────────────────┐ │
-│ │ Escolher origem        › │ │
-│ └──────────────────────────┘ │
-│              ⇅ inverter      │
-│ Para onde                    │
-│ ┌──────────────────────────┐ │
-│ │ Escolher destino       › │ │
-│ └──────────────────────────┘ │
-│ Saída                        │
-│ ┌──────────────────────────┐ │
-│ │ Hoje, 23:00            › │ │
-│ └──────────────────────────┘ │
-│ ┌──────────────────────────┐ │
-│ │     Ver alternativas     │ │
-│ └──────────────────────────┘ │
-│ Recentes (no aparelho)     › │
+│ [ imagem heroPlanejar     ⚙ ]│
+│  VoltaSegura                 │
+│  Para onde vamos?            │
+│  Compare os caminhos...      │
+│╭────────────────────────────╮│
+││ ○ De onde                ⌖ ││   ⌖ = usar minha localização (um toque)
+││   Sua localização ou um... ││
+││ ─────────────────────── ⇅  ││   ⇅ = inverter
+││ ● Para onde              › ││
+││   Buscar destino ou ...    ││
+│╰────────────────────────────╯│
+│ (Agora)(Em 15 min)(Em 30)(1 h)│
+│ Saída  [ 05:11 ]             │
+│ Dia da saída: 15 de novembro │
+│ [        Ver alternativas  ] │
+│ Lugares salvos               │
+│ ┌────┐ ┌────┐ ┌ ─ ─ ┐        │
+│ │Casa│ │Trab│ │ +    │        │
+│ └────┘ └────┘ │Adicionar│     │
 └──────────────────────────────┘
 ```
 
-**Estado opções de ponto** (ao tocar em origem ou destino, FL-05)
+**Vindo do resultado ("Planejar a volta")**: aparece a etiqueta "Planejando a volta", os pontos já vêm invertidos e o campo de hora se chama "Saída da volta". Não há seletor Ida/Volta.
 
-```
-┌──────────────────────────────┐
-│ Escolher origem          ✕   │
-│ ┌──────────────────────────┐ │
-│ │ ◎ Usar minha localização │ │
-│ └──────────────────────────┘ │
-│ ┌──────────────────────────┐ │
-│ │ 🗺 Escolher no mapa       │ │
-│ └──────────────────────────┘ │
-│ Locais salvos no aparelho    │
-│  · Faculdade                 │
-│  · Casa                      │
-│ Pontos de exemplo  EXEMPLO   │
-│  · Exemplo: Av. Paulista     │
-│  · Exemplo: Estação Sé       │
-└──────────────────────────────┘
-```
+**Sem lugares salvos:** cartão com a imagem `vazioLocais`, o texto "Salve casa, trabalho ou outro lugar..." e o botão "Adicionar lugar".
 
-**Estado preenchido (volta, vindo da ida)**
-
-```
-│ ┌────────────┬─────────────┐ │
-│ │  ○ Ida     │   ● Volta   │ │
-│ └────────────┴─────────────┘ │
-│ De onde                      │
-│ │ Faculdade              › │ │
-│ Para onde                    │
-│ │ Casa                   › │ │
-│ Saída da volta               │
-│ │ Hoje, 23:00            › │ │
-```
-
-**Estado campo faltante** (US-06 AC2)
-
-```
-│ Para onde                    │
-│ ┌──────────────────────────┐ │
-│ │ Escolher destino       › │ │
-│ └──────────────────────────┘ │
-│ ⚠ Escolha o destino.         │
-```
-
-**Estado origem igual ao destino** (US-06 AC4)
-
-```
-│ ┌──────────────────────────┐ │
-│ │ ⓘ Origem e destino são o  │ │
-│ │ mesmo lugar: não há       │ │
-│ │ trajeto a calcular.       │ │
-│ └──────────────────────────┘ │
-```
-
-**Estado fora da área atendida** (US-06 AC3, D-05)
-
-```
-│ ┌──────────────────────────┐ │
-│ │ ⓘ Este ponto está fora da │ │
-│ │ área atendida (município  │ │
-│ │ de São Paulo). Nada foi   │ │
-│ │ enviado.                  │ │
-│ └──────────────────────────┘ │
-```
-
-**Estado permissão de localização negada** (US-05 AC2)
-
-```
-│ ⓘ Sem acesso à localização.  │
-│ Escolha no mapa ou num local │
-│ salvo.                       │
-```
-
-**Estado sem rede:** aviso "Sem conexão. Você ainda pode escolher locais salvos." e o botão "Ver alternativas" desabilitado.
+**Erros:** campo faltante, origem igual ao destino, fora da área, permissão de localização negada (aviso acima do horário), hora inválida.
 
 ## Estrutura e componentes
-
-1. `Cabecalho` com marca e atalho de configurações (⚙)
-2. `SeletorSentido` (ida / volta)
-3. `CampoPonto` origem
-4. `Botao` ícone "inverter"
-5. `CampoPonto` destino
-6. `SeletorHorario` saída
-7. `Botao` primário "Ver alternativas"
-8. `Link` "Recentes (no aparelho)" (só se o histórico estiver ligado ou houver itens)
-9. `Folha` (bottom sheet) de opções de ponto: `Botao` localização, `Botao` mapa, `Lista` locais salvos, `Lista` pontos de exemplo
-10. `Aviso` (informativo e erro)
-
-## Conteúdo e dados
-
-Origem e destino vêm de GPS, mapa, local salvo ou exemplo; horário e sentido são locais (`09_dados_por_tela.md`, TL-04).
+`Tela` com `Hero` (imagem, botão de configurações `BotaoIcone`) · painel com dois `CampoPonto` (origem com ação rápida de localização) e `BotaoIcone` inverter · `AtalhosHorario` · `SeletorHorario` · `Botao` "Ver alternativas" · faixa de `CartaoLocal` + `CartaoAdicionarLocal` · `Aviso`.
 
 ## Ações do usuário
-
 | Gesto | Resultado | Próxima tela |
 |---|---|---|
-| Toca em ida/volta | Muda o sentido; ao ir para volta com ida planejada, inverte os pontos (US-07 AC1) | TL-04 |
-| Toca num campo de ponto | Abre a folha de opções | TL-04 (folha) |
-| "Usar minha localização" | Pede permissão (se preciso), lê a posição uma vez | TL-04 |
-| "Escolher no mapa" | Abre o mapa | TL-05 |
-| Toca num local salvo ou exemplo | Preenche o campo | TL-04 |
-| Toca em "inverter" | Troca origem e destino | TL-04 |
-| Toca no horário | Abre o seletor de data e hora | TL-04 |
-| Toca em "Ver alternativas" | Valida; se tudo certo, envia | TL-06 |
-| Toca em "Recentes" | Lista do histórico local; um toque preenche os campos | TL-04 |
-| Toca em ⚙ | Abre configurações | TL-12 |
-
-## Estados
-
-inicial · opções de ponto · preenchido · campo faltante · origem igual ao destino · fora da área atendida · permissão negada · lendo localização ("Obtendo localização…") · sem rede · recentes vazio ("Nenhum trajeto salvo. Ligue o histórico em Configurações.").
+| Toca em De onde ou Para onde | Abre direto o mapa para aquele campo (não há mais menu de métodos) | TL-05 |
+| Toca em ⌖ na origem | Pede a permissão (se preciso), lê a posição uma vez e preenche "Minha localização" | TL-04 |
+| Toca em ⇅ | Troca origem e destino | TL-04 |
+| Toca num atalho de horário | Define a saída (agora ou daqui a 15, 30 ou 60 min) | TL-04 |
+| Digita a hora | Valida HH:mm ao sair do campo | TL-04 |
+| Toca num lugar salvo | Preenche o destino; se o destino já está definido e falta a origem, preenche a origem | TL-04 |
+| Toca em "Adicionar lugar" | Abre o mapa (destino) para marcar e salvar | TL-05 |
+| Toca em "Ver alternativas" | Valida; se tudo certo, envia (campo faltante abre o mapa dele) | TL-06 |
+| Toca em ⚙ | Configurações | TL-12 |
 
 ## Validações e mensagens de erro
-
-| Campo | Regra | Mensagem proposta | AC |
+| Campo | Regra | Mensagem | AC |
 |---|---|---|---|
 | Origem / destino | Obrigatórios | "Escolha a origem." / "Escolha o destino." | US-06 AC2 |
 | Origem × destino | Diferentes | "Origem e destino são o mesmo lugar: não há trajeto a calcular." | US-06 AC4 |
-| Origem / destino | Dentro do município de São Paulo (checagem no aparelho, PL-11) | "Este ponto está fora da área atendida (município de São Paulo). Nada foi enviado." | US-06 AC3, D-05 |
-| Horário | Obrigatório (padrão: agora) | — | US-06 AC1 |
-
-## Textos
-
-`planejar.*` (catálogo em `08_microcopy.md`).
+| Origem / destino | Dentro do município (PL-11) | "Este ponto está fora da área atendida (município de São Paulo). Nada foi enviado." | US-06 AC3, D-05 |
+| Horário | HH:mm; padrão agora | "Informe a hora no formato HH:mm." | US-06 AC1 |
 
 ## Acessibilidade
-
-- `SeletorSentido` anunciado como grupo de opções ("Ida, selecionado").
-- Cada `CampoPonto` tem rótulo ("Origem: Faculdade. Toque para mudar").
-- O botão "inverter" tem rótulo "Inverter origem e destino".
-- Mensagens de validação são anunciadas, e o foco vai para o primeiro campo com problema.
+Cada campo é um botão com rótulo (valor) e dica (De onde / Para onde); o ícone de localização e o de inverter têm rótulo por extenso; mudança de origem, destino e inversão são anunciadas; imagens são decorativas (ocultas do leitor); alvos de 48 pt; texto até 200%.
 
 ## Privacidade e linguagem
-
-- Nenhuma busca de endereço em serviço externo (D-02, US-19 AC3).
-- GPS só na ação "Usar minha localização" (US-05 AC3).
-- Os pontos de exemplo levam o rótulo `EXEMPLO` (RNF-08).
-- "Recentes" só existe no aparelho; o texto diz "no aparelho" (US-04 AC4).
-- Nenhum rótulo de bairro ou de região "de risco" (RNF-02).
+- GPS só no toque em ⌖ (US-05 AC3). Lugares salvos só no aparelho (US-04 AC5).
+- Sem rótulo de bairro ou área "de risco" (RNF-02). `[HIPÓTESE]` textos em `textos/hipotesesMapa.ts`.
+- Histórico de trajetos ("Recentes") **não existe** nesta versão (FN-13, `[EM ABERTO]`).
 
 ## Critérios de pronto da tela
-
-- [ ] Origem, destino e horário preenchidos enviam a consulta (US-06 AC1).
-- [ ] Campo vazio não envia e indica o campo (US-06 AC2).
-- [ ] Ponto fora do município não envia e mostra o aviso (US-06 AC3).
-- [ ] Origem igual ao destino mostra o aviso (US-06 AC4).
-- [ ] "Usar minha localização" pede permissão e preenche; com a permissão negada, as outras opções seguem disponíveis (US-05 AC1–AC2).
-- [ ] Volta inverte os pontos e tem horário próprio (US-07 AC1).
-- [ ] Com o histórico ligado, a consulta é salva só no aparelho (US-04 AC2).
+- [x] Origem, destino e horário preenchidos enviam a consulta (US-06 AC1).
+- [x] Campo vazio não envia e abre o mapa daquele campo (US-06 AC2).
+- [x] Ponto fora do município não envia (US-06 AC3); origem igual ao destino mostra o aviso (AC4).
+- [x] Localização com um toque; permissão negada não bloqueia (US-05 AC1–AC2).
+- [x] Sem seletor Ida/Volta; "Planejar a volta" inverte os pontos (US-07 AC1).
+- [ ] Verificar no celular com fonte a 200%.

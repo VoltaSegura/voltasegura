@@ -38,15 +38,16 @@ A atividade 7 é transversal: fica disponível em qualquer momento, pelas config
 
 | Passo | Tarefa | US / AC | Fluxo | Fatia |
 |---|---|---|---|---|
-| 2.1 Escolher a origem | Tocar no mapa, usar a localização atual ou escolher local salvo/exemplo (D-02) | US-05 AC1–AC3, US-06 | FL-04, FL-05 | MVP |
+| 2.1 Escolher a origem | Mapa em tela cheia, busca por texto, localização atual (um toque na home) ou lugar salvo (D-29) | US-05 AC1–AC3, US-06 | FL-04, FL-05 | MVP |
 | | Seguir digitando/escolhendo se negar o GPS | US-05 AC2 | FL-05 | MVP |
-| 2.2 Escolher o destino | Mesmas formas da origem (D-02) | US-06 | FL-04, FL-05 | MVP |
+| 2.2 Escolher o destino | Mesmas formas da origem (D-29) | US-06 | FL-04, FL-05 | MVP |
 | 2.3 Informar o horário | Definir o horário de saída | US-06 AC1 | FL-04 | MVP |
 | 2.4 Pedir as alternativas | Enviar a consulta com os campos válidos | US-06 AC1 | FL-04 | MVP |
 | | Ver o campo faltante indicado | US-06 AC2 | FL-04 | MVP |
 | | Ver aviso de fora da área atendida (D-05) | US-06 AC3 | FL-04 | MVP |
 | | Ver aviso de origem igual ao destino | US-06 AC4 | FL-04 | MVP |
-| 2.5 Reaproveitar trajeto | Escolher um trajeto do histórico local, se ativado | US-04 AC2 | FL-11 | MVP |
+| 2.5 Reaproveitar lugar | Escolher um **lugar salvo** (cartão na home ou chip no mapa) | US-04 AC5 | FL-05, FL-11 | MVP |
+| | Reaproveitar um trajeto do histórico local (`[EM ABERTO]`, fora desta versão) | US-04 AC2 | FL-11 | Depois |
 
 ### 3. Ver alternativas
 
