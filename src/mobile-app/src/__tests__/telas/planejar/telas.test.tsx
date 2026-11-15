@@ -19,12 +19,14 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams,
 }));
 jest.mock('@/locais', () => jest.requireActual<typeof import('@/test-utils/locais')>('@/test-utils/locais').moduloLocais);
+jest.mock('expo-location', () => ({ requestForegroundPermissionsAsync: jest.fn(), getCurrentPositionAsync: jest.fn() }));
 jest.mock('@/consulta', () => ({
   ...jest.requireActual<typeof import('@/consulta')>('@/consulta'),
   useConsulta: jest.fn(),
 }));
 
 const consultaMock = jest.mocked(useConsulta);
+const mockGps = jest.requireMock<{ requestForegroundPermissionsAsync: jest.Mock<() => Promise<unknown>>; getCurrentPositionAsync: jest.Mock<() => Promise<unknown>> }>('expo-location');
 const mockPush = jest.mocked(router.push);
 const mockReplace = jest.mocked(router.replace);
 const origem = { lat: -23.5, lon: -46.6 };
@@ -117,6 +119,42 @@ describe('TL-04 Planejar', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Faculdade' }));
     expect(definirOrigem).toHaveBeenCalledWith({ lat: -23.55, lon: -46.64 }, 'Faculdade');
     locaisMock.locais = [];
+  });
+
+  it('atalhos de horário definem a saída sem digitar', async () => {
+    estado();
+    await render(<Planejar />);
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesMapa.em30 }));
+    expect(definirSaida).toHaveBeenCalledTimes(1);
+    const minutos = (Date.parse(definirSaida.mock.calls[0][0] as string) - Date.now()) / 60000;
+    expect(minutos).toBeGreaterThan(29);
+    expect(minutos).toBeLessThan(31);
+  });
+
+  it('atalho de localização preenche a origem só ao tocar', async () => {
+    mockGps.requestForegroundPermissionsAsync.mockResolvedValue({ status: 'granted' });
+    mockGps.getCurrentPositionAsync.mockResolvedValue({ coords: { latitude: -23.5, longitude: -46.6 } });
+    estado({ ...base, origem: null });
+    await render(<Planejar />);
+    expect(mockGps.requestForegroundPermissionsAsync).not.toHaveBeenCalled();
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesMapa.usarLocalizacaoOrigem }));
+    expect(definirOrigem).toHaveBeenCalledWith({ lat: -23.5, lon: -46.6 }, textos.planejar.minhaLocalizacao);
+  });
+
+  it('atalho de localização sem permissão avisa e não define a origem', async () => {
+    mockGps.requestForegroundPermissionsAsync.mockResolvedValue({ status: 'denied' });
+    estado({ ...base, origem: null });
+    await render(<Planejar />);
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesMapa.usarLocalizacaoOrigem }));
+    expect(screen.getByText(textos.planejar.semPermissao)).toBeTruthy();
+    expect(definirOrigem).not.toHaveBeenCalled();
+  });
+
+  it('"Adicionar lugar" abre o mapa, com ou sem lugares salvos', async () => {
+    estado();
+    await render(<Planejar />);
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesMapa.adicionarLugar }));
+    expect(mockPush).toHaveBeenCalledWith({ pathname: '/escolher-ponto', params: { campo: 'destino' } });
   });
 
   it('sem lugares salvos mostra o convite para salvar', async () => {

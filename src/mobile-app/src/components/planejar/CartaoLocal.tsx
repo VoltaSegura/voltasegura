@@ -44,4 +44,20 @@ const estilos = StyleSheet.create({
   imagem: { height: 96, width: '100%' },
   legenda: { flexDirection: 'row', alignItems: 'center', gap: esp[2], paddingHorizontal: esp[3], paddingVertical: esp[3] },
   nome: { flex: 1 },
+  adicionar: { height: 96 + 52, borderStyle: 'dashed', alignItems: 'center', justifyContent: 'center', gap: esp[2], padding: esp[3] },
+  centro: { textAlign: 'center' },
 });
+
+/** Último cartão da faixa de lugares: convida a adicionar um lugar (abre o mapa). */
+export function CartaoAdicionarLocal({ rotulo, onPress, testID }: { rotulo: string; onPress: () => void; testID?: string }) {
+  const { cores } = useTema();
+  return (
+    <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={rotulo} onPress={() => { haptica.leve(); onPress(); }}>
+      <View style={[estilos.cartao, estilos.adicionar, { borderColor: cores.borda }]}>
+        <Icone nome="plus-circle-outline" tamanho={32} corTema="acaoLink" />
+        <Texto variante="corpoForte" style={estilos.centro}>{rotulo}</Texto>
+      </View>
+    </Pressable>
+  );
+}
+

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ScrollView, StyleSheet, View } from 'react-native';
+import * as Location from 'expo-location';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 
-import { Aviso, BotaoIcone, Botao, Hero, Tela, Texto } from '@/components';
-import { CampoPonto, CartaoLocal, SeletorHorario } from '@/components/planejar';
+import { Aviso, BotaoIcone, Botao, Hero, ImagemPlaceholder, Tela, Texto } from '@/components';
+import { AtalhosHorario, CampoPonto, CartaoAdicionarLocal, CartaoLocal, SeletorHorario } from '@/components/planejar';
 import { Entrada } from '@/components/movimento';
 import { useConsulta, validarConsulta, type CodigoProblema } from '@/consulta';
 import { useLocais, type LocalSalvo } from '@/locais';
@@ -25,6 +26,8 @@ export default function Planejar() {
   const parametroAplicado = useRef(false);
   const { locais } = useLocais();
   const { cores } = useTema();
+  const [obtendo, setObtendo] = useState(false);
+  const [erroGps, setErroGps] = useState<string | null>(null);
   const chaveConsulta = JSON.stringify([consulta.origem, consulta.destino, consulta.saida, consulta.sentido]);
   const problemas = validacao?.chave === chaveConsulta ? validacao.problemas : [];
 
@@ -51,6 +54,22 @@ export default function Planejar() {
 
   /** D-29: tocar no campo abre direto o mapa (com busca, localização e lugares salvos). */
   function abrir(campo: Campo) { router.push({ pathname: '/escolher-ponto', params: { campo } }); }
+
+  /** Atalho: a origem mais comum é "onde estou". Pede a localização só neste toque (US-05). */
+  async function usarMinhaLocalizacao() {
+    if (obtendo) return;
+    setObtendo(true);
+    setErroGps(null);
+    try {
+      const permissao = await Location.requestForegroundPermissionsAsync();
+      if (permissao.status !== 'granted') { setErroGps(textos.planejar.semPermissao); return; }
+      const posicao = await Location.getCurrentPositionAsync({});
+      definirOrigem({ lat: posicao.coords.latitude, lon: posicao.coords.longitude }, textos.planejar.minhaLocalizacao);
+      setValidacao(null);
+      AccessibilityInfo.announceForAccessibility(h.localizacaoDefinida);
+    } catch { setErroGps(textos.planejar.erroLocalizacao); }
+    finally { setObtendo(false); }
+  }
 
   /** Lugar salvo com um toque: preenche o destino; se o destino já está certo e falta a origem, preenche a origem. */
   function usarLugar(lugar: LocalSalvo) {
@@ -83,7 +102,7 @@ export default function Planejar() {
     {volta ? <View style={[estilos.etiqueta, { backgroundColor: cores.superficie2 }]}><Texto variante="rotulo" accessibilityRole="header">{h.planejandoVolta}</Texto></View> : null}
     <Entrada indice={0}>
       <View style={[estilos.painel, { backgroundColor: cores.superficie, borderColor: cores.divisoria }]}>
-        <CampoPonto rotulo={textos.planejar.deOnde} icone="circle-outline" valor={consulta.origem ? rotuloOrigem : h.deOndeVazio} preenchido={!!consulta.origem} erro={problemas.includes('ORIGEM_AUSENTE') ? textos.planejar.erroOrigem : undefined} onPress={() => abrir('origem')} />
+        <CampoPonto rotulo={textos.planejar.deOnde} icone="circle-outline" valor={consulta.origem ? rotuloOrigem : h.deOndeVazio} preenchido={!!consulta.origem} erro={problemas.includes('ORIGEM_AUSENTE') ? textos.planejar.erroOrigem : undefined} onPress={() => abrir('origem')} acao={{ icone: 'crosshairs-gps', rotulo: h.usarLocalizacaoOrigem, carregando: obtendo, onPress: () => { void usarMinhaLocalizacao(); } }} />
         <View style={estilos.separador}>
           <View style={[estilos.fio, { backgroundColor: cores.divisoria }]} />
           <BotaoIcone icone="swap-vertical" rotulo={textos.planejar.inverter} fundo="superficie" onPress={() => { inverterPontos(); setValidacao(null); AccessibilityInfo.announceForAccessibility(hipotesesPlanejar.pontosInvertidos); }} />
@@ -91,7 +110,9 @@ export default function Planejar() {
         <CampoPonto rotulo={textos.planejar.paraOnde} icone="map-marker" valor={consulta.destino ? rotuloDestino : h.paraOndeVazio} preenchido={!!consulta.destino} erro={problemas.includes('DESTINO_AUSENTE') ? textos.planejar.erroDestino : undefined} onPress={() => abrir('destino')} />
       </View>
     </Entrada>
+    {erroGps ? <Aviso texto={erroGps} variante="erro" /> : null}
     <Entrada indice={1}>
+      <AtalhosHorario onEscolher={(saida) => { definirSaida(saida); setHoraValida(true); setValidacao(null); }} />
       <SeletorHorario rotulo={volta ? textos.planejar.saidaVolta : textos.planejar.saida} saida={consulta.saida} onChange={definirSaida} onValidadeChange={setHoraValida} focar={focarHora || foco === 'horario'} />
       <Texto variante="apoio" cor="texto2">{hipotesesPlanejar.diaSaida}: {dia}</Texto>
     </Entrada>
@@ -105,8 +126,17 @@ export default function Planejar() {
       {locais.length ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.faixa}>
           {locais.map((l) => <CartaoLocal key={l.id} local={l} onPress={() => usarLugar(l)} />)}
+          <CartaoAdicionarLocal rotulo={h.adicionarLugar} onPress={() => abrir('destino')} />
         </ScrollView>
-      ) : <Texto variante="apoio" cor="texto2">{h.lugaresVazio}</Texto>}
+      ) : (
+        <View style={[estilos.vazio, { backgroundColor: cores.superficie, borderColor: cores.divisoria }]}>
+          <ImagemPlaceholder nome="vazioLocais" icone="map-marker-plus-outline" style={estilos.vazioImagem} />
+          <View style={estilos.vazioTexto}>
+            <Texto variante="apoio" cor="texto2">{h.lugaresVazio}</Texto>
+            <Botao rotulo={h.adicionarLugar} variante="secundario" onPress={() => abrir('destino')} />
+          </View>
+        </View>
+      )}
     </Entrada>
   </Tela>;
 }
@@ -117,5 +147,8 @@ const estilos = StyleSheet.create({
   fio: { flex: 1, height: 1 },
   etiqueta: { alignSelf: 'flex-start', borderRadius: raio.pilula, paddingHorizontal: esp[3], paddingVertical: esp[1] },
   lugares: { gap: esp[3] },
+  vazio: { borderRadius: raio.grande, borderWidth: 1, overflow: 'hidden' },
+  vazioImagem: { height: 120, width: '100%' },
+  vazioTexto: { padding: esp[3], gap: esp[3] },
   faixa: { gap: esp[3], paddingRight: esp[4] },
 });

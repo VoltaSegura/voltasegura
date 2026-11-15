@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import { AccessibilityInfo, StyleSheet, View } from 'react-native';
 import { Stack, router } from 'expo-router';
 
-import { Botao, GrupoLinhas, LinhaGrupo, Tela, Texto } from '@/components';
+import { Botao, GrupoLinhas, ImagemPlaceholder, LinhaGrupo, Tela, Texto } from '@/components';
 import { infoTipo } from '@/components/planejar';
 import { useLocais } from '@/locais';
 import { servicos } from '@/services';
@@ -10,6 +10,7 @@ import { useSessao } from '@/sessao/SessaoContext';
 import { textos } from '@/textos';
 import { hipotesesDetalhes as h } from '@/textos/hipotesesDetalhes';
 import { hipotesesMapa as m } from '@/textos/hipotesesMapa';
+import { esp } from '@/theme/tokens';
 
 export default function Configuracoes() {
   const { sessao, encerrarSessao } = useSessao();
@@ -37,9 +38,13 @@ export default function Configuracoes() {
   return (
     <Tela>
       <Stack.Screen options={{ title: textos.config.titulo }} />
-      <GrupoLinhas titulo={textos.config.conta}>
-        <LinhaGrupo icone="account-circle-outline" titulo={sessao?.email ?? textos.config.conta} ultima />
-      </GrupoLinhas>
+      <View accessible accessibilityLabel={[textos.config.conta, sessao?.email].filter(Boolean).join('. ')} style={estilos.perfil}>
+        <ImagemPlaceholder nome="avatarPerfil" icone="account-outline" escurecer={false} style={estilos.avatar} />
+        <View style={estilos.perfilTextos}>
+          <Texto variante="rotulo" cor="texto2">{textos.config.conta}</Texto>
+          <Texto variante="destaque" numberOfLines={1}>{sessao?.email ?? textos.config.conta}</Texto>
+        </View>
+      </View>
       <GrupoLinhas titulo={m.lugaresSecao}>
         {locais.length ? locais.map((l, i) => (
           <LinhaGrupo
@@ -67,3 +72,9 @@ export default function Configuracoes() {
     </Tela>
   );
 }
+
+const estilos = StyleSheet.create({
+  perfil: { flexDirection: 'row', alignItems: 'center', gap: esp[4] },
+  avatar: { width: 72, height: 72, borderRadius: 36 },
+  perfilTextos: { flex: 1 },
+});

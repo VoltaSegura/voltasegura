@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import { AccessibilityInfo, StyleSheet } from 'react-native';
 import { Stack, router } from 'expo-router';
 
-import { Aviso, Botao, Cabecalho, Carregando, Link, Tela, Texto } from '@/components';
+import { Aviso, Botao, Cabecalho, Carregando, ImagemPlaceholder, Link, Tela, Texto } from '@/components';
 import { haptica } from '@/components/movimento';
 import { useConsulta } from '@/consulta';
 import { textos } from '@/textos';
@@ -63,11 +63,13 @@ export default function Buscando() {
       <Stack.Screen options={{ title: textos.buscando.texto }} />
       {busca.status === 'ocioso' || busca.status === 'buscando' ? (
         <>
+          <ImagemPlaceholder nome="heroBuscando" icone="map-search-outline" style={estilos.imagem} />
           <Carregando texto={textos.buscando.texto} />
           <Texto>{textos.buscando.privacidade}</Texto>
           <Botao rotulo={textos.comuns.cancelar} variante="secundario" onPress={voltar} />
         </>
       ) : null}
+      {mensagem ? <ImagemPlaceholder nome="vazioBusca" icone={semTransporte ? 'bus-clock' : 'cloud-off-outline'} style={estilos.imagem} /> : null}
       {mensagem ? <Aviso texto={mensagem} variante={semTransporte ? 'informativo' : 'erro'} /> : null}
       {semTransporte ? <Botao rotulo={textos.buscando.mudarHorario} onPress={mudarHorario} /> : null}
       {busca.status === 'erro' ? (
@@ -79,3 +81,5 @@ export default function Buscando() {
     </Tela>
   );
 }
+
+const estilos = StyleSheet.create({ imagem: { height: 150, width: '100%', borderRadius: 20 } });
