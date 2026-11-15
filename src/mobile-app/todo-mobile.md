@@ -250,3 +250,6 @@ Quem testou no Expo Go viu o mapa, mas relatou: não sabe como selecionar os cam
 - [ ] Citar a busca por texto no aviso de privacidade (TL-13) `[HIPÓTESE]`
 - [ ] Renomear lugar na interface; histórico de trajetos (FN-13) `[EM ABERTO]`
 - [ ] Barra inferior em pílula, se virar seções `[EM ABERTO]`
+- [x] Rodada 2 de usabilidade (15/11): localização com um toque na origem, atalhos de horário, adicionar lugar, estados vazios com imagem, perfil e aviso com imagem; 399 testes
+- [ ] **Lucas:** enviar as imagens novas (`heroBuscando`, `vazioBusca`, `heroPrivacidade`, `avatarPerfil`, `vazioLocais`)
+- [ ] Rever no celular o resumo do topo do resultado (texto longo)
