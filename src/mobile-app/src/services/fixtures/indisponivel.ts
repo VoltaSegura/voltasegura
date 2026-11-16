@@ -2,6 +2,7 @@ import type { RespostaConsulta } from "../tipos";
 
 export const indisponivel: RespostaConsulta = {
   "exemplo": true,
+  "fontes": { "roteamento": "exemplo", "exposicao": "exemplo" },
   "caso": "INDISPONIVEL",
   "motivo": null,
   "rotas": [],

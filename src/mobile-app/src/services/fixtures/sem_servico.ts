@@ -2,6 +2,7 @@ import type { RespostaConsulta } from "../tipos";
 
 export const sem_servico: RespostaConsulta = {
   "exemplo": true,
+  "fontes": { "roteamento": "exemplo", "exposicao": "exemplo" },
   "caso": "SEM_COMPARACAO",
   "motivo": null,
   "rotas": [],

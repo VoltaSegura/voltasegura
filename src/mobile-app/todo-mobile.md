@@ -258,3 +258,19 @@ Quem testou no Expo Go viu o mapa, mas relatou: não sabe como selecionar os cam
 - [ ] Onda 4 (evidência da Onda 3, `docs/redesign/10_*`): R1 teclado ainda corta o formulário de salvar; R2 linha da busca ilegível sobre o mapa; R3 centro do mapa como ponto escolhido; R6 tempo na folha recolhida; R4 quadro preto (confirmar)
 - [x] Onda 4 (15/11, D-30): marcador por toque, endereço exato do ponto, lugares com endereço, R1 modo compacto, R2, R6; 447 testes
 - [ ] **Lucas:** conferir no celular (teclado, endereço, arrastar marcador, R4); revisar o texto do Aviso de privacidade (D-30)
+
+## Bloco 11 · Plano B: dados reais no app (`docs/dados-reais/04_plano_implementacao.md`, 15/11/2026)
+- [x] B-01 Validação do JSON da consulta em tempo de execução (`services/validar.ts`): roteamento ou origem inválidos = `INDISPONIVEL`/`FORMATO`; exposição inválida = rotas mantidas e números `null`, `caso` `INDISPONIVEL`, sem foco de menor exposição. 48 testes
+- [x] B-02 Tipos: `RespostaConsulta.fontes` (`roteamento: otp2|exemplo`, `exposicao: ssp|exemplo|indisponivel`); exposição desconhecida = objeto com campos `null` (escolha do Lucas, 15/11); nova fixture `so_roteamento`. **Redesign precisa trazer este commit** e tratar `fontes.exposicao === 'indisponivel'` (B-08)
+- [x] B-04 Seleção de fonte `EXPO_PUBLIC_API_MODE = mock | api | otp2` e `EXPO_PUBLIC_OTP2_URL` (`services/selecao.ts`, `.env.example`); modo desconhecido ou sem URL = erro `CONFIGURACAO`, nunca mock
+- [x] B-05 `otp2.ts` ligado: `POST /otp/gtfs/v1`, tempo limite 20 s `[HIPÓTESE]` (504 → "O servidor demorou para responder"), cancelamento repassado ao `fetch`, `routingErrors` (`OUTSIDE_BOUNDS` → fora da área; sem itinerário → zero rotas), trólebus = ônibus, geometria conferida
+- [ ] B-03 Geometria honesta no mock (zona compartilhada `MapaResultado*`: combinar com o redesign)
+- [x] B-06 SQL da exposição (`scripts/sql/`): esquema, carga atômica, `mobile_api.comparar_exposicao` (N/L/D, 50/100/150 m, binomial bilateral, cobertura, caso), testes SQL sintéticos e referência Python (13 testes). **SQL ainda não executado** (sem Postgres local): roda na branch `dev` do Neon
+- [x] B-07 Importador da SSP (`scripts/ssp/`, 25 testes): rodado na planilha real em 15/11; 814.900 linhas lidas, 281.966 válidas no município; 94 circunscrições, cobertura média 90,8%, mínima 78,1%. CSVs e relatório ficam em `saida/` (ignorado pelo git). Carga no Neon pendente (B-15)
+- [ ] `[EM ABERTO]` Lucas: rota sem trecho a pé (L=0): o SQL devolve `registros: null`; a fixture `nao_aplicavel` mostra `registros: 0`. Escolher um
+- [ ] `[EM ABERTO]` Lucas: cobertura por rota sem polígonos de circunscrição (modo `proxy_pontos` `[HIPÓTESE]` ou buscar polígonos oficiais); sem isso toda consulta real vira `INSUFICIENTE/COBERTURA`
+- [ ] `[EM ABERTO]` Lucas: `chave_bo` é SHA256 sem segredo (dá para recuperar o número do BO, que já é público na planilha); trocar por HMAC com segredo se o grupo quiser
+- [ ] **Lucas:** B-10 a B-13 (Java 25, grafo OTP2, porta 8080 na rede privada, teste no celular, conferir o Neon `dev`)
+- [ ] `[EM ABERTO]` Texto de "sem itinerário" é sobre horário ("neste horário"); para `NO_STOPS_IN_RANGE`/`LOCATION_NOT_FOUND` o motivo é o lugar (redesign decide se vale texto próprio)
+- [ ] `[EM ABERTO]` Data do GTFS carregado no OTP2 (`sobreOsDados.atualizacao.gtfs` sai vazia no modo `otp2`)
+

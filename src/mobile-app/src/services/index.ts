@@ -1,22 +1,25 @@
 import { ambiente } from '@/config/ambiente';
-import { consultaApi, consultaMock } from './consulta';
 import { contaApi, contaMock } from './conta';
 import { criarContaNeonAuth } from './contaNeonAuth';
+import { consultaSelecionada } from './selecao';
 
 const contaNeonAuth = ambiente.urlNeonAuth
   ? criarContaNeonAuth({ urlBase: ambiente.urlNeonAuth, origem: ambiente.origemNeonAuth })
   : null;
 
 export const servicos = {
-  consulta: ambiente.modoApi === 'api' ? consultaApi : consultaMock,
-  // Neon Auth, quando configurado, vale para conta e sessão em qualquer modo; a consulta segue mock|api.
+  // mock | api | otp2 (B-04); sem URL ou modo inválido = erro tratado, nunca fixture no lugar de dado real.
+  consulta: consultaSelecionada,
+  // Neon Auth, quando configurado, vale para conta e sessão em qualquer modo; a consulta segue o API_MODE.
   conta: contaNeonAuth ?? (ambiente.modoApi === 'api' ? contaApi : contaMock),
 };
 
 export { ErroServico, ehErroServico } from './erros';
 export type { TipoErroServico } from './erros';
+export { CODIGO_CONFIGURACAO, consultarRotas, selecionarConsulta } from './selecao';
+export type { ConfiguracaoConsulta } from './selecao';
+export { CODIGO_FORMATO, validarRespostaConsulta } from './validar';
 export {
-  consultarRotas,
   definirFixtureMock,
   definirLatenciaMock,
   definirProvedorToken,
