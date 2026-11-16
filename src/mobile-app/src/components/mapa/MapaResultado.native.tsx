@@ -18,9 +18,11 @@ export type PropsMapaResultado = {
   onSelecionar: (id: string) => void;
   expandido: boolean;
   alturaFolha?: number;
+  /** Resposta de exemplo (mock): sem traço, só origem e destino escolhidos + rótulo "trajeto de exemplo". */
+  exemplo?: boolean;
 };
 
-export default function MapaResultado({ rotas, rotaSelecionadaId, onSelecionar, expandido, alturaFolha }: PropsMapaResultado) {
+export default function MapaResultado({ rotas, rotaSelecionadaId, onSelecionar, expandido, alturaFolha, exemplo = false }: PropsMapaResultado) {
   const { cores } = useTema();
   const mapa = useRef<MapView>(null);
   const linhas = useMemo(() => rotas.map(rota => ({ id: rota.id, pontos: decodificarPolyline(rota.geometria) })), [rotas]);
@@ -33,19 +35,22 @@ export default function MapaResultado({ rotas, rotaSelecionadaId, onSelecionar, 
     <MapView ref={mapa} testID="mapa-resultado" style={StyleSheet.absoluteFill} onMapReady={ajustarCamera} onLayout={ajustarCamera}
       initialRegion={inicio ? { ...inicio, latitudeDelta: 0.04, longitudeDelta: 0.04 } : undefined}
       showsUserLocation={false} showsMyLocationButton={false}>
-      {linhas.filter(linha => linha.id !== rotaSelecionadaId).map(linha => linha.pontos.length > 0 &&
+      {!exemplo && linhas.filter(linha => linha.id !== rotaSelecionadaId).map(linha => linha.pontos.length > 0 &&
         <Fragment key={linha.id}>
           <Polyline testID={`toque-rota-${linha.id}`} coordinates={linha.pontos} strokeColor="transparent" strokeWidth={medidas.areaToqueMapa} tappable onPress={() => onSelecionar(linha.id)} />
           <Polyline testID={`linha-rota-${linha.id}`} coordinates={linha.pontos} strokeColor={cores.rotaOutra} strokeWidth={3}
             lineDashPattern={[8, 6]} tappable onPress={() => onSelecionar(linha.id)} />
         </Fragment>)}
       {selecionada && selecionada.pontos.length > 0 && <>
-        <Polyline testID={`toque-rota-${selecionada.id}`} coordinates={selecionada.pontos} strokeColor="transparent" strokeWidth={medidas.areaToqueMapa} tappable onPress={() => onSelecionar(selecionada.id)} />
-        <Polyline testID={`linha-rota-${selecionada.id}`} coordinates={selecionada.pontos} strokeColor={cores.rotaSelecionada} strokeWidth={7} tappable onPress={() => onSelecionar(selecionada.id)} />
+        {!exemplo && <>
+          <Polyline testID={`toque-rota-${selecionada.id}`} coordinates={selecionada.pontos} strokeColor="transparent" strokeWidth={medidas.areaToqueMapa} tappable onPress={() => onSelecionar(selecionada.id)} />
+          <Polyline testID={`linha-rota-${selecionada.id}`} coordinates={selecionada.pontos} strokeColor={cores.rotaSelecionada} strokeWidth={7} tappable onPress={() => onSelecionar(selecionada.id)} />
+        </>}
         <Marker coordinate={selecionada.pontos[0]} title={textos.escolherPonto.tituloOrigem} accessibilityLabel={textos.escolherPonto.tituloOrigem} />
         <Marker coordinate={selecionada.pontos[selecionada.pontos.length - 1]} title={textos.escolherPonto.tituloDestino} accessibilityLabel={textos.escolherPonto.tituloDestino} />
       </>}
     </MapView>
+    {inicio && exemplo && <View testID="rotulo-trajeto-exemplo" style={[estilos.aviso, { backgroundColor: cores.superficie }]}><Texto>{hipotesesEstadosResultado.trajetoDeExemplo}</Texto></View>}
     {!inicio && <View style={[estilos.aviso, { backgroundColor: cores.superficie }]}><Texto>{hipotesesEstadosResultado.trajetoIndisponivel}</Texto></View>}
   </View>;
 }

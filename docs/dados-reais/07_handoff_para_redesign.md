@@ -20,7 +20,7 @@ Documentos tocados pelo Plano B: `TODO.md`, `prompts.md`, `docs/app-map/12_pende
 | ID | O quê | Observação |
 |---|---|---|
 | B-08 | Telas tratam `exposicao` com campos `null`, `caso = INDISPONIVEL` e `fontes.exposicao = 'indisponivel'` como **"Só roteamento"**: sem selo de exposição, sem foco de menor exposição, sem número de ocorrências, sem zero | Testar com a fixture `so_roteamento` |
-| B-03 | **Geometria honesta no mock.** `ajustarAosPontos` (`services/geometria.ts`) estica a polyline fixa entre origem e destino, e o traço cruza a cidade em linha reta. No mock, desenhar só os pontos escolhidos e rotular "trajeto de exemplo" (ou ocultar o traço). **Ainda não feito** | Zona compartilhada: `MapaResultado*` |
+| B-03 | **Geometria honesta no mock.** `ajustarAosPontos` (`services/geometria.ts`) estica a polyline fixa entre origem e destino, e o traço cruza a cidade em linha reta. No mock, desenhar só os pontos escolhidos e rotular "trajeto de exemplo" (ou ocultar o traço). **Feito (mock devolve só origem/destino; `MapaResultado` com `exemplo` não traça e rotula "trajeto de exemplo")** | Zona compartilhada: `MapaResultado*` |
 | B-21 | Mapa desenha **por trecho** (a pé em pontilhado/cor neutra, ônibus em traço cheio); rota selecionada acesa; câmera encaixa a rota acima da folha | Depende do dado real (B-20) |
 | — | Selo EXEMPLO por bloco: some só nas partes reais (`fontes.*`), não por `exemplo` global | Ao mexer em `components/resultado` |
 | — | Horários chegam em ISO **com fuso**; formatar no fuso do aparelho | Correção de formatação é do redesign |

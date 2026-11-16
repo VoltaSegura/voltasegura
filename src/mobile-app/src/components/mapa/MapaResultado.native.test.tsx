@@ -117,3 +117,19 @@ it('soma a margem segura do topo ao enquadramento da câmera', async () => {
     edgePadding: { top: 78, left: 48, right: 48, bottom: 224 },
   }));
 });
+
+it('resposta de exemplo não traça linha: só origem, destino e o rótulo de trajeto de exemplo', async () => {
+  await render(<MapaResultado rotas={rotas} rotaSelecionadaId={rotas[0].id} onSelecionar={() => {}} expandido={false} exemplo />);
+  expect(screen.queryByTestId(`linha-rota-${rotas[0].id}`)).toBeNull();
+  expect(screen.queryByTestId(`linha-rota-${rotas[1].id}`)).toBeNull();
+  expect(screen.queryByTestId(`toque-rota-${rotas[0].id}`)).toBeNull();
+  expect(screen.getByLabelText(textos.escolherPonto.tituloOrigem)).toBeTruthy();
+  expect(screen.getByLabelText(textos.escolherPonto.tituloDestino)).toBeTruthy();
+  expect(screen.getByText(hipotesesEstadosResultado.trajetoDeExemplo)).toBeTruthy();
+});
+
+it('geometria real (sem exemplo) passa intacta e sem rótulo de exemplo', async () => {
+  await render(<MapaResultado rotas={rotas} rotaSelecionadaId={rotas[0].id} onSelecionar={() => {}} expandido={false} />);
+  expect(screen.getByTestId(`linha-rota-${rotas[0].id}`)).toBeTruthy();
+  expect(screen.queryByText(hipotesesEstadosResultado.trajetoDeExemplo)).toBeNull();
+});

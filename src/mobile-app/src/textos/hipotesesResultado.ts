@@ -20,6 +20,7 @@ export const hipotesesEstadosResultado = {
   semServico: 'Não há trajetos disponíveis neste horário.',
   comparacaoIndisponivel: 'Comparação de registros indisponível nesta consulta.',
   trajetoIndisponivel: 'Trajeto no mapa indisponível. Consulte os trechos da opção.',
+  trajetoDeExemplo: 'Trajeto de exemplo: o mapa mostra só origem e destino escolhidos, sem o caminho real.',
   mapaWeb: 'Mapa disponível no celular. Compare as opções abaixo.',
   rotaNoMapa: (indice: number) => `Opção ${indice} selecionada no mapa`,
 } as const;

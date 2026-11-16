@@ -62,3 +62,10 @@ describe('traçados de exemplo', () => {
     }
   });
 });
+
+describe('geometria real (otp2/api)', () => {
+  it('codificar e decodificar preservam um traço real sem esticar', () => {
+    const real = [origem, { lat: -23.5531, lon: -46.6402 }, { lat: -23.5577, lon: -46.6499 }, destino];
+    expect(decodificar(codificar(real))).toEqual(real);
+  });
+});

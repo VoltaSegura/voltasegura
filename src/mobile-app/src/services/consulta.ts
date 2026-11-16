@@ -1,7 +1,6 @@
 import { ambiente } from '@/config/ambiente';
-import { pontosExemplo } from '@/components/mapa/pontosExemplo';
 import { fixtures, type NomeFixture } from './fixtures';
-import { ajustarAosPontos } from './geometria';
+import { codificar } from './geometria';
 import { atraso, chamar } from './http';
 import type { RespostaConsulta } from './tipos';
 import { obterToken } from './token';
@@ -43,16 +42,13 @@ export const consultaMock: ServicoConsulta = {
     if (opcoes?.signal?.aborted) throw Object.assign(new Error('Consulta cancelada'), { name: 'AbortError' });
     // cópia para o chamador não alterar a fixture compartilhada
     const resposta = JSON.parse(JSON.stringify(fixtures[fixtureMock])) as RespostaConsulta;
-    const ajustar = (geometria: string) => ajustarAosPontos(
-      geometria,
-      pontosExemplo.origem,
-      pontosExemplo.destino,
-      entrada.origem,
-      entrada.destino,
-    );
+    // B-03: o traço fixo da fixture não é um trajeto real entre os pontos escolhidos; esticá-lo
+    // desenhava uma reta cruzando a cidade. O mock devolve só os pontos escolhidos (o mapa não traça
+    // linha em resposta de exemplo e rotula "trajeto de exemplo"). Traço real só vem de otp2/api.
+    const pontosEscolhidos = codificar([entrada.origem, entrada.destino]);
     for (const rota of resposta.rotas) {
-      rota.geometria = ajustar(rota.geometria);
-      for (const trecho of rota.trechos) trecho.geometria = ajustar(trecho.geometria);
+      rota.geometria = pontosEscolhidos;
+      for (const trecho of rota.trechos) trecho.geometria = pontosEscolhidos;
     }
     return resposta;
   },
