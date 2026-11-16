@@ -28,6 +28,9 @@ app/
     ├── sobre-os-dados.tsx      TL-10
     ├── dados-considerados.tsx  TL-11 (?rotaId=)
     ├── configuracoes.tsx       TL-12
+    ├── rotina.tsx              TL-16 (Depende do tempo, D-31)
+    ├── rotina/
+    │   └── editar.tsx          TL-17 (?id= ao editar)
     ├── compartilhar/
     │   └── [rotaId].tsx        TL-14 (modal; Depende do tempo)
     └── acompanhar/
@@ -61,6 +64,10 @@ flowchart LR
     TL07 --> TL04
     TL08 --> TL04
     TL04 --> TL12["TL-12 Configurações"]
+    TL12 --> TL16["TL-16 Rotina da semana"]
+    TL16 --> TL17["TL-17 Criar ou editar rotina"]
+    TL17 --> TL16
+    NOTIF(["Lembrete local"]) --> TL04
     TL12 --> TL13
     TL12 --> TL01
     TL08 --> TL14["TL-14 Compartilhar"]
@@ -83,6 +90,8 @@ flowchart LR
 | TL-07/08/09 → TL-10 → TL-11 | pilha | volta à origem |
 | TL-07/TL-08 → TL-04 ("Planejar a volta") | pilha, com `sentido=volta` e pontos invertidos | volta ao resultado anterior |
 | TL-12 → TL-01 (sair ou excluir; excluir: adiado, D-25) | **substitui** tudo | — |
+| TL-12 → TL-16 → TL-17 | pilha (D-31) | volta à tela anterior; salvar sem permissão volta à TL-16 com aviso (`?aviso=`) |
+| Toque no lembrete → TL-04 | **navega** para a TL-04 com origem, destino e saída da rotina já na consulta; se a rotina não existe mais, só abre o app (D-31) | segue o comportamento normal da TL-04 |
 | TL-08 → TL-14 | modal | fecha para a TL-08; a sessão de compartilhamento continua ativa |
 | Link temporário → TL-15 | **deep link** no app; sem sessão, passa pela TL-03 e volta ao link (PL-23); sem o app, página de instalação | volta à TL-04 do contato |
 | Qualquer tela de (app) com sessão expirada | vai para TL-03 guardando a rota | depois do login, retorna à rota guardada |
@@ -100,6 +109,7 @@ No Android, o botão físico de voltar segue a coluna "Voltar".
 | Conectividade | Contexto | Avisos de FL-13 |
 | Modo `mock`/`api` | Configuração do app | Camada de serviços |
 | Locais salvos | `expo-secure-store` no aparelho (FN-13, D-29); histórico de trajetos `[EM ABERTO]` | TL-04, TL-05, TL-12 |
+| Rotinas da semana | `expo-secure-store` no aparelho, chave `voltasegura.rotinas` (FN-17, D-31); lembretes programados no sistema (notificações locais) | TL-16, TL-17, abertura pelo lembrete |
 | Sessão de compartilhamento ativa (id, link, início, tempo máximo) | Memória + armazenamento seguro, para retomar se o app for reaberto `[HIPÓTESE]` | Indicador global em todas as telas de `(app)`, TL-14 |
 | Tarefa de localização em segundo plano | Sistema (só com sessão ativa, D-20) | FN-15 |
 

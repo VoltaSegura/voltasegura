@@ -7,6 +7,12 @@
 - **US/AC cobertos:** US-10 AC1–AC6; US-11 AC1–AC5; US-12 AC1–AC3; US-13 AC1–AC4; US-14 AC1, AC4; RNF-03, RNF-04
 - **Telas envolvidas:** TL-07 → TL-08 → TL-09 → TL-10 / TL-11
 
+## Revisão de 15/11/2026 — apresentação da Onda 3
+
+[HIPÓTESE] TL-07 usa quantidade curta e saída no fuso do aparelho; chip de exposição só quando a primeira rota possui esse foco. A dica aparece uma vez por sessão. Alça por toque/arraste controla folha recolhida, meia ou cheia; aviso GTFS e “Planejar a volta” ficam no fim da lista, com “Sobre os dados” fixo no rodapé. Nenhum limiar ou critério estatístico foi alterado.
+
+[DECISÃO] Horas da consulta, cartões e embarques usam o fuso do aparelho, com --:-- para ISO inválido. [HIPÓTESE] TL-09 oferece somente “Fechar” à direita no cabeçalho, retornando à TL-08 sem seta duplicada.
+
 ## Parte 1: regra de par (o que a API resolve para cada par X e Y)
 
 Documenta a regra do `docs/08`. Ela roda no servidor; o app só recebe o caso resultante e os números.
@@ -60,6 +66,7 @@ flowchart TD
     IND --> SOB(["TL-10 Sobre os dados (FL-09)"])
     IND --> DET(["TL-11 Dados considerados (FL-10)"])
     IND --> ESC(["Ágatha escolhe a rota"])
+    IND --> FECHAR["Fechar à direita: retorna à TL-08; sem seta duplicada"]
 ```
 
 ## Matriz de casos

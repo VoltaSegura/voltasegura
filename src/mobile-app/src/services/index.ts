@@ -28,3 +28,21 @@ export type { OpcoesNeonAuth, ServicoContaNeonAuth } from './contaNeonAuth';
 export type { EntradaCadastro, EntradaLogin, ServicoConta, Sessao } from './conta';
 export type { NomeFixture } from './fixtures';
 export type * from './tipos';
+
+// Compartilhar minha volta (protótipo, D-22): mock em memória ou API, conforme o modo.
+// eslint-disable-next-line import/first
+import { compartilhamentoApi, compartilhamentoMock } from './compartilhamento';
+
+export const servicoCompartilhamento =
+  ambiente.modoApi === 'api' ? compartilhamentoApi : compartilhamentoMock;
+export { definirLatenciaCompartilhamentoMock } from './compartilhamento';
+export type {
+  EntradaCompartilhamento,
+  EstadoSessao,
+  MotivoFim,
+  PosicaoCompartilhada,
+  ServicoCompartilhamento,
+  SessaoCompartilhamento,
+  TrajetoCompartilhado,
+  VisaoAcompanhamento,
+} from './compartilhamento';

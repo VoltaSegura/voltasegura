@@ -45,8 +45,10 @@ Aplicativos de mobilidade priorizam tempo, distância e conveniência, mas não 
 ### Proposta de valor
 Ajudar o usuário a entender as diferenças entre trajetos possíveis — não apenas tempo, mas indicadores disponíveis sobre os trechos, meios de transporte, horário e confiabilidade dos dados.
 
-### Público inicial `[DECISÃO]`
-**Estudantes universitários que retornam para casa à noite**, usando transporte público e caminhadas. Justificativa: rotina recorrente e previsível, testável com trajetos reais em diferentes partes do município, e conecta público de impacto ao modelo de negócio (universidades como clientes institucionais).
+### Público inicial `[DECISÃO — 15/11/2026, revista pelo roteiro do pitch]`
+**Quem volta para casa à noite** (público amplo): pessoas que saem da aula ou do trabalho, usam transporte público e caminham em parte do trajeto, incluindo estudantes universitários do período noturno e trabalhadores noturnos. O pitch gravado fala de quem sai "da aula ou do trabalho" e cita trabalhadores noturnos.
+- ~~Público inicial só de estudantes universitários noturnos (decisão de 09–11/11/2026).~~ Substituído em 15/11/2026; histórico em `docs/06` (1.44).
+- Atenção: o feedback do professor pedia começar com um perfil prioritário (§2). A persona Ágatha Santos segue como proto-persona de **um** perfil dentro do público amplo, não validada. Trabalhadores noturnos deixam de ser "público futuro".
 
 **Abrangência do piloto `[DECISÃO — 11/11/2026]`**: todo o município de São Paulo. O lançamento não fica restrito a um campus ou bairro; a comparação de cada trajeto depende de cobertura e qualidade suficientes, que podem variar dentro da cidade. Trajetos reais em partes diferentes do município servirão como testes iniciais, complementados por avaliação de cobertura em toda a cidade.
 
@@ -57,7 +59,7 @@ Ajudar o usuário a entender as diferenças entre trajetos possíveis — não a
 - `[DECISÃO — 11/11/2026]` Persona padronizada como **Ágatha Santos, 24 anos** (antes "Marina, 22"). Como o grupo não fará pesquisa com usuários nesta fase, o perfil é uma **proto-persona**: construída pelo grupo, não validada com estudantes, e deve ser apresentada assim.
 
 ### Públicos futuros (não priorizar agora)
-Trabalhadores noturnos · frequentadores de eventos · turistas · outros usuários de transporte público.
+Frequentadores de eventos · turistas · outros usuários de transporte público. *(Trabalhadores noturnos passaram ao público inicial em 15/11/2026.)*
 
 ## 4. Como a solução deve funcionar `[DECISÃO — fluxo]`
 
@@ -126,6 +128,8 @@ Limitação aceita pela decisão: sem armazenar consultas, a adoção no piloto 
 
 Fora da sessão, as regras acima valem como estão. A construção está marcada como "Depende do tempo" para a entrega de 19/11.
 
+`[DECISÃO — 15/11/2026]` **Rotina do VoltaSegura+** (cadastrar trajetos fixos e receber avisos antes de sair): fica **só no aparelho**, com notificação local, nos moldes do histórico e dos lugares salvos (item 4). Não vai ao servidor nem se vincula à conta. Avisos que dependam de tempo real ficam para a Fase 2. Isso preserva a fala do pitch "não armazenamos históricos de buscas" (não guardamos em servidor); a opção C de privacidade segue rejeitada.
+
 **Alternativas avaliadas (não adotadas no MVP):**
 
 | Opção | O que muda em relação ao pacote mínimo | Implicações |
@@ -159,9 +163,11 @@ O produto passa a se chamar **VoltaSegura**. O nome resolve o conflito de identi
 
 ## 8. Modelo de negócio `[HIPÓTESE — não validado financeiramente]`
 
-- **Modelo proposto**: **B2B2C** — o estudante usa a solução; instituições contratam para a comunidade.
-- **Primeiro cliente potencial**: universidades/centros universitários com estudantes do período noturno (licença institucional, divulgação, piloto em campus/região).
-- **Fontes de receita a validar**: licença institucional recorrente · planos para empresas (turnos noturnos) · pacotes por evento · posteriormente, licenciamento de API/painéis agregados.
+- `[HIPÓTESE — 15/11/2026, roteiro do pitch]` **Modelo proposto: freemium individual + empresas.** Comparar rotas e consultar informações no VoltaSegura é **sempre gratuito**. O **VoltaSegura+** (assinatura) permite **cadastrar a rotina e receber avisos antes de sair**. **Empresas com funcionários em turnos noturnos** poderão oferecer o VoltaSegura+ como benefício (canal B2B2C). Sem preço definido e sem validação financeira. Princípio: "o grátis informa, o premium poupa trabalho".
+- ~~**Modelo proposto**: B2B2C com universidades como primeiro cliente (licença institucional).~~ *Substituído em 15/11/2026: as universidades saem do modelo (decisão do grupo na onda do pitch); o piloto segue sem instituição.*
+- **Fontes de receita a validar**: assinatura individual (VoltaSegura+) · planos para empresas (turnos noturnos) · pacotes por evento · posteriormente, licenciamento de API/painéis agregados.
+- `[DECISÃO — 15/11/2026]` O pitch já gravado diz que a comparação será "sempre gratuita" sem a ressalva "modelo a validar" (exceção consciente à regra de `docs/06` §2); a ressalva fica na descrição do vídeo e nos slides.
+- `[DECISÃO]` O nome "premium" também é usado no redesign visual do app (D-28); não confundir com o VoltaSegura+.
 - **Princípio comercial**: **não vender** dados pessoais ou trajetos individuais; relatórios institucionais agregados, anonimizados, com controles de privacidade.
 - **Custos a incluir**: infraestrutura em nuvem, banco, processamento e monitoramento; serviços de mapas/geocodificação/roteamento; integração e manutenção das bases; desenvolvimento, suporte, segurança e LGPD; auditoria da metodologia, testes e atendimento institucional.
 - **Antes de projetar receita**: entrevistar universidades, entender orçamento e processo de contratação, testar disposição a pagar, estimar custo por usuário/campus.
@@ -176,6 +182,8 @@ O produto passa a se chamar **VoltaSegura**. O nome resolve o conflito de identi
 | **Fase 3 — Inteligência e personalização** | Indicadores urbanos adicionais; preferências de mobilidade e acessibilidade; assistente de orientação após validação |
 | **Fase 4 — Expansão** | Parcerias (universidades, empresas, eventos); integrações institucionais e API se houver demanda comprovada; outras cidades após validar dados e metodologia localmente |
 
+**Roadmap do pitch `[HIPÓTESE — 15/11/2026]`**: (1) **relatos de infraestrutura** (postes apagados, calçadas sem acessibilidade), com 3 dias de VoltaSegura+ de recompensa; dados anônimos que poderão ajudar a melhorar a cidade; (2) **agente inteligente** que reorganiza trajetos diante de atrasos (depende de tempo real, Fase 2) e **integrações com aplicativos de mobilidade**; ambos a partir do VoltaSegura+. Os relatos são só de infraestrutura, isolados da comparação de exposição; relatos de crime ou de percepção de segurança continuam fora (DT-10). Moderação, antifraude da recompensa, anonimização e destino dos dados `[EM ABERTO]`.
+
 **Fora do escopo inicial**: garantia de segurança, previsão de crimes, lotação de ônibus sem fonte validada, monitoramento individual contínuo, replanejamento em tempo real sem integração confirmada.
 
 ## 10. Estatísticas utilizadas (Big Numbers — com contexto obrigatório)
@@ -184,6 +192,14 @@ O produto passa a se chamar **VoltaSegura**. O nome resolve o conflito de identi
 |---|---|---|
 | 71% | Ipsos-Ipec / Rede Nossa São Paulo — qualidade de vida em SP (2026) | 700 internautas 16+, moradores da capital há 2+ anos; entrevistas em dez/2025 |
 | 63% · 35% · 42% | Instituto Patrícia Galvão / Locomotiva — mulheres e mobilidade noturna (2025) | 1.200 mulheres 18–59 anos que saem à noite para lazer ≥2×/mês |
+
+`[DECISÃO — 15/11/2026]` Os números do **roteiro do pitch** são os principais; os da tabela acima ficam de reserva para slides e relatório. Fichas pesquisadas em 15/11/2026 (confirmar na fonte primária antes de uso formal):
+
+| Indicador | Fonte | Amostra/período | Situação |
+|---|---|---|---|
+| "Mais da metade" se sente insegura andando sozinha à noite (51,7% pela imprensa); durante o dia, 79,7% se sentem seguras (cerca de 1 em 5 inseguras) | IBGE, PNAD Contínua — Sensação de Segurança, com o Ministério da Justiça | 4º trimestre de 2021, divulgada em 07/12/2022; pergunta sobre andar sozinho nas redondezas do domicílio; quem nunca anda sozinho à noite fica fora do cálculo | `[EM ABERTO]` valores exatos só em reportagens; conferir no informativo do IBGE (ISBN 978-85-240-4555-4). Dado de 2021: citar o ano |
+| 8,6 milhões (8,4%) trabalham à noite, total ou parcialmente | IBGE, PNAD Contínua (via reportagem de 23/09/2026) | 102,983 milhões de ocupados; ano de referência 2025 | `[EM ABERTO]` só reportagem encontrada; conferir a publicação do IBGE |
+| 35,6% deixaram de sair à noite por medo; 36,5% mudaram um percurso rotineiro | Fórum Brasileiro de Segurança Pública / Datafolha — "Medo do crime e eleições 2026: os gatilhos da insegurança" | 2.004 entrevistas, 137 municípios, 9–10/03/2026; divulgação 10–11/05/2026; "nos últimos 12 meses"; recorte feminino: 40,9% deixaram de sair à noite | números conferem em reportagens; conferir no relatório do FBSP |
 
 ## 11. Estrutura da apresentação (slides) `[DECISÃO]`
 

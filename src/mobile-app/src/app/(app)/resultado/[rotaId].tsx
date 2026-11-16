@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatarHora } from '@/components/resultado/formatos';
 import { Redirect, Stack, router, useLocalSearchParams } from 'expo-router';
 
 import { Botao, SeloExemplo, Tela, Texto } from '@/components';
@@ -24,7 +25,7 @@ const focos: Record<FocoRota, string> = {
 };
 const numero = (valor: number) => valor.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 const distancia = (km: number) => km < 1 ? `${numero(km * 1000)} m` : `${numero(km)} km`;
-const hora = (iso: string) => iso.slice(11, 16);
+
 
 const rotulos: RotulosTrecho & { modos: RotulosModos } = {
   modos,
@@ -32,7 +33,7 @@ const rotulos: RotulosTrecho & { modos: RotulosModos } = {
   detalhe: (trecho, modo) => textos.resultado.detalhes.trecho({ modo, distancia: distancia(trecho.distanciaKm), duracao: `${trecho.duracaoMin} min` }),
   embarque: (trecho) => {
     if (trecho.modo === 'A_PE') return null;
-    const previsto = trecho.partidaPrevista ? textos.resultado.detalhes.embarque(hora(trecho.partidaPrevista)) : null;
+    const previsto = trecho.partidaPrevista ? textos.resultado.detalhes.embarque(formatarHora(trecho.partidaPrevista)) : null;
     return [previsto, trecho.embarque].filter(Boolean).join(' · ') || null;
   },
   desembarque: (trecho) => trecho.desembarque ? `${h.desembarque} · ${trecho.desembarque}` : null,
@@ -66,6 +67,7 @@ export default function DetalhesRota() {
     {!podeExplicar && <Texto>{textos.resultado.detalhes.semTrechoAPe}</Texto>}
     <Texto cor="texto2">{textos.comuns.horariosPrevistos}</Texto>
     <Botao variante="texto" rotulo={textos.porQue.linkConsiderados} onPress={() => router.push({ pathname: '/dados-considerados', params: { rotaId: rota.id } })} />
+    <Botao variante="secundario" rotulo={textos.compartilhar.botaoTl08} onPress={() => router.push({ pathname: '/compartilhar/[rotaId]', params: { rotaId: rota.id } })} />
     <Botao variante="secundario" rotulo={textos.resultado.planejarVolta} onPress={() => { planejarVolta(); router.push({ pathname: '/planejar', params: { sentido: 'volta' } }); }} />
   </Tela>;
 }

@@ -41,7 +41,7 @@ it('mostra marcador acessível e abre no ponto recebido', async () => {
   const ponto = { lat: -23.56, lon: -46.65 };
   await render(<MapaPonto ponto={ponto} onEscolher={jest.fn()} />);
   expect(screen.getByTestId('mapa-ponto').props.initialRegion).toEqual({
-    latitude: ponto.lat, longitude: ponto.lon, latitudeDelta: 0.04, longitudeDelta: 0.04,
+    latitude: ponto.lat, longitude: ponto.lon, latitudeDelta: 0.015, longitudeDelta: 0.015,
   });
   expect(screen.getByTestId('marcador-ponto').props.coordinate).toEqual({ latitude: ponto.lat, longitude: ponto.lon });
   expect(screen.getByTestId('marcador-ponto').props.accessibilityLabel).toBe(textos.planejar.pontoMapa);
@@ -53,7 +53,7 @@ it('anima apenas quando o foco passa a um ponto novo', async () => {
   const foco = { lat: -23.57, lon: -46.66 };
   await rerender(<MapaPonto onEscolher={onEscolher} ponto={foco} foco={foco} />);
   expect(mapa.__animateToRegion).toHaveBeenCalledTimes(1);
-  expect(mapa.__animateToRegion).toHaveBeenCalledWith({ latitude: foco.lat, longitude: foco.lon, latitudeDelta: 0.04, longitudeDelta: 0.04 }, 250);
+  expect(mapa.__animateToRegion).toHaveBeenCalledWith({ latitude: foco.lat, longitude: foco.lon, latitudeDelta: 0.015, longitudeDelta: 0.015 }, 250);
   await rerender(<MapaPonto onEscolher={onEscolher} ponto={foco} foco={{ ...foco }} />);
   expect(mapa.__animateToRegion).toHaveBeenCalledTimes(1);
   await rerender(<MapaPonto onEscolher={onEscolher} foco={{ lat: -23.58, lon: -46.67 }} />);
@@ -76,7 +76,7 @@ it('avisa indisponibilidade quando o mapa nativo não fica pronto', async () => 
   } finally { jest.useRealTimers(); }
 });
 
-it('escolhe por toque e pelo centro depois de arrastar', async () => {
+it('escolhe por toque e arrasto do marcador, sem escolher o centro ao mover o mapa', async () => {
   const onEscolher = jest.fn();
   await render(<MapaPonto onEscolher={onEscolher} />);
   const vista = screen.getByTestId('mapa-ponto');
@@ -85,7 +85,14 @@ it('escolhe por toque e pelo centro depois de arrastar', async () => {
   expect(onEscolher).not.toHaveBeenCalled();
   await fireEvent(vista, 'press', { nativeEvent: { coordinate: { latitude: -23.55, longitude: -46.64 } } });
   expect(onEscolher).toHaveBeenCalledWith({ lat: -23.55, lon: -46.64 });
-  await fireEvent(vista, 'panDrag');
+  await fireEvent(vista, 'touchStart');
   await fireEvent(vista, 'regionChangeComplete', regiao);
+  expect(onEscolher).toHaveBeenCalledTimes(1);
+  expect(mapa.__animateToRegion).not.toHaveBeenCalled();
+  const { rerender } = await render(<MapaPonto cheio ponto={{ lat: -23.55, lon: -46.64 }} onEscolher={onEscolher} />);
+  expect(screen.getByTestId('marcador-ponto').props.draggable).toBe(true);
+  await fireEvent(screen.getByTestId('marcador-ponto'), 'dragEnd', { nativeEvent: { coordinate: { latitude: -23.57, longitude: -46.66 } } });
   expect(onEscolher).toHaveBeenLastCalledWith({ lat: -23.57, lon: -46.66 });
+  await rerender(<MapaPonto cheio ponto={{ lat: -23.58, lon: -46.67 }} onEscolher={onEscolher} />);
+  expect(screen.getByTestId('marcador-ponto').props.coordinate).toEqual({ latitude: -23.58, longitude: -46.67 });
 });

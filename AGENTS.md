@@ -60,8 +60,8 @@ Você é um agente trabalhando neste repositório. Toda a base de conhecimento e
 - **Idioma**: português (BR), tom profissional.
 - **Conflito entre documentos**: regras de ética/linguagem (`05`) > regras da FIAP (`01`) > projeto (`03`) > dados (`04`).
 - **Termo canônico do produto**: "exposição estimada" (nunca "segurança garantida", "rota segura", "área perigosa").
-- **Público inicial**: estudantes universitários do período noturno (persona: Ágatha Santos, 24 anos — proto-persona, não validada com usuários).
-- **Modelo comercial a validar**: B2B2C começando por universidades.
+- **Público inicial**: quem volta para casa à noite, incluindo estudantes universitários noturnos e trabalhadores noturnos (decisão de 15/11/2026; persona de trabalho: Ágatha Santos, 24 anos — proto-persona, não validada com usuários).
+- **Modelo comercial a validar**: freemium individual (VoltaSegura+) com empresas de turno noturno como canal; universidades fora do modelo (hipótese de 15/11/2026).
 - **Commits**: mensagens convencionais (feat/fix/docs/chore) em português.
 
 ## Meta-informações do desafio (resumo ultra-rápido)

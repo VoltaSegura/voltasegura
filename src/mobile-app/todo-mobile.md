@@ -253,3 +253,8 @@ Quem testou no Expo Go viu o mapa, mas relatou: não sabe como selecionar os cam
 - [x] Rodada 2 de usabilidade (15/11): localização com um toque na origem, atalhos de horário, adicionar lugar, estados vazios com imagem, perfil e aviso com imagem; 399 testes
 - [ ] **Lucas:** enviar as imagens novas (`heroBuscando`, `vazioBusca`, `heroPrivacidade`, `avatarPerfil`, `vazioLocais`)
 - [ ] Rever no celular o resumo do topo do resultado (texto longo)
+- [x] Onda 3A/3B (15/11): teclado no mapa, botão "Minha localização", rótulo do ponto, abrir perto, hora no fuso, cabeçalho curto, câmera, folha em 3 alturas, renomear/desfazer lugar, tela Buscando; 434 testes
+- [ ] **Lucas:** conferir no celular (teclado, arraste da folha, câmera, 200%); decidir D-30 (geocodificação reversa); enviar imagens
+- [ ] Onda 4 (evidência da Onda 3, `docs/redesign/10_*`): R1 teclado ainda corta o formulário de salvar; R2 linha da busca ilegível sobre o mapa; R3 centro do mapa como ponto escolhido; R6 tempo na folha recolhida; R4 quadro preto (confirmar)
+- [x] Onda 4 (15/11, D-30): marcador por toque, endereço exato do ponto, lugares com endereço, R1 modo compacto, R2, R6; 447 testes
+- [ ] **Lucas:** conferir no celular (teclado, endereço, arrastar marcador, R4); revisar o texto do Aviso de privacidade (D-30)

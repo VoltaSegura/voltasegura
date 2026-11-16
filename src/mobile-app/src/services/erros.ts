@@ -34,7 +34,7 @@ export function ehErroServico(e: unknown): e is ErroServico {
 export function erroDeStatus(
   status: number,
   codigo: string | null,
-  contexto: 'consulta' | 'conta',
+  contexto: 'consulta' | 'conta' | 'compartilhamento',
 ): ErroServico {
   if (status === 401) return new ErroServico('NAO_AUTORIZADO', codigo, status);
   if (status === 422) {

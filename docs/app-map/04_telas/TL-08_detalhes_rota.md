@@ -7,6 +7,10 @@
 - **Saídas:** TL-09 (por que esta rota?), TL-07 (voltar), TL-04 (planejar a volta), TL-14 (compartilhar minha volta; Depende do tempo).
 - **Revisão de 13/11/2026 (D-19):** acrescentado o botão "Compartilhar minha volta" (US-21 AC1). O resto da tela segue aprovado (D-17).
 
+## Revisão de 15/11/2026 — B2
+
+[DECISÃO] Horários de embarque usam o fuso do aparelho (Date/toLocaleTimeString pt-BR, HH:mm), inclusive quando o servidor envia UTC ou outro deslocamento. ISO inválido exibe --:--. A indicação de horário previsto e a navegação permanecem.
+
 ## Wireframe
 
 **Estado padrão** (rota C do exemplo, EXEMPLO)

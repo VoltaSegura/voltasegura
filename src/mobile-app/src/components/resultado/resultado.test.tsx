@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import { fixtures } from '@/services/fixtures';
 import type { Rota, Trecho } from '@/services';
@@ -8,6 +9,7 @@ import { textos } from '@/textos';
 import { hipotesesResultado } from '@/textos/hipotesesResultado';
 import { coresClaro, coresEscuro, toque } from '@/theme/tokens';
 
+import { formatarHora } from './formatos';
 import { BotaoPorQue, CardRota, Indicativo, ItemTrecho, LinhaCategoria, LinhaSobreOsDados, PainelResultado, RotuloFoco, SeloLinha, SequenciaModos, TabelaNumeros, type RotulosResultado, type RotulosTrecho } from './index';
 
 let mockEsquema: 'light' | 'dark' = 'dark';
@@ -24,7 +26,7 @@ const rotulos: RotulosResultado = {
   },
   modos: { A_PE: textos.modos.modo.aPe, ONIBUS: textos.modos.modo.onibus, METRO: textos.modos.modo.metro, TREM: textos.modos.modo.trem },
   duracao: n => `${n} min`, caminhada: n => textos.resultado.kmAPe(String(n)),
-  trocas: textos.resultado.trocas, saida: s => textos.resultado.saidaPrevista(s.slice(11, 16)),
+  trocas: textos.resultado.trocas, saida: s => textos.resultado.saidaPrevista(formatarHora(s)),
   trechoAPe: n => `${textos.modos.modo.aPe} ${n} min`, linha: t,
   card: (rota: Rota, i, n, modos) => textos.resultado.rotuloCard({ i, n, focos: rota.focos.map(f => rotulos.focos[f]).join(', '), duracao: rotulos.duracao(rota.duracaoMin), km: String(rota.caminhadaKm), trocas: rotulos.trocas(rota.trocas), modos }),
   selecionada: textos.resultado.selecionada, dadosInsuficientes: 'Dados insuficientes',
@@ -131,6 +133,40 @@ describe('resultado', () => {
     expect(screen.getByRole('button', { name: 'Abrir Sobre os dados' })).toBeTruthy();
     expect(screen.getAllByRole('button').length).toBeGreaterThan(2);
     expect(screen.getByText(hipotesesResultado.dicaSelecao)).toBeTruthy();
+  });
+
+  it('folha reserva a margem segura inferior no paddingBottom', async () => {
+    const resposta = fixtures.conclusivo;
+    await render(
+      <SafeAreaInsetsContext.Provider value={{ top: 0, bottom: 34, left: 0, right: 0 }}>
+        <PainelResultado resposta={resposta} rotulos={rotulos} tituloLista="3 opções" rotuloExpandir="Expandir lista" rotaSelecionadaId={resposta.rotas[0].id}
+          onExpandir={() => {}} onSelecionar={() => {}} onAbrirDetalhes={() => {}} alturaFolha={300}
+          linhaDados={{ texto: 'Dados: SSP-SP', rotuloAcessivel: 'Abrir Sobre os dados', onPress: () => {} }} />
+      </SafeAreaInsetsContext.Provider>,
+    );
+    expect(StyleSheet.flatten(screen.getByTestId('painel-resultado').props.style).paddingBottom).toBe(34);
+  });
+
+  it('resumo recolhido usa a opção selecionada, plural e rótulo de foco completo para acessibilidade', async () => {
+    const resposta = fixtures.conclusivo;
+    const props = { resposta, rotulos, tituloLista: '3 opções', rotuloExpandir: 'Expandir lista',
+      onExpandir: () => {}, onSelecionar: () => {}, onAbrirDetalhes: () => {},
+      linhaDados: { texto: 'Dados: SSP-SP', rotuloAcessivel: 'Abrir Sobre os dados', onPress: () => {} } };
+    const tela = await render(<PainelResultado {...props} rotaSelecionadaId={resposta.rotas[0].id} nivel={0} />);
+    const resumo = screen.getByTestId('resumo-recolhido');
+    expect(resumo.props.children).toBe('40 min · 1 troca · 1 a pé · Menor exposição estimada');
+    expect(resumo.props.accessibilityLabel).toBe(resumo.props.children);
+    expect(resumo.props.numberOfLines).toBe(2);
+    expect(resumo.props.ellipsizeMode).toBe('tail');
+    expect(resumo.props.children).not.toMatch(/segura/i);
+    await tela.rerender(<PainelResultado {...props} rotaSelecionadaId={resposta.rotas[1].id} nivel={0} />);
+    expect(screen.getByTestId('resumo-recolhido').props.children).toContain('Menor tempo');
+    await tela.rerender(<PainelResultado {...props} rotaSelecionadaId={resposta.rotas[1].id} nivel={1} />);
+    expect(screen.queryByTestId('resumo-recolhido')).toBeNull();
+    await tela.rerender(<PainelResultado {...props} rotaSelecionadaId={resposta.rotas[1].id} nivel={2} />);
+    expect(screen.queryByTestId('resumo-recolhido')).toBeNull();
+    expect(hipotesesResultado.resumoRecolhido('40 min', rotulos.trocas(0).toLowerCase(), '1,0 km a pé', [])).toBe('40 min · sem troca · 1,0 km a pé');
+    expect(hipotesesResultado.resumoRecolhido('40 min', rotulos.trocas(2), '1,0 km a pé', [])).toBe('40 min · 2 trocas · 1,0 km a pé');
   });
 
   it.each(['dark', 'light'] as const)('conjunto de apresentação renderiza no tema %s', async tema => {

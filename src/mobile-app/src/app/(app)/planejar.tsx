@@ -5,6 +5,7 @@ import { Stack, router, useLocalSearchParams } from 'expo-router';
 
 import { Aviso, BotaoIcone, Botao, Hero, ImagemPlaceholder, Tela, Texto } from '@/components';
 import { AtalhosHorario, CampoPonto, CartaoAdicionarLocal, CartaoLocal, SeletorHorario } from '@/components/planejar';
+import { LARGURA_CARTAO_LOCAL } from '@/components/planejar/CartaoLocal';
 import { Entrada } from '@/components/movimento';
 import { useConsulta, validarConsulta, type CodigoProblema } from '@/consulta';
 import { useLocais, type LocalSalvo } from '@/locais';
@@ -124,7 +125,7 @@ export default function Planejar() {
     <Entrada indice={2} style={estilos.lugares}>
       <Texto variante="secao" accessibilityRole="header">{h.lugaresSalvos}</Texto>
       {locais.length ? (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.faixa}>
+        <ScrollView testID="carrossel-lugares" horizontal showsHorizontalScrollIndicator={false} style={estilos.carrossel} contentContainerStyle={estilos.faixa} snapToInterval={LARGURA_CARTAO_LOCAL + esp[3]} snapToAlignment="start" decelerationRate="fast">
           {locais.map((l) => <CartaoLocal key={l.id} local={l} onPress={() => usarLugar(l)} />)}
           <CartaoAdicionarLocal rotulo={h.adicionarLugar} onPress={() => abrir('destino')} />
         </ScrollView>
@@ -150,5 +151,7 @@ const estilos = StyleSheet.create({
   vazio: { borderRadius: raio.grande, borderWidth: 1, overflow: 'hidden' },
   vazioImagem: { height: 120, width: '100%' },
   vazioTexto: { padding: esp[3], gap: esp[3] },
-  faixa: { gap: esp[3], paddingRight: esp[4] },
+  // Sangra até a borda da tela (cancela o padding da Tela); o cartão "Adicionar" não parece cortado.
+  carrossel: { marginHorizontal: -esp[4] },
+  faixa: { gap: esp[3], paddingHorizontal: esp[4] },
 });

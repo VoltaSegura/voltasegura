@@ -131,6 +131,7 @@
 | Histórico ligado | Local (`preferencias.historico_ligado`) | Padrão desligado |
 | Trajetos salvos | Local (`historico`) | "Origem → Destino"; mais recente primeiro |
 | Locais salvos | Local (`locais_salvos`) | Nome |
+| Entrada "Rotina da semana" | Fixo | Leva à TL-16; a TL-12 não lê as rotinas |
 | Resultado da exclusão (adiado, D-25) | API (`DELETE /api/conta`) | `204` → TL-01; erro → aviso, nada apagado |
 
 ## TL-13 · Aviso de privacidade
@@ -160,3 +161,23 @@
 | Chegada estimada | API (`trajeto.chegadaPrevista`) | Formato de horário |
 | Link expirado | API (`404`/`410`) | "Este compartilhamento terminou." |
 
+## TL-16 · Rotina da semana (Depende do tempo, D-31)
+
+| Campo | Origem | Regra |
+|---|---|---|
+| Rotinas (trajeto, dias, horário, ativa) | Local (`expo-secure-store`, `voltasegura.rotinas`) | Só no aparelho; nunca no servidor nem na conta; até 5 |
+| Trajeto | Local (nomes dos lugares salvos no momento do cadastro) | "{origem} para {destino}" |
+| Dias | Local | "Todos os dias", "Dias úteis", "Fim de semana" ou lista curta |
+| Estado do lembrete | Local (`ativa`) e sistema (notificações programadas) | Interruptor; sem permissão, aviso |
+| Selo e textos de privacidade | Fixo | Recurso em validação, sem preço |
+
+## TL-17 · Criar ou editar rotina (Depende do tempo, D-31)
+
+| Campo | Origem | Regra |
+|---|---|---|
+| Origem e destino | Local (lugares salvos, FN-13) | Coordenadas e nome copiados para a rotina; diferentes entre si |
+| Dias | Digitado (toques) | 1 a 7 (1 = domingo); pelo menos um |
+| Horário de saída | Digitado | `HH:MM`, 00:00 a 23:59; "7:45" vira "07:45" |
+| Antecedência | Escolha | 5, 10, 15 (padrão) ou 30 min |
+| Lembrete ativo | Escolha | Padrão ligado; a permissão de notificações é pedida ao salvar ativa |
+| Conteúdo da notificação | Fixo + dia e hora | Só o id da rotina vai nos dados; sem coordenadas |

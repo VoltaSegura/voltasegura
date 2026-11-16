@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
 import Buscando from '@/app/(app)/buscando';
@@ -121,6 +122,18 @@ describe('TL-04 Planejar', () => {
     locaisMock.locais = [];
   });
 
+  it('carrossel de lugares sangra até a borda e encaixa cartões ao rolar', async () => {
+    locaisMock.locais = [{ id: 'a', nome: 'Faculdade', tipo: 'estudo', ponto: { lat: -23.55, lon: -46.64 } }];
+    estado();
+    await render(<Planejar />);
+    const rolagem = screen.getByTestId('carrossel-lugares');
+    expect(rolagem.props.decelerationRate).toBe('fast');
+    expect(rolagem.props.snapToInterval).toBe(160);
+    expect(StyleSheet.flatten(rolagem.props.style).marginHorizontal).toBe(-16);
+    expect(StyleSheet.flatten(rolagem.props.contentContainerStyle).paddingHorizontal).toBe(16);
+    locaisMock.locais = [];
+  });
+
   it('atalhos de horário definem a saída sem digitar', async () => {
     estado();
     await render(<Planejar />);
@@ -165,6 +178,14 @@ describe('TL-04 Planejar', () => {
 });
 
 describe('TL-06 Buscando', () => {
+  it.each(['ocioso', 'buscando'] as const)('mantém indicador, texto e Cancelar visíveis no estado %s', async (status) => {
+    estado(base, { status });
+    await render(<Buscando />);
+    expect(screen.getByRole('progressbar', { name: textos.buscando.texto })).toBeVisible();
+    expect(screen.getByText(textos.buscando.texto)).toBeVisible();
+    expect(screen.getByRole('button', { name: textos.comuns.cancelar })).toBeVisible();
+  });
+
   it('busca uma vez, substitui ao sucesso e não registra dados no console', async () => {
     const log = jest.spyOn(console, 'log').mockImplementation(() => {});
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});

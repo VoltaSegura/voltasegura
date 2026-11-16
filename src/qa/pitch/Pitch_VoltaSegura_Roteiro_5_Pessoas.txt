@@ -1,0 +1,163 @@
+================================================================================
+                         PITCH VOLTASEGURA
+                        ROTEIRO PARA 5 PESSOAS
+================================================================================
+
+
+################################################################################
+PESSOA 1 | O PROBLEMA
+################################################################################
+
+GANCHO
+-------------------------------------------------------------------------------
+
+Imagine você, ou alguém que ama, saindo da aula ou do trabalho depois das dez e meia da noite.
+
+Um ônibus, um metrô e, no fim, uma longa caminhada. Sozinha.
+
+Enquanto isso, em casa, alguém deixou a luz acesa, esperando ouvir a porta se abrir.
+
+Porque, para quem volta, o caminho é uma incerteza. E, para quem espera, cada minuto parece uma eternidade.
+
+
+URGÊNCIA
+-------------------------------------------------------------------------------
+
+Mas e se eu te disser que isso não é apenas imaginação?
+
+Segundo o IBGE, mais da metade dos brasileiros se sentem inseguros ao andar sozinhos à noite. Durante o dia, apenas um em cada cinco se sente assim.
+
+E, além disso, 8,6 milhões de brasileiros trabalham à noite, total ou parcialmente.
+
+Para essas pessoas, evitar sair à noite simplesmente não é uma opção.
+
+
+POR QUE É DIFÍCIL
+-------------------------------------------------------------------------------
+
+Mas se tantas pessoas precisam sair, por que ainda é tão difícil escolher o caminho de volta?
+
+A informação já existe. Está na SSP-SP, na SPTrans e no GeoSampa.
+
+Mas espalhada em portais e planilhas que ninguém consulta às dez da noite, em um ponto de ônibus.
+
+O dado existe. Só não chega a quem realmente precisa.
+
+
+
+################################################################################
+PESSOA 2 | A SOLUÇÃO
+################################################################################
+
+SOLUÇÃO
+-------------------------------------------------------------------------------
+
+Foi para mudar essa realidade que criamos o VoltaSegura.
+
+Um aplicativo que reúne informações para ajudar você a escolher o melhor caminho de ida e volta.
+
+Funciona em três passos: você informa origem, destino e horário. Cruzamos dados de transporte e ocorrências registradas. E apresentamos rotas para comparar tempo, conexões, exposição estimada nos trechos a pé e confiabilidade dos dados.
+
+Tudo em uma única tela.
+
+Você ainda pode compartilhar seu trajeto com quem espera por você.
+
+Não prometemos segurança. Prometemos informação para escolher com mais confiança.
+
+
+
+################################################################################
+PESSOA 3 | CONFIANÇA E DEMANDA
+################################################################################
+
+ÉTICA
+-------------------------------------------------------------------------------
+
+Mas transformar dados em orientação exige responsabilidade.
+
+Por isso, comparamos apenas os trechos a pé. E, quando faltam dados, deixamos isso claro, sem classificar bairros como perigosos.
+
+Nosso objetivo não é aumentar o medo, mas ajudar as pessoas a decidir melhor.
+
+
+DEMANDA E VIABILIDADE
+-------------------------------------------------------------------------------
+
+E essa necessidade já existe.
+
+Segundo pesquisa do Fórum Brasileiro de Segurança Pública com o Datafolha, de março de 2026, 35,6% dos entrevistados deixaram de sair à noite por medo e 36,5% mudaram seus percursos.
+
+Ou seja, as pessoas já adaptam suas rotas, mas nem sempre têm informação para decidir.
+
+E o projeto é viável: utilizamos dados públicos da SSP-SP e do Infosiga, começando por um piloto em São Paulo.
+
+
+
+################################################################################
+PESSOA 4 | NEGÓCIO E FUTURO
+################################################################################
+
+NEGÓCIO
+-------------------------------------------------------------------------------
+
+Quem volta tarde já paga um preço: em tempo, preocupação e oportunidades perdidas.
+
+Por isso, comparar rotas e consultar informações no VoltaSegura será sempre gratuito.
+
+Já o VoltaSegura+ permite cadastrar sua rotina e receber avisos antes de sair.
+
+Empresas com funcionários em turnos noturnos também poderão oferecer esse benefício.
+
+E a privacidade é prioridade: não armazenamos históricos de buscas nem vendemos dados pessoais.
+
+
+ROADMAP
+-------------------------------------------------------------------------------
+
+E queremos ir além.
+
+Primeiro, usuários poderão reportar problemas como postes apagados e calçadas sem acessibilidade, recebendo três dias de VoltaSegura+.
+
+Esses dados anônimos poderão ajudar a melhorar a cidade.
+
+Depois, teremos um agente inteligente para reorganizar trajetos diante de atrasos e integrações com aplicativos de mobilidade.
+
+A tecnologia não elimina os riscos, mas ajuda a se antecipar a eles.
+
+
+
+################################################################################
+PESSOA 5 | DIFERENCIAL E FECHAMENTO
+################################################################################
+
+CONCORRÊNCIA
+-------------------------------------------------------------------------------
+
+Mas o que nos diferencia?
+
+O Waze já possui alertas de insegurança, mas é voltado a motoristas e depende de relatos dos usuários.
+
+O VoltaSegura foi pensado para quem caminha, utiliza transporte público e combina diferentes meios de deslocamento.
+
+Partimos de registros oficiais e mostramos as informações antes da pessoa sair.
+
+Enquanto outras soluções alertam durante o caminho, nós ajudamos você a escolher antes de começar.
+
+
+FECHAMENTO
+-------------------------------------------------------------------------------
+
+O VoltaSegura não vai acabar com o medo da noite. Mas pode acabar com a volta sem informação e sem escolha.
+
+E aquela luz acesa, esperando alguém chegar?
+
+Queremos que quem está voltando tenha mais informação para escolher seu caminho.
+
+Porque voltar para casa não deveria ser uma aposta. Deveria ser uma escolha.
+
+VoltaSegura.
+
+
+================================================================================
+                              FIM DO ROTEIRO
+================================================================================

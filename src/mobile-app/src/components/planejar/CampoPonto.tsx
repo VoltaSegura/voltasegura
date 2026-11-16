@@ -38,7 +38,7 @@ export function CampoPonto({ rotulo, valor, preenchido = true, icone = 'map-mark
         <View style={[estilos.icone, { backgroundColor: cores.superficie2 }]}><Icone nome={icone} tamanho={20} corTema="acaoLink" /></View>
         <View style={estilos.textos}>
           <Texto variante="rotulo" cor="texto2">{rotulo}</Texto>
-          <Texto variante={preenchido ? 'corpoForte' : 'corpo'} cor={preenchido ? 'texto' : 'texto2'} numberOfLines={1}>{valor}</Texto>
+          <Texto variante={preenchido ? 'corpoForte' : 'corpo'} cor={preenchido ? 'texto' : 'texto2'} numberOfLines={1} ellipsizeMode="tail">{valor}</Texto>
         </View>
         {acao ? null : <Icone nome="chevron-right" tamanho={22} corTema="texto2" />}
       </Pressable>

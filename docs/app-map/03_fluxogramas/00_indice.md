@@ -21,6 +21,8 @@
 | TL-13 | Aviso de privacidade (minuta acadêmica) |
 | TL-14 | Compartilhar minha volta: confirmar e sessão ativa (Depende do tempo) |
 | TL-15 | Acompanhar viagem (quem recebe o link; Depende do tempo) |
+| TL-16 | Rotina da semana: lista (VoltaSegura+, recurso em validação; Depende do tempo, D-31) |
+| TL-17 | Criar ou editar rotina (Depende do tempo, D-31) |
 
 ## Mapa geral
 
@@ -41,6 +43,7 @@ flowchart TD
     FL14 --> FL15["FL-15 Compartilhar minha volta"]
     FL15 -. "link" .-> FL16["FL-16 Acompanhar (contato)"]
     FL12["FL-12 Excluir conta (adiado, D-25)"]
+    FL17["FL-17 Rotina da semana e lembrete (D-31)"] -. "toque no lembrete" .-> FL04
     FL13["FL-13 Erros globais e sem rede"]
 ```
 
@@ -64,6 +67,7 @@ flowchart TD
 | FL-14 | Passo a passo | US-09, D-04 | [FL-14](FL-14_passo_a_passo.md) |
 | FL-15 | Compartilhar minha volta (Depende do tempo) | US-21, D-19 a D-22 | [FL-15](FL-15_compartilhar.md) |
 | FL-16 | Acompanhar uma viagem (contato; Depende do tempo) | US-21 AC6–AC8, D-21 | [FL-16](FL-16_acompanhar.md) |
+| FL-17 | Rotina da semana e lembrete antes de sair (VoltaSegura+; Depende do tempo) | US-22, D-31 | [FL-17](FL-17_rotina_lembrete.md) |
 
 ## Cobertura dos AC do MVP
 

@@ -1,10 +1,13 @@
 import { expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import MapaResultado from './MapaResultado.native';
 import { conclusivo } from '@/services/fixtures';
 import { textos } from '@/textos';
 import { hipotesesEstadosResultado } from '@/textos/hipotesesResultado';
 
+let mockMovimentoReduzido = false;
+jest.mock('@/hooks/useReducedMotion', () => ({ useReducedMotion: () => mockMovimentoReduzido }));
 const mockFitToCoordinates = jest.fn();
 jest.mock('react-native-maps', () => {
   const React = jest.requireActual<typeof import('react')>('react');
@@ -87,4 +90,30 @@ it('marca origem e destino e enquadra a rota selecionada ao montar e ao trocar',
   const chamadas = mockFitToCoordinates.mock.calls.length;
   await tela.rerender(<MapaResultado rotas={rotas} rotaSelecionadaId={rotas[1].id} onSelecionar={onSelecionar} expandido={false} />);
   expect(mockFitToCoordinates.mock.calls.length).toBeGreaterThan(chamadas);
+});
+
+it('refaz enquadramento quando a folha muda e desliga animação ao reduzir movimento', async () => {
+  mockFitToCoordinates.mockClear();
+  const tela = await render(<MapaResultado rotas={rotas} rotaSelecionadaId={rotas[0].id} onSelecionar={() => {}} expandido={false} alturaFolha={200} />);
+  expect(mockFitToCoordinates).toHaveBeenLastCalledWith(pontosA, {
+    edgePadding: { top: 48, left: 48, right: 48, bottom: 224 }, animated: true,
+  });
+  mockMovimentoReduzido = true;
+  await tela.rerender(<MapaResultado rotas={rotas} rotaSelecionadaId={rotas[0].id} onSelecionar={() => {}} expandido alturaFolha={400} />);
+  expect(mockFitToCoordinates).toHaveBeenLastCalledWith(pontosA, {
+    edgePadding: { top: 48, left: 48, right: 48, bottom: 424 }, animated: false,
+  });
+  mockMovimentoReduzido = false;
+});
+
+it('soma a margem segura do topo ao enquadramento da câmera', async () => {
+  mockFitToCoordinates.mockClear();
+  await render(
+    <SafeAreaInsetsContext.Provider value={{ top: 30, bottom: 0, left: 0, right: 0 }}>
+      <MapaResultado rotas={rotas} rotaSelecionadaId={rotas[0].id} onSelecionar={() => {}} expandido={false} alturaFolha={200} />
+    </SafeAreaInsetsContext.Provider>,
+  );
+  expect(mockFitToCoordinates).toHaveBeenLastCalledWith(pontosA, expect.objectContaining({
+    edgePadding: { top: 78, left: 48, right: 48, bottom: 224 },
+  }));
 });

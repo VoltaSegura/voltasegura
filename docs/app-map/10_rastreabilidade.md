@@ -50,6 +50,7 @@
 | US-08 AC4 | Uma rota, sem comparação | FL-06 | TL-07 | FN-08 | T-08.4 Fixture `uma_rota`: sem foco e com "não há comparação" | − | App |
 | US-08 AC5 | Até 3 rotas com foco, prioridade da menor exposição estimada, outra opção | FL-06 | TL-07 | FN-07, FN-08 · `RotuloFoco` | T-08.5a Fixture `conclusivo`: 3 cards; o de menor exposição estimada primeiro, selecionado, mapa no trajeto dele e rótulo em destaque; demais por tempo (D-23) · T-08.5d Fixture `sem_diferenca`: ordem por tempo · T-08.5b Fixture `outra_opcao`: rota com dois rótulos + "Outra opção" · T-08.5c Nenhum card diz "por segurança" | + / − | App |
 | US-09 AC1 | Passo a passo em ordem | FL-14 | TL-08 | FN-09 · `ListaTrechos` | T-09.1 Trechos na ordem de `ordem`, com embarque e desembarque | + | App |
+<!-- 15/11/2026: US-21 implementado como protótipo com mock (testes em src/__tests__/telas/compartilhamento, src/compartilhamento e src/services/compartilhamento.test.ts); T-21.5, T-21.6a e a parte API de T-21.1/T-21.7 seguem pendentes. -->
 | US-21 AC1 | Compartilhar gera link temporário | FL-15 | TL-08 → TL-14 | FN-15 | T-21.1 Confirmar o compartilhamento cria a sessão e abre a folha de compartilhar com o link | + | App + API |
 | US-21 AC2 | Explica o que o contato verá e quando termina | FL-15 | TL-14 | FN-15 | T-21.2 A confirmação lista trajeto, posição, chegada estimada e o horário de término | + | App |
 | US-21 AC3 | Indicador sempre visível com Parar | FL-15 | TL-14 + todas de `(app)` | FN-15 · `IndicadorCompartilhamento` | T-21.3 Com sessão ativa, o indicador aparece em todas as telas; "Parar" encerra e o link expira | + | App + API |
@@ -119,6 +120,16 @@
 | US-20 AC1 | Só agregados | Contrato FN-07 | T-20.1 A resposta não contém coordenadas nem campos de boletins | − | API |
 | US-20 AC2 | Recortes identificáveis ocultos | TL-11 "dados insuficientes" | T-20.2 Contagem `null` exibida como "dados insuficientes", nunca 0 | − | App + API |
 
+## E7 — VoltaSegura+ (Depende do tempo, D-31)
+
+| AC | Resumo | Fluxo | Tela | FN / componente | Teste previsto | Tipo | Onde |
+|---|---|---|---|---|---|---|---|
+| US-22 AC1 | Rotina (origem, destino, dias, horário) salva só no aparelho | FL-17 | TL-16, TL-17 | FN-17 | T-22.1 Salvar uma rotina e reabrir o app: ela continua lá; nada é enviado (`rotina.test.tsx`) | + | App |
+| US-22 AC2 | Notificação local antes da saída | FL-17 | TL-17 | FN-17 · `lembretes.ts` | T-22.2 Salvar rotina ativa programa um lembrete semanal por dia, N min antes, com texto neutro (`lembretes.test.ts`); o disparo real é verificado no aparelho | + | App (aparelho) |
+| US-22 AC3 | Editar, desativar e apagar; nunca ao servidor nem à conta | FL-17 | TL-16, TL-17 | FN-17 | T-22.3 Editar muda os lembretes; desativar e apagar os cancelam; nenhuma chamada de rede (`rotina.test.tsx`) | + / − | App |
+| US-22 AC4 | Permissão negada: aviso e rotina mantida | FL-17 | TL-16, TL-17 | FN-17 | T-22.4 Negar a permissão: a rotina fica salva, o lembrete não é programado e o aviso aparece | − | App |
+| US-22 AC5 | Sem promessa de segurança nem "rota segura"; recurso em validação, sem preço | FL-17 | TL-16, TL-17 | `08_microcopy.md` | T-22.5 Varredura dos textos `rotina.*`: 0 termos proibidos (`linguagem.test.ts`) | − | App |
+
 ## Requisitos não funcionais
 
 | RNF | Verificação no app | Teste previsto | Onde |
@@ -140,5 +151,7 @@
 | AC de US-01 a US-16 e US-21 (com tela) | 74 | 74 | 72 (US-10 AC2 e AC3 são só backend) | 74 |
 | AC de US-17 a US-20 (backend e proteção) | 12 | — | reflexo indicado | 12 |
 | RNF | 9 | — | — | 9 |
+
+> Nota (D-31): os 5 AC de US-22 (F7.1, `docs/10` v1.10) têm fluxo, tela e teste na seção E7 acima e **não** entram nos totais desta tabela, que seguem os do v1.6.
 
 > Nota (D-25): os 3 AC de US-03 e os testes T-03.x estão adiados e continuam contados acima, pois o backlog os preserva. Os totais não foram alterados.

@@ -68,3 +68,12 @@ O que o vídeo acrescenta ao Plano B: (a) o horário exibido precisa vir do serv
 
 ## 6. Documentação atualizada nesta rodada
 Fluxos e telas alterados desde a D-29 foram reescritos: TL-04, TL-05, FL-04, FL-05, FL-08, FL-11 (nota), FN-04, FN-06, FN-13, microcopy, dados por tela, story map, navegação, índices. Regra permanente criada em `src/mobile-app/AGENTS.md` ("Mudou o fluxo, mudou a documentação").
+
+## 7. Andamento da Onda 3 (15/11/2026)
+**Feito (3A + 3B, por 3 workers Codex via Alethe, revisado e integrado pelo lead; `tsc` e ESLint limpos, 434 testes em 35 suítes):**
+- B1 teclado: o painel do mapa sobe com o teclado (`useAlturaTeclado`), o formulário de salvar fica visível; B3 botão em pílula "Minha localização"; B4 rótulo mantido se o ponto ficou a menos de 60 m (`distancia.ts`) e painel sem truncar (U5, com confirmação "Salvo como ...").
+- U1 abrir perto: ponto do outro campo ou última posição conhecida (só se a permissão já existe; nunca pede ao abrir); U4 aviso da busca em uma linha.
+- B2 hora no fuso do aparelho (`formatarHora`); U6 cabeçalho curto ("3 opções" + saída + chip de exposição só com o foco), dica só na primeira vez, "Planejar a volta" no fim da lista; U7 câmera com margem da folha (`useAjusteCamera`, mudança isolada em `MapaResultado.native.tsx`); U8 folha em três alturas (toque e arraste); U9 modal só com "Fechar".
+- U10 detalhe do tipo só quando o nome difere; renomear lugar; desfazer ao apagar; U12 tela Buscando sempre visível.
+**Ainda a conferir no celular (não validável aqui):** teclado no Android, arraste da folha, câmera do mapa, fonte a 200%, consulta lenta na tela Buscando.
+**Não feito:** 3C (Plano B, outro terminal), 3D (decisão D-30 sobre geocodificação reversa), 3E (imagens reais, revisão de textos, prints e vídeo). **Aviso para o merge:** o Plano B também mexe em `MapaResultado*`; a mudança desta onda ali é pequena (16 linhas) e isolada em `useAjusteCamera.ts`.

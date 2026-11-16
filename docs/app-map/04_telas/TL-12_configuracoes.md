@@ -1,5 +1,11 @@
 # TL-12 · Configurações
 
+> **Revisão D-31 (15/11/2026):** `[DECISÃO]` novo grupo "VoltaSegura+ · recurso em validação" com a linha "Rotina da semana" (detalhe "Lembrete antes de sair, só neste aparelho"), que abre a TL-16, entre Lugares salvos e Privacidade. A TL-12 não lê as rotinas; só leva à TL-16.
+
+> **Revisão D-30 (15/11/2026):** `[DECISÃO]` o detalhe do lugar salvo mostra seu endereço quando houver (até duas linhas); sem endereço, mantém o tipo somente se o nome diferir do rótulo do tipo. Na edição do nome, o endereço aparece como apoio não editável. `[HIPÓTESE]` Para lugares antigos sem endereço, o apoio diz "Endereço não salvo".
+
+> **Revisão Onda 3 (15/11/2026):** a linha de cada lugar salvo mostra o tipo como detalhe **só quando o nome é diferente** do rótulo do tipo (fim do "Casa / Casa"). **Renomear:** tocar na linha abre edição inline (campo com o nome atual, até 30 letras, Salvar e Cancelar, foco automático; erro "Dê um nome para o lugar." se vazio; anúncio "Nome atualizado."); o teclado não cobre o campo. **Apagar** continua imediato, com **Desfazer** por 5 s (restaura o lugar na mesma posição). Textos em `src/textos/hipotesesConfig.ts` `[HIPÓTESE]`. Histórico de trajetos segue `[EM ABERTO]`.
+
 > **Revisão D-29 (14/11/2026):** configurações em grupos (Conta, Lugares salvos, Privacidade) com ícone redondo por linha. **Lugares salvos** listados com apagar (só no aparelho). Histórico de trajetos segue `[EM ABERTO]`.
 
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/configuracoes`

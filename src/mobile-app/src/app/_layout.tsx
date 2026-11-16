@@ -1,8 +1,10 @@
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { View } from 'react-native';
 
+import { CompartilhamentoProvider, linkPendente, useCompartilhamento } from '@/compartilhamento';
+import { IndicadorCompartilhamento } from '@/components/compartilhamento/IndicadorCompartilhamento';
 import { definirProvedorToken } from '@/services';
 import { SessaoProvider, useSessao } from '@/sessao/SessaoContext';
 import { coresEscuro, fonte } from '@/theme/tokens';
@@ -19,8 +21,13 @@ export default function RootLayout() {
   if (!fontesProntas) return <View style={{ flex: 1, backgroundColor: coresEscuro.fundo }} />;
   return (
     <SessaoProvider>
-      <LigacaoServicos />
-      <Navegacao />
+      <CompartilhamentoProvider>
+        <LigacaoServicos />
+        <LigacaoLink />
+        <IndicadorCompartilhamento>
+          <Navegacao />
+        </IndicadorCompartilhamento>
+      </CompartilhamentoProvider>
     </SessaoProvider>
   );
 }
@@ -32,6 +39,36 @@ function LigacaoServicos() {
   useEffect(() => {
     definirProvedorToken(() => sessao?.token ?? null);
   }, [sessao]);
+
+  return null;
+}
+
+/**
+ * Link de acompanhar (D-21, PL-23): sem sessão, o token espera o login; com sessão, abre a TL-15.
+ * Ao sair da conta, uma sessão de compartilhamento ativa é encerrada (nada continua sem a conta).
+ */
+function LigacaoLink() {
+  const { logado } = useSessao();
+  const { fase, parar } = useCompartilhamento();
+  const token = useSyncExternalStore(linkPendente.assinar, linkPendente.obter, linkPendente.obter);
+
+  useEffect(() => {
+    linkPendente.definirLogado(logado);
+  }, [logado]);
+
+  useEffect(() => {
+    if (!logado && fase === 'ativa') void parar();
+  }, [logado, fase, parar]);
+
+  useEffect(() => {
+    if (!logado || !token) return;
+    // espera o navegador montar as rotas protegidas antes de empilhar a tela
+    const id = setTimeout(() => {
+      linkPendente.definir(null);
+      router.push({ pathname: '/acompanhar/[token]', params: { token } });
+    }, 0);
+    return () => clearTimeout(id);
+  }, [logado, token]);
 
   return null;
 }

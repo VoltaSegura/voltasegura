@@ -107,6 +107,8 @@ A atividade 7 é transversal: fica disponível em qualquer momento, pelas config
 | | Apagar um ou todos os trajetos salvos | US-04 AC3 | FL-11 | MVP |
 | 7.2 Excluir conta | Excluir a conta com confirmação; cancelar sem apagar | US-03 AC1–AC3 | FL-12 | MVP |
 | 7.3 Aviso de privacidade | Reler o aviso (minuta acadêmica) | US-01 AC6, RNF-09 | FL-02 | MVP |
+| 7.4 Rotina da semana (VoltaSegura+) | Cadastrar rotina (origem, destino, dias, horário) só no aparelho | US-22 AC1, AC3 | FL-17 | MVP (Depende do tempo, D-31) |
+| | Receber o lembrete antes de sair; permissão negada mantém a rotina | US-22 AC2, AC4–AC5 | FL-17 | MVP (Depende do tempo, D-31) |
 
 ## Fora das telas
 

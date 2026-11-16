@@ -6,6 +6,10 @@
 - **Entradas:** TL-08 (botão num trecho a pé). Parâmetros: `rotaId`, `trechoId`.
 - **Saídas:** TL-10 (sobre os dados), TL-11 (dados considerados), fechar (volta à TL-08).
 
+## Revisão de 15/11/2026 — U9
+
+[HIPÓTESE] Uma única saída no cabeçalho do modal: “Fechar” à direita volta à TL-08. A seta de voltar e o headerLeft ficam ocultos; voltar pelo sistema continua disponível. Alvo de toque mínimo de 48 pt e texto até 200%.
+
 ## Partes fixas da tela (todos os estados)
 
 1. O que é este trecho: "Trecho 1 · a pé · 250 m".
@@ -21,7 +25,7 @@
 
 ```
 ┌──────────────────────────────┐
-│ ✕  Por que esta rota?        │
+│ Por que esta rota?   Fechar │
 │ Trecho 1 · a pé · 600 m      │
 │ Rota: ◆ Menor exposição      │
 │ estimada            EXEMPLO  │
@@ -141,7 +145,7 @@ Caso, motivo, N, L, D e cobertura da rota; faixa do dia do trecho (`09_dados_por
 |---|---|---|
 | "Sobre os dados" | Abre o bloco | TL-10 |
 | "Dados considerados" | Abre os totais por categoria | TL-11 |
-| ✕ | Fecha | TL-08 |
+| “Fechar” à direita | Fecha o modal | TL-08 |
 
 ## Estados
 

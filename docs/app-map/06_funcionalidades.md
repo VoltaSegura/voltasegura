@@ -24,6 +24,7 @@
 | FN-14 | Erros globais e sem rede | TL-02, TL-03, TL-04, TL-06, TL-12 | FL-13, PL-12 | — |
 | FN-15 | Compartilhar minha volta (**Depende do tempo**) | TL-08, TL-14, indicador global | US-21 AC1–AC5, AC7, AC9; US-05 AC3; US-19 AC4 | Endpoint de compartilhamento (PL-18), GPS em segundo plano (PL-24) |
 | FN-16 | Acompanhar viagem (**Depende do tempo**) | TL-15 | US-21 AC6–AC8 | Endpoint de compartilhamento (PL-18), deep link |
+| FN-17 | Rotina da semana e lembrete local (VoltaSegura+; **Depende do tempo**) | TL-12, TL-16, TL-17, TL-04 | US-22 AC1–AC5 | FN-13 (lugares), `expo-notifications` |
 
 ## Regras comuns
 
@@ -196,7 +197,9 @@ Resposta `200`:
 
 ## FN-13 · Locais salvos (decidido, D-29) e histórico local (`[EM ABERTO]`)
 
-- **Locais salvos (implementado):** nome (até 30 letras) + tipo (Casa, Trabalho, Estudo, Outro) + coordenada; até 10; **só no aparelho**, no `expo-secure-store` (cifrado), chave única `voltasegura.locais`; nunca enviados nem registrados em log (US-04 AC4–AC5). Salvar na TL-05; usar na TL-04 (cartões) e na TL-05 (chips); apagar na TL-12. Renomear existe no contexto, sem tela (Onda 3A). Na web fica só em memória.
+> **D-30 (15/11/2026):** `[DECISÃO]` cada local salvo pode ter `endereco?: string`, legível, aparado e limitado a 140 caracteres. O endereço fica só no aparelho, junto com nome, tipo e coordenada. Registros antigos sem `endereco` continuam válidos; um campo `endereco` que não seja string é descartado sem perder o lugar. Renomear e desfazer a exclusão preservam o endereço; `atualizarEndereco` permite preenchê-lo ou corrigi-lo.
+
+- **Locais salvos (implementado):** nome (até 30 letras) + tipo (Casa, Trabalho, Estudo, Outro) + coordenada; até 10; **só no aparelho**, no `expo-secure-store` (cifrado), chave única `voltasegura.locais`; nunca enviados nem registrados em log (US-04 AC4–AC5). Salvar na TL-05; usar na TL-04 (cartões) e na TL-05 (chips); apagar na TL-12. **Renomear** na interface em Configurações (edição inline); apagar com **Desfazer** por 5 s (Onda 3). Na web fica só em memória.
 - **Histórico de trajetos (não implementado):** desligado por padrão (US-04 AC1), só no aparelho, apagar um ou todos (AC3). O SQLite saiu (D-24); onde guardar fica em aberto.
 - **Testes:** salvar persiste e relê; nome vazio e limite recusam; renomear e apagar; nenhuma coordenada vai ao console (`locais.test.tsx`).
 
@@ -206,6 +209,8 @@ Resposta `200`:
 - **Testes previstos:** sem rede, nada é enviado e o aviso aparece; tempo esgotado e erro do servidor têm "Tentar de novo"; sessão expirada leva ao login e retorna.
 
 ## FN-15 · Compartilhar minha volta (Depende do tempo, D-22)
+
+- **Status (15/11/2026): protótipo com mock.** `src/services/compartilhamento.ts` tem `compartilhamentoMock` (memória, sem servidor nem GPS) e `compartilhamentoApi` (contrato abaixo, não conciliado, PL-18 aberto). Estado da sessão em `src/compartilhamento/`. GPS em segundo plano não implementado (PL-24 aberto).
 
 - **Regras:**
   - explicar antes o que será compartilhado e até quando (US-21 AC2);
@@ -236,7 +241,23 @@ Resposta `200`:
 
 ## FN-16 · Acompanhar viagem (Depende do tempo, D-22)
 
+- **Status (15/11/2026): protótipo com mock** (mesmo serviço da FN-15; tokens de exemplo e deep link com guarda de sessão, PL-23 `[HIPÓTESE]`).
+
 - **Regras:** o link só abre no app (D-21); exige sessão (PL-23, `[HIPÓTESE]`); mostra trajeto, última posição com horário, chegada estimada e estado (US-21 AC6); não mostra dados da conta nem da comparação de quem compartilha (US-21 AC8); nada fica no aparelho depois do fim `[HIPÓTESE]`.
 - **Contrato esperado `[HIPÓTESE]`:** `GET /api/compartilhamentos/a/{token}` (com token da conta do contato) → `200 { "estado": "ATIVO" | "CHEGOU" | "ENCERRADO", "aoVivo": true, "trajeto": { "geometria", "trechos", "chegadaPrevista" }, "posicao": { "lat", "lon", "em" } | null }` · `404`/`410` (expirado ou inexistente, sem dados). Atualização por consulta periódica (ex.: a cada 30 s) `[HIPÓTESE]`.
 - **Testes previstos:** positivo (link ativo mostra a viagem e depois "Chegou"); negativos (link expirado mostra "terminou" sem dados; sem o app leva à página de instalação; sem sessão passa pelo login); a resposta não contém e-mail nem dados da comparação.
 
+## FN-17 · Rotina da semana e lembrete local (VoltaSegura+, Depende do tempo, D-31)
+
+- **Regras:**
+  - rotina = origem e destino (de lugares salvos), dias (1 = domingo ... 7 = sábado), horário de saída `HH:MM`, antecedência e ativa; até 5 rotinas `[HIPÓTESE]`;
+  - **só no aparelho** (`expo-secure-store`, chave `voltasegura.rotinas`); nunca enviada nem vinculada à conta (US-22 AC3, DT-08);
+  - `[DECISÃO]` **gatilho:** notificação local semanal, N minutos antes da saída em cada dia escolhido (N = 5, 10, 15 ou 30; padrão 15). Sem tempo real, sem servidor, sem token de push. Se o aviso passa da meia-noite para trás, cai no dia anterior;
+  - texto neutro: "Hora de sair: sua rotina de {dia} às {hora}. Compare os caminhos antes de sair." Sem "rota segura", sem preço e sem prometer mudança de resultado (US-22 AC5);
+  - a **permissão de notificações só é pedida ao ativar uma rotina** (não na abertura do app); negada: aviso e rotina mantida (US-22 AC4);
+  - a notificação leva só o id da rotina; ao tocar, o app lê a rotina do aparelho, preenche origem, destino e saída de hoje na consulta e abre a TL-04; sem rotina, só abre o app;
+  - editar, desativar ou apagar cancela os lembretes antigos; "apagar todas" cancela todos;
+  - na web (só desenvolvimento) não há notificações.
+- **Implementação:** `src/rotina/` (tipos, armazenamento, `RotinaContext`, `AberturaPorLembrete`), `src/services/lembretes.ts`, `src/textos/rotina.ts`.
+- **Testes:** `src/rotina/rotina.test.tsx` (salvar, editar, desativar, apagar, limite, validação, permissão negada, leitura corrompida), `src/services/lembretes.test.ts` (gatilhos, virada de dia, texto, agendar, cancelar, permissão) com as notificações mockadas.
+- **Depende do aparelho:** o disparo real (inclusive em Expo Go no Android) e o toque no lembrete só se verificam em aparelho.

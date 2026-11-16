@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 import type { Ponto } from '@/consulta';
 
-import { apagarTodosLocais, gravarLocais, lerLocais, normalizarNome } from './armazenamento';
+import { apagarTodosLocais, gravarLocais, lerLocais, normalizarEndereco, normalizarNome } from './armazenamento';
 import { MAX_LOCAIS, type LocalSalvo, type TipoLocal } from './tipos';
 
 export type ResultadoSalvar = 'ok' | 'nome_vazio' | 'limite' | 'erro';
@@ -10,9 +10,11 @@ export type ResultadoSalvar = 'ok' | 'nome_vazio' | 'limite' | 'erro';
 type Valor = {
   locais: LocalSalvo[];
   carregado: boolean;
-  salvar: (nome: string, ponto: Ponto, tipo: TipoLocal) => Promise<ResultadoSalvar>;
+  salvar: (nome: string, ponto: Ponto, tipo: TipoLocal, endereco?: string) => Promise<ResultadoSalvar>;
   renomear: (id: string, nome: string) => Promise<void>;
+  atualizarEndereco: (id: string, endereco: string) => Promise<void>;
   apagar: (id: string) => Promise<void>;
+  restaurar: (local: LocalSalvo, posicao: number) => Promise<ResultadoSalvar>;
   apagarTodos: () => Promise<void>;
 };
 
@@ -34,16 +36,17 @@ export function LocaisProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const persistir = useCallback(async (proximos: LocalSalvo[]) => {
-    setLocais(proximos);
     await gravarLocais(proximos);
+    setLocais(proximos);
   }, []);
 
-  const salvar = useCallback(async (nome: string, ponto: Ponto, tipo: TipoLocal): Promise<ResultadoSalvar> => {
+  const salvar = useCallback(async (nome: string, ponto: Ponto, tipo: TipoLocal, endereco?: string): Promise<ResultadoSalvar> => {
     const limpo = normalizarNome(nome);
     if (!limpo) return 'nome_vazio';
     if (locais.length >= MAX_LOCAIS) return 'limite';
+    const enderecoLimpo = endereco ? normalizarEndereco(endereco) : undefined;
     try {
-      await persistir([...locais, { id: novoId(), nome: limpo, ponto, tipo }]);
+      await persistir([...locais, { id: novoId(), nome: limpo, ponto, tipo, ...(enderecoLimpo ? { endereco: enderecoLimpo } : {}) }]);
       return 'ok';
     } catch {
       return 'erro';
@@ -56,10 +59,32 @@ export function LocaisProvider({ children }: { children: React.ReactNode }) {
     await persistir(locais.map((l) => (l.id === id ? { ...l, nome: limpo } : l)));
   }, [locais, persistir]);
 
+  const atualizarEndereco = useCallback(async (id: string, endereco: string) => {
+    const limpo = normalizarEndereco(endereco);
+    await persistir(locais.map((l) => {
+      if (l.id !== id) return l;
+      const { endereco: _anterior, ...semEndereco } = l;
+      return limpo ? { ...semEndereco, endereco: limpo } : semEndereco;
+    }));
+  }, [locais, persistir]);
+
   const apagar = useCallback(async (id: string) => { await persistir(locais.filter((l) => l.id !== id)); }, [locais, persistir]);
+  const restaurar = useCallback(async (local: LocalSalvo, posicao: number): Promise<ResultadoSalvar> => {
+    if (locais.some((l) => l.id === local.id)) return 'ok';
+    if (locais.length >= MAX_LOCAIS) return 'limite';
+    const proximos = [...locais];
+    proximos.splice(Math.max(0, Math.min(posicao, proximos.length)), 0, local);
+    try {
+      await persistir(proximos);
+      return 'ok';
+    } catch {
+      return 'erro';
+    }
+  }, [locais, persistir]);
+
   const apagarTodos = useCallback(async () => { setLocais([]); await apagarTodosLocais(); }, []);
 
-  const valor = useMemo(() => ({ locais, carregado, salvar, renomear, apagar, apagarTodos }), [locais, carregado, salvar, renomear, apagar, apagarTodos]);
+  const valor = useMemo(() => ({ locais, carregado, salvar, renomear, atualizarEndereco, apagar, restaurar, apagarTodos }), [locais, carregado, salvar, renomear, atualizarEndereco, apagar, restaurar, apagarTodos]);
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }
 

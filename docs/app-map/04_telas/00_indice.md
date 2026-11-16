@@ -21,8 +21,10 @@
 | TL-11 | Dados considerados | `/(app)/dados-considerados` | FL-10 | US-15 AC1–AC4, D-14 | pronta |
 | TL-12 | Configurações | `/(app)/configuracoes` | FL-11, FL-12 (adiado, D-25) | US-03 (adiado, D-25), US-04 | pronta (exclusão de conta: adiado, D-25) |
 | TL-13 | Aviso de privacidade | `/aviso-privacidade` | FL-02 | US-01 AC6, RNF-09 | pronta |
-| TL-14 | Compartilhar minha volta (**Depende do tempo**) | `/(app)/compartilhar/[rotaId]` (modal) + indicador global | FL-15 | US-21 AC1–AC5, AC7, AC9 | rascunho (nova, D-19) |
-| TL-15 | Acompanhar viagem (**Depende do tempo**) | `/(app)/acompanhar/[token]` | FL-16 | US-21 AC6–AC8 | rascunho (nova, D-19) |
+| TL-14 | Compartilhar minha volta (**Depende do tempo**) | `/(app)/compartilhar/[rotaId]` (modal) + indicador global | FL-15 | US-21 AC1–AC5, AC7, AC9 | rascunho; protótipo com mock implementado (15/11) |
+| TL-15 | Acompanhar viagem (**Depende do tempo**) | `/(app)/acompanhar/[token]` | FL-16 | US-21 AC6–AC8 | rascunho; protótipo com mock implementado (15/11) |
+| TL-16 | Rotina da semana: lista (**Depende do tempo**) | `/(app)/rotina` | FL-17 | US-22 AC1, AC3–AC5 | rascunho (nova, D-31) |
+| TL-17 | Criar ou editar rotina (**Depende do tempo**) | `/(app)/rotina/editar` | FL-17 | US-22 AC1–AC5 | rascunho (nova, D-31) |
 
 ## Variantes do resultado e onde ficam
 

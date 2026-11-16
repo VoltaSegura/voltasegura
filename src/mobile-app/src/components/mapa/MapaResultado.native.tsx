@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef } from 'react';
+import { Fragment, useMemo, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
@@ -10,29 +10,27 @@ import { esp } from '@/theme/tokens';
 import { Texto } from '@/components/Texto';
 import { medidas } from '@/components/resultado/medidas';
 import { decodificarPolyline } from './polyline';
+import { useAjusteCamera } from './useAjusteCamera';
 
 export type PropsMapaResultado = {
   rotas: Rota[];
   rotaSelecionadaId: string;
   onSelecionar: (id: string) => void;
   expandido: boolean;
+  alturaFolha?: number;
 };
 
-export default function MapaResultado({ rotas, rotaSelecionadaId, onSelecionar, expandido }: PropsMapaResultado) {
+export default function MapaResultado({ rotas, rotaSelecionadaId, onSelecionar, expandido, alturaFolha }: PropsMapaResultado) {
   const { cores } = useTema();
   const mapa = useRef<MapView>(null);
   const linhas = useMemo(() => rotas.map(rota => ({ id: rota.id, pontos: decodificarPolyline(rota.geometria) })), [rotas]);
   const selecionada = linhas.find(linha => linha.id === rotaSelecionadaId);
   const inicio = selecionada?.pontos[0];
 
-  useEffect(() => {
-    if (selecionada?.pontos.length) mapa.current?.fitToCoordinates(selecionada.pontos, {
-      edgePadding: { top: 24, right: 24, bottom: 24, left: 24 }, animated: false,
-    });
-  }, [selecionada, expandido]);
+  const ajustarCamera = useAjusteCamera(mapa, selecionada?.pontos, alturaFolha ?? 0, expandido);
 
-  return <View testID="moldura-mapa-resultado" accessibilityLabel={hipotesesEstadosResultado.rotaNoMapa(rotas.findIndex(rota => rota.id === rotaSelecionadaId) + 1)} style={[estilos.moldura, { height: expandido ? medidas.mapaAlturaExpandido : medidas.mapaAltura, borderColor: cores.borda }]}>
-    <MapView ref={mapa} testID="mapa-resultado" style={StyleSheet.absoluteFill}
+  return <View testID="moldura-mapa-resultado" accessibilityLabel={hipotesesEstadosResultado.rotaNoMapa(rotas.findIndex(rota => rota.id === rotaSelecionadaId) + 1)} style={[estilos.moldura, { height: alturaFolha !== undefined ? '100%' : expandido ? medidas.mapaAlturaExpandido : medidas.mapaAltura, borderColor: cores.borda }]}>
+    <MapView ref={mapa} testID="mapa-resultado" style={StyleSheet.absoluteFill} onMapReady={ajustarCamera} onLayout={ajustarCamera}
       initialRegion={inicio ? { ...inicio, latitudeDelta: 0.04, longitudeDelta: 0.04 } : undefined}
       showsUserLocation={false} showsMyLocationButton={false}>
       {linhas.filter(linha => linha.id !== rotaSelecionadaId).map(linha => linha.pontos.length > 0 &&

@@ -1,4 +1,7 @@
-import type { ReactNode } from 'react';
+import { useContext, useEffect, useState, type ReactNode } from 'react';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
+import { useFolhaResultado } from './useFolhaResultado';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Botao, SeloExemplo, Texto } from '@/components';
@@ -174,31 +177,61 @@ export function ListaTrechos({ trechos, rotulos, rotuloLinha, botaoPorQue }: {
   return <View>{trechos.map(t => <ItemTrecho key={t.id} trecho={t} total={trechos.length} rotulos={rotulos} rotuloLinha={rotuloLinha} botaoPorQue={botaoPorQue?.(t)} />)}</View>;
 }
 
-export function PainelResultado({ resposta, rotaSelecionadaId, rotulos, tituloLista, rotuloExpandir, expandido = false, onExpandir, onSelecionar, onAbrirDetalhes, linhaDados, children }: {
+// Memória da sessão do app: sem persistência e sem dados pessoais.
+let dicaSelecaoApresentada = false;
+
+export function PainelResultado({ resposta, rotaSelecionadaId, rotulos, tituloLista, rotuloExpandir, onExpandir, onSelecionar, onAbrirDetalhes, linhaDados, children, saida, alturaFolha, nivel = 0, onRecolher, rodapeLista }: {
   resposta: RespostaConsulta; rotaSelecionadaId: string; rotulos: RotulosResultado;
   tituloLista: string; rotuloExpandir: string; expandido?: boolean; onExpandir: () => void; onSelecionar: (rota: Rota) => void; onAbrirDetalhes: (rota: Rota) => void;
   linhaDados: { texto: string; rotuloAcessivel: string; onPress: () => void; indisponivel?: boolean };
   children?: ReactNode;
+  saida?: string; alturaFolha?: number; nivel?: number; onRecolher?: () => void; rodapeLista?: ReactNode;
 }) {
   const { cores } = useTema();
-  return <View testID="painel-resultado" style={[estilos.painel, { backgroundColor: cores.superficie, borderTopColor: cores.luz }]}>
-    <View accessible={false} importantForAccessibility="no-hide-descendants" style={[estilos.alca, { backgroundColor: cores.luz }]} />
+  const baseSegura = useContext(SafeAreaInsetsContext)?.bottom ?? 0;
+  const [mostrarDica] = useState(() => resposta.rotas.length >= 2 && !dicaSelecaoApresentada);
+  useEffect(() => { if (mostrarDica) dicaSelecaoApresentada = true; }, [mostrarDica]);
+  const { estiloAnimado, panHandlers } = useFolhaResultado(alturaFolha, nivel, onExpandir, onRecolher);
+  const rotaSelecionada = resposta.rotas.find(rota => rota.id === rotaSelecionadaId);
+  const resumo = rotaSelecionada && hipotesesResultado.resumoRecolhido(
+    rotulos.duracao(rotaSelecionada.duracaoMin),
+    rotulos.trocas(rotaSelecionada.trocas).toLocaleLowerCase('pt-BR'),
+    rotulos.caminhada(rotaSelecionada.caminhadaKm),
+    rotaSelecionada.focos.map(foco => rotulos.focos[foco].replace(/^◆\s*/, '')),
+  );
+  return <Animated.View testID="painel-resultado" style={[estilos.painel, alturaFolha !== undefined && { position: 'absolute', left: 0, right: 0, bottom: 0, height: alturaFolha, flexGrow: 0, flexBasis: 'auto' }, { backgroundColor: cores.superficie, borderTopColor: cores.luz, paddingBottom: baseSegura }, estiloAnimado]}>
+    <View {...panHandlers}>
+      <Pressable testID="alca-resultado" accessibilityRole="button" accessibilityLabel={rotuloExpandir}
+        accessibilityHint={hipotesesResultado.alternarAltura} accessibilityValue={{ text: hipotesesResultado.alturas[nivel] }}
+        onPress={onExpandir} style={estilos.toqueAlca}>
+        <View accessible={false} style={[estilos.alca, { backgroundColor: cores.luz }]} />
+      </Pressable>
+    </View>
     <View style={estilos.cabecalho}><Texto accessibilityRole="header" variante="secao" style={estilos.flex}>{tituloLista}</Texto>
-      <Botao variante="texto" rotulo={rotuloExpandir} accessibilityHint={expandido ? hipotesesResultado.dicaRecolher : hipotesesResultado.dicaExpandir} onPress={onExpandir} /></View>
+      {saida && <Texto variante="apoio" style={estilos.hora}>{saida}</Texto>}</View>
+    {resposta.rotas[0]?.focos.includes('MENOR_EXPOSICAO') && <View style={[estilos.chipOrdem, { borderColor: cores.borda }]}>
+      <Texto variante="rotulo">{hipotesesResultado.exposicaoPrimeiro}</Texto>
+    </View>}
+    {nivel === 0 && resumo && <Texto testID="resumo-recolhido" accessibilityLabel={resumo} variante="apoio" numberOfLines={2} ellipsizeMode="tail" style={estilos.resumoRecolhido}>{resumo}</Texto>}
     <ScrollView testID="lista-resultado" style={estilos.lista} contentContainerStyle={estilos.conteudoLista}>
       {children}
-      {resposta.rotas.length >= 2 && <Texto variante="apoio" style={estilos.dica}>{hipotesesResultado.dicaSelecao}</Texto>}
       {resposta.rotas.map((rota, i) => <Entrada key={rota.id} indice={i}><CardRota rota={rota} indice={i + 1} total={resposta.rotas.length} selecionada={rota.id === rotaSelecionadaId} exemplo={resposta.exemplo} rotulos={rotulos} onPress={() => onSelecionar(rota)} onAbrirDetalhes={() => onAbrirDetalhes(rota)} /></Entrada>)}
+      {mostrarDica && <Texto variante="apoio" style={estilos.dica}>{hipotesesResultado.dicaSelecao}</Texto>}
+      {rodapeLista}
     </ScrollView>
     <LinhaSobreOsDados {...linhaDados} />
-  </View>;
+  </Animated.View>;
 }
 
 const estilos = StyleSheet.create({
   flex: { flex: 1 },
   painel: { flexGrow: 1, flexShrink: 1, flexBasis: 0, minHeight: 0, borderTopWidth: medidas.borda, borderTopLeftRadius: raio.painel, borderTopRightRadius: raio.painel, overflow: 'hidden' },
-  alca: { width: 36, height: 4, borderRadius: 2, alignSelf: 'center', marginTop: esp[2], opacity: 0.55 },
-  cabecalho: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: esp[4], gap: esp[2] },
+  toqueAlca: { minHeight: toque.minimo, justifyContent: 'center', alignItems: 'center' },
+  alca: { width: 36, height: 4, borderRadius: 2, opacity: 0.55 },
+  hora: { flexShrink: 1 },
+  chipOrdem: { alignSelf: 'flex-start', marginHorizontal: esp[4], marginBottom: esp[2], padding: esp[1], borderWidth: 1, borderRadius: raio.pequeno },
+  resumoRecolhido: { marginHorizontal: esp[4], marginBottom: esp[2], flexShrink: 1 },
+  cabecalho: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: esp[4], paddingBottom: esp[2], gap: esp[2], flexWrap: 'wrap' },
   lista: { flex: 1, minHeight: 0 },
   conteudoLista: { flexGrow: 1 },
   card: { padding: esp[4], gap: esp[3], minHeight: toque.minimo },

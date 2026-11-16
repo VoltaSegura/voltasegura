@@ -373,3 +373,83 @@ Feita em 13/11/2026 por script local sobre **894 linhas** (refeita após o acré
 | `mapa.tipo_*` | Casa / Trabalho / Estudo / Outro |
 | `mapa.lugares_secao` / `no_aparelho` | Lugares salvos / Guardados só neste aparelho, nunca enviados. |
 | `aviso.busca` / `aviso.locais` | Textos novos do Aviso de privacidade sobre a busca e os lugares salvos |
+
+## Onda 3 (15/11/2026, `[HIPÓTESE]`)
+
+| Fonte | Chave | Texto |
+|---|---|---|
+| `hipotesesMapa` | `buscarAvisoCurto` | Busca usa o serviço de mapas do celular |
+| `hipotesesMapa` | `minhaLocalizacaoPilula` | Minha localização |
+| `hipotesesMapa` | `salvoComo(nome)` | Salvo como {nome} |
+| `hipotesesResultado` | `opcoes(n)` | 1 opção / N opções |
+| `hipotesesResultado` | `exposicaoPrimeiro` | Menor exposição estimada primeiro |
+| `hipotesesResultado` | `saida(hora)` | Saída às HH:mm (no fuso do aparelho) |
+| `hipotesesResultado` | `alturas` | Lista recolhida / Lista em meia altura / Lista em altura cheia |
+| `hipotesesResultado` | `alternarAltura` | Toque para mudar a altura da lista |
+| `hipotesesConfig` | `renomear(nome)` | Renomear {nome} |
+| `hipotesesConfig` | `nomeLugar` / `salvar` / `cancelar` | Nome do lugar / Salvar / Cancelar |
+| `hipotesesConfig` | `nomeVazio` / `nomeAtualizado` | Dê um nome para o lugar. / Nome atualizado. |
+| `hipotesesConfig` | `lugarApagado` / `desfazer` / `lugarRestaurado` | Lugar apagado. / Desfazer / Lugar restaurado. |
+| `hipotesesConfig` | `erroAlterar` | Não foi possível atualizar os lugares agora. Tente de novo. |
+
+## Onda 4 (15/11/2026, D-30, `[HIPÓTESE]`)
+
+| Fonte | Chave | Texto |
+|---|---|---|
+| `hipotesesMapa` | `toqueMapa` | Toque no mapa para marcar o ponto. |
+| `hipotesesMapa` | `buscandoEndereco` | Buscando endereço… |
+| `hipotesesMapa` | `enderecoIndisponivel` | Endereço indisponível |
+| `hipotesesConfig` | `enderecoNaoSalvo` | Endereço não salvo |
+| `hipotesesResultado` | `resumoRecolhido` | 40 min · 1 troca · 1,0 km a pé · Menor exposição estimada (só na folha recolhida) |
+| `hipotesesAviso` | `busca` | …a posição marcada também é enviada a esse serviço para mostrar o endereço… (atualizado) |
+| `hipotesesAviso` | `locais` | Os lugares que você salva (nome, endereço e posição) ficam só neste celular… (atualizado) |
+
+## Compartilhar e acompanhar: textos de apoio do protótipo (`[HIPÓTESE]`, fonte: `src/textos/hipotesesCompartilhar.ts`)
+
+| Chave | Texto |
+|---|---|
+| `prototipo` | Protótipo: este compartilhamento usa dados de exemplo. Nenhuma localização real é lida ou enviada. |
+| `prototipoAcompanhar` | Protótipo: esta viagem é um exemplo. Nada aqui vem de uma viagem real. |
+| `quemEspera` | Quem espera por você pode acompanhar a viagem pelo app. Não é um serviço de emergência. |
+| `simularChegada` | Simular chegada (exemplo) |
+| `encerradoTempo` | Compartilhamento encerrado: o tempo máximo acabou. |
+| `semConexao` | Sem conexão. Mostrando a última informação recebida. |
+
+## Rotina da semana (VoltaSegura+, D-31, `[HIPÓTESE]`, fonte: `src/textos/rotina.ts`)
+
+| Chave | Texto |
+|---|---|
+| `rotina.titulo` | Rotina da semana |
+| `rotina.selo` | VoltaSegura+ · recurso em validação |
+| `rotina.intro` | Cadastre um trajeto fixo, com dias e horário de saída. O app avisa antes da hora de sair, para você comparar os caminhos sem repetir a busca. |
+| `rotina.semPreco` | Sem cobrança durante a validação. |
+| `rotina.privacidade` | A rotina fica só neste aparelho. Não é enviada ao servidor nem vinculada à sua conta. |
+| `rotina.lembreteSoHorario` | O lembrete avisa só o horário. Ele não usa trânsito nem dados em tempo real. |
+| `rotina.entradaConfig` / `entradaConfigDetalhe` | Rotina da semana / Lembrete antes de sair, só neste aparelho |
+| `rotina.vazio` | Você ainda não tem uma rotina. Crie uma para receber o lembrete antes de sair. |
+| `rotina.nova` / `editar` | Nova rotina / Editar rotina |
+| `rotina.limite(max)` | Você já tem {max} rotinas. Apague uma para criar outra. |
+| `rotina.secaoRotinas` | Suas rotinas |
+| `rotina.trajeto(origem, destino)` / `detalhe(dias, hora)` | {origem} para {destino} / {dias}, saída às {hora} |
+| `rotina.alternar(trajeto)` | Lembrete de {trajeto} |
+| `rotina.origem` / `destino` / `escolherLugar` / `selecionado(nome)` | Origem / Destino / Escolha entre seus lugares salvos / {nome}, selecionado |
+| `rotina.poucosLugares` | Para criar uma rotina, salve pelo menos dois lugares (por exemplo, casa e trabalho) na tela inicial. |
+| `rotina.irParaInicio` | Ir para a tela inicial |
+| `rotina.dias` / `hora` / `horaAjuda` | Dias da semana / Horário de saída / Use o formato 18:30. |
+| `rotina.antecedencia` / `antecedenciaOpcao(min)` | Avisar antes da saída / {min} min |
+| `rotina.ativarLembrete` | Lembrete ativo |
+| `rotina.salvar` / `cancelar` / `apagar` | Salvar rotina / Cancelar / Apagar rotina |
+| `rotina.confirmarApagar` / `confirmarApagarSim` | Apagar esta rotina? Isso não pode ser desfeito. / Sim, apagar |
+| `rotina.erroOrigem` / `erroDestino` | Escolha a origem. / Escolha o destino. |
+| `rotina.erroMesmoLugar` | Origem e destino precisam ser lugares diferentes. |
+| `rotina.erroDias` / `erroHora` | Escolha pelo menos um dia. / Informe a hora no formato 18:30. |
+| `rotina.erroSalvar` | Não foi possível salvar a rotina agora. Tente de novo. |
+| `rotina.erroAvisoAgendar` | A rotina foi salva, mas não foi possível programar o lembrete agora. Tente salvar de novo. |
+| `rotina.semPermissao` | As notificações estão desativadas neste aparelho, então o lembrete não será enviado. A rotina continua salva e você pode ativar as notificações nas configurações do aparelho. |
+| `rotina.salva` / `apagada` | Rotina salva. / Rotina apagada. |
+| `rotina.lembreteAtivado` / `lembreteDesativado` | Lembrete ativado. / Lembrete desativado. |
+| `rotina.notificacaoTitulo` | Hora de se organizar |
+| `rotina.corpo(dia, hora)` | Hora de sair: sua rotina de {dia} às {hora}. Compare os caminhos antes de sair. |
+| `rotina.canal` | Lembretes da rotina (nome do canal de notificação no Android) |
+| `rotina.diasCompletos` / `diasCurtos` | domingo ... sábado / Dom ... Sáb |
+| `rotina.todosOsDias` / `diasUteis` / `fimDeSemana` | Todos os dias / Dias úteis / Fim de semana |

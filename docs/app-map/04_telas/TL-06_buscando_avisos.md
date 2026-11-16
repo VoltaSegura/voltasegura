@@ -1,5 +1,7 @@
 # TL-06 · Buscando e avisos
 
+> **Revisão Onda 3 (15/11/2026):** durante a espera a tela mostra **sempre** a imagem `heroBuscando` (placeholder), o fio pulsante, o texto de carregamento e o botão Cancelar, centralizados (antes o carregamento colapsava dentro da rolagem e a tela podia aparecer vazia, achado U12 do vídeo). Sem transporte e falha usam `vazioBusca`.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/buscando` (substituída pela TL-07 no sucesso; não fica no histórico de voltar)
 - **Objetivo:** mostrar que a consulta está em andamento e tratar os retornos sem resultado: sem transporte público no horário, sem rede, tempo esgotado, erro do servidor.
 - **US/AC e funcionalidades cobertas:** US-08 AC2 · FN-07, FN-14 · **RNF aplicáveis:** RNF-06, RNF-07

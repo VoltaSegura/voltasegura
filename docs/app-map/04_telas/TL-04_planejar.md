@@ -1,5 +1,7 @@
 # TL-04 · Planejar
 
+> **Revisão D-30 (15/11/2026):** `[DECISÃO]` os cartões de lugares salvos mostram nome e, quando disponível, endereço legível em uma linha com reticências. Ao tocar, o nome continua sendo o rótulo de De onde/Para onde. Os campos mostram rótulos longos em uma linha com reticências. O cartão Adicionar lugar acompanha a altura dos cartões de lugar.
+
 - **Status:** pronta, **revista pela D-29 em 14 e 15/11/2026** (sem Ida/Volta, mapa direto, lugares salvos, atalhos) · **Rota Expo Router:** `/(app)/planejar` (tela inicial com sessão)
 - **Objetivo:** informar origem, destino e horário de saída e pedir as alternativas. Momento: **Planejar** e **Revisar a jornada** (`docs/03` §4).
 - **US/AC e funcionalidades cobertas:** US-05 AC1–AC3, US-06 AC1–AC5, US-07 AC1–AC2, US-04 AC5, US-02 AC3 · FN-04, FN-05, FN-06, FN-13 · **RNF aplicáveis:** RNF-01, RNF-07, RNF-08

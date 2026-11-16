@@ -1,11 +1,25 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { CampoPonto, SeletorHorario } from '@/components/planejar';
+import { CampoPonto, CartaoLocal, SeletorHorario } from '@/components/planejar';
 import { textos } from '@/textos';
 import { hipotesesPlanejar } from '@/textos/hipotesesPlanejar';
 
 describe('componentes de planejamento', () => {
+  it('mostra endereço no cartão e mantém nome como rótulo', async () => {
+    const local = { id: 'c6', nome: 'C6 Bank', tipo: 'outro' as const, ponto: { lat: -23.5, lon: -46.6 }, endereco: 'Rua Um, 10' };
+    await render(<CartaoLocal local={local} onPress={jest.fn()} />);
+    expect(screen.getByText('Rua Um, 10').props.numberOfLines).toBe(1);
+    expect(screen.getByRole('button', { name: 'C6 Bank' }).props.accessibilityHint).toBe('Rua Um, 10');
+    await render(<CartaoLocal local={{ ...local, endereco: undefined }} onPress={jest.fn()} />);
+    expect(screen.queryByText('Rua Um, 10')).toBeNull();
+  });
+
+  it('trunca rótulo longo do campo em uma linha', async () => {
+    await render(<CampoPonto rotulo="De onde" valor={'Rua Longa '.repeat(20)} onPress={jest.fn()} />);
+    expect(screen.getByText('Rua Longa '.repeat(20)).props.numberOfLines).toBe(1);
+    expect(screen.getByText('Rua Longa '.repeat(20)).props.ellipsizeMode).toBe('tail');
+  });
   it('anuncia o campo escolhido e seu erro', async () => {
     const onPress = jest.fn();
     await render(<CampoPonto rotulo={textos.planejar.deOnde} valor={textos.planejar.escolherOrigem} preenchido={false} erro={textos.planejar.erroOrigem} onPress={onPress} />);

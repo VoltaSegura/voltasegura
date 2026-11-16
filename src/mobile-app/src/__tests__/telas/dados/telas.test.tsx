@@ -1,5 +1,6 @@
-import { afterEach, describe, expect, it, jest } from '@jest/globals';
+import { beforeEach, afterEach, describe, expect, it, jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { AccessibilityInfo, Keyboard, Platform, type KeyboardEvent } from 'react-native';
 
 import Configuracoes from '@/app/(app)/configuracoes';
 import DadosConsiderados from '@/app/(app)/dados-considerados';
@@ -10,6 +11,9 @@ import { conclusivo } from '@/services/fixtures';
 import { useSessao } from '@/sessao/SessaoContext';
 import { textos } from '@/textos';
 import { hipotesesDetalhes as h } from '@/textos/hipotesesDetalhes';
+
+import { locaisMock } from '@/test-utils/locais';
+import { hipotesesConfig as c } from '@/textos/hipotesesConfig';
 
 let mockHref = '';
 jest.mock('expo-router', () => {
@@ -52,7 +56,129 @@ afterEach(() => {
 });
 
 describe('TL-12 Configurações', () => {
-  it('omite exclusão, histórico e locais salvos', async () => {
+  it('mostra endereço no detalhe e na edição, e avisa quando não foi salvo', async () => {
+    locaisMock.locais = [
+      { id: 'casa', nome: 'Casa', tipo: 'casa', ponto: { lat: -23.5, lon: -46.6 }, endereco: 'Rua Um, 10, São Paulo' },
+      { id: 'estudo', nome: 'Faculdade', tipo: 'estudo', ponto: { lat: -23.6, lon: -46.7 } },
+    ];
+    sessao();
+    await render(<Configuracoes />);
+    expect(screen.getByText('Rua Um, 10, São Paulo')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
+    expect(screen.getAllByText('Rua Um, 10, São Paulo')).toHaveLength(2);
+    await fireEvent.press(screen.getByRole('button', { name: c.cancelar }));
+    await fireEvent.press(screen.getByRole('button', { name: c.renomear('Faculdade') }));
+    expect(screen.getByText(c.enderecoNaoSalvo)).toBeTruthy();
+    expect(screen.getByText('Estudo')).toBeTruthy();
+  });
+  beforeEach(() => {
+    locaisMock.locais = [
+      { id: 'casa', nome: 'Casa', tipo: 'casa', ponto: { lat: -23.5, lon: -46.6 } },
+      { id: 'estudo', nome: 'Faculdade', tipo: 'estudo', ponto: { lat: -23.6, lon: -46.7 } },
+    ];
+    locaisMock.renomear.mockImplementation(async () => {});
+    locaisMock.apagar.mockImplementation(async () => {});
+    locaisMock.restaurar.mockResolvedValue('ok');
+  });
+
+  afterEach(() => { locaisMock.locais = []; jest.useRealTimers(); });
+
+  it('oculta o tipo repetido e mantém o detalhe quando o nome difere', async () => {
+    sessao();
+    await render(<Configuracoes />);
+    expect(screen.getAllByText('Casa')).toHaveLength(1);
+    expect(screen.getByText('Estudo')).toBeTruthy();
+    expect(screen.getByRole('button', { name: c.renomear('Casa') })).toBeTruthy();
+  });
+
+  it('edita com foco automático, limita a 30 e salva o nome normalizado', async () => {
+    sessao();
+    const anuncio = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    await render(<Configuracoes />);
+    await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
+    expect(screen.getByLabelText(c.nomeLugar).props.autoFocus).toBe(true);
+    expect(screen.getByLabelText(c.nomeLugar).props.value).toBe('Casa');
+    expect(screen.getByLabelText(c.nomeLugar).props.maxLength).toBe(30);
+    await fireEvent.changeText(screen.getByLabelText(c.nomeLugar), 'x'.repeat(40));
+    expect(screen.getByLabelText(c.nomeLugar).props.value).toHaveLength(30);
+    await fireEvent.changeText(screen.getByLabelText(c.nomeLugar), '  Casa   da vó  ');
+    await fireEvent.press(screen.getByRole('button', { name: c.salvar }));
+    expect(locaisMock.renomear).toHaveBeenCalledWith('casa', 'Casa da vó');
+    expect(screen.queryByLabelText(c.nomeLugar)).toBeNull();
+    expect(anuncio).toHaveBeenCalledWith(c.nomeAtualizado);
+    anuncio.mockRestore();
+  });
+
+  it('cancela sem renomear e mantém o botão de apagar durante a edição', async () => {
+    sessao();
+    await render(<Configuracoes />);
+    await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
+    await fireEvent.changeText(screen.getByLabelText(c.nomeLugar), 'Outro nome');
+    expect(screen.getByRole('button', { name: 'Apagar Casa' })).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: c.cancelar }));
+    expect(locaisMock.renomear).not.toHaveBeenCalled();
+    expect(screen.queryByLabelText(c.nomeLugar)).toBeNull();
+  });
+
+  it('recusa nome vazio e permite corrigir', async () => {
+    sessao();
+    await render(<Configuracoes />);
+    await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
+    await fireEvent.changeText(screen.getByLabelText(c.nomeLugar), '   ');
+    await fireEvent.press(screen.getByRole('button', { name: c.salvar }));
+    expect(screen.getByText(c.nomeVazio)).toBeTruthy();
+    expect(locaisMock.renomear).not.toHaveBeenCalled();
+    await fireEvent.changeText(screen.getByLabelText(c.nomeLugar), 'Apartamento');
+    expect(screen.queryByText(c.nomeVazio)).toBeNull();
+  });
+
+  it('apaga imediatamente e desfaz com os mesmos dados e posição', async () => {
+    sessao();
+    const local = locaisMock.locais[1];
+    const anuncio = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    await render(<Configuracoes />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Apagar Faculdade' }));
+    expect(locaisMock.apagar).toHaveBeenCalledWith('estudo');
+    expect(anuncio).toHaveBeenCalledWith(c.lugarApagado);
+    await fireEvent.press(screen.getByRole('button', { name: c.desfazer }));
+    expect(locaisMock.restaurar).toHaveBeenCalledWith(local, 1);
+    expect(screen.queryByRole('button', { name: c.desfazer })).toBeNull();
+    expect(anuncio).toHaveBeenCalledWith(c.lugarRestaurado);
+    anuncio.mockRestore();
+  });
+
+  it('oferece desfazer por exatamente 5 segundos', async () => {
+    jest.useFakeTimers();
+    sessao();
+    await render(<Configuracoes />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Apagar Casa' }));
+    await act(async () => { jest.advanceTimersByTime(4999); });
+    expect(screen.getByRole('button', { name: c.desfazer })).toBeTruthy();
+    await act(async () => { jest.advanceTimersByTime(1); });
+    expect(screen.queryByRole('button', { name: c.desfazer })).toBeNull();
+    expect(locaisMock.restaurar).not.toHaveBeenCalled();
+  });
+
+  it('reserva altura do teclado no Android e remove ao fechar', async () => {
+    const anterior = Platform.OS;
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: 'android' });
+    const listeners: Record<string, (evento: KeyboardEvent) => unknown> = {};
+    const ouvir = jest.spyOn(Keyboard, 'addListener').mockImplementation((evento, callback) => {
+      listeners[evento] = callback;
+      return { remove: jest.fn() };
+    });
+    sessao();
+    await render(<Configuracoes />);
+    await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
+    await act(async () => { listeners.keyboardDidShow({ endCoordinates: { screenY: 400, height: 300 } } as KeyboardEvent); });
+    expect(screen.getByTestId('espaco-teclado').props.style.height).toBe(300);
+    await act(async () => { listeners.keyboardDidHide({} as KeyboardEvent); });
+    expect(screen.queryByTestId('espaco-teclado')).toBeNull();
+    ouvir.mockRestore();
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: anterior });
+  });
+
+  it('omite exclusão e histórico; exibe lugares salvos', async () => {
     sessao();
     await render(<Configuracoes />);
     expect(screen.getByText(textos.config.conta)).toBeTruthy();

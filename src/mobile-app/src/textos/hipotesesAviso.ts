@@ -7,7 +7,7 @@ export const hipotesesAviso = {
   localizacaoTitulo: 'Localização',
   localizacao: 'O app solicita sua localização somente quando você toca em “usar minha localização”.',
   buscaTitulo: 'Busca de endereço',
-  busca: 'Ao tocar em “Buscar” no mapa, o texto digitado é enviado ao serviço de mapas do seu celular para achar o lugar. Nada disso é guardado pelo VoltaSegura.',
+  busca: 'Ao tocar em “Buscar” no mapa, o texto digitado é enviado ao serviço de mapas do seu celular para achar o lugar. Ao marcar um ponto no mapa, a posição marcada também é enviada a esse serviço para mostrar o endereço. Nada disso é guardado pelo VoltaSegura nem registrado em log.',
   locaisTitulo: 'Lugares salvos',
-  locais: 'Os lugares que você salva ficam só neste celular, em armazenamento protegido, e nunca são enviados. Você pode apagá-los em Configurações.',
+  locais: 'Os lugares que você salva (nome, endereço e posição) ficam só neste celular, em armazenamento protegido, e nunca são enviados. Você pode apagá-los em Configurações.',
 } as const;
