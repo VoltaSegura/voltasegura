@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 
 const CHAVES = [
   'EXPO_PUBLIC_API_MODE',
+  'EXPO_PUBLIC_API_URL',
+  'EXPO_PUBLIC_OTP2_URL',
   'EXPO_PUBLIC_NEON_AUTH_URL',
   'EXPO_PUBLIC_NEON_AUTH_ORIGIN',
 ] as const;
@@ -43,8 +45,108 @@ describe('seleção do serviço de conta por variável de ambiente', () => {
     expect(ambiente.origemNeonAuth).toBe('http://localhost:8081');
   });
 
-  it('a consulta continua seguindo mock|api, independente do Neon Auth', () => {
+  it('a consulta continua seguindo o API_MODE, independente do Neon Auth', () => {
     process.env.EXPO_PUBLIC_NEON_AUTH_URL = 'https://auth.exemplo.invalid/neondb/auth';
+    const { servicos } = jest.requireActual<typeof import('./index')>('./index');
+    const { consultaMock } = jest.requireActual<typeof import('./consulta')>('./consulta');
+    expect(servicos.consulta).toBe(consultaMock);
+  });
+});
+
+const entrada = {
+  origem: { lat: -23.5, lon: -46.6 },
+  destino: { lat: -23.51, lon: -46.61 },
+  saida: '2026-11-17T23:00:00-03:00',
+  sentido: 'volta' as const,
+};
+
+describe('lerModo (EXPO_PUBLIC_API_MODE)', () => {
+  it.each([
+    [undefined, 'mock'],
+    ['', 'mock'],
+    ['mock', 'mock'],
+    ['api', 'api'],
+    ['otp2', 'otp2'],
+    [' OTP2 ', 'otp2'],
+    ['otp', 'invalido'],
+    ['real', 'invalido'],
+  ])('%p vira %p', (valor, esperado) => {
+    const { lerModo } = jest.requireActual<typeof import('@/config/ambiente')>('@/config/ambiente');
+    expect(lerModo(valor)).toBe(esperado);
+  });
+});
+
+describe('seleção da fonte da consulta (B-04)', () => {
+  const fetchMock = jest.fn<typeof fetch>();
+  let fetchOriginal: typeof fetch;
+
+  beforeEach(() => {
+    fetchOriginal = globalThis.fetch;
+    fetchMock.mockReset();
+    fetchMock.mockRejectedValue(new TypeError('sem rede no teste'));
+    (globalThis as unknown as { fetch: unknown }).fetch = fetchMock;
+  });
+
+  afterEach(() => {
+    (globalThis as unknown as { fetch: unknown }).fetch = fetchOriginal;
+  });
+
+  const carregar = () => jest.requireActual<typeof import('./selecao')>('./selecao');
+
+  it('mock devolve as fixtures de exemplo', () => {
+    const { selecionarConsulta } = carregar();
+    const { consultaMock } = jest.requireActual<typeof import('./consulta')>('./consulta');
+    expect(selecionarConsulta({ modoApi: 'mock', urlApi: '', urlOtp2: '' })).toBe(consultaMock);
+  });
+
+  it('api chama POST /api/consultas na URL configurada', async () => {
+    const { selecionarConsulta } = carregar();
+    await selecionarConsulta({ modoApi: 'api', urlApi: 'http://api.exemplo.test', urlOtp2: '' })
+      .consultarRotas(entrada).catch(() => {});
+    expect(fetchMock.mock.calls[0][0]).toBe('http://api.exemplo.test/api/consultas');
+  });
+
+  it('otp2 chama POST /otp/gtfs/v1 na URL configurada', async () => {
+    const { selecionarConsulta } = carregar();
+    await selecionarConsulta({ modoApi: 'otp2', urlApi: '', urlOtp2: 'http://otp.exemplo.test:8080' })
+      .consultarRotas(entrada).catch(() => {});
+    expect(fetchMock.mock.calls[0][0]).toBe('http://otp.exemplo.test:8080/otp/gtfs/v1');
+    expect(fetchMock.mock.calls[0][1]?.method).toBe('POST');
+  });
+
+  it.each([
+    ['api sem URL', { modoApi: 'api' as const, urlApi: '', urlOtp2: 'http://otp.exemplo.test' }],
+    ['otp2 sem URL', { modoApi: 'otp2' as const, urlApi: 'http://api.exemplo.test', urlOtp2: '' }],
+    ['modo inválido', { modoApi: 'invalido' as const, urlApi: 'http://api.exemplo.test', urlOtp2: 'http://otp.exemplo.test' }],
+  ])('%s: erro de configuração, sem chamar a rede e sem devolver fixture', async (_nome, config) => {
+    const { selecionarConsulta, CODIGO_CONFIGURACAO } = carregar();
+    const { consultaMock } = jest.requireActual<typeof import('./consulta')>('./consulta');
+    const servico = selecionarConsulta(config);
+    expect(servico).not.toBe(consultaMock);
+    await expect(servico.consultarRotas(entrada)).rejects.toMatchObject({
+      tipo: 'INDISPONIVEL',
+      codigo: CODIGO_CONFIGURACAO,
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('pelas variáveis: otp2 com barra final na URL usa /otp/gtfs/v1', async () => {
+    process.env.EXPO_PUBLIC_API_MODE = 'otp2';
+    process.env.EXPO_PUBLIC_OTP2_URL = 'http://192.168.0.10:8080//';
+    const { servicos } = jest.requireActual<typeof import('./index')>('./index');
+    await servicos.consulta.consultarRotas(entrada).catch(() => {});
+    expect(fetchMock.mock.calls[0][0]).toBe('http://192.168.0.10:8080/otp/gtfs/v1');
+  });
+
+  it('pelas variáveis: modo com erro de digitação não cai no mock', async () => {
+    process.env.EXPO_PUBLIC_API_MODE = 'otp';
+    process.env.EXPO_PUBLIC_OTP2_URL = 'http://192.168.0.10:8080';
+    const { servicos } = jest.requireActual<typeof import('./index')>('./index');
+    await expect(servicos.consulta.consultarRotas(entrada)).rejects.toMatchObject({ tipo: 'INDISPONIVEL' });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('pelas variáveis: sem API_MODE continua mock (padrão)', () => {
     const { servicos } = jest.requireActual<typeof import('./index')>('./index');
     const { consultaMock } = jest.requireActual<typeof import('./consulta')>('./consulta');
     expect(servicos.consulta).toBe(consultaMock);

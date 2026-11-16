@@ -2,6 +2,7 @@ import type { RespostaConsulta } from "../tipos";
 
 export const nao_aplicavel: RespostaConsulta = {
   "exemplo": true,
+  "fontes": { "roteamento": "exemplo", "exposicao": "exemplo" },
   "caso": "NAO_APLICAVEL",
   "motivo": null,
   "rotas": [

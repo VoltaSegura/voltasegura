@@ -5,6 +5,7 @@ import { ajustarAosPontos } from './geometria';
 import { atraso, chamar } from './http';
 import type { RespostaConsulta } from './tipos';
 import { obterToken } from './token';
+import { validarRespostaConsulta } from './validar';
 
 export { definirProvedorToken } from './token';
 
@@ -57,7 +58,10 @@ export const consultaMock: ServicoConsulta = {
   },
 };
 
-/** POST /api/consultas [HIPÓTESE, PL-18]. O app devolve os números como vieram. */
+/**
+ * POST /api/consultas [HIPÓTESE, PL-18]. O JSON passa por `validarRespostaConsulta` (B-01): os números
+ * seguem como vieram quando o formato fecha; formato inválido vira INDISPONIVEL, nunca número inventado.
+ */
 export function criarConsultaApi(urlBase: string): ServicoConsulta {
   return {
     async consultarRotas(entrada, opcoes) {
@@ -67,18 +71,15 @@ export function criarConsultaApi(urlBase: string): ServicoConsulta {
         saida: entrada.saida,
         sentido: entrada.sentido,
       };
-      const r = await chamar<RespostaConsulta>(`${urlBase}/api/consultas`, 'POST', {
+      const r = await chamar<unknown>(`${urlBase}/api/consultas`, 'POST', {
         corpo,
         token: obterToken(),
         contexto: 'consulta',
         signal: opcoes?.signal,
       });
-      return r as RespostaConsulta;
+      return validarRespostaConsulta(r);
     },
   };
 }
 
 export const consultaApi = criarConsultaApi(ambiente.urlApi);
-
-export const consultarRotas = (entrada: EntradaConsulta, opcoes?: { signal?: AbortSignal }) =>
-  (ambiente.modoApi === 'api' ? consultaApi : consultaMock).consultarRotas(entrada, opcoes);

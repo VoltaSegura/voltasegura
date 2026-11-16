@@ -2,6 +2,7 @@ import type { RespostaConsulta } from "../tipos";
 
 export const uma_rota: RespostaConsulta = {
   "exemplo": true,
+  "fontes": { "roteamento": "exemplo", "exposicao": "exemplo" },
   "caso": "SEM_COMPARACAO",
   "motivo": null,
   "rotas": [

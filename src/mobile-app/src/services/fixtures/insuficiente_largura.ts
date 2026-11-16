@@ -2,6 +2,7 @@ import type { RespostaConsulta } from "../tipos";
 
 export const insuficiente_largura: RespostaConsulta = {
   "exemplo": true,
+  "fontes": { "roteamento": "exemplo", "exposicao": "exemplo" },
   "caso": "INSUFICIENTE",
   "motivo": "LARGURA",
   "rotas": [

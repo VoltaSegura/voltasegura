@@ -14,6 +14,7 @@ const nomes = [
   "outra_opcao",
   "sem_servico",
   "indisponivel",
+  "so_roteamento",
 ] as const;
 const focosValidos: FocoRota[] = [
   "MENOR_TEMPO",
@@ -33,13 +34,27 @@ function stringsRecursivas(valor: unknown): string[] {
 }
 
 describe("fixtures da consulta", () => {
-  it("exporta os onze casos esperados", () => {
+  it("exporta os doze casos esperados", () => {
     expect(Object.keys(fixtures).sort()).toEqual([...nomes].sort());
   });
 
   it.each(nomes)("mantém invariantes e linguagem em %s", (nome) => {
     const resposta = fixtures[nome];
     expect(resposta.exemplo).toBe(true);
+    // fixture nunca se declara real (B-02): o roteamento é sempre de exemplo
+    expect(resposta.fontes.roteamento).toBe("exemplo");
+    expect(["exemplo", "indisponivel"]).toContain(resposta.fontes.exposicao);
+    if (resposta.fontes.exposicao === "indisponivel") {
+      expect(resposta.caso).toBe("INDISPONIVEL");
+      for (const rota of resposta.rotas) {
+        expect(rota.exposicao.registros).toBeNull();
+        expect(rota.exposicao.registrosPorKm).toBeNull();
+        expect(rota.exposicao.cobertura).toBeNull();
+        expect(rota.categorias.furto.total).toBeNull();
+        expect(rota.categorias.roubo.total).toBeNull();
+        expect(rota.categorias.transito.total).toBeNull();
+      }
+    }
 
     const rotas = resposta.rotas;
     expect(rotas.length).toBeLessThanOrEqual(3);
