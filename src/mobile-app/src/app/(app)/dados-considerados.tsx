@@ -3,7 +3,7 @@ import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
 import { BackHandler } from 'react-native';
 
 import { Aviso, LinhaLista, SeloExemplo, Tela, Texto, Botao } from '@/components';
-import { LinhaCategoria } from '@/components/resultado';
+import { LinhaCategoria, selosExemplo, soRoteamento } from '@/components/resultado';
 import { SeletorOpcoes } from '@/components/detalhes';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, Rota, TotaisCategoria } from '@/services';
@@ -72,14 +72,18 @@ export default function DadosConsiderados() {
     ?? resposta.rotas.find((item) => item.id === rotaSelecionadaId)
     ?? resposta.rotas[0];
   const t = textos.dadosConsiderados;
+  const semExposicao = soRoteamento(resposta);
   const janela = resposta.sobreOsDados.periodo;
   const panoramaPeriodo = resposta.panoramaMunicipal.periodo;
 
   return (
     <Tela>
       <Stack.Screen options={{ title: panorama ? t.panoramaTitulo : t.titulo }} />
-      {resposta.exemplo ? <SeloExemplo /> : null}
-      {panorama ? (
+      {selosExemplo(resposta).exposicao ? <SeloExemplo /> : null}
+      {semExposicao ? (
+        // B-08: sem exposição estimada não há totais, nem zeros, nem panorama a mostrar.
+        <Aviso texto={textos.soRoteamento.dadosConsiderados} />
+      ) : panorama ? (
         <>
           <Botao variante="texto" rotulo={textos.comuns.voltar} onPress={() => setPanorama(false)} />
           <Texto variante="secao" accessibilityRole="header">{t.panoramaTitulo}</Texto>

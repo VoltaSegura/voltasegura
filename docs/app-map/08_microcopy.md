@@ -453,3 +453,17 @@ Feita em 13/11/2026 por script local sobre **894 linhas** (refeita após o acré
 | `rotina.canal` | Lembretes da rotina (nome do canal de notificação no Android) |
 | `rotina.diasCompletos` / `diasCurtos` | domingo ... sábado / Dom ... Sáb |
 | `rotina.todosOsDias` / `diasUteis` / `fimDeSemana` | Todos os dias / Dias úteis / Fim de semana |
+
+## Só roteamento (B-08, 16/11/2026, `[HIPÓTESE]`, fonte: `src/textos/soRoteamento.ts`)
+
+Usado quando `fontes.exposicao = 'indisponivel'` ou `caso = 'INDISPONIVEL'`: rota sem exposição estimada, sem número de ocorrências e sem zero (docs/05).
+
+| Chave | Texto |
+|---|---|
+| `selo` | Só roteamento |
+| `aviso` (TL-07, TL-08) | Só roteamento: mostramos os trajetos e os horários. A exposição estimada não está disponível nesta consulta, então não há comparação de registros. |
+| `linhaDados` (linha fixa TL-07/08) | Só roteamento · exposição estimada indisponível |
+| `porQue` (TL-09, acesso direto) | Sem exposição estimada para esta consulta, não há o que explicar sobre registros neste trecho. |
+| `dadosConsiderados` (TL-11) | Sem exposição estimada nesta consulta: nenhum registro foi considerado e não há totais para mostrar. |
+| `sobreTitulo` / `sobreExplica` (TL-10) | Exposição estimada / Indisponível nesta consulta. Os registros da SSP-SP não foram consultados, então nenhuma opção tem número de registros ou cobertura. |
+| `roteamentoTitulo`, `roteamentoExemplo`, `roteamentoReal` (TL-10) | Trajetos e horários / Trajetos de exemplo. / Trajetos e horários do roteamento do projeto (GTFS e OpenStreetMap). |

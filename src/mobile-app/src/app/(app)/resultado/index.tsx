@@ -4,7 +4,7 @@ import { formatarHora } from '@/components/resultado/formatos';
 import { Redirect, Stack, router } from 'expo-router';
 import { Botao, Texto } from '@/components';
 import { MapaResultado } from '@/components/mapa';
-import { PainelResultado, formatarPeriodo, type RotulosResultado } from '@/components/resultado';
+import { PainelResultado, formatarPeriodo, soRoteamento, type RotulosResultado } from '@/components/resultado';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, ModoTrecho, Rota, Trecho } from '@/services';
 import { textos } from '@/textos';
@@ -62,7 +62,7 @@ export default function Resultado() {
     if (medida > 0) setAlturaTela(medida);
   }}>
     <Stack.Screen options={{ title: nomeSentido }} />
-    {selecionada && <MapaResultado rotas={resposta.rotas} rotaSelecionadaId={selecionada.id} onSelecionar={selecionarRota} expandido={nivel > 0} alturaFolha={alturaFolha} />}
+    {selecionada && <MapaResultado rotas={resposta.rotas} rotaSelecionadaId={selecionada.id} onSelecionar={selecionarRota} expandido={nivel > 0} alturaFolha={alturaFolha} exemplo={resposta.fontes.roteamento === 'exemplo'} />}
     <PainelResultado resposta={resposta} rotaSelecionadaId={selecionada?.id ?? ''} rotulos={rotulos}
       tituloLista={tituloLista} expandido={nivel > 0} alturaFolha={alturaFolha} nivel={nivel}
       saida={hipotesesResultado.saida(formatarHora(estado.consulta.saida))}
@@ -76,12 +76,12 @@ export default function Resultado() {
           onPress={() => { if (proximoSentido === 'volta') planejarVolta(); else { inverterPontos(); definirSentido('ida'); } router.push(`/planejar?sentido=${proximoSentido}`); }} />
       </View>}
       linhaDados={{
-        texto: resposta.caso === 'INDISPONIVEL' ? textos.comuns.linhaDadosIndisponivel : textos.comuns.linhaDados({
+        texto: soRoteamento(resposta) ? (resposta.rotas.length > 0 ? textos.soRoteamento.linhaDados : textos.comuns.linhaDadosIndisponivel) : textos.comuns.linhaDados({
           fonte: resposta.sobreOsDados.fonte,
           periodo: formatarPeriodo(resposta.sobreOsDados.periodo.inicio, resposta.sobreOsDados.periodo.fim),
         }),
         rotuloAcessivel: textos.sobre.titulo,
-        indisponivel: resposta.caso === 'INDISPONIVEL',
+        indisponivel: soRoteamento(resposta),
         onPress: () => router.push('/sobre-os-dados'),
       }}>
       <View style={estilos.intro}>

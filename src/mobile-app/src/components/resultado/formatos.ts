@@ -10,6 +10,8 @@ export function formatarHora(iso: string): string {
  * Recebe datas ISO (AAAA-MM-DD) como vêm da resposta.
  */
 export function formatarPeriodo(inicio: string, fim: string): string {
+  // "Só roteamento" (B-08) manda período vazio: sem datas válidas não há período a mostrar.
+  if (Number.isNaN(new Date(`${inicio}T12:00:00Z`).getTime()) || Number.isNaN(new Date(`${fim}T12:00:00Z`).getTime())) return '';
   const mes = (data: string) =>
     new Intl.DateTimeFormat('pt-BR', { month: 'short', timeZone: 'UTC' })
       .format(new Date(`${data}T12:00:00Z`))

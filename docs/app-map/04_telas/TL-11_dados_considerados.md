@@ -6,6 +6,10 @@
 - **Entradas:** TL-09, TL-10.
 - **Saídas:** voltar.
 
+## Revisão de 16/11/2026 — B-08 · Só roteamento
+
+[DECISÃO] B-08 (Plano B, 16/11/2026): com `fontes.exposicao = 'indisponivel'` OU `caso = 'INDISPONIVEL'` (ou campos de exposição `null`) a tela trata a consulta como **"Só roteamento"** (`soRoteamento()` em `components/resultado/fontes.ts`). O selo EXEMPLO segue `fontes.*` por bloco (`selosExemplo()`), não o booleano global `exemplo`. Em "Só roteamento": no lugar dos totais e do panorama aparece `textos.soRoteamento.dadosConsiderados`; nenhum número, zero ou "Dados insuficientes" é exibido.
+
 ## Wireframe
 
 **Estado padrão** (EXEMPLO)

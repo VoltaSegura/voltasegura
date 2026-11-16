@@ -6,6 +6,10 @@
 - **Entradas:** TL-06 (sucesso). Parâmetros: a resposta da consulta (rotas, focos, situação, sobre os dados).
 - **Saídas:** TL-08 (detalhes da rota), TL-10 (sobre os dados), TL-04 (planejar a volta ou nova consulta).
 
+## Revisão de 16/11/2026 — B-08 · Só roteamento
+
+[DECISÃO] B-08 (Plano B, 16/11/2026): com `fontes.exposicao = 'indisponivel'` OU `caso = 'INDISPONIVEL'` (ou campos de exposição `null`) a tela trata a consulta como **"Só roteamento"** (`soRoteamento()` em `components/resultado/fontes.ts`). O selo EXEMPLO segue `fontes.*` por bloco (`selosExemplo()`), não o booleano global `exemplo`. Em "Só roteamento": o cartão não mostra o foco de menor exposição (nem o chip "Menor exposição estimada primeiro", nem o resumo recolhido), não há número de ocorrências nem zero; o painel mostra o aviso `textos.soRoteamento.aviso` e a linha fixa vira "Só roteamento · exposição estimada indisponível". O selo EXEMPLO do cartão vem de `fontes.roteamento` (e de `fontes.exposicao = 'exemplo'` só no cartão que tem foco de exposição).
+
 ## Revisão de 15/11/2026 — B2, U6, U7 e U8
 
 [HIPÓTESE] Ajustes da Onda 3, sem validação visual no aparelho: cabeçalho com quantidade curta e saída local; chip neutro apenas quando a primeira rota tem foco MENOR_EXPOSICAO; dica só na primeira visita da sessão (memória do módulo, sem persistência). A alça aceita toque e arraste vertical, com três alturas de aproximadamente 28%, 55% e 88% da área disponível. O toque percorre recolhida → meia → cheia → recolhida e anuncia a altura. Arrastar para cima/baixo avança/recua uma altura, sem circular nos extremos. A lista mantém rolagem própria. Animação de transform de 180 ms, desativada por reduzir movimento.

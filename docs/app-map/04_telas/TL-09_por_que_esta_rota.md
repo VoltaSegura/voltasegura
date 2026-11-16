@@ -6,6 +6,10 @@
 - **Entradas:** TL-08 (botão num trecho a pé). Parâmetros: `rotaId`, `trechoId`.
 - **Saídas:** TL-10 (sobre os dados), TL-11 (dados considerados), fechar (volta à TL-08).
 
+## Revisão de 16/11/2026 — B-08 · Só roteamento
+
+[DECISÃO] B-08 (Plano B, 16/11/2026): com `fontes.exposicao = 'indisponivel'` OU `caso = 'INDISPONIVEL'` (ou campos de exposição `null`) a tela trata a consulta como **"Só roteamento"** (`soRoteamento()` em `components/resultado/fontes.ts`). O selo EXEMPLO segue `fontes.*` por bloco (`selosExemplo()`), não o booleano global `exemplo`. Em "Só roteamento" a tela não é alcançada pelo app (botão oculto na TL-08). Em acesso direto, mostra só o indicativo `textos.soRoteamento.porQue` e o link para "Sobre os dados": sem tabela de registros, sem cobertura, sem zero.
+
 ## Revisão de 15/11/2026 — U9
 
 [HIPÓTESE] Uma única saída no cabeçalho do modal: “Fechar” à direita volta à TL-08. A seta de voltar e o headerLeft ficam ocultos; voltar pelo sistema continua disponível. Alvo de toque mínimo de 48 pt e texto até 200%.
