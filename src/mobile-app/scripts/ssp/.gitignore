@@ -1,0 +1,9 @@
+# Saídas geradas a partir da planilha real da SSP-SP: nunca versionar.
+saida/
+*.csv
+*.csv.parcial
+importacao.json
+relatorio.md
+# Planilhas (a real fica fora do repositório; as sintéticas dos testes são temporárias)
+*.xlsx
+__pycache__/

@@ -25,17 +25,17 @@ Para instalar dependências, use sempre `npx expo install <pacote>`: ele escolhe
 ```
 src/mobile-app/
 ├── app.json            nome, scheme "voltasegura" (deep link da TL-15), plugins, typed routes
-├── .env.example        EXPO_PUBLIC_API_MODE, EXPO_PUBLIC_API_URL, EXPO_PUBLIC_NEON_AUTH_URL e EXPO_PUBLIC_NEON_AUTH_ORIGIN
+├── .env.example        EXPO_PUBLIC_API_MODE, EXPO_PUBLIC_API_URL, EXPO_PUBLIC_OTP2_URL, EXPO_PUBLIC_NEON_AUTH_URL e EXPO_PUBLIC_NEON_AUTH_ORIGIN
 ├── neon.ts             serviços do Neon declarados (auth); o .env.local gerado por `neon deploy` fica fora do git
-├── scripts/            e2e-neon-auth.mjs: teste real do Neon Auth contra a branch dev (o jest-expo simula o fetch)
+├── scripts/            e2e-neon-auth.mjs: teste real do Neon Auth contra a branch dev (o jest-expo simula o fetch); `sql/`: esquema e função de exposição estimada para o Neon (B-06); `ssp/`: importador da planilha SSP-SP (B-07). Ver o LEIA-ME de cada pasta
 ├── assets/             ícones e splash (ainda os padrões do Expo; trocar pela marca v10 após a T15)
 └── src/
     ├── app/            SÓ rotas (cada arquivo é uma tela; _layout.tsx define a navegação)
     ├── components/     componentes base só por tokens (Tela, Botao, CampoTexto, Aviso, SeloExemplo...); `medidas.ts` guarda valores ainda fora dos tokens. Subpastas com entrada própria, importadas por caminho (`@/components/planejar`, `@/components/mapa`, `@/components/resultado`) e NÃO pelo índice: elas importam do índice, e reexportá-las criaria ciclo; o mapa fica fora para não carregar o `react-native-maps` nos testes das outras telas
-    ├── config/         ambiente.ts: modo mock|api, URL da API e URL/origem do Neon Auth
+    ├── config/         ambiente.ts: modo mock|api|otp2, URLs da API e do OTP2 e URL/origem do Neon Auth
     ├── consulta/       estado global da consulta em memória: reducer, validação, planejar a volta, ConsultaProvider
     ├── sessao/         SessaoProvider (SecureStore, expira sozinha; entrar() e sair() provisórios para as telas atuais)
-    ├── services/       consulta, conta (mock, api e Neon Auth), erros, http, token; fixtures/ com os 11 casos
+    ├── services/       consulta (mock, api, otp2), seleção da fonte (`selecao.ts`), validação do JSON (`validar.ts`), conta (mock, api e Neon Auth), erros, http, token; fixtures/ com os 12 casos
     ├── textos/         microcopy de 08_microcopy.md em 16 módulos; `hipoteses.ts` guarda o que o catálogo só descreve por regra (`sequenciaLeitura`, `[HIPÓTESE]`)
     └── theme/          tokens.ts (de 07_design/tokens.md) e useTema()
 ```
@@ -72,14 +72,14 @@ Pendente (05_navegacao, "Guardas"): voltar à rota guardada depois de a sessão 
 
 `src/theme/tokens.ts` copia os valores de `docs/app-map/07_design/tokens.md` (cores dos dois temas, tipografia, espaçamento, raio, toque). `useTema()` usa o tema escuro como padrão e o claro quando o sistema estiver em modo claro (`app.json`: `userInterfaceStyle: "automatic"`). A marca v10 continua `[HIPÓTESE]` até a aprovação do grupo (D-06).
 
-## Modo `mock|api`
+## Modo `mock|api|otp2`
 
-`src/config/ambiente.ts` lê `EXPO_PUBLIC_API_MODE` (padrão `mock`) e `EXPO_PUBLIC_API_URL`. A camada `src/services/` usa essa configuração (`servicos.consulta` e `servicos.conta`). Regras que ela cumpre (`06_funcionalidades.md`, "Regras comuns"): o app não calcula estatística; no mock, toda resposta traz `exemplo: true` e a tela mostra a marca `EXEMPLO`; nenhum log leva coordenadas, endereços ou e-mail.
+`src/config/ambiente.ts` lê `EXPO_PUBLIC_API_MODE` (padrão `mock`), `EXPO_PUBLIC_API_URL` e `EXPO_PUBLIC_OTP2_URL`. `src/services/selecao.ts` escolhe a fonte de `servicos.consulta`: `mock` (fixtures EXEMPLO), `api` (`POST /api/consultas`, contrato `[HIPÓTESE]`) ou `otp2` (OpenTripPlanner 2, só roteamento). Modo desconhecido ou sem a URL correspondente falha com `INDISPONIVEL`/`CONFIGURACAO`; nunca cai sozinho no mock. A resposta da `api` passa por `validar.ts` (formato errado no roteamento = erro; na exposição = exposição indisponível). A resposta traz `fontes` (`roteamento`, `exposicao`) para a tela tirar o selo EXEMPLO só do que é real (`docs/dados-reais/04_plano_implementacao.md`). Regras que ela cumpre (`06_funcionalidades.md`, "Regras comuns"): o app não calcula estatística; no mock, toda resposta traz `exemplo: true` e a tela mostra a marca `EXEMPLO`; nenhum log leva coordenadas, endereços ou e-mail.
 
 ## Neon (D-24)
 
 - **O app nunca conecta no Postgres.** Só `EXPO_PUBLIC_*` vai para o pacote, e o `DATABASE_URL` fica no `.env.local` (ignorado pelo git). Conferido em 14/11: a senha e o host do Postgres aparecem em 0 arquivos do pacote exportado.
-- **Contas:** `src/services/contaNeonAuth.ts` fala com o Neon Auth quando `EXPO_PUBLIC_NEON_AUTH_URL` está definida (vale para conta e sessão em qualquer modo; a consulta segue mock|api).
+- **Contas:** `src/services/contaNeonAuth.ts` fala com o Neon Auth quando `EXPO_PUBLIC_NEON_AUTH_URL` está definida (vale para conta e sessão em qualquer modo; a consulta segue o `API_MODE`).
 - **Limites verificados na branch `dev`:** a sessão é um cookie assinado de 7 dias (o token do corpo e o `Bearer` não servem); todo POST exige `Origin` de um domínio confiável (`neon neon-auth domain add`; localhost já vale); não há exclusão de conta (D-25); o aceite do aviso não é gravado no servidor.
 - **Não verificado:** o comportamento no React Native (cabeçalho `Origin`, leitura do `Set-Cookie`) e o login Neon Auth no navegador (falha ao ler `Set-Cookie`). O SecureStore na web usa somente memória, coberto por teste. Teste real: `NEON_AUTH_E2E_URL=<URL da branch dev> node scripts/e2e-neon-auth.mjs`.
 - **Dependências:** `overrides` de `glob` e `minimatch` no `package.json` levam o `npm audit` de 30 para 9 (só baixas, do `deepmerge`, sem correção publicada). Não rode `npm audit fix --force`: ele sugere rebaixar o Expo para o SDK 52.
