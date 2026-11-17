@@ -12,8 +12,11 @@ import type { FaixaDoDia, FocoRota, ModoTrecho, RespostaConsulta, Rota, Trecho }
  * `RoutingErrorCode`, `Mode`) em 15/11/2026. Não escreve em log.
  */
 
-/** Tempo máximo de espera pelo OTP2. [HIPÓTESE] até medir a latência real no notebook (B-10). */
-export const TEMPO_LIMITE_OTP2_MS = 20_000;
+/**
+ * Tempo máximo de espera pelo OTP2. [HIPÓTESE] 45 s (B-50): em aparelho, uma consulta longa
+ * (Butantã → Pirituba, madrugada) levou ~16 s e outra estourou os 20 s anteriores.
+ */
+export const TEMPO_LIMITE_OTP2_MS = 45_000;
 export const CODIGO_TEMPO_ESGOTADO = 'TEMPO_ESGOTADO';
 
 export const CONSULTA_OTP2 = `

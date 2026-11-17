@@ -207,8 +207,8 @@ describe('criarConsultaOtp2: tempo limite, cancelamento e erros (B-05)', () => {
     expect(chamadas).not.toMatch(/-23\.5|-46\.6/); // US-19 AC2: coordenadas nunca em log
   });
 
-  it('tempo padrão é 20 s [HIPÓTESE até medir no B-10]', () => {
-    expect(TEMPO_LIMITE_OTP2_MS).toBe(20_000);
+  it('tempo padrão é 45 s [HIPÓTESE, B-50]', () => {
+    expect(TEMPO_LIMITE_OTP2_MS).toBe(45_000);
   });
 
   it('servidor sem resposta: tempo esgotado vira INDISPONIVEL 504 (sem fixture)', async () => {

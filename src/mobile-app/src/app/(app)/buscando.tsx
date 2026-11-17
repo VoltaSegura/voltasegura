@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ScrollView, StyleSheet, View } from 'react-native';
 import { Stack, router } from 'expo-router';
 
@@ -9,12 +9,26 @@ import { textos } from '@/textos';
 import { hipotesesPlanejar } from '@/textos/hipotesesPlanejar';
 import { esp } from '@/theme/tokens';
 
+/** Depois deste tempo de espera, a tela mostra uma linha neutra sobre a demora. */
+export const ESPERA_AVISO_DEMORA_MS = 8000;
+
 export default function Buscando() {
   const { estado, buscar, cancelarBusca } = useConsulta();
   const { busca, consulta } = estado;
   const iniciou = useRef(false);
   const buscaInicial = useRef(busca);
   const repetindo = useRef(false);
+  const [demorou, setDemorou] = useState(false);
+  const esperando = busca.status === 'ocioso' || busca.status === 'buscando';
+
+  useEffect(() => {
+    if (!esperando) return;
+    const id = setTimeout(() => {
+      setDemorou(true);
+      AccessibilityInfo.announceForAccessibility(textos.buscando.demora);
+    }, ESPERA_AVISO_DEMORA_MS);
+    return () => clearTimeout(id);
+  }, [esperando]);
 
   useEffect(() => {
     if (!iniciou.current) {
@@ -67,6 +81,7 @@ export default function Buscando() {
           <View style={estilos.espera}>
             <ImagemPlaceholder nome="heroBuscando" icone="map-search-outline" style={estilos.imagem} />
             <Carregando texto={textos.buscando.texto} />
+            {esperando && demorou ? <Texto testID="buscando-demora">{textos.buscando.demora}</Texto> : null}
             <Texto>{textos.buscando.privacidade}</Texto>
             <Botao rotulo={textos.comuns.cancelar} variante="secundario" onPress={voltar} />
           </View>

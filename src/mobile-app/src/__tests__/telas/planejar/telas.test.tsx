@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
-import { StyleSheet } from 'react-native';
+import { AccessibilityInfo, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
 import Buscando from '@/app/(app)/buscando';
@@ -184,6 +184,25 @@ describe('TL-06 Buscando', () => {
     expect(screen.getByRole('progressbar', { name: textos.buscando.texto })).toBeVisible();
     expect(screen.getByText(textos.buscando.texto)).toBeVisible();
     expect(screen.getByRole('button', { name: textos.comuns.cancelar })).toBeVisible();
+  });
+
+  it('após 8 s de espera mostra a linha de demora e a anuncia uma vez; antes disso, não', async () => {
+    jest.useFakeTimers();
+    const anunciar = jest.spyOn(AccessibilityInfo, 'announceForAccessibility').mockImplementation(() => {});
+    try {
+      estado(base, { status: 'buscando' });
+      const tela = await render(<Buscando />);
+      await act(async () => { jest.advanceTimersByTime(7_999); });
+      expect(screen.queryByText(textos.buscando.demora)).toBeNull();
+      await act(async () => { jest.advanceTimersByTime(1); });
+      expect(screen.getByText(textos.buscando.demora)).toBeVisible();
+      expect(anunciar.mock.calls.filter(([t]) => t === textos.buscando.demora)).toHaveLength(1);
+      await act(async () => { await tela.rerender(<Buscando />); jest.advanceTimersByTime(30_000); });
+      expect(anunciar.mock.calls.filter(([t]) => t === textos.buscando.demora)).toHaveLength(1);
+    } finally {
+      anunciar.mockRestore();
+      jest.useRealTimers();
+    }
   });
 
   it('busca uma vez, substitui ao sucesso e não registra dados no console', async () => {
