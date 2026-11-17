@@ -18,8 +18,8 @@ jest.mock('react-native-maps', () => {
       React.useImperativeHandle(ref, () => ({ fitToCoordinates: mockFitToCoordinates }));
       return <View testID="mapa-resultado">{props.children}</View>;
     }),
-    Polyline: (props: { onPress?: () => void; testID?: string; strokeWidth?: number }) =>
-      <View testID={props.testID} accessibilityHint={String(props.strokeWidth)} onTouchEnd={props.onPress} />,
+    Polyline: (props: { onPress?: () => void; testID?: string; strokeWidth?: number; lineDashPattern?: number[]; strokeColor?: string }) =>
+      <View testID={props.testID} accessibilityHint={String(props.strokeWidth)} accessibilityLabel={`${props.strokeColor}|${props.lineDashPattern?.join(',') ?? 'cheio'}`} onTouchEnd={props.onPress} />,
     Marker: (props: { coordinate: { latitude: number; longitude: number }; accessibilityLabel: string }) =>
       <View testID="marcador" accessibilityLabel={props.accessibilityLabel} accessibilityHint={`${props.coordinate.latitude},${props.coordinate.longitude}`} />,
   };
@@ -56,7 +56,7 @@ const pontosB = [
   { latitude: -23.58, longitude: -46.67 },
 ];
 const rotas = conclusivo.rotas.slice(0, 2).map((rota, indice) => ({
-  ...rota, geometria: codificar(indice === 0 ? pontosA : pontosB),
+  ...rota, geometria: codificar(indice === 0 ? pontosA : pontosB), trechos: [],
 }));
 
 it('geometria vazia não desenha linha nem marcadores', async () => {
@@ -132,4 +132,33 @@ it('geometria real (sem exemplo) passa intacta e sem rótulo de exemplo', async 
   await render(<MapaResultado rotas={rotas} rotaSelecionadaId={rotas[0].id} onSelecionar={() => {}} expandido={false} />);
   expect(screen.getByTestId(`linha-rota-${rotas[0].id}`)).toBeTruthy();
   expect(screen.queryByText(hipotesesEstadosResultado.trajetoDeExemplo)).toBeNull();
+});
+
+describe('traço por trecho (B-21)', () => {
+  const trechoPe = { ...conclusivo.rotas[0].trechos[0], id: 'tr-pe', ordem: 1, modo: 'A_PE' as const, geometria: codificar(pontosA) };
+  const trechoBus = { ...conclusivo.rotas[0].trechos[0], id: 'tr-bus', ordem: 2, modo: 'ONIBUS' as const, geometria: codificar(pontosB) };
+  const comTrechos = { ...rotas[0], trechos: [trechoBus, trechoPe] };
+
+  it('desenha cada trecho: a pé pontilhado e neutro, ônibus em traço cheio e aceso, sem esticar a rota', async () => {
+    await render(<MapaResultado rotas={[comTrechos, rotas[1]]} rotaSelecionadaId={comTrechos.id} onSelecionar={() => {}} expandido={false} />);
+    expect(screen.getByTestId('linha-trecho-tr-pe').props.accessibilityLabel).toMatch(/\|2,8$/);
+    expect(screen.getByTestId('linha-trecho-tr-bus').props.accessibilityLabel).toMatch(/\|cheio$/);
+    expect(screen.getByTestId('linha-trecho-tr-bus').props.accessibilityHint).toBe('7');
+    expect(screen.getByTestId('linha-trecho-tr-pe').props.accessibilityLabel).not.toBe(screen.getByTestId('linha-trecho-tr-bus').props.accessibilityLabel.replace('cheio', '2,8'));
+    expect(screen.queryByTestId(`linha-rota-${comTrechos.id}`)).toBeNull();
+    expect(screen.getByTestId(`linha-rota-${rotas[1].id}`)).toBeTruthy();
+  });
+
+  it('trecho sem geometria válida é ignorado e, sem nenhum válido, cai no traço da rota inteira', async () => {
+    const vazios = { ...comTrechos, trechos: [{ ...trechoPe, geometria: '' }] };
+    await render(<MapaResultado rotas={[vazios]} rotaSelecionadaId={vazios.id} onSelecionar={() => {}} expandido={false} />);
+    expect(screen.queryByTestId('linha-trecho-tr-pe')).toBeNull();
+    expect(screen.getByTestId(`linha-rota-${vazios.id}`)).toBeTruthy();
+  });
+
+  it('em resposta de exemplo nenhum trecho é traçado', async () => {
+    await render(<MapaResultado rotas={[comTrechos]} rotaSelecionadaId={comTrechos.id} onSelecionar={() => {}} expandido={false} exemplo />);
+    expect(screen.queryByTestId('linha-trecho-tr-pe')).toBeNull();
+    expect(screen.queryByTestId('linha-trecho-tr-bus')).toBeNull();
+  });
 });

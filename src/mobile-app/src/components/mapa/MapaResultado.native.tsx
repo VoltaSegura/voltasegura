@@ -10,6 +10,7 @@ import { esp } from '@/theme/tokens';
 import { Texto } from '@/components/Texto';
 import { medidas } from '@/components/resultado/medidas';
 import { decodificarPolyline } from './polyline';
+import { trechosDaRota } from './trechosMapa';
 import { useAjusteCamera } from './useAjusteCamera';
 
 export type PropsMapaResultado = {
@@ -27,6 +28,10 @@ export default function MapaResultado({ rotas, rotaSelecionadaId, onSelecionar, 
   const mapa = useRef<MapView>(null);
   const linhas = useMemo(() => rotas.map(rota => ({ id: rota.id, pontos: decodificarPolyline(rota.geometria) })), [rotas]);
   const selecionada = linhas.find(linha => linha.id === rotaSelecionadaId);
+  const trechos = useMemo(() => {
+    const rota = rotas.find(item => item.id === rotaSelecionadaId);
+    return rota ? trechosDaRota(rota) : [];
+  }, [rotas, rotaSelecionadaId]);
   const inicio = selecionada?.pontos[0];
 
   const ajustarCamera = useAjusteCamera(mapa, selecionada?.pontos, alturaFolha ?? 0, expandido);
@@ -44,7 +49,11 @@ export default function MapaResultado({ rotas, rotaSelecionadaId, onSelecionar, 
       {selecionada && selecionada.pontos.length > 0 && <>
         {!exemplo && <>
           <Polyline testID={`toque-rota-${selecionada.id}`} coordinates={selecionada.pontos} strokeColor="transparent" strokeWidth={medidas.areaToqueMapa} tappable onPress={() => onSelecionar(selecionada.id)} />
-          <Polyline testID={`linha-rota-${selecionada.id}`} coordinates={selecionada.pontos} strokeColor={cores.rotaSelecionada} strokeWidth={7} tappable onPress={() => onSelecionar(selecionada.id)} />
+          {trechos.length === 0
+            ? <Polyline testID={`linha-rota-${selecionada.id}`} coordinates={selecionada.pontos} strokeColor={cores.rotaSelecionada} strokeWidth={7} tappable onPress={() => onSelecionar(selecionada.id)} />
+            : trechos.map(trecho => trecho.aPe
+              ? <Polyline key={trecho.id} testID={`linha-trecho-${trecho.id}`} coordinates={trecho.pontos} strokeColor={cores.rotaOutra} strokeWidth={5} lineDashPattern={[2, 8]} lineCap="round" tappable onPress={() => onSelecionar(selecionada.id)} />
+              : <Polyline key={trecho.id} testID={`linha-trecho-${trecho.id}`} coordinates={trecho.pontos} strokeColor={cores.rotaSelecionada} strokeWidth={7} tappable onPress={() => onSelecionar(selecionada.id)} />)}
         </>}
         <Marker coordinate={selecionada.pontos[0]} title={textos.escolherPonto.tituloOrigem} accessibilityLabel={textos.escolherPonto.tituloOrigem} />
         <Marker coordinate={selecionada.pontos[selecionada.pontos.length - 1]} title={textos.escolherPonto.tituloDestino} accessibilityLabel={textos.escolherPonto.tituloDestino} />
