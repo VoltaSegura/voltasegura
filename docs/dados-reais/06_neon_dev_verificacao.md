@@ -25,3 +25,23 @@
 2. Criar no `dev` uma função de teste trivial com dados sintéticos, sem tabelas da SSP.
 3. Obter o JWT em `/token` do Neon Auth e chamar a RPC com `Authorization: Bearer <JWT>`. O cookie de sessão não serve.
 4. Conferir que a mesma chamada sem JWT é recusada.
+
+## B-14 provado (17/11/2026)
+Teste feito pelo Lucas no PowerShell contra a branch `dev` (nenhum token ou URL registrado aqui). Função sintética `mobile_api.ping_teste()` (sem tabelas da SSP), `GRANT USAGE` no schema e `GRANT EXECUTE` na função só para o papel `authenticated`; schema `mobile_api` exposto na Data API e cache de schema atualizado. JWT obtido em `/token` do Neon Auth após login por e-mail (conta de teste criada só na `dev`; cabeçalho `Origin` enviado).
+
+| Chamada | Resultado | Status |
+|---|---|---|
+| `POST /rpc/ping_teste` com `Authorization: Bearer <JWT>` e `Content-Profile: mobile_api` | HTTP 200, `{"ok": true, "origem": "sintetico"}` | `[DECISÃO]` observado |
+| mesma chamada sem JWT | HTTP 401, `PGRST302` ("missing authentication credentials") | `[DECISÃO]` observado |
+
+**Conclusão:** a Opção A (função SQL como RPC na Data API, protegida pelo JWT do Neon Auth) funciona na `dev`. Opção E (API fina própria) fica só como contingência. `[EM ABERTO]` falta a latência com a carga real (B-15) e o app chamar a RPC com o JWT da sessão. Regra mantida: **nunca expor `mobile_dados`** na Data API.
+
+## B-15 provado pela Data API (17/11/2026)
+Carga real na `dev` (importação 22: 279.048 linhas em `ssp_bo`, 94 circunscrições; `ssp_bo` 113 MB, banco total 129 MB de 1 GB). `GRANT USAGE` em `mobile_api` e `GRANT EXECUTE` em `comparar_exposicao(jsonb, text)` para `authenticated`. Chamada `POST /rpc/comparar_exposicao` com JWT do Neon Auth, duas rotas de exemplo a pé (linhas retas ilustrativas, faixa NOITE, região da Av. Paulista):
+
+| Modo | HTTP | Resultado | Tempo |
+|---|---|---|---|
+| `poligono` | 200 | `INSUFICIENTE` / `COBERTURA` (sem polígonos de circunscrição) | 884 ms (primeira chamada, inclui partida a frio) |
+| `proxy_pontos` | 200 | `SEM_DIFERENCA` (cobertura 91,1% e 91,9%; 234 e 206 registros em 0,75 e 0,78 km) | 57 ms |
+
+`[DECISÃO]` do Lucas: usar `proxy_pontos` no MVP (`[HIPÓTESE]` do projeto, sem validação do grupo). `[EM ABERTO]` supressão de contagens pequenas; latência com rotas reais do OTP2 (rotas mais longas); trajetos de exemplo não são rotas reais.

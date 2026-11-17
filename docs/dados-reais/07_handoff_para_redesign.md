@@ -10,7 +10,7 @@
 | B-01 | Validação do JSON em tempo de execução. Roteamento/origem inválidos viram `ErroServico('INDISPONIVEL','FORMATO')`; exposição inválida mantém as rotas, números `null` e `caso` indisponível. Horário sem fuso é falha de formato | `src/services/validar.ts` (+ testes) |
 | B-02 | `RespostaConsulta.fontes` (`FontesConsulta`): `roteamento: 'otp2'\|'exemplo'`, `exposicao: 'ssp'\|'exemplo'\|'indisponivel'`. `exemplo` precisa bater com `fontes` (é `true` se algum bloco for exemplo). Exposição desconhecida = **objeto com campos `null`**, não objeto nulo (decisão do Lucas, 15/11). Fixture nova `so_roteamento` | `src/services/tipos.ts`, `fixtures/` |
 | B-04 | Modos `EXPO_PUBLIC_API_MODE = mock \| api \| otp2`; vazio = `mock`; valor desconhecido ou modo sem URL = `INDISPONIVEL`/`CONFIGURACAO`; sem queda silenciosa para mock | `src/config/ambiente.ts`, `services/selecao.ts`, `.env.example` |
-| B-05 | Adaptador OTP2: tempo limite 20 s (`[HIPÓTESE]`), cancelamento repassado ao `fetch`, rede = `SEM_REDE`, HTTP de erro/JSON ilegível = `INDISPONIVEL`, `OUTSIDE_BOUNDS` = `FORA_DA_AREA`, zero itinerários = resposta válida com zero rotas | `src/services/otp2.ts` |
+| B-05 | Adaptador OTP2: tempo limite 45 s (`[HIPÓTESE]`; era 20 s, B-50), cancelamento repassado ao `fetch`, rede = `SEM_REDE`, HTTP de erro/JSON ilegível = `INDISPONIVEL`, `OUTSIDE_BOUNDS` = `FORA_DA_AREA`, zero itinerários = resposta válida com zero rotas | `src/services/otp2.ts` |
 | B-06 | SQL da exposição (esquema, carga, `mobile_api.comparar_exposicao`, testes sintéticos). **Escrito, não executado no Neon** | `src/mobile-app/scripts/sql/` |
 | B-07 | Importador da SSP (rodado na planilha real: 281.966 linhas válidas, 94 circunscrições). **Sem carga no banco** | `src/mobile-app/scripts/ssp/` |
 
@@ -43,7 +43,8 @@ Confirmar em `tipos.ts` se `Trecho.geometria` e `Rota.geometria` estão como a �
 | B-14 | **próximo** | Ativar a Data API na `dev`, criar função de teste sintética em `mobile_api`, obter o JWT em `/token` do Neon Auth (o cookie de sessão não serve como Bearer) e provar: com JWT = 200, sem JWT = 401/403. Tabelas `ssp_*` nunca expostas. Nomes de papel (`authenticated`) e exposição de schema são do PostgREST comum, **a confirmar no console** |
 | B-15 | depois | Aplicar o SQL (B-06) e carregar a SSP (B-07) no `dev`; medir `pg_total_relation_size` |
 | B-20 | adiado com o B-12 | Ponta a ponta no celular |
-| B-30, B-31, B-40 | pendentes | Exposição real; varredura de linguagem; relatório honesto |
+| B-30 | código feito (17/11), falta provar no aparelho | `services/exposicao.ts`: no modo `otp2`, com `EXPO_PUBLIC_DATA_API_URL` + Neon Auth + sessão, troca o cookie por JWT em `GET /token`, chama `POST <DATA_API>/rpc/comparar_exposicao` (10 s) só com geometrias dos trechos a pé e faixas, e mescla `exposicao`, `categorias`, `caso`, `motivo`, panorama e `fontes.exposicao = 'ssp'`. Qualquer falha = "Só roteamento". Só `CONCLUSIVO` põe `MENOR_EXPOSICAO`. `EXPO_PUBLIC_EXPOSICAO_COBERTURA` = `poligono` (padrão) \| `proxy_pontos` `[HIPÓTESE]` |
+| B-31, B-40 | pendentes | Varredura de linguagem; relatório honesto |
 
 ## 5. Cortes e prazos (do plano)
 - 17/11: sem adaptador funcionando no aparelho, congelar em EXEMPLO e entregar B-03, B-08 e B-40.
