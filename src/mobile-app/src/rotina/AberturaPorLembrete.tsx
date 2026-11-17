@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 
 import { useConsulta } from '@/consulta';
+import { carregarNotificacoes, type ModuloNotificacoes } from '@/services/notificacoes';
 
 import { useRotinas } from './RotinaContext';
 
@@ -19,7 +19,13 @@ export function saidaDeHoje(hora: string, agora: Date = new Date()): string {
  * A notificação leva só o id da rotina; as coordenadas são lidas do armazenamento do aparelho.
  * Se a rotina não existe mais, o app só abre.
  */
+/** Sem o módulo nativo (Expo Go), não há lembrete para abrir: não renderiza nada. A disponibilidade não muda durante a execução. */
 export function AberturaPorLembrete() {
+  const Notifications = carregarNotificacoes();
+  return Notifications ? <AberturaComModulo Notifications={Notifications} /> : null;
+}
+
+function AberturaComModulo({ Notifications }: { Notifications: ModuloNotificacoes }) {
   const resposta = Notifications.useLastNotificationResponse();
   const { rotinas, carregado } = useRotinas();
   const { definirOrigem, definirDestino, definirSaida, definirSentido } = useConsulta();

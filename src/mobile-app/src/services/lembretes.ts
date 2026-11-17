@@ -1,9 +1,9 @@
-import * as Notifications from 'expo-notifications';
-import { AndroidImportance } from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import type { Rotina } from '@/rotina/tipos';
 import { rotina as t } from '@/textos/rotina';
+
+import { carregarNotificacoes } from './notificacoes';
 
 /**
  * Lembretes locais da Rotina da semana (FN-17, D-31).
@@ -44,16 +44,25 @@ export function corpoDoLembrete(diaSaida: number, hora: string): string {
   return t.corpo(t.diasCompletos[diaSaida - 1], hora);
 }
 
-const suportado = () => Platform.OS !== 'web';
+const suportado = () => Platform.OS !== 'web' && carregarNotificacoes() !== null;
+
+/** Módulo já carregado; só chamar depois de `suportado()`. */
+const notif = () => carregarNotificacoes()!;
+
+/** false no Expo Go ou sem o módulo nativo: a rotina continua salva, sem lembrete. */
+export function lembretesDisponiveis(): boolean {
+  return suportado();
+}
 
 /** Define como o app mostra o lembrete e cria o canal do Android. Chamar uma vez ao abrir a área logada. */
 export async function configurarLembretes(): Promise<void> {
   if (!suportado()) return;
+  const Notifications = notif();
   Notifications.setNotificationHandler({
     handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: false, shouldSetBadge: false }),
   });
   if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync(CANAL, { name: t.canal, importance: AndroidImportance.DEFAULT });
+    await Notifications.setNotificationChannelAsync(CANAL, { name: t.canal, importance: Notifications.AndroidImportance.DEFAULT });
   }
 }
 
@@ -63,6 +72,7 @@ export type ResultadoPermissao = 'concedida' | 'negada';
 export async function pedirPermissaoLembretes(): Promise<ResultadoPermissao> {
   if (!suportado()) return 'negada';
   try {
+    const Notifications = notif();
     const atual = await Notifications.getPermissionsAsync();
     if (atual.granted) return 'concedida';
     if (!atual.canAskAgain) return 'negada';
@@ -75,6 +85,7 @@ export async function pedirPermissaoLembretes(): Promise<ResultadoPermissao> {
 
 export async function cancelarLembretes(id: string): Promise<void> {
   if (!suportado()) return;
+  const Notifications = notif();
   const pendentes = await Notifications.getAllScheduledNotificationsAsync();
   await Promise.all(
     pendentes
@@ -86,6 +97,7 @@ export async function cancelarLembretes(id: string): Promise<void> {
 /** Substitui os lembretes da rotina pelos atuais. O conteúdo leva só o id da rotina: coordenadas não vão para a notificação. */
 export async function agendarLembretes(r: Rotina): Promise<void> {
   if (!suportado()) return;
+  const Notifications = notif();
   await cancelarLembretes(r.id);
   for (const g of gatilhosDaRotina(r)) {
     await Notifications.scheduleNotificationAsync({
@@ -98,5 +110,5 @@ export async function agendarLembretes(r: Rotina): Promise<void> {
 
 export async function cancelarTodosLembretes(): Promise<void> {
   if (!suportado()) return;
-  await Notifications.cancelAllScheduledNotificationsAsync();
+  await notif().cancelAllScheduledNotificationsAsync();
 }
