@@ -429,7 +429,7 @@ BEGIN
     PERFORM pg_temp.conferir(abs(r.cobertura - 0.9) < 1e-12, format('cobertura %s, esperado 0.9', r.cobertura));
 
     v_resp := mobile_api.comparar_exposicao(
-        jsonb_build_array(pg_temp.rota('r1', jsonb_build_array(pg_temp.trecho(-23.55, -46.64, -46.63))))));
+        jsonb_build_array(pg_temp.rota('r1', jsonb_build_array(pg_temp.trecho(-23.55, -46.64, -46.63)))));
     PERFORM pg_temp.conferir_caso('uma rota', v_resp, 'SEM_COMPARACAO', NULL, NULL);
     v_rota := v_resp -> 'rotas' -> 0;
     v_l := ST_Length(v_linha::geography) / 1000.0;
