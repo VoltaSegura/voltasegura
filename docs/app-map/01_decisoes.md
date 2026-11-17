@@ -91,3 +91,26 @@ Pedido do Lucas: no máximo 3 rotas, cada uma com o seu foco destacado. Se duas 
 5. **Imagens com reserva:** `theme/imagens.ts` + `ImagemPlaceholder`; o Lucas informa as imagens depois.
 6. **Dependências novas liberadas** (complementa a D-28): `@expo/vector-icons` e `expo-asset`.
 7. **Não muda:** `docs/05`, contraste, toque mínimo, "reduzir movimento", marca D-06, dados. "Sem commit sem pedir" continua.
+
+## D-30 (15/11/2026): endereço exato dos pontos e marcador por toque (revê a D-29 no mapa)
+
+`[DECISÃO]` Pedido do Lucas após testar a Onda 3: (1) os lugares "nunca mostram o endereço" (marcou "C6 Bank" e não vê onde é); (2) o pino fixo no centro, que se move junto com o mapa, incomoda.
+
+1. **Endereço legível.** Ao marcar um ponto, o app mostra o **endereço exato** (rua, número, bairro) obtido pela **geocodificação reversa do sistema** (`expo-location` `reverseGeocodeAsync`), sem servidor nem chave nossos. O endereço é mostrado no painel do mapa, vira o rótulo de origem e destino na home e é **guardado com o lugar salvo** (campo `endereco`, até 140 caracteres, só no aparelho, no `expo-secure-store`).
+2. **Marcador por toque.** Tocar no mapa coloca o marcador onde se tocou; mover ou dar zoom no mapa **não** move o marcador; tocar em outro lugar o move e atualiza o endereço; o marcador também pode ser arrastado. Sai o pino fixo no centro (a regra "ponto = centro do mapa" da D-29 e os 60 m do rótulo deixam de existir).
+3. **Privacidade (revê o item 3 da D-29).** Além do texto da busca, a **posição do ponto marcado** é enviada ao serviço de mapas do sistema (no Android, o do Google) para obter o endereço: a cada toque, fim de arrasto do marcador, resultado de busca ou localização; nunca ao mover o mapa. Nada é guardado pelo VoltaSegura além do endereço dos lugares que a pessoa salva, e nada vai a log. O Aviso de privacidade (TL-13) foi atualizado `[HIPÓTESE]`; revisão do texto pendente.
+4. **Falha do geocodificador:** o ponto continua utilizável com o rótulo "Ponto escolhido no mapa" e "Endereço indisponível".
+5. Registros de lugares antigos (sem `endereco`) continuam válidos.
+Plano e andamento: `docs/redesign/10_onda3_evidencia_e_proximos_passos.md` §6.
+
+## D-31 (15/11/2026): VoltaSegura+ entra no MVP em versão mínima (rotina e aviso local)
+
+`[DECISÃO]` Onda de perguntas do roteiro do pitch (`TODO.md` T23, PT-13 e PT-14), resposta do Lucas Simidu:
+
+1. **Escopo mínimo:** a usuária cadastra uma **rotina** (trajetos fixos, com dias e horário de saída) e recebe um **aviso antes de sair**. O texto exato do aviso e o que ele informa (horário de saída, mudança no resultado) estão `[EM ABERTO]`; sem dados de tempo real, o aviso é só um lembrete do horário.
+2. **Só no aparelho:** a rotina fica no armazenamento local, como histórico e lugares salvos (D-29), com **notificação local**. Nada vai ao servidor nem se vincula à conta (DT-08, `docs/03` §6).
+3. **Cobrança:** modelo freemium é `[HIPÓTESE]` (`docs/03` §8). No MVP **não há pagamento**: a tela identifica o VoltaSegura+ como recurso em validação, sem preço.
+4. **Prazo:** previsto para 19/11 com a marca "Depende do tempo", como o compartilhamento (D-22), depois das telas essenciais. Se apertar, vira roadmap sem afetar o resto.
+5. **Linguagem:** o aviso não promete segurança nem fala em "rota segura" (`docs/05`).
+6. **Pendente de mapeamento (resolvido em 15/11/2026, item 7):** fluxo, tela, funcionalidade e critérios no `docs/app-map/`; hoje só existe o backlog (`docs/10` F7.1/US-22).
+7. **Mapeamento e gatilho (15/11/2026):** `[DECISÃO]` o aviso é um **lembrete local por horário**: notificação N minutos antes do horário de saída (padrão 15), nos dias da rotina, **sem tempo real e sem servidor**. Texto neutro: "Hora de sair: sua rotina de {dia} às {hora}. Compare os caminhos antes de sair." Não informa mudança no resultado. A permissão de notificações só é pedida ao ativar a primeira rotina; negada, a rotina fica salva com aviso. Tocar no lembrete abre a TL-04 com origem, destino e saída da rotina. Mapeado em FL-17, TL-16, TL-17 e FN-17. Fora do que Lucas decidiu e `[HIPÓTESE]`: até 5 rotinas; antecedência de 5, 10, 15 ou 30 min; origem e destino só entre lugares salvos.

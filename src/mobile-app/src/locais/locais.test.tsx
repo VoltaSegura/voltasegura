@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 
 import { LocaisProvider, useLocais } from './LocaisContext';
 import { buscarEndereco } from '@/services/geocodificacao';
-import { normalizarNome } from './armazenamento';
+import { lerLocais, normalizarNome } from './armazenamento';
 import { MAX_LOCAIS } from './tipos';
 
 jest.mock('expo-secure-store', () => {
@@ -17,7 +17,7 @@ jest.mock('expo-secure-store', () => {
 });
 jest.mock('expo-location', () => ({ geocodeAsync: jest.fn() }));
 
-const SecureStore = jest.requireMock<{ setItemAsync: jest.Mock; deleteItemAsync: jest.Mock }>('expo-secure-store');
+const SecureStore = jest.requireMock<{ setItemAsync: jest.Mock<(chave: string, valor: string) => Promise<void>>; deleteItemAsync: jest.Mock }>('expo-secure-store');
 const Location = jest.requireMock<{ geocodeAsync: jest.Mock<(t: string) => Promise<unknown>> }>('expo-location');
 const envolver = ({ children }: { children: React.ReactNode }) => <LocaisProvider>{children}</LocaisProvider>;
 const ponto = { lat: -23.55, lon: -46.63 };
@@ -31,6 +31,36 @@ beforeEach(async () => {
 });
 
 describe('locais salvos (FN-13, D-29)', () => {
+  it('normaliza o endereço ao salvar e o relê do armazenamento', async () => {
+    const { result } = await renderHook(() => useLocais(), { wrapper: envolver });
+    await waitFor(() => expect(result.current.carregado).toBe(true));
+    await act(async () => { await result.current.salvar('C6 Bank', ponto, 'outro', `  ${'R'.repeat(145)}  `); });
+    expect(result.current.locais[0].endereco).toBe('R'.repeat(140));
+    const outra = await renderHook(() => useLocais(), { wrapper: envolver });
+    await waitFor(() => expect(outra.result.current.locais[0]?.endereco).toBe('R'.repeat(140)));
+  });
+
+  it('preserva lugar antigo e descarta só endereço de tipo inválido', async () => {
+    const antigo = { id: 'antigo', nome: 'Casa', tipo: 'casa', ponto };
+    await SecureStore.setItemAsync('voltasegura.locais', JSON.stringify([antigo, { ...antigo, id: 'invalido', endereco: 42 }]));
+    expect(await lerLocais()).toEqual([antigo, { ...antigo, id: 'invalido' }]);
+  });
+
+  it('atualiza, renomeia e desfaz sem perder o endereço', async () => {
+    const { result } = await renderHook(() => useLocais(), { wrapper: envolver });
+    await waitFor(() => expect(result.current.carregado).toBe(true));
+    await act(async () => { await result.current.salvar('Casa', ponto, 'casa'); });
+    const id = result.current.locais[0].id;
+    await act(async () => { await result.current.atualizarEndereco(id, '  Rua Um, 10  '); });
+    expect(result.current.locais[0].endereco).toBe('Rua Um, 10');
+    await act(async () => { await result.current.renomear(id, 'Minha casa'); });
+    const local = result.current.locais[0];
+    await act(async () => { await result.current.apagar(id); });
+    await act(async () => { await result.current.restaurar(local, 0); });
+    expect(result.current.locais[0].endereco).toBe('Rua Um, 10');
+    await act(async () => { await result.current.atualizarEndereco(id, '   '); });
+    expect(result.current.locais[0].endereco).toBeUndefined();
+  });
   it('salva, persiste no armazenamento cifrado e relê ao reabrir', async () => {
     const { result } = await renderHook(() => useLocais(), { wrapper: envolver });
     await waitFor(() => expect(result.current.carregado).toBe(true));
@@ -67,6 +97,48 @@ describe('locais salvos (FN-13, D-29)', () => {
     expect(result.current.locais[0].nome).toBe('Casa da vó');
     await act(async () => { await result.current.apagar(id); });
     expect(result.current.locais).toHaveLength(0);
+  });
+
+  it('restaura o lugar apagado na posição original e persiste sem duplicar', async () => {
+    const { result } = await renderHook(() => useLocais(), { wrapper: envolver });
+    await waitFor(() => expect(result.current.carregado).toBe(true));
+    for (const nome of ['Casa', 'Faculdade', 'Trabalho']) {
+      await act(async () => { await result.current.salvar(nome, ponto, 'outro'); });
+    }
+    const original = [...result.current.locais];
+    const local = original[1];
+    await act(async () => { await result.current.apagar(local.id); });
+    expect(result.current.locais.map((l) => l.nome)).toEqual(['Casa', 'Trabalho']);
+    await act(async () => { expect(await result.current.restaurar(local, 1)).toBe('ok'); });
+    expect(result.current.locais).toEqual(original);
+    await act(async () => { await result.current.restaurar(local, 1); });
+    expect(result.current.locais).toEqual(original);
+    const outra = await renderHook(() => useLocais(), { wrapper: envolver });
+    await waitFor(() => expect(outra.result.current.locais).toEqual(original));
+  });
+
+  it('falha ao restaurar não reinsere um lugar que não foi persistido', async () => {
+    const { result } = await renderHook(() => useLocais(), { wrapper: envolver });
+    await waitFor(() => expect(result.current.carregado).toBe(true));
+    await act(async () => { await result.current.salvar('Casa', ponto, 'casa'); });
+    const local = result.current.locais[0];
+    await act(async () => { await result.current.apagar(local.id); });
+    SecureStore.setItemAsync.mockRejectedValueOnce(new Error('armazenamento indisponível'));
+    await act(async () => { expect(await result.current.restaurar(local, 0)).toBe('erro'); });
+    expect(result.current.locais).toEqual([]);
+    await act(async () => { expect(await result.current.restaurar(local, 0)).toBe('ok'); });
+    expect(result.current.locais).toEqual([local]);
+  });
+
+  it('renomear ignora vazio e normaliza o nome sem alterar ponto ou tipo', async () => {
+    const { result } = await renderHook(() => useLocais(), { wrapper: envolver });
+    await waitFor(() => expect(result.current.carregado).toBe(true));
+    await act(async () => { await result.current.salvar('Casa', ponto, 'casa'); });
+    const local = result.current.locais[0];
+    await act(async () => { await result.current.renomear(local.id, '   '); });
+    expect(result.current.locais[0]).toEqual(local);
+    await act(async () => { await result.current.renomear(local.id, '  Novo   nome  '); });
+    expect(result.current.locais[0]).toEqual({ ...local, nome: 'Novo nome' });
   });
 
   it('nunca escreve coordenadas no console', async () => {

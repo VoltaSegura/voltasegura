@@ -1,0 +1,25 @@
+/** [HIPÓTESE] Textos de apoio das TL-14 e TL-15 (protótipo), pendentes de revisão do Lucas. Sem promessa de proteção. */
+export const hipotesesCompartilhar = {
+  prototipo:
+    'Protótipo: este compartilhamento usa dados de exemplo. Nenhuma localização real é lida ou enviada.',
+  prototipoCurto: 'Protótipo com dados de exemplo',
+  prototipoAcompanhar: 'Protótipo: esta viagem é um exemplo. Nada aqui vem de uma viagem real.',
+  quemEspera: 'Quem espera por você pode acompanhar a viagem pelo app. Não é um serviço de emergência.',
+  verTrajetoSo: 'Só o trajeto e a chegada estimada, sem posição ao vivo.',
+  tituloAtivo: 'Compartilhando',
+  semPosicao: 'Nenhuma posição enviada ainda.',
+  simularChegada: 'Simular chegada (exemplo)',
+  ok: 'Ok',
+  abrirCompartilhamento: 'Abrir o compartilhamento',
+  encerradoTempo: 'Compartilhamento encerrado: o tempo máximo acabou.',
+  semRedeAviso: 'Sem conexão. As posições seguem quando a conexão voltar.',
+  linkCompartilhado: 'Link para acompanhar',
+  trajeto: 'Trajeto',
+  ultimaSemHora: 'Ainda sem posição enviada.',
+  semConexao: 'Sem conexão. Mostrando a última informação recebida.',
+  carregandoViagem: 'Abrindo a viagem…',
+  naoFoiPossivel: 'Não foi possível abrir esta viagem agora.',
+  voltar: 'Voltar ao planejamento',
+  tempoRestante: (min: number) => `Faltam ${min} min para o tempo máximo.`,
+  instalarOutro: 'O link só abre no app VoltaSegura, com a sua conta.',
+} as const;

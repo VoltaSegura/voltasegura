@@ -10,7 +10,6 @@ import {
 import { contaMock, criarContaApi, definirLatenciaContaMock } from './conta';
 import { ErroServico } from './erros';
 import { decodificar } from './geometria';
-import { pontosExemplo } from '@/components/mapa/pontosExemplo';
 
 const entrada = {
   origem: { lat: -23.001, lon: -46.002 },
@@ -77,20 +76,21 @@ describe('consulta mock', () => {
       });
       for (const rota of r.rotas) {
         const pontos = decodificar(rota.geometria);
+        // B-03: só os pontos escolhidos, sem traço esticado entre eles
+        expect(pontos).toHaveLength(2);
         expect(pontos[0]).toMatchObject(entrada.origem);
-        expect(pontos[pontos.length - 1]).toMatchObject(entrada.destino);
-        for (const trecho of rota.trechos) expect(decodificar(trecho.geometria).length).toBeGreaterThanOrEqual(2);
+        expect(pontos[1]).toMatchObject(entrada.destino);
+        for (const trecho of rota.trechos) expect(decodificar(trecho.geometria)).toEqual(pontos);
       }
     },
   );
 
-  it('ajusta pontos distantes sem modificar a fixture entre chamadas', async () => {
+  it('não modifica a fixture entre chamadas', async () => {
     const original = JSON.stringify(fixtures.conclusivo);
     const primeira = await consultaMock.consultarRotas(entrada);
     primeira.rotas[0].trechos[0].geometria = 'alterada';
-    const exemplo = { ...entrada, origem: pontosExemplo.origem, destino: pontosExemplo.destino };
-    const segunda = await consultaMock.consultarRotas(exemplo);
-    expect(segunda.rotas[0].trechos[0].geometria).toBe(fixtures.conclusivo.rotas[0].trechos[0].geometria);
+    const segunda = await consultaMock.consultarRotas(entrada);
+    expect(segunda.rotas[0].trechos[0].geometria).not.toBe('alterada');
     expect(JSON.stringify(fixtures.conclusivo)).toBe(original);
   });
 

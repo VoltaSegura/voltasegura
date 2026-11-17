@@ -9,6 +9,7 @@ import { uma_rota } from "./uma_rota";
 import { outra_opcao } from "./outra_opcao";
 import { sem_servico } from "./sem_servico";
 import { indisponivel } from "./indisponivel";
+import { so_roteamento } from "./so_roteamento";
 
 export { conclusivo } from "./conclusivo";
 export { sem_diferenca } from "./sem_diferenca";
@@ -21,6 +22,7 @@ export { uma_rota } from "./uma_rota";
 export { outra_opcao } from "./outra_opcao";
 export { sem_servico } from "./sem_servico";
 export { indisponivel } from "./indisponivel";
+export { so_roteamento } from "./so_roteamento";
 
 export const fixtures = {
   conclusivo,
@@ -34,6 +36,7 @@ export const fixtures = {
   outra_opcao,
   sem_servico,
   indisponivel,
+  so_roteamento,
 } as const;
 
 export type NomeFixture = keyof typeof fixtures;

@@ -15,7 +15,11 @@ export type ChaveImagem =
   | 'localTrabalho'
   | 'localEstudo'
   | 'localOutro'
-  | 'vazioLocais';
+  | 'vazioLocais'
+  | 'heroBuscando'
+  | 'vazioBusca'
+  | 'heroPrivacidade'
+  | 'avatarPerfil';
 
 export const imagens: Record<ChaveImagem, ImageSourcePropType | null> = {
   heroAbertura: null,
@@ -27,4 +31,8 @@ export const imagens: Record<ChaveImagem, ImageSourcePropType | null> = {
   localEstudo: null,
   localOutro: null,
   vazioLocais: null,
+  heroBuscando: null,
+  vazioBusca: null,
+  heroPrivacidade: null,
+  avatarPerfil: null,
 };

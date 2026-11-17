@@ -6,6 +6,14 @@
 - **Entradas:** TL-08 (botão num trecho a pé). Parâmetros: `rotaId`, `trechoId`.
 - **Saídas:** TL-10 (sobre os dados), TL-11 (dados considerados), fechar (volta à TL-08).
 
+## Revisão de 16/11/2026 — B-08 · Só roteamento
+
+[DECISÃO] B-08 (Plano B, 16/11/2026): com `fontes.exposicao = 'indisponivel'` OU `caso = 'INDISPONIVEL'` (ou campos de exposição `null`) a tela trata a consulta como **"Só roteamento"** (`soRoteamento()` em `components/resultado/fontes.ts`). O selo EXEMPLO segue `fontes.*` por bloco (`selosExemplo()`), não o booleano global `exemplo`. Em "Só roteamento" a tela não é alcançada pelo app (botão oculto na TL-08). Em acesso direto, mostra só o indicativo `textos.soRoteamento.porQue` e o link para "Sobre os dados": sem tabela de registros, sem cobertura, sem zero.
+
+## Revisão de 15/11/2026 — U9
+
+[HIPÓTESE] Uma única saída no cabeçalho do modal: “Fechar” à direita volta à TL-08. A seta de voltar e o headerLeft ficam ocultos; voltar pelo sistema continua disponível. Alvo de toque mínimo de 48 pt e texto até 200%.
+
 ## Partes fixas da tela (todos os estados)
 
 1. O que é este trecho: "Trecho 1 · a pé · 250 m".
@@ -21,7 +29,7 @@
 
 ```
 ┌──────────────────────────────┐
-│ ✕  Por que esta rota?        │
+│ Por que esta rota?   Fechar │
 │ Trecho 1 · a pé · 600 m      │
 │ Rota: ◆ Menor exposição      │
 │ estimada            EXEMPLO  │
@@ -141,7 +149,7 @@ Caso, motivo, N, L, D e cobertura da rota; faixa do dia do trecho (`09_dados_por
 |---|---|---|
 | "Sobre os dados" | Abre o bloco | TL-10 |
 | "Dados considerados" | Abre os totais por categoria | TL-11 |
-| ✕ | Fecha | TL-08 |
+| “Fechar” à direita | Fecha o modal | TL-08 |
 
 ## Estados
 
@@ -175,3 +183,5 @@ Nenhuma.
 - [ ] O indicativo corresponde ao caso da API, e mistos aparecem como sem diferença clara (D-11).
 - [ ] Dados insuficientes mostram o motivo, sem ordenar (US-12 AC1–AC2).
 - [ ] Nenhuma regra ou limiar exposto (D-01).
+
+> B-53 (17/11/2026): ver "Cobertura por proxy e texto por caso" em 08_microcopy.md (aviso com fonte ssp; texto próprio por caso na TL-07).

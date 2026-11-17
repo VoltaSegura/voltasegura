@@ -1,5 +1,7 @@
 # TL-13 · Aviso de privacidade
 
+> **Revisão D-30 (15/11/2026):** a seção "Busca de endereço" agora diz que, ao marcar um ponto no mapa, a posição marcada também é enviada ao serviço de mapas do celular para mostrar o endereço; e "Lugares salvos" cita nome, endereço e posição, só no aparelho. Texto em `src/textos/hipotesesAviso.ts` `[HIPÓTESE]`, revisão pendente.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/aviso-privacidade` (acessível com ou sem sessão)
 - **Objetivo:** mostrar a **minuta acadêmica** do aviso de privacidade: o que é coletado, o que fica no aparelho e como excluir a conta.
 - **US/AC e funcionalidades cobertas:** US-01 AC6 · FN-12 · **RNF aplicáveis:** RNF-05, RNF-07, RNF-09

@@ -41,3 +41,29 @@ Docs: https://docs.expo.dev/eas/index.md
 - If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
 - Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build: `npx expo run:ios|android` locally, or `eas build --profile development`.
 - Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md
+
+## VoltaSegura: mudou o fluxo, mudou a documentação (regra permanente)
+
+Toda alteração que muda **o que a pessoa vê ou faz** (tela, passo de um fluxo, texto, regra, dado guardado ou enviado, dependência com efeito de privacidade) só está pronta quando a documentação **do mesmo fluxo** foi atualizada **no mesmo trabalho** (mesmo commit ou mesma entrega). Nunca deixe "docs depois".
+
+| Se você mudou... | Atualize, em `docs/app-map/` (monorepo) |
+|---|---|
+| Uma tela (layout, estados, ações, acessibilidade) | `04_telas/TL-nn_*.md` e a linha de `04_telas/00_indice.md` |
+| Um passo ou caminho de um fluxo | `03_fluxogramas/FL-nn_*.md` (diagrama Mermaid, passos, erros, regras) e `03_fluxogramas/00_indice.md` |
+| Navegação (rota, modal, parâmetro, o que volta para onde) | `05_navegacao.md` |
+| Uma função ou regra de negócio | `06_funcionalidades.md` (FN-nn) |
+| Qualquer texto da interface | `08_microcopy.md` **e** `src/textos/` (a fonte do código) |
+| Dado exibido, de onde vem ou onde fica guardado | `09_dados_por_tela.md` |
+| Um critério de aceite ou o teste que o cobre | `10_rastreabilidade.md` |
+| Uma tarefa do mapa da jornada | `02_story_map.md` |
+| Uma decisão (ela contradiz ou revê outra) | `01_decisoes.md` (nova decisão D-nn, marcando a revista) e `12_pendencias_e_lacunas.md` (histórico) |
+| Cor, tipografia, componente, imagem, movimento | `src/mobile-app/DESIGN.md`, `docs/app-map/07_design/componentes.md` e `tokens.md`, e `src/theme/imagens.ts` + `assets/imagens/LEIA-ME.md` se houver imagem |
+| Privacidade (o que sai do aparelho, o que fica) | `src/textos/hipotesesAviso.ts` (TL-13) e `docs/05_regras_linguagem_etica.md` se tocar em linguagem |
+
+Ao terminar qualquer mudança de fluxo, faça também:
+1. Atualize `todo-mobile.md` (marque o que foi feito e o que ficou) e, se houve mudança de estrutura, `ARQUITETURA.md`.
+2. Registre o uso de IA em `prompts.md` (monorepo).
+3. Se o fluxo mudou por decisão do Lucas, cite a decisão (D-nn) e a data na faixa de revisão da tela e do fluxo.
+4. Rode `npx tsc --noEmit`, `npx eslint src` e `npx jest`; os testes que descrevem o fluxo devem ser atualizados junto (um teste que ainda descreve o fluxo antigo é um bug de documentação).
+5. Não commite sem o Lucas pedir. O monorepo é a fonte da verdade; o espelho recebe a cópia pelo `scripts/sync_mirrors.sh` (não edite código no espelho).
+6. Para mudanças grandes, escreva ou atualize o plano em `docs/redesign/` ou `docs/dados-reais/` antes de implementar.

@@ -1,0 +1,25 @@
+-- Carga real (B-15): versão executável da PARTE B de 002_carga.sql. Rodar com o psql dentro da pasta dos CSVs gerados.
+-- Conexão DIRETA (sem -pooler). Não contém dados nem credenciais.
+\set ON_ERROR_STOP on
+BEGIN;
+TRUNCATE mobile_dados.ssp_bo_estagio, mobile_dados.ssp_cobertura_estagio,
+         mobile_dados.ssp_panorama_estagio, mobile_dados.importacao_estagio;
+
+\copy mobile_dados.ssp_bo_estagio (chave_bo,natureza,data_ocorrencia,faixa,lat,lon,circunscricao,tipo_local) FROM 'ssp_bo.csv' WITH (FORMAT csv, HEADER MATCH, ENCODING 'UTF8', FORCE_NULL (data_ocorrencia,faixa,lat,lon,circunscricao,tipo_local))
+\copy mobile_dados.ssp_cobertura_estagio (circunscricao,elegiveis_total,elegiveis_coord_faixa) FROM 'ssp_cobertura.csv' WITH (FORMAT csv, HEADER MATCH, ENCODING 'UTF8')
+\copy mobile_dados.ssp_panorama_estagio (natureza,total) FROM 'ssp_panorama.csv' WITH (FORMAT csv, HEADER MATCH, ENCODING 'UTF8')
+-- JSON: cada linha do arquivo vira uma linha de texto (delimitador/aspas improváveis,
+-- para nada do JSON ser interpretado pelo COPY).
+\copy mobile_dados.importacao_estagio (texto) FROM 'importacao.json' WITH (FORMAT csv, DELIMITER E'\x01', QUOTE E'\x02', ENCODING 'UTF8')
+
+SELECT mobile_dados.publicar_importacao() AS importacao_ativa;
+COMMIT;
+ANALYZE mobile_dados.ssp_bo;
+ANALYZE mobile_dados.ssp_cobertura;
+
+
+-- Conferência (só agregados) e tamanho em disco:
+SELECT id, fonte, periodo_inicio, periodo_fim, linhas_lidas, linhas_validas, gerado_em FROM mobile_dados.importacao WHERE ativa;
+SELECT natureza, count(DISTINCT chave_bo) FROM mobile_dados.ssp_bo b JOIN mobile_dados.importacao i ON i.id = b.importacao_id AND i.ativa GROUP BY natureza ORDER BY 1;
+SELECT relname, pg_size_pretty(pg_total_relation_size(c.oid)) AS tamanho FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='mobile_dados' AND c.relkind='r' ORDER BY pg_total_relation_size(c.oid) DESC;
+SELECT pg_size_pretty(pg_database_size(current_database())) AS banco_total;

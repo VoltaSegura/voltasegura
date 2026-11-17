@@ -18,7 +18,7 @@
 |---|---|
 | **Nome da CitizenTech** | **VoltaSegura** (ex-"CitizenTech"; produto renomeado em 10/11/2026) |
 | **Cidade e bairro** | Município de São Paulo — todos os bairros no escopo planejado do piloto `[DECISÃO]`; comparação por trajeto depende de cobertura e qualidade dos dados locais |
-| **Cidadão beneficiado** | Estudante universitário do período noturno que retorna para casa por transporte público e caminhadas (persona de trabalho: Ágatha Santos, 24 — proto-persona, não validada com usuários) |
+| **Cidadão beneficiado** | Quem volta para casa à noite por transporte público e caminhadas, incluindo estudantes universitários e trabalhadores noturnos (persona de trabalho: Ágatha Santos, 24 — proto-persona, não validada com usuários) |
 | **Problema, em uma frase** | Apps de mobilidade priorizam tempo e distância, mas não oferecem visão integrada das condições urbanas que influenciam a percepção de segurança no deslocamento, dificultando a escolha consciente entre trajetos |
 | **Como funciona** | O usuário informa origem, destino, horário (ida e, se aplicável, volta); a plataforma consulta fontes de mobilidade, segurança e infraestrutura; compara alternativas por tempo, conexões, indicadores de exposição e confiabilidade dos dados; e o usuário decide com contexto |
 | **O que cada parte faz** | Ver tabela de disciplinas abaixo |

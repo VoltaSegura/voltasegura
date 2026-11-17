@@ -1,7 +1,7 @@
 ---
 titulo: Backlog do produto VoltaSegura
 projeto: VoltaSegura
-atualizado: 2026-11-13
+atualizado: 2026-11-15
 tipo: backlog-produto
 fonte: "Consolidação das decisões de docs/03, 04, 05, 07, 08 e 06 até a versão 1.30 de docs/06"
 convencao_status: "[DECISÃO] direcionamento atual do grupo · [HIPÓTESE] precisa ser testada · [EM ABERTO] não apresentar como resolvido"
@@ -42,11 +42,11 @@ Este documento reúne **tudo o que define o produto**: visão, proposta de valor
 
 | Item | Conteúdo | Status | Origem |
 |---|---|---|---|
-| **Público inicial** | Estudantes universitários que voltam para casa à noite usando transporte público e caminhadas. | `[DECISÃO]` | `docs/03` §3 |
+| **Público inicial** | **Quem volta para casa à noite** (público amplo): estudantes e trabalhadores noturnos que usam transporte público e caminham em parte do trajeto. *(15/11/2026: antes só estudantes universitários noturnos.)* | `[DECISÃO — 15/11/2026]` | `docs/03` §3 |
 | **Abrangência** | Município de São Paulo inteiro, sem campus ou bairro obrigatório. A comparação de cada trajeto depende da cobertura dos dados. | `[DECISÃO]` | `docs/03` §3 |
 | **Persona** | **Ágatha Santos, 24 anos**: estudante universitária do período noturno; usa ônibus, metrô e caminhadas; sai da faculdade tarde; nem sempre conhece todos os trechos. Necessidade principal: entender as diferenças entre rotas e escolher com mais informação, sem depender só do menor tempo ou distância. **Proto-persona**, não validada com usuários. | `[DECISÃO de nome]` · perfil `[HIPÓTESE]` | `docs/03` §3 |
 | **Instituições no piloto** | Nenhuma. Não citar universidade como parceira ou candidata. | `[DECISÃO]` | `docs/06` (1.28) |
-| **Públicos futuros** | Trabalhadores noturnos, frequentadores de eventos, turistas, outros usuários de transporte público. Não priorizar agora. | `[HIPÓTESE]` | `docs/03` §3 |
+| **Públicos futuros** | Frequentadores de eventos, turistas, outros usuários de transporte público. Não priorizar agora. *(Trabalhadores noturnos passaram ao público inicial em 15/11/2026.)* | `[HIPÓTESE]` | `docs/03` §3 |
 
 ## 3. Benchmarking
 
@@ -65,8 +65,8 @@ Este documento reúne **tudo o que define o produto**: visão, proposta de valor
 
 | Item | Conteúdo | Status | Origem |
 |---|---|---|---|
-| **Modelo** | B2B2C: o estudante usa; instituições contratam para a comunidade. Mantido como modelo futuro, mesmo sem instituição no piloto. No pitch: "modelo a validar". | `[HIPÓTESE]` | `docs/03` §8, `docs/06` (1.30) |
-| **Receitas a validar** | Licença institucional recorrente; planos para empresas com turnos noturnos; pacotes por evento; depois, API ou painéis agregados. | `[HIPÓTESE]` | `docs/03` §8 |
+| **Modelo** | **Freemium individual + empresas** *(15/11/2026, roteiro do pitch)*: comparar rotas e consultar informações é sempre gratuito; o **VoltaSegura+** (assinatura) cadastra a rotina e avisa antes de sair; empresas com turnos noturnos podem oferecer o benefício. Universidades saem do modelo. O pitch gravado não traz a ressalva "a validar"; ela vai na descrição e nos slides. Sem preço. | `[HIPÓTESE]` | `docs/03` §8, `docs/06` (1.44) |
+| **Receitas a validar** | Assinatura individual (VoltaSegura+); planos para empresas com turnos noturnos; pacotes por evento; depois, API ou painéis agregados. | `[HIPÓTESE]` | `docs/03` §8 |
 | **Princípio comercial** | Não vender dados pessoais nem trajetos individuais; patrocinadores não alteram resultados. | `[DECISÃO]` | `docs/03` §6 e §8 |
 | **Custos a considerar** | Infraestrutura (servidor do OTP2, banco, processamento), manutenção das bases, desenvolvimento, segurança e LGPD, auditoria da metodologia. Custo de hospedagem só depois de medir o OTP2. | `[EM ABERTO]` | `docs/03` §8, `docs/04` §6.2 |
 
@@ -83,7 +83,7 @@ Este documento reúne **tudo o que define o produto**: visão, proposta de valor
 | DT-07 | **Regra de destaque**: cobertura ≥ 80% por alternativa e diferença ≤ 10 p.p.; `N_X + N_Y ≥ 10`; destacar só se uma alternativa tiver `N` **e** `D` menores e teste binomial exato bilateral com `p < 0,05` nas três larguras. Sem pesos arbitrários. | `[DECISÃO]` · validação em trajetos reais `[EM ABERTO]` | `docs/08` |
 | DT-08 | **Privacidade**: conta obrigatória só com e-mail e identificador; login por e-mail e senha ou Google; consultas descartadas após o cálculo; logs sem coordenadas nem vínculo com a conta; histórico só no aparelho; GPS opcional; exclusão da conta pelo app; exclusão e incidentes operados só pelos desenvolvedores internos. **Exceção (13/11/2026, F2.5):** durante uma sessão de compartilhamento, GPS em segundo plano e guarda temporária de trajeto e última posição no servidor, apagados ao encerrar. | `[DECISÃO]` · base legal e revisão jurídica `[EM ABERTO]` | `docs/03` §6 |
 | DT-09 | **Revisão de vieses automática**: script de cobertura por circunscrição e subprefeitura antes do piloto e a cada atualização; bloqueio só por "dados insuficientes"; pesos e limites nunca mudam sozinhos. | `[DECISÃO]` · script `[EM ABERTO]` (T21) | `docs/08` |
-| DT-10 | **Percepção relatada por usuários fora do MVP**: nenhum relato vira dado no app. | `[DECISÃO]` | `docs/06` §3 |
+| DT-10 | **Percepção relatada por usuários fora do MVP**: nenhum relato vira dado no app. **Exceção de roadmap (15/11/2026):** relatos de **infraestrutura** (poste apagado, calçada sem acessibilidade) podem existir numa fase futura, isolados da comparação de exposição; relatos de crime ou de percepção de segurança continuam fora. Moderação, antifraude, anonimização e destino dos dados `[EM ABERTO]`. | `[DECISÃO]` · exceção `[HIPÓTESE]` | `docs/06` §3, 1.44 |
 | DT-11 | **App**: React Native com TypeScript e Expo Router; consome API ou mock e salva em banco (exigência da entrega Mobile). | `[DECISÃO]` (rubrica) | `docs/02` §5 |
 | DT-12 | **Backends SOA e C#, ESP32 e Risco Cidadão** atendem às disciplinas e não definem o produto. Para as entregas, SOA e C# ficam na **mesma solution .NET 8** (`src/csharp-backend/`), com domínio e infraestrutura únicos e duas APIs: `VoltaSegura.Api` (C#) e `VoltaSegura.Servicos` (SOA); o OTP2 entra atrás da interface `IRoteador`, com mock enquanto o teste local não roda. | `[DECISÃO]` (12/11/2026, para as entregas) | `docs/06` §1 e §3 |
 
@@ -179,6 +179,8 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 #### F2.5 — Compartilhar trajeto e localização ao vivo · MVP **(Depende do tempo)** · Mobile, SOA, Cyber · `[DECISÃO — 13/11/2026]` (`docs/app-map/01_decisoes.md`, D-19 a D-22; antecipa o P-02)
 
+> **Status (15/11/2026): protótipo com mock.** Telas, indicador global e deep link existem no app, com serviço de exemplo em memória (sem backend real e sem GPS em segundo plano; PL-18 e PL-24 seguem abertos).
+>
 > **Depende do tempo (D-22):** previsto para o protótipo de 19/11. Se o prazo apertar, a construção é cancelada e fica para depois, sem afetar as demais features. É **nativa e gratuita** (não entra no premium).
 
 **US-21.** Como Ágatha, quero compartilhar minha rota e minha localização com uma pessoa de confiança durante a volta, para que ela acompanhe minha viagem até eu chegar.
@@ -302,6 +304,22 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - **AC1.** A API devolve só resultados agregados (`N`, `D`, `L`, cobertura); nunca coordenadas ou dados de boletins individuais.
 - **AC2.** Recortes que permitam identificar pessoas não são exibidos.
 
+### E7 — VoltaSegura+
+
+#### F7.1 — Rotina e aviso antes de sair · MVP **(Depende do tempo)** · Mobile · `[DECISÃO — 15/11/2026]` (gatilho decidido, ver AC2) (`docs/app-map/01_decisoes.md`, D-31)
+
+> Versão mínima, sem pagamento. Se o prazo de 19/11 apertar, fica para depois, sem afetar as demais features.
+
+**US-22.** Como Ágatha, quero cadastrar minha rotina de volta e receber um aviso antes de sair, para me planejar sem repetir a busca.
+
+- **AC1.** Dado a tela da rotina, quando a usuária cadastrar um trajeto fixo (origem, destino, dias e horário de saída), então ele fica salvo **só no aparelho**.
+- **AC2.** Dado uma rotina ativa, quando chegar o horário do aviso, então o app envia uma notificação local antes da saída. `[DECISÃO — 15/11/2026]` (D-31) O gatilho é um **lembrete por horário**: N minutos antes da saída (padrão 15), nos dias da rotina, **sem tempo real e sem servidor**. Texto: "Hora de sair: sua rotina de {dia} às {hora}. Compare os caminhos antes de sair." Tocar na notificação abre a tela inicial com origem, destino e saída da rotina. `[HIPÓTESE]` antecedência de 5, 10, 15 ou 30 min; até 5 rotinas; origem e destino entre os lugares salvos.
+- **AC3.** A rotina pode ser editada, desativada e apagada, e nunca é enviada ao servidor nem vinculada à conta (DT-08).
+- **AC4.** Dado a permissão de notificações negada, então o app informa que o aviso não será enviado e a rotina continua salva.
+- **AC5.** Nenhum texto promete segurança ou usa "rota segura" (RNF-01); a tela identifica o VoltaSegura+ como recurso em validação, sem preço.
+- `[DECISÃO — 15/11/2026]` O aviso **não** informa mudança no resultado: só o horário (sem tempo real).
+- `[EM ABERTO]` Cobrança real; aviso com dados em tempo real (roadmap, P-08).
+
 ## 7. Requisitos não funcionais
 
 | ID | Requisito | Verificação | Origem |
@@ -343,6 +361,8 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 | P-04 | Preferências de mobilidade e acessibilidade | Fase 3 |
 | P-05 | Parcerias, integrações institucionais e API sob demanda; outras cidades | Fase 4 |
 | P-06 | Teste de compreensão das mensagens com usuários (metodologia em `docs/08`) | Após o MVP |
+| P-07 | Relatos de infraestrutura (postes apagados, calçadas sem acessibilidade) com 3 dias de VoltaSegura+ de recompensa; dados anônimos para melhorar a cidade (pitch, 15/11/2026) | Roadmap do pitch, passo 1 |
+| P-08 | Agente inteligente que reorganiza trajetos diante de atrasos (depende de P-01) e integrações com aplicativos de mobilidade, a partir do VoltaSegura+ | Roadmap do pitch, passo 2 |
 
 ## 10. Pontos em aberto que afetam o backlog
 
@@ -374,6 +394,8 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 | Data | Versão | Mudança | Responsável |
 |---|---|---|---|
+| 15/11/2026 | 1.9 | Alinhamento ao roteiro do pitch (`TODO.md` T23): público amplo (quem volta à noite), modelo freemium individual + empresas, nova F7.1/US-22 (VoltaSegura+, rotina só no aparelho, Depende do tempo), exceção de roadmap em DT-10, P-07 e P-08. IDs mantidos | Lucas Simidu + assistente |
+| 15/11/2026 | 1.10 | F7.1/US-22 detalhada: gatilho decidido (lembrete local por horário, sem tempo real, texto neutro, aviso não informa mudança no resultado), mapeada em FL-17, TL-16, TL-17 e FN-17; implementada. IDs mantidos | Lucas Simidu + assistente |
 | 14/11/2026 | 1.8 | US-03 / F1.3 (exclusão de conta) adiada por ora pela D-25: fora do MVP, critérios preservados; IDs mantidos | Lucas Simidu + assistente |
 | 13/11/2026 | 1.7 | F2.3 AC5 revisto: a menor exposição estimada passa a ser a prioridade do resultado (D-23); com esse foco, a rota vem primeiro, já selecionada e com rótulo em destaque; sem ele, a ordem segue por tempo. IDs mantidos | Lucas Simidu + assistente |
 | 13/11/2026 | 1.6 | Nova F2.5 / US-21 (compartilhar trajeto e localização ao vivo; nativa e gratuita; MVP "Depende do tempo"; D-19 a D-22); exceções registradas em DT-08, US-05 AC3 e novo US-19 AC4; P-02 antecipado; seção 10 com as pendências do compartilhamento e a proposta de receita em discussão. IDs mantidos | Lucas Simidu + assistente |

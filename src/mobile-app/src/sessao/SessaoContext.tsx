@@ -8,6 +8,9 @@ import {
   type ReactNode,
 } from 'react';
 
+import { ambiente } from '@/config/ambiente';
+import { ehCookieSessaoNeonAuth } from '@/services/exposicao';
+
 import { apagarSessao, gravarSessao, lerSessao } from './armazenamento';
 import type { Sessao } from './tipos';
 
@@ -50,7 +53,9 @@ export function SessaoProvider({ children }: { children: ReactNode }) {
     (async () => {
       const salva = await lerSessao();
       if (!ativo) return;
-      if (salva && !expirada(salva)) {
+      // Com o Neon Auth configurado, uma sessão antiga do modo de teste (mock/provisória) não vale: apaga e pede login.
+      const deOutroModo = !!salva && !!ambiente.urlNeonAuth && !ehCookieSessaoNeonAuth(salva.token);
+      if (salva && !deOutroModo && !expirada(salva)) {
         setSessao(salva);
       } else if (salva) {
         await apagarSessao();

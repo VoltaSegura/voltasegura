@@ -11,8 +11,8 @@
 | TL-01 | Abertura | `/(auth)/` | FL-01, FL-03 | US-02 AC3 | pronta |
 | TL-02 | Criar conta | `/(auth)/criar-conta` | FL-02 | US-01 AC1–AC6 | pronta |
 | TL-03 | Entrar | `/(auth)/entrar` | FL-03 | US-02 AC1–AC3, US-03 AC2 | pronta |
-| TL-04 | Planejar | `/(app)/planejar` | FL-04, FL-05, FL-08, FL-11 | US-04, US-05, US-06, US-07 | pronta |
-| TL-05 | Escolher ponto no mapa | `/(app)/escolher-ponto` (modal) | FL-05 | US-05, US-06, D-02 | pronta |
+| TL-04 | Planejar (revista D-29) | `/(app)/planejar` | FL-04, FL-05, FL-08, FL-11 | US-04, US-05, US-06, US-07 | pronta |
+| TL-05 | Escolher ponto: mapa em tela cheia (revista D-29) | `/(app)/escolher-ponto` (modal) | FL-05 | US-05, US-06, D-02 | pronta |
 | TL-06 | Buscando e avisos | `/(app)/buscando` | FL-06, FL-13 | US-08 AC2 | pronta |
 | TL-07 | Resultado (mapa + container) | `/(app)/resultado` | FL-06, FL-07 | US-08, US-11, US-13, D-01, D-09, D-12, D-16, D-23 | pronta (prioridade revista pela D-23) |
 | TL-08 | Detalhes da rota (trechos) | `/(app)/resultado/[rotaId]` | FL-07, FL-14 | US-09 AC1, US-08 AC1, AC3 | pronta |
@@ -21,8 +21,10 @@
 | TL-11 | Dados considerados | `/(app)/dados-considerados` | FL-10 | US-15 AC1–AC4, D-14 | pronta |
 | TL-12 | Configurações | `/(app)/configuracoes` | FL-11, FL-12 (adiado, D-25) | US-03 (adiado, D-25), US-04 | pronta (exclusão de conta: adiado, D-25) |
 | TL-13 | Aviso de privacidade | `/aviso-privacidade` | FL-02 | US-01 AC6, RNF-09 | pronta |
-| TL-14 | Compartilhar minha volta (**Depende do tempo**) | `/(app)/compartilhar/[rotaId]` (modal) + indicador global | FL-15 | US-21 AC1–AC5, AC7, AC9 | rascunho (nova, D-19) |
-| TL-15 | Acompanhar viagem (**Depende do tempo**) | `/(app)/acompanhar/[token]` | FL-16 | US-21 AC6–AC8 | rascunho (nova, D-19) |
+| TL-14 | Compartilhar minha volta (**Depende do tempo**) | `/(app)/compartilhar/[rotaId]` (modal) + indicador global | FL-15 | US-21 AC1–AC5, AC7, AC9 | rascunho; protótipo com mock implementado (15/11) |
+| TL-15 | Acompanhar viagem (**Depende do tempo**) | `/(app)/acompanhar/[token]` | FL-16 | US-21 AC6–AC8 | rascunho; protótipo com mock implementado (15/11) |
+| TL-16 | Rotina da semana: lista (**Depende do tempo**) | `/(app)/rotina` | FL-17 | US-22 AC1, AC3–AC5 | rascunho (nova, D-31) |
+| TL-17 | Criar ou editar rotina (**Depende do tempo**) | `/(app)/rotina/editar` | FL-17 | US-22 AC1–AC5 | rascunho (nova, D-31) |
 
 ## Variantes do resultado e onde ficam
 

@@ -1,6 +1,7 @@
 import { Redirect, Stack, router } from 'expo-router';
 
 import { LinhaLista, Link, SeloExemplo, Tela, Texto } from '@/components';
+import { coberturaPorProxy, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, RespostaConsulta, Rota } from '@/services';
 import { textos } from '@/textos';
@@ -39,6 +40,7 @@ function situacao(resposta: RespostaConsulta): string {
       return textos.porQue.indicativo.insuficiente(motivo);
     }
     case 'NAO_APLICAVEL': return textos.porQue.indicativo.naoAplicavel;
+    case 'MISTOS': return textos.casosResultado.mistos;
     case 'INDISPONIVEL': return textos.porQue.indicativo.indisponivel;
     default: return textos.porQue.indicativo.semDiferenca;
   }
@@ -55,19 +57,46 @@ export default function SobreOsDados() {
   if (!resposta) return <Redirect href="/planejar" />;
 
   const { fonte, periodo: janela, atualizacao } = resposta.sobreOsDados;
+  const semExposicao = soRoteamento(resposta);
+  const selos = selosExemplo(resposta);
+  const ambos = selos.roteamento && selos.exposicao;
+  // Selo EXEMPLO por bloco (fontes.*): um só no topo quando os dois blocos são de exemplo.
+  const horarios = <>
+    {selos.roteamento && !ambos ? <SeloExemplo /> : null}
+    <Texto>{textos.sobre.atualizacaoGtfs(data(atualizacao.gtfs))}</Texto>
+  </>;
+  if (semExposicao) {
+    // B-08 · "Só roteamento": sem período, sem base SSP, sem cobertura, sem comparação.
+    return (
+      <Tela>
+        <Stack.Screen options={{ title: textos.sobre.titulo }} />
+        <Texto variante="secao" accessibilityRole="header">{textos.soRoteamento.roteamentoTitulo}</Texto>
+        <Texto>{selos.roteamento ? textos.soRoteamento.roteamentoExemplo : textos.soRoteamento.roteamentoReal}</Texto>
+        {horarios}
+        <Texto variante="secao" accessibilityRole="header">{textos.soRoteamento.sobreTitulo}</Texto>
+        <Texto>{textos.soRoteamento.sobreExplica}</Texto>
+        <Texto variante="secao" accessibilityRole="header">{textos.sobre.limitacoesTitulo}</Texto>
+        <Texto>{`• ${textos.sobre.limHorarios}`}</Texto>
+        <Texto variante="secao" accessibilityRole="header">{textos.sobre.creditosTitulo}</Texto>
+        <Texto>{h.creditosFontes}</Texto>
+      </Tela>
+    );
+  }
   return (
     <Tela>
       <Stack.Screen options={{ title: textos.sobre.titulo }} />
-      {resposta.exemplo ? <SeloExemplo /> : null}
+      {ambos ? <SeloExemplo /> : null}
+      {selos.exposicao && !ambos ? <SeloExemplo /> : null}
       <Texto variante="secao" accessibilityRole="header">{textos.sobre.fonteTitulo}</Texto>
       <Texto>{textos.sobre.fonte({ fonte, periodo: periodo(janela.inicio, janela.fim), meses: janela.meses })}</Texto>
       <Texto>{textos.sobre.atualizacaoSsp(data(atualizacao.ssp))}</Texto>
-      <Texto>{textos.sobre.atualizacaoGtfs(data(atualizacao.gtfs))}</Texto>
+      {horarios}
       <Texto variante="secao" accessibilityRole="header">{textos.sobre.coberturaTitulo}</Texto>
       {resposta.rotas.map((rota, indice) => (
-        <LinhaLista key={rota.id} titulo={h.opcaoComFoco(indice + 1, rota.focos.map((foco) => focos[foco]).join(', '))} valor={cobertura(rota)} />
+        <LinhaLista key={rota.id} titulo={h.opcaoComFoco(indice + 1, focosVisiveis(rota.focos, resposta).map((foco) => focos[foco]).join(', '))} valor={cobertura(rota)} />
       ))}
       <Texto cor="texto2">{textos.sobre.coberturaExplica}</Texto>
+      {coberturaPorProxy(resposta) && <Texto testID="aviso-cobertura-proxy" cor="texto2">{textos.coberturaProxy.aviso}</Texto>}
       <Texto variante="secao" accessibilityRole="header">{textos.sobre.situacaoTitulo}</Texto>
       <Texto>{situacao(resposta)}</Texto>
       <Texto variante="secao" accessibilityRole="header">{textos.sobre.limitacoesTitulo}</Texto>

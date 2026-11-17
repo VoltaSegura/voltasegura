@@ -24,6 +24,7 @@ function FioPulsante() {
   useEffect(() => {
     if (reduzido) { p.value = 1; return; }
     p.value = withRepeat(withTiming(1, { duration: 900 }), -1, true);
+    return () => { p.value = 1; };
   }, [p, reduzido]);
   const estilo = useAnimatedStyle(() => ({ opacity: p.value, transform: [{ scaleX: 0.55 + 0.45 * p.value }] }));
   return <Animated.View accessible={false} style={[estilos.fio, { backgroundColor: cores.luz }, brilho(cores.luz, 0.6), estilo]} />;
@@ -49,7 +50,7 @@ export function Carregando({ texto, variante = 'tela' }: Props) {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: esp[3], padding: esp[4] },
+  tela: { flexGrow: 1, minHeight: 96, alignItems: 'center', justifyContent: 'center', gap: esp[3], padding: esp[4] },
   fio: { width: 96, height: 4, borderRadius: 2 },
   linha: { flexDirection: 'row', alignItems: 'center', gap: esp[2] },
 });

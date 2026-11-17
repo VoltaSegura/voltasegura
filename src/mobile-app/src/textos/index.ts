@@ -5,6 +5,7 @@ import { buscando } from './buscando';
 import { comuns } from './comuns';
 import { compartilhar } from './compartilhar';
 import { config } from './config';
+import { coberturaProxy, casosResultado } from './coberturaProxy';
 import { criarConta } from './criarConta';
 import { dadosConsiderados } from './dadosConsiderados';
 import { entrar } from './entrar';
@@ -14,6 +15,7 @@ import { planejar } from './planejar';
 import { porQue } from './porQue';
 import { resultado } from './resultado';
 import { sobre } from './sobre';
+import { soRoteamento } from './soRoteamento';
 
 // Fonte única dos textos das telas (docs/app-map/08_microcopy.md).
 export const textos = {
@@ -28,6 +30,9 @@ export const textos = {
   resultado,
   porQue,
   sobre,
+  soRoteamento,
+  coberturaProxy,
+  casosResultado,
   dadosConsiderados,
   config,
   aviso,

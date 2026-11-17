@@ -7,17 +7,17 @@ import { esp, raio, tipo, toque } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
 
 import { Botao } from '../Botao';
-import { Icone } from '../Icone';
 import { Texto } from '../Texto';
 import { infoTipo, tiposLocal } from './tiposLocal';
 
 type Props = {
+  endereco?: string | null;
   onSalvar: (nome: string, tipo: TipoLocal) => Promise<string | null>;
   onCancelar: () => void;
 };
 
 /** Formulário curto para salvar o ponto marcado como lugar (nome + tipo). Fica só no aparelho. */
-export function SalvarLugar({ onSalvar, onCancelar }: Props) {
+export function SalvarLugar({ endereco, onSalvar, onCancelar }: Props) {
   const { cores } = useTema();
   const [nome, setNome] = useState('');
   const [tipoEscolhido, setTipo] = useState<TipoLocal>('casa');
@@ -34,26 +34,8 @@ export function SalvarLugar({ onSalvar, onCancelar }: Props) {
 
   return (
     <View style={estilos.base}>
-      <Texto variante="rotulo" cor="texto2">{h.tipoDoLugar}</Texto>
-      <View accessibilityRole="radiogroup" accessibilityLabel={h.tipoDoLugar} style={estilos.tipos}>
-        {tiposLocal.map((t) => {
-          const marcado = t === tipoEscolhido;
-          return (
-            <Pressable
-              key={t}
-              accessibilityRole="radio"
-              accessibilityLabel={infoTipo[t].rotulo}
-              accessibilityState={{ checked: marcado, selected: marcado }}
-              onPress={() => { setTipo(t); if (!nome) setNome(t === 'outro' ? '' : infoTipo[t].rotulo); }}
-              style={[estilos.tipo, { borderColor: marcado ? cores.acao : cores.borda, backgroundColor: marcado ? cores.acao : 'transparent' }]}
-            >
-              <Icone nome={infoTipo[t].icone} tamanho={18} cor={marcado ? cores.acaoTexto : cores.texto} />
-              <Texto variante="rotulo" cor={marcado ? 'acaoTexto' : 'texto'}>{infoTipo[t].rotulo}</Texto>
-            </Pressable>
-          );
-        })}
-      </View>
       <TextInput
+        autoFocus
         accessibilityLabel={h.nomeDoLugar}
         placeholder={h.nomeExemplo}
         placeholderTextColor={cores.texto2}
@@ -70,14 +52,23 @@ export function SalvarLugar({ onSalvar, onCancelar }: Props) {
         <Botao rotulo={h.salvarCancelar} variante="texto" onPress={onCancelar} style={estilos.acao} />
         <Botao rotulo={h.salvarConfirmar} carregando={salvando} onPress={() => { void confirmar(); }} style={estilos.acao} />
       </View>
+      <View accessibilityRole="radiogroup" accessibilityLabel={h.tipoDoLugar} style={estilos.tipos}>
+        {tiposLocal.map((t) => {
+          const marcado = t === tipoEscolhido;
+          return <Pressable key={t} accessibilityRole="radio" accessibilityLabel={infoTipo[t].rotulo} accessibilityState={{ checked: marcado, selected: marcado }} onPress={() => { setTipo(t); if (!nome) setNome(t === 'outro' ? '' : infoTipo[t].rotulo); }} style={[estilos.tipo, { borderColor: marcado ? cores.acao : cores.borda, backgroundColor: marcado ? cores.acao : 'transparent' }]}>
+            <Texto variante="rotulo" cor={marcado ? 'acaoTexto' : 'texto'} numberOfLines={1}>{infoTipo[t].rotulo}</Texto>
+          </Pressable>;
+        })}
+      </View>
+      {endereco ? <Texto variante="apoio" cor="texto2" numberOfLines={1} accessibilityLiveRegion="polite">{endereco}</Texto> : null}
     </View>
   );
 }
 
 const estilos = StyleSheet.create({
   base: { gap: esp[2] },
-  tipos: { flexDirection: 'row', flexWrap: 'wrap', gap: esp[2] },
-  tipo: { flexDirection: 'row', alignItems: 'center', gap: esp[1], minHeight: toque.minimo - 8, paddingHorizontal: esp[3], borderRadius: raio.pilula, borderWidth: 1 },
+  tipos: { flexDirection: 'row', gap: esp[1] },
+  tipo: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', minHeight: toque.minimo, borderRadius: raio.pilula, borderWidth: 1 },
   campo: { minHeight: toque.minimo, borderRadius: raio.medio, borderWidth: 1, paddingHorizontal: esp[3] },
   acoes: { flexDirection: 'row', gap: esp[2] },
   acao: { flex: 1 },

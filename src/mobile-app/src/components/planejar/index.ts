@@ -1,5 +1,6 @@
 export { CampoPonto } from './CampoPonto';
-export { CartaoLocal } from './CartaoLocal';
+export { AtalhosHorario } from './AtalhosHorario';
+export { CartaoAdicionarLocal, CartaoLocal } from './CartaoLocal';
 export { SeletorHorario } from './SeletorHorario';
 export { infoTipo, tiposLocal } from './tiposLocal';
 export { BuscaEndereco } from './BuscaEndereco';

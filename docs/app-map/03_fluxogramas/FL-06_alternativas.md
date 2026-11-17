@@ -7,6 +7,12 @@
 - **US/AC cobertos:** US-08 AC1–AC4
 - **Telas envolvidas:** TL-06 → TL-07 → TL-08
 
+## Revisão de 15/11/2026 — B2, U6, U7 e U8
+
+[HIPÓTESE] TL-07 apresenta cabeçalho curto (“N opções” / “1 opção” + saída), chip neutro só com foco de exposição na primeira rota e dica só na primeira visita da sessão (memória, sem persistência). Folha em três alturas (~28%, ~55%, ~88%); toque na alça percorre as alturas e anuncia o estado, arraste avança/recua. A câmera reserva os pinos e a área da folha. Reduzir movimento desativa as transições. “Horários previstos (GTFS)” e “Planejar a volta” ficam no fim da lista; “Sobre os dados” continua fixo no rodapé.
+
+[DECISÃO] A saída e os horários previstos são exibidos no fuso do aparelho em HH:mm, sem recorte textual do ISO. ISO inválido usa --:--. Planejar a volta preserva a inversão de pontos e navega para /planejar?sentido=volta.
+
 ## Diagrama
 
 ```mermaid
@@ -31,7 +37,11 @@ flowchart TD
     LEXP --> TROCA
     LISTA --> TROCA["Toca em outro card: o mapa troca o trajeto em destaque"]
     TROCA --> LISTA
-    LISTA --> DET["Toca no card: TL-08 detalhes e trechos (FL-14)"]
+    LISTA --> ALT["Alça por toque ou arraste: recolhida, meia ou cheia; anúncio da altura"]
+    ALT --> LISTA
+    LISTA --> FIM["Fim da lista: horários previstos GTFS e Planejar a volta"]
+    FIM --> PLAN["TL-04 com pontos invertidos e sentido volta"]
+    LISTA --> DET["Toca em ›: TL-08 detalhes e trechos (FL-14)"]
     UMA --> DET
 ```
 
@@ -55,7 +65,7 @@ flowchart TD
 |---|---|---|---|---|
 | 1 | — | Mostra "buscando alternativas" | TL-06 | API |
 | 2 | — | Desenha no mapa o trajeto inteiro da primeira rota (a de menor exposição estimada, se houver; senão, a mais rápida); as outras em traço claro | TL-07 | Resposta da API |
-| 3 | Lê os cards | Cada card: rótulo(s) de foco, duração total, caminhada, baldeações, modos e linhas, horário previsto | TL-07 | Resposta da API |
+| 3 | Lê o cabeçalho curto e os cards (hora no fuso do aparelho) | Cada card: rótulo(s) de foco, duração total, caminhada, baldeações, modos e linhas, horário previsto | TL-07 | Resposta da API |
 | 4 | Toca em outro card | Troca o trajeto em destaque no mapa | TL-07 | Local |
 | 5 | Abre os detalhes | Mostra os trechos em ordem | TL-08 | Resposta da API |
 

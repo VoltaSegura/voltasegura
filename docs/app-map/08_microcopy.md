@@ -98,22 +98,20 @@
 
 | Chave | Texto |
 |---|---|
-| `planejar.ida` / `planejar.volta` | Ida / Volta |
+| `planejar.ida` / `planejar.volta` | Ida / Volta (**só usados em rótulos internos; a TL-04 não tem mais o seletor**, D-29) |
 | `planejar.de_onde` | De onde |
 | `planejar.para_onde` | Para onde |
 | `planejar.escolher_origem` / `planejar.escolher_destino` | Escolher origem / Escolher destino |
 | `planejar.inverter` | Inverter origem e destino |
 | `planejar.saida` / `planejar.saida_volta` | Saída / Saída da volta |
 | `planejar.ver_alternativas` | Ver alternativas |
-| `planejar.recentes` | Recentes (no aparelho) |
-| `planejar.recentes_vazio` | Nenhum trajeto salvo. Ligue o histórico em Configurações. |
+| `planejar.recentes` / `planejar.recentes_vazio` | *(histórico de trajetos fora desta versão, `[EM ABERTO]`)* |
 | `planejar.usar_localizacao` | Usar minha localização |
 | `planejar.obtendo_localizacao` | Obtendo localização… |
 | `planejar.minha_localizacao` | Minha localização |
 | `planejar.escolher_mapa` | Escolher no mapa |
 | `planejar.locais_salvos` | Locais salvos no aparelho |
-| `planejar.pontos_exemplo` | Pontos de exemplo |
-| `planejar.prefixo_exemplo` | Exemplo: {nome} |
+| `planejar.pontos_exemplo` / `planejar.prefixo_exemplo` | *(removidos da interface, D-29)* |
 | `planejar.ponto_mapa` | Ponto escolhido no mapa |
 | `planejar.erro_origem` / `planejar.erro_destino` | Escolha a origem. / Escolha o destino. |
 | `planejar.mesmo_lugar` | Origem e destino são o mesmo lugar: não há trajeto a calcular. |
@@ -127,7 +125,7 @@
 | Chave | Texto |
 |---|---|
 | `escolher_ponto.titulo_origem` / `escolher_ponto.titulo_destino` | Escolher origem / Escolher destino |
-| `escolher_ponto.instrucao` | Arraste o mapa para pôr o ponto na mira. |
+| `escolher_ponto.instrucao` | Arraste o mapa para pôr o ponto na mira. *(na tela cheia: "Arraste o mapa para pôr o pino no ponto certo.")* |
 | `escolher_ponto.usar` | Usar este ponto |
 | `escolher_ponto.salvar` | Salvar no aparelho como: |
 | `escolher_ponto.nome_exemplo` | ex.: Faculdade |
@@ -353,3 +351,132 @@ Feita em 13/11/2026 por script local sobre **894 linhas** (refeita após o acré
 | "prev" no sentido de prever crimes ("prevemos", "previsão de crime") | 0 (só "previsto" para horário programado) |
 | "conformidade", "LGPD" em contexto afirmativo | 0 |
 | "culpa", "responsabilidade sua" | 0 |
+
+## Home, mapa e lugares salvos (D-29, `[HIPÓTESE]`, fonte: `src/textos/hipotesesMapa.ts`)
+
+| Chave | Texto |
+|---|---|
+| `mapa.saudacao` / `mapa.subtitulo` | Para onde vamos? / Compare os caminhos antes de sair. |
+| `mapa.de_onde_vazio` / `mapa.para_onde_vazio` | Sua localização ou um ponto no mapa / Buscar destino ou escolher no mapa |
+| `mapa.planejando_volta` | Planejando a volta |
+| `mapa.usar_localizacao_origem` | Usar minha localização como origem |
+| `mapa.agora` / `em15` / `em30` / `em1h` | Agora / Em 15 min / Em 30 min / Em 1 h |
+| `mapa.lugares_salvos` / `lugares_vazio` | Lugares salvos / Salve casa, trabalho ou outro lugar para escolher com um toque. |
+| `mapa.adicionar_lugar` | Adicionar lugar |
+| `mapa.buscar` / `buscar_campo` / `buscar_exemplo` | Buscar / Buscar endereço ou lugar / Rua, avenida ou lugar em São Paulo |
+| `mapa.buscar_aviso` | O texto buscado é enviado ao serviço de mapas do seu celular. Só ao tocar em Buscar. |
+| `mapa.nao_achou` / `busca_indisponivel` | Não encontramos esse endereço... / A busca por texto não está disponível agora... |
+| `mapa.minha_localizacao_botao` | Ir para minha localização |
+| `mapa.ponto_escolhido` / `salvar_lugar` | Ponto escolhido / Salvar este lugar |
+| `mapa.nome_do_lugar` / `tipo_do_lugar` | Nome do lugar / Tipo do lugar |
+| `mapa.erro_nome` / `erro_limite` / `erro_salvar` | Dê um nome para salvar o lugar. / Você chegou ao limite de 10 lugares. Apague um em Configurações. / Não foi possível salvar agora. |
+| `mapa.tipo_*` | Casa / Trabalho / Estudo / Outro |
+| `mapa.lugares_secao` / `no_aparelho` | Lugares salvos / Guardados só neste aparelho, nunca enviados. |
+| `aviso.busca` / `aviso.locais` | Textos novos do Aviso de privacidade sobre a busca e os lugares salvos |
+
+## Onda 3 (15/11/2026, `[HIPÓTESE]`)
+
+| Fonte | Chave | Texto |
+|---|---|---|
+| `hipotesesMapa` | `buscarAvisoCurto` | Busca usa o serviço de mapas do celular |
+| `hipotesesMapa` | `minhaLocalizacaoPilula` | Minha localização |
+| `hipotesesMapa` | `salvoComo(nome)` | Salvo como {nome} |
+| `hipotesesResultado` | `opcoes(n)` | 1 opção / N opções |
+| `hipotesesResultado` | `exposicaoPrimeiro` | Menor exposição estimada primeiro |
+| `hipotesesResultado` | `saida(hora)` | Saída às HH:mm (no fuso do aparelho) |
+| `hipotesesResultado` | `alturas` | Lista recolhida / Lista em meia altura / Lista em altura cheia |
+| `hipotesesResultado` | `alternarAltura` | Toque para mudar a altura da lista |
+| `hipotesesConfig` | `renomear(nome)` | Renomear {nome} |
+| `hipotesesConfig` | `nomeLugar` / `salvar` / `cancelar` | Nome do lugar / Salvar / Cancelar |
+| `hipotesesConfig` | `nomeVazio` / `nomeAtualizado` | Dê um nome para o lugar. / Nome atualizado. |
+| `hipotesesConfig` | `lugarApagado` / `desfazer` / `lugarRestaurado` | Lugar apagado. / Desfazer / Lugar restaurado. |
+| `hipotesesConfig` | `erroAlterar` | Não foi possível atualizar os lugares agora. Tente de novo. |
+
+## Onda 4 (15/11/2026, D-30, `[HIPÓTESE]`)
+
+| Fonte | Chave | Texto |
+|---|---|---|
+| `hipotesesMapa` | `toqueMapa` | Toque no mapa para marcar o ponto. |
+| `hipotesesMapa` | `buscandoEndereco` | Buscando endereço… |
+| `hipotesesMapa` | `enderecoIndisponivel` | Endereço indisponível |
+| `hipotesesConfig` | `enderecoNaoSalvo` | Endereço não salvo |
+| `hipotesesResultado` | `resumoRecolhido` | 40 min · 1 troca · 1,0 km a pé · Menor exposição estimada (só na folha recolhida) |
+| `hipotesesAviso` | `busca` | …a posição marcada também é enviada a esse serviço para mostrar o endereço… (atualizado) |
+| `hipotesesAviso` | `locais` | Os lugares que você salva (nome, endereço e posição) ficam só neste celular… (atualizado) |
+
+## Compartilhar e acompanhar: textos de apoio do protótipo (`[HIPÓTESE]`, fonte: `src/textos/hipotesesCompartilhar.ts`)
+
+| Chave | Texto |
+|---|---|
+| `prototipo` | Protótipo: este compartilhamento usa dados de exemplo. Nenhuma localização real é lida ou enviada. |
+| `prototipoAcompanhar` | Protótipo: esta viagem é um exemplo. Nada aqui vem de uma viagem real. |
+| `quemEspera` | Quem espera por você pode acompanhar a viagem pelo app. Não é um serviço de emergência. |
+| `simularChegada` | Simular chegada (exemplo) |
+| `encerradoTempo` | Compartilhamento encerrado: o tempo máximo acabou. |
+| `semConexao` | Sem conexão. Mostrando a última informação recebida. |
+
+## Rotina da semana (VoltaSegura+, D-31, `[HIPÓTESE]`, fonte: `src/textos/rotina.ts`)
+
+| Chave | Texto |
+|---|---|
+| `rotina.titulo` | Rotina da semana |
+| `rotina.selo` | VoltaSegura+ · recurso em validação |
+| `rotina.intro` | Cadastre um trajeto fixo, com dias e horário de saída. O app avisa antes da hora de sair, para você comparar os caminhos sem repetir a busca. |
+| `rotina.semPreco` | Sem cobrança durante a validação. |
+| `rotina.privacidade` | A rotina fica só neste aparelho. Não é enviada ao servidor nem vinculada à sua conta. |
+| `rotina.lembreteSoHorario` | O lembrete avisa só o horário. Ele não usa trânsito nem dados em tempo real. |
+| `rotina.entradaConfig` / `entradaConfigDetalhe` | Rotina da semana / Lembrete antes de sair, só neste aparelho |
+| `rotina.vazio` | Você ainda não tem uma rotina. Crie uma para receber o lembrete antes de sair. |
+| `rotina.nova` / `editar` | Nova rotina / Editar rotina |
+| `rotina.limite(max)` | Você já tem {max} rotinas. Apague uma para criar outra. |
+| `rotina.secaoRotinas` | Suas rotinas |
+| `rotina.trajeto(origem, destino)` / `detalhe(dias, hora)` | {origem} para {destino} / {dias}, saída às {hora} |
+| `rotina.alternar(trajeto)` | Lembrete de {trajeto} |
+| `rotina.origem` / `destino` / `escolherLugar` / `selecionado(nome)` | Origem / Destino / Escolha entre seus lugares salvos / {nome}, selecionado |
+| `rotina.poucosLugares` | Para criar uma rotina, salve pelo menos dois lugares (por exemplo, casa e trabalho) na tela inicial. |
+| `rotina.irParaInicio` | Ir para a tela inicial |
+| `rotina.dias` / `hora` / `horaAjuda` | Dias da semana / Horário de saída / Use o formato 18:30. |
+| `rotina.antecedencia` / `antecedenciaOpcao(min)` | Avisar antes da saída / {min} min |
+| `rotina.ativarLembrete` | Lembrete ativo |
+| `rotina.salvar` / `cancelar` / `apagar` | Salvar rotina / Cancelar / Apagar rotina |
+| `rotina.confirmarApagar` / `confirmarApagarSim` | Apagar esta rotina? Isso não pode ser desfeito. / Sim, apagar |
+| `rotina.erroOrigem` / `erroDestino` | Escolha a origem. / Escolha o destino. |
+| `rotina.erroMesmoLugar` | Origem e destino precisam ser lugares diferentes. |
+| `rotina.erroDias` / `erroHora` | Escolha pelo menos um dia. / Informe a hora no formato 18:30. |
+| `rotina.erroSalvar` | Não foi possível salvar a rotina agora. Tente de novo. |
+| `rotina.erroAvisoAgendar` | A rotina foi salva, mas não foi possível programar o lembrete agora. Tente salvar de novo. |
+| `rotina.semPermissao` | As notificações estão desativadas neste aparelho, então o lembrete não será enviado. A rotina continua salva e você pode ativar as notificações nas configurações do aparelho. |
+| `rotina.salva` / `apagada` | Rotina salva. / Rotina apagada. |
+| `rotina.lembreteAtivado` / `lembreteDesativado` | Lembrete ativado. / Lembrete desativado. |
+| `rotina.notificacaoTitulo` | Hora de se organizar |
+| `rotina.corpo(dia, hora)` | Hora de sair: sua rotina de {dia} às {hora}. Compare os caminhos antes de sair. |
+| `rotina.canal` | Lembretes da rotina (nome do canal de notificação no Android) |
+| `rotina.diasCompletos` / `diasCurtos` | domingo ... sábado / Dom ... Sáb |
+| `rotina.todosOsDias` / `diasUteis` / `fimDeSemana` | Todos os dias / Dias úteis / Fim de semana |
+
+## Só roteamento (B-08, 16/11/2026, `[HIPÓTESE]`, fonte: `src/textos/soRoteamento.ts`)
+
+Usado quando `fontes.exposicao = 'indisponivel'` ou `caso = 'INDISPONIVEL'`: rota sem exposição estimada, sem número de ocorrências e sem zero (docs/05).
+
+| Chave | Texto |
+|---|---|
+| `selo` | Só roteamento |
+| `aviso` (TL-07, TL-08) | Só roteamento: mostramos os trajetos e os horários. A exposição estimada não está disponível nesta consulta, então não há comparação de registros. |
+| `linhaDados` (linha fixa TL-07/08) | Só roteamento · exposição estimada indisponível |
+| `porQue` (TL-09, acesso direto) | Sem exposição estimada para esta consulta, não há o que explicar sobre registros neste trecho. |
+| `dadosConsiderados` (TL-11) | Sem exposição estimada nesta consulta: nenhum registro foi considerado e não há totais para mostrar. |
+| `sobreTitulo` / `sobreExplica` (TL-10) | Exposição estimada / Indisponível nesta consulta. Os registros da SSP-SP não foram consultados, então nenhuma opção tem número de registros ou cobertura. |
+| `roteamentoTitulo`, `roteamentoExemplo`, `roteamentoReal` (TL-10) | Trajetos e horários / Trajetos de exemplo. / Trajetos e horários do roteamento do projeto (GTFS e OpenStreetMap). |
+
+## Cobertura por proxy e texto por caso (B-53, 17/11/2026, `[HIPÓTESE]`, fonte: `src/textos/coberturaProxy.ts`)
+
+`coberturaProxy.aviso` aparece em TL-09, TL-10 e TL-11 quando `fontes.exposicao = 'ssp'` (fora de "só roteamento"). `casosResultado` é o texto próprio de cada caso na TL-07 (2 ou mais opções); nenhum destaca rota nem rotula território (docs/05).
+
+| Chave | Texto |
+|---|---|
+| `coberturaProxy.aviso` | A cobertura dos dados é estimada pelos pontos dos boletins, não por mapas oficiais das áreas. Recurso em validação. |
+| `casosResultado.semDiferenca` | Com os dados registrados, não há diferença clara de exposição estimada entre as opções. |
+| `casosResultado.mistos` (também em TL-09/10) | Os dados registrados apontam sinais diferentes conforme o trecho a pé: não há uma ordem única de exposição estimada entre as opções. |
+| `casosResultado.insuficiente` | Os dados registrados não bastam para comparar a exposição estimada entre as opções, então elas aparecem sem ordenar por exposição. |
+| `casosResultado.naoAplicavel` | Uma das opções não tem trecho a pé, então a exposição estimada não foi comparada desta vez. |
+| `SEM_COMPARACAO` / opção única | Reusa `resultado.soUma`: Só uma opção neste horário: não há comparação. |

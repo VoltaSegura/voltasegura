@@ -1,6 +1,6 @@
 # TL-15 · Acompanhar viagem
 
-- **Status:** rascunho (nova, 13/11/2026; aguarda revisão do Lucas) · **Depende do tempo (D-22)** · **Rota Expo Router prevista:** `/(app)/acompanhar/[token]` (aberta pelo link; exige sessão, PL-23)
+- **Status:** rascunho (nova, 13/11/2026; aguarda revisão do Lucas) · **implementada como protótipo com mock (15/11/2026): telas reais com serviço de exemplo em memória, sem servidor e sem GPS em segundo plano (PL-24 aberto)** · **Depende do tempo (D-22)** · **Rota Expo Router prevista:** `/(app)/acompanhar/[token]` (aberta pelo link; exige sessão, PL-23)
 - **Objetivo:** permitir que o contato acompanhe a viagem de quem compartilhou: trajeto, última posição, chegada estimada e estado.
 - **US/AC e funcionalidades cobertas:** US-21 AC6–AC8 · FN-16 · **RNF aplicáveis:** RNF-01, RNF-02, RNF-06, RNF-07
 - **Entradas:** link temporário (com o app instalado e sessão; senão, passa por TL-03).
@@ -104,6 +104,14 @@ Nenhuma.
 - O trajeto e a posição não ficam guardados no aparelho do contato depois do fim `[HIPÓTESE]`.
 - Sem marcadores de ocorrência nem rótulos de bairro (US-15 AC4, RNF-02).
 - **Proibido:** "ela está segura", "risco", "alerta de perigo", e qualquer texto que responsabilize o contato (RNF-01, RNF-06).
+
+## Implementação no protótipo (15/11/2026)
+
+- Arquivos: `src/app/(app)/acompanhar/[token].tsx`, `src/components/compartilhamento/MapaTrajeto*.tsx`, `src/app/+native-intent.ts` e `LigacaoLink` em `src/app/_layout.tsx` (deep link `voltasegura://acompanhar/<token>`).
+- Guarda de sessão (PL-23): sem sessão, o token fica guardado, o app abre na entrada e, depois do login, empilha a TL-15. Com sessão, abre direto.
+- Tokens de exemplo no mock: `exemplo-ativo`, `exemplo-chegou`, `exemplo-encerrado`, `exemplo-expirado` (e o token da sessão iniciada no próprio aparelho). Consulta a cada 30 s só enquanto em andamento.
+- A resposta usada não tem e-mail nem números da comparação (testado). "Sem o app" é página externa e fica fora do protótipo.
+- Pendente no aparelho: abrir o link com o app fechado e aberto (Expo Go usa `exp://`; o esquema `voltasegura://` pede build de desenvolvimento).
 
 ## Critérios de pronto da tela
 

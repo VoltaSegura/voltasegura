@@ -1,11 +1,25 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { CampoPonto, SeletorHorario } from '@/components/planejar';
+import { AtalhosHorario, CampoPonto, CartaoLocal, SeletorHorario } from '@/components/planejar';
 import { textos } from '@/textos';
 import { hipotesesPlanejar } from '@/textos/hipotesesPlanejar';
 
 describe('componentes de planejamento', () => {
+  it('mostra endereço no cartão e mantém nome como rótulo', async () => {
+    const local = { id: 'c6', nome: 'C6 Bank', tipo: 'outro' as const, ponto: { lat: -23.5, lon: -46.6 }, endereco: 'Rua Um, 10' };
+    await render(<CartaoLocal local={local} onPress={jest.fn()} />);
+    expect(screen.getByText('Rua Um, 10').props.numberOfLines).toBe(1);
+    expect(screen.getByRole('button', { name: 'C6 Bank' }).props.accessibilityHint).toBe('Rua Um, 10');
+    await render(<CartaoLocal local={{ ...local, endereco: undefined }} onPress={jest.fn()} />);
+    expect(screen.queryByText('Rua Um, 10')).toBeNull();
+  });
+
+  it('trunca rótulo longo do campo em uma linha', async () => {
+    await render(<CampoPonto rotulo="De onde" valor={'Rua Longa '.repeat(20)} onPress={jest.fn()} />);
+    expect(screen.getByText('Rua Longa '.repeat(20)).props.numberOfLines).toBe(1);
+    expect(screen.getByText('Rua Longa '.repeat(20)).props.ellipsizeMode).toBe('tail');
+  });
   it('anuncia o campo escolhido e seu erro', async () => {
     const onPress = jest.fn();
     await render(<CampoPonto rotulo={textos.planejar.deOnde} valor={textos.planejar.escolherOrigem} preenchido={false} erro={textos.planejar.erroOrigem} onPress={onPress} />);
@@ -26,6 +40,16 @@ describe('componentes de planejamento', () => {
     expect(data.getHours()).toBe(8);
     expect(data.getMinutes()).toBe(30);
     expect(data.getDate()).toBe(new Date(saida).getDate());
+  });
+
+  it('ajusta a saída em ±15 min a partir da saída atual, sem teclado', async () => {
+    const onEscolher = jest.fn<(saida: string) => void>();
+    const saida = '2026-11-17T18:00:00.000Z';
+    await render(<AtalhosHorario saidaAtual={saida} onEscolher={onEscolher} />);
+    await fireEvent.press(screen.getByTestId('ajuste-horamais'));
+    await fireEvent.press(screen.getByTestId('ajuste-horamenos'));
+    expect(onEscolher.mock.calls[0][0]).toBe('2026-11-17T18:15:00.000Z');
+    expect(onEscolher.mock.calls[1][0]).toBe('2026-11-17T17:45:00.000Z');
   });
 
   it('avisa quando a hora digitada é inválida e não altera a saída', async () => {

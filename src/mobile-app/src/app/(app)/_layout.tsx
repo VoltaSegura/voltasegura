@@ -1,12 +1,21 @@
+import { Platform } from 'react-native';
 import { router, Stack } from 'expo-router';
 
 import { ConsultaProvider } from '@/consulta';
 import { LocaisProvider } from '@/locais';
+import { AberturaPorLembrete, RotinaProvider } from '@/rotina';
 import { fonte } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
 import { Botao } from '@/components/Botao';
 import { TituloModal } from '@/components/TituloModal';
 import { textos } from '@/textos';
+import { rotina as rotinaTextos } from '@/textos/rotina';
+
+/**
+ * Com sessão o app sempre abre na home (TL-04). Sem isto, o Expo Router escolhe a rota
+ * inicial pela ordem dos arquivos e pode abrir numa tela sem seta de voltar (ex.: Rotina).
+ */
+export const unstable_settings = { initialRouteName: 'planejar' };
 
 /**
  * Rotas que exigem sessão. A guarda fica na raiz (Stack.Protected).
@@ -17,7 +26,10 @@ export default function AppLayout() {
   return (
     <ConsultaProvider>
       <LocaisProvider>
-        <PilhaApp />
+        <RotinaProvider>
+          {Platform.OS !== 'web' ? <AberturaPorLembrete /> : null}
+          <PilhaApp />
+        </RotinaProvider>
       </LocaisProvider>
     </ConsultaProvider>
   );
@@ -46,11 +58,13 @@ function PilhaApp() {
       <Stack.Screen name="resultado/[rotaId]" />
       <Stack.Screen
         name="por-que/[rotaId]/[trechoId]"
-        options={{ presentation: 'modal', headerTitle: ({ children }) => <TituloModal titulo={children} cor={cores.texto} />, headerRight: () => <Botao variante="texto" rotulo={textos.comuns.fechar} onPress={() => router.back()} /> }}
+        options={{ presentation: 'modal', headerBackVisible: false, headerLeft: () => null, headerTitle: ({ children }) => <TituloModal titulo={children} cor={cores.texto} />, headerRight: () => <Botao variante="texto" rotulo={textos.comuns.fechar} onPress={() => router.back()} /> }}
       />
       <Stack.Screen name="sobre-os-dados" />
       <Stack.Screen name="dados-considerados" />
       <Stack.Screen name="configuracoes" />
+      <Stack.Screen name="rotina" options={{ title: rotinaTextos.titulo }} />
+      <Stack.Screen name="rotina/editar" />
       <Stack.Screen
         name="compartilhar/[rotaId]"
         options={{ title: 'Compartilhar', presentation: 'modal', headerTitle: ({ children }) => <TituloModal titulo={children} cor={cores.texto} />, headerRight: () => <Botao variante="texto" rotulo={textos.comuns.fechar} onPress={() => router.back()} /> }}

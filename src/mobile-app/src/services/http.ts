@@ -3,8 +3,8 @@ import { ErroServico, erroDeStatus } from './erros';
 /** Chamada HTTP única da camada. Não registra nada em log. */
 export async function chamar<T>(
   url: string,
-  metodo: 'POST' | 'DELETE',
-  opcoes: { corpo?: unknown; token?: string | null; contexto: 'consulta' | 'conta'; signal?: AbortSignal },
+  metodo: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+  opcoes: { corpo?: unknown; token?: string | null; contexto: 'consulta' | 'conta' | 'compartilhamento'; signal?: AbortSignal },
 ): Promise<T | null> {
   const headers: Record<string, string> = { Accept: 'application/json' };
   if (opcoes.corpo !== undefined) headers['Content-Type'] = 'application/json';

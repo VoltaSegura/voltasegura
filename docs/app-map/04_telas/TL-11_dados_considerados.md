@@ -6,6 +6,10 @@
 - **Entradas:** TL-09, TL-10.
 - **Saídas:** voltar.
 
+## Revisão de 16/11/2026 — B-08 · Só roteamento
+
+[DECISÃO] B-08 (Plano B, 16/11/2026): com `fontes.exposicao = 'indisponivel'` OU `caso = 'INDISPONIVEL'` (ou campos de exposição `null`) a tela trata a consulta como **"Só roteamento"** (`soRoteamento()` em `components/resultado/fontes.ts`). O selo EXEMPLO segue `fontes.*` por bloco (`selosExemplo()`), não o booleano global `exemplo`. Em "Só roteamento": no lugar dos totais e do panorama aparece `textos.soRoteamento.dadosConsiderados`; nenhum número, zero ou "Dados insuficientes" é exibido.
+
 ## Wireframe
 
 **Estado padrão** (EXEMPLO)
@@ -125,3 +129,5 @@ Linhas expansíveis anunciadas como "Furto, 7 registros, recolhido. Toque para v
 - [ ] Aviso de que só os "outros" entram na comparação (US-15 AC2).
 - [ ] Panorama municipal só por ação deliberada, com o aviso (US-15 AC3).
 - [ ] Sem filtros finos nem marcadores (US-15 AC4).
+
+> B-53 (17/11/2026): ver "Cobertura por proxy e texto por caso" em 08_microcopy.md (aviso com fonte ssp; texto próprio por caso na TL-07).

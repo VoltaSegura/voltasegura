@@ -10,6 +10,8 @@ Esta pasta transforma o backlog (`docs/10_backlog_produto.md`, v1.6) em fluxos, 
 
 **Adiado em 14/11/2026 (D-25):** `[DECISÃO — 14/11/2026]` a exclusão de conta fica fora do MVP por ora. FL-12, a parte de exclusão da TL-12 e FN-03 (US-03) estão **adiados** e preservados para retomada; contas e login seguem pelo Neon Auth (D-24).
 
+**Acréscimo de 15/11/2026 (D-31):** **VoltaSegura+ em versão mínima**, a Rotina da semana com lembrete local por horário, só no aparelho e em validação ("Depende do tempo"). Gerou FL-17, TL-16, TL-17, FN-17 e a US-22. Telas novas aguardam revisão do Lucas.
+
 ## Regras desta pasta
 
 - **Fonte única de funcionalidades:** `docs/10`. Nada é inventado aqui: tudo o que o backlog não cobre vai para `12_pendencias_e_lacunas.md`.

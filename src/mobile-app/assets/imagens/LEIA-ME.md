@@ -11,10 +11,14 @@ Hoje todos os espaços mostram um degradê com ícone. Para trocar por uma foto:
 | `heroEntrar` | Topo da tela Entrar | 16:9 (1080x600) | Mesma família da abertura |
 | `heroCriarConta` | Topo da tela Criar conta | 16:9 | Idem |
 | `heroPlanejar` | Topo da home (Planejar) | 16:9 | Cidade, ponto de ônibus ou estação ao anoitecer |
-| `localCasa` | Cartão do local salvo "Casa" | 4:3 (800x600) | Fachada/rua residencial genérica |
+| `localCasa` | Cartão do lugar salvo "Casa" | 4:3 (800x600) | Fachada/rua residencial genérica |
 | `localTrabalho` | Cartão "Trabalho" | 4:3 | Prédio comercial genérico |
 | `localEstudo` | Cartão "Estudo" | 4:3 | Campus/escola genérico |
-| `localOutro` | Cartão de outros locais | 4:3 | Pin/mapa genérico |
-| `vazioLocais` | Estado "nenhum local salvo" | 4:3 | Ilustração de mapa com pin |
+| `localOutro` | Cartão de outros lugares | 4:3 | Pin/mapa genérico |
+| `vazioLocais` | Home sem lugares salvos | 4:3 | Ilustração de mapa com pin |
+| `heroBuscando` | Tela "Buscando alternativas" | 16:9 | Mapa/rua à noite, sem texto legível |
+| `vazioBusca` | Busca sem transporte ou com falha | 16:9 | Ilustração calma (ponto de ônibus vazio, mapa desconectado), nada alarmante |
+| `heroPrivacidade` | Topo do aviso de privacidade | 16:9 | Ilustração de cadeado/escudo, sem rostos |
+| `avatarPerfil` | Perfil em Configurações | 1:1 (400x400) | Avatar genérico (nunca foto de pessoa real sem autorização) |
 
 Regras: sem pessoas reconhecíveis, sem placas ou endereços legíveis, sem imagem que sugira que um lugar é "seguro" ou "perigoso" (`docs/05_regras_linguagem_etica.md`). Confirme a licença da imagem antes de usar.

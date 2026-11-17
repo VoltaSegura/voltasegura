@@ -1,7 +1,7 @@
 import { Redirect, Stack, router, useLocalSearchParams } from 'expo-router';
 
 import { Botao, Link, SeloExemplo, Tela, Texto } from '@/components';
-import { Indicativo, RotuloFoco, TabelaNumeros } from '@/components/resultado';
+import { Indicativo, RotuloFoco, TabelaNumeros, coberturaPorProxy, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, RespostaConsulta, Rota } from '@/services';
 import { textos } from '@/textos';
@@ -29,6 +29,7 @@ function indicativo(resposta: RespostaConsulta, rota: Rota): string {
       return textos.porQue.indicativo.insuficiente(motivo);
     }
     case 'NAO_APLICAVEL': return textos.porQue.indicativo.naoAplicavel;
+    case 'MISTOS': return textos.casosResultado.mistos;
     case 'INDISPONIVEL': return textos.porQue.indicativo.indisponivel;
     default: return textos.porQue.indicativo.semDiferenca;
   }
@@ -42,22 +43,35 @@ export default function PorQueEstaRota() {
   if (!resposta) return <Redirect href="/planejar" />;
   if (!rota || !trecho) return <Redirect href="/planejar" />;
 
+  const semExposicao = soRoteamento(resposta);
   const vencedor = resposta.caso === 'CONCLUSIVO' && !rota.focos.includes('MENOR_EXPOSICAO')
     ? resposta.rotas.find((item) => item.focos.includes('MENOR_EXPOSICAO')) : null;
   const faixa = trecho.faixaDoDia ? textos.modos.faixa[trecho.faixaDoDia.toLowerCase() as keyof typeof textos.modos.faixa] : null;
   const exposicao = rota.exposicao;
-  const linhas = resposta.caso === 'INDISPONIVEL' ? [] : [
+  const linhas = semExposicao ? [] : [
     { rotulo: textos.porQue.registros, valor: exposicao.registros },
     { rotulo: textos.porQue.km, valor: numero(exposicao.kmAPe) },
     { rotulo: textos.porQue.porKm, valor: exposicao.kmAPe === 0 ? textos.porQue.naoAplicavel : exposicao.registrosPorKm === null ? null : numero(exposicao.registrosPorKm) },
   ];
 
+  if (semExposicao) {
+    // Acesso direto (link ou rota salva): sem exposição estimada não há registros, cobertura nem foco para explicar.
+    return <Tela>
+      <Stack.Screen options={{ title: textos.porQue.titulo }} />
+      <Botao variante="texto" rotulo={h.fecharExplicacao} onPress={() => router.back()} />
+      <Texto accessibilityRole="header" variante="secao">{textos.porQue.trecho({ i: trecho.ordem, distancia: distancia(trecho.distanciaKm) })}</Texto>
+      {selosExemplo(resposta).roteamento && <SeloExemplo />}
+      <Indicativo texto={textos.soRoteamento.porQue} />
+      <Link variante="dado" rotulo={textos.porQue.linkSobre} onPress={() => router.push('/sobre-os-dados')} />
+    </Tela>;
+  }
+
   return <Tela>
     <Stack.Screen options={{ title: textos.porQue.titulo }} />
     <Botao variante="texto" rotulo={h.fecharExplicacao} onPress={() => router.back()} />
     <Texto accessibilityRole="header" variante="secao">{textos.porQue.trecho({ i: trecho.ordem, distancia: distancia(trecho.distanciaKm) })}</Texto>
-    {rota.focos.map((foco) => <RotuloFoco key={foco} foco={foco} rotulo={focos[foco]} />)}
-    {resposta.exemplo && <SeloExemplo />}
+    {focosVisiveis(rota.focos, resposta).map((foco) => <RotuloFoco key={foco} foco={foco} rotulo={focos[foco]} />)}
+    {(selosExemplo(resposta).roteamento || selosExemplo(resposta).exposicao) && <SeloExemplo />}
     <Texto>{textos.porQue.conta}</Texto>
     <Texto>{faixa ? textos.porQue.faixa(faixa) : h.faixaAusente}</Texto>
     <Indicativo texto={indicativo(resposta, rota)} />
@@ -68,6 +82,7 @@ export default function PorQueEstaRota() {
     </>}
     <Texto variante="secao" accessibilityRole="header">{h.qualidadeDados}</Texto>
     <TabelaNumeros linhas={[{ rotulo: textos.porQue.cobertura, valor: exposicao.cobertura === null ? null : `${Math.round(exposicao.cobertura * 100)}%` }]} dadosInsuficientes={textos.dadosConsiderados.insuficiente} />
+    {coberturaPorProxy(resposta) && <Texto testID="aviso-cobertura-proxy" cor="texto2">{textos.coberturaProxy.aviso}</Texto>}
     {resposta.caso === 'INSUFICIENTE' && <Texto cor="texto2">{textos.porQue.semOrdenar}</Texto>}
     <Texto cor="texto2">{textos.porQue.limitacao}</Texto>
     <Link variante="dado" rotulo={textos.porQue.linkSobre} onPress={() => router.push('/sobre-os-dados')} />

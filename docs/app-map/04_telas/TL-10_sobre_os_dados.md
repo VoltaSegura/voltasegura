@@ -6,6 +6,10 @@
 - **Entradas:** linha fixa "Dados: …" (TL-07, TL-08), link na TL-09.
 - **Saídas:** TL-11 (dados considerados); voltar.
 
+## Revisão de 16/11/2026 — B-08 · Só roteamento
+
+[DECISÃO] B-08 (Plano B, 16/11/2026): com `fontes.exposicao = 'indisponivel'` OU `caso = 'INDISPONIVEL'` (ou campos de exposição `null`) a tela trata a consulta como **"Só roteamento"** (`soRoteamento()` em `components/resultado/fontes.ts`). O selo EXEMPLO segue `fontes.*` por bloco (`selosExemplo()`), não o booleano global `exemplo`. Em "Só roteamento": a tela mostra "Trajetos e horários" (selo EXEMPLO se `fontes.roteamento = 'exemplo'`) e "Exposição estimada: indisponível nesta consulta"; some o período, a base SSP, a cobertura por opção e a situação da comparação. Com exposição disponível, o selo EXEMPLO é um só quando os dois blocos são de exemplo, ou fica junto do bloco que é de exemplo.
+
 ## Wireframe
 
 **Estado padrão** (EXEMPLO)
@@ -114,3 +118,5 @@ Seções como cabeçalhos; a cobertura é lida como "Menor tempo: 88 por cento";
 - [ ] As cinco limitações fixas (US-14 AC5).
 - [ ] Créditos SSP-SP, SPTrans e OSM (US-16 AC1).
 - [ ] Sem nota, escala ou níveis (US-14 AC1).
+
+> B-53 (17/11/2026): ver "Cobertura por proxy e texto por caso" em 08_microcopy.md (aviso com fonte ssp; texto próprio por caso na TL-07).

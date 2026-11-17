@@ -7,6 +7,14 @@
 - **Saídas:** TL-09 (por que esta rota?), TL-07 (voltar), TL-04 (planejar a volta), TL-14 (compartilhar minha volta; Depende do tempo).
 - **Revisão de 13/11/2026 (D-19):** acrescentado o botão "Compartilhar minha volta" (US-21 AC1). O resto da tela segue aprovado (D-17).
 
+## Revisão de 16/11/2026 — B-08 · Só roteamento
+
+[DECISÃO] B-08 (Plano B, 16/11/2026): com `fontes.exposicao = 'indisponivel'` OU `caso = 'INDISPONIVEL'` (ou campos de exposição `null`) a tela trata a consulta como **"Só roteamento"** (`soRoteamento()` em `components/resultado/fontes.ts`). O selo EXEMPLO segue `fontes.*` por bloco (`selosExemplo()`), não o booleano global `exemplo`. Em "Só roteamento": sem rótulo de foco de exposição, sem o botão "Por que esta rota?" nos trechos a pé e sem o link "Dados considerados"; aparece o aviso `textos.soRoteamento.aviso`. O selo EXEMPLO segue `fontes.*`.
+
+## Revisão de 15/11/2026 — B2
+
+[DECISÃO] Horários de embarque usam o fuso do aparelho (Date/toLocaleTimeString pt-BR, HH:mm), inclusive quando o servidor envia UTC ou outro deslocamento. ISO inválido exibe --:--. A indicação de horário previsto e a navegação permanecem.
+
 ## Wireframe
 
 **Estado padrão** (rota C do exemplo, EXEMPLO)

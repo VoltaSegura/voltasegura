@@ -1,5 +1,12 @@
 // [HIPÓTESE] Instruções de interação da TL-07, ainda sem validação com usuárias.
 export const hipotesesResultado = {
+  opcoes: (quantidade: number) => quantidade === 1 ? '1 opção' : `${quantidade} opções`,
+  exposicaoPrimeiro: 'Menor exposição estimada primeiro',
+  saida: (hora: string) => `Saída às ${hora}`,
+  resumoRecolhido: (duracao: string, trocas: string, caminhada: string, focos: string[]) =>
+    [duracao, trocas, caminhada, ...focos].join(' · '),
+  alturas: ['Lista recolhida', 'Lista em meia altura', 'Lista em altura cheia'],
+  alternarAltura: 'Toque para mudar a altura da lista',
   dicaExpandir: 'A lista ocupará mais espaço',
   dicaRecolher: 'A lista será recolhida',
   dicaSelecao: 'Toque na opção para vê-la no mapa; › abre os detalhes.',
@@ -13,6 +20,7 @@ export const hipotesesEstadosResultado = {
   semServico: 'Não há trajetos disponíveis neste horário.',
   comparacaoIndisponivel: 'Comparação de registros indisponível nesta consulta.',
   trajetoIndisponivel: 'Trajeto no mapa indisponível. Consulte os trechos da opção.',
+  trajetoDeExemplo: 'Trajeto de exemplo: o mapa mostra só origem e destino escolhidos, sem o caminho real.',
   mapaWeb: 'Mapa disponível no celular. Compare as opções abaixo.',
   rotaNoMapa: (indice: number) => `Opção ${indice} selecionada no mapa`,
 } as const;

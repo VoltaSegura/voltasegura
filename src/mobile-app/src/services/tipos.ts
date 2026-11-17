@@ -12,6 +12,13 @@ export type ModoTrecho = "A_PE" | "ONIBUS" | "METRO" | "TREM";
 export type FaixaDoDia = "MADRUGADA" | "MANHA" | "TARDE" | "NOITE";
 export type FocoRota = "MENOR_TEMPO" | "MENOS_CAMINHADA" | "MENOR_EXPOSICAO" | "OUTRA_OPCAO";
 
+/**
+ * Contrato da consulta entre serviços e telas. Só a frente do Plano B altera este arquivo
+ * (`docs/dados-reais/04_plano_implementacao.md` §3); as telas leem.
+ * Horários (`saidaPrevista`, `chegadaPrevista`, `partidaPrevista`) são sempre ISO-8601 COM fuso;
+ * a tela formata no fuso do aparelho.
+ */
+
 export interface Trecho {
   id: string;
   ordem: number;
@@ -23,6 +30,7 @@ export interface Trecho {
   duracaoMin: number;
   distanciaKm: number;
   faixaDoDia: FaixaDoDia | null;
+  /** Polyline 5 (precisão 1e-5) do próprio trecho, com pelo menos dois pontos: o mapa desenha por trecho. */
   geometria: string;
 }
 
@@ -40,6 +48,10 @@ export interface CategoriasRota {
   transito: { total: number | null };
 }
 
+/**
+ * Exposição desconhecida = objeto presente com números `null` (nunca zero, nunca o objeto inteiro nulo).
+ * `kmAPe` é distância do roteamento, não ocorrência, e existe mesmo sem exposição.
+ */
 export interface ExposicaoRota {
   registros: number | null;
   kmAPe: number;
@@ -55,14 +67,30 @@ export interface Rota {
   trocas: number;
   saidaPrevista: string;
   chegadaPrevista: string;
+  /** Polyline 5 da rota inteira (união dos trechos). */
   geometria: string;
   trechos: Trecho[];
   exposicao: ExposicaoRota;
   categorias: CategoriasRota;
 }
 
+/** De onde veio cada bloco da resposta. */
+export interface FontesConsulta {
+  /** `otp2` = OpenTripPlanner do projeto (GTFS + OSM); `exemplo` = fixture local. */
+  roteamento: 'otp2' | 'exemplo';
+  /** `ssp` = cálculo do serviço sobre a SSP-SP; `exemplo` = fixture; `indisponivel` = sem exposição validada. */
+  exposicao: 'ssp' | 'exemplo' | 'indisponivel';
+}
+
 export interface RespostaConsulta {
+  /** `true` se QUALQUER bloco for de exemplo (`fontes.roteamento` ou `fontes.exposicao` = `exemplo`). */
   exemplo: boolean;
+  /**
+   * Origem por bloco: o selo EXEMPLO some só nas partes reais. Com `exposicao: 'indisponivel'`,
+   * `caso` é `INDISPONIVEL`, os números de exposição, categorias e panorama são `null` e nenhuma
+   * rota tem o foco `MENOR_EXPOSICAO` ("só roteamento").
+   */
+  fontes: FontesConsulta;
   caso: CasoConsulta;
   motivo: MotivoInsuficiencia | null;
   rotas: Rota[];

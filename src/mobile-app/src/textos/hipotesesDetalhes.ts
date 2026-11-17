@@ -9,7 +9,7 @@ export const hipotesesDetalhes = {
   fecharExplicacao: 'Voltar aos detalhes da rota',
   verOpcao: (indice: number) => `Ver opção ${indice} na comparação`,
   opcao: (indice: number) => `Opção ${indice}`,
-  opcaoComFoco: (indice: number, focos: string) => `Opção ${indice} · ${focos}`,
+  opcaoComFoco: (indice: number, focos: string) => focos ? `Opção ${indice} · ${focos}` : `Opção ${indice}`,
   dataAusente: 'dados insuficientes',
   faixaMista: (faixas: string) => `Faixas dos trechos a pé: ${faixas}.`,
   faixaNaoInformada: 'Faixa dos trechos a pé: dados insuficientes.',

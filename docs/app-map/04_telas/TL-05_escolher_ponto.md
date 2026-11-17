@@ -1,105 +1,57 @@
 # TL-05 · Escolher ponto no mapa
 
-> **Revisão D-29 (14/11/2026):** mapa em **tela cheia** com pino fixo no centro; por cima, busca por texto (só ao tocar em Buscar, mín. 3 letras, limitada a São Paulo, geocodificador do sistema) e voltar; botão de localização em ícone; painel inferior com ponto escolhido, **salvar este lugar** (nome + tipo, até 10, só no aparelho), lugares salvos em chips e "Usar este ponto". **Sem pontos de exemplo.** `[HIPÓTESE]` o aviso de privacidade deve citar a busca. Detalhes: `docs/redesign/08_home_busca_locais_arquitetura.md`.
-
-- **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/escolher-ponto` (modal; parâmetro `campo=origem|destino`)
-- **Objetivo:** escolher origem ou destino tocando no mapa, sem busca de endereço externa (D-02).
-- **US/AC e funcionalidades cobertas:** US-06 AC5, US-04 AC5 (salvar local no aparelho), US-16 AC1 · FN-04, FN-13 · **RNF aplicáveis:** RNF-02, RNF-07
-- **Entradas:** TL-04 (folha de opções → "Escolher no mapa").
-- **Saídas:** TL-04 com o campo preenchido; cancelar volta sem mudar.
+- **Status:** pronta; revisão de implementação em 15/11/2026 por D-30 (endereço exato) e pedido de Lucas (marcador por toque). Textos novos `[HIPÓTESE]`, sem validação com usuários.
+- **Rota:** `/(app)/escolher-ponto?campo=origem|destino`.
+- **Objetivo:** escolher um ponto por toque no mapa, busca por texto, localização atual ou lugar salvo, e opcionalmente salvá-lo.
+- **Referências:** US-05, US-06 AC5, US-04 AC5, US-16 AC1; FN-04, FN-13; RNF-02, RNF-07.
 
 ## Wireframe
 
-**Estado inicial**
-
-```
-┌──────────────────────────────┐
-│ ✕  Escolher origem           │
-│┌────────────────────────────┐│
-││                            ││
-││          MAPA              ││
-││                            ││
-││            ✛               ││
-││     (mira fixa no centro)  ││
-││                            ││
-││                            ││
-││       © OpenStreetMap      ││
-││          contributors      ││
-│└────────────────────────────┘│
-│ Arraste o mapa para pôr o    │
-│ ponto na mira.               │
-│ ┌──────────────────────────┐ │
-│ │    Usar este ponto       │ │
-│ └──────────────────────────┘ │
-└──────────────────────────────┘
+```text
+┌───────────────────────────────────┐
+│ [Voltar] [Buscar rua ou lugar]     │
+│ [Busca usa o serviço...]*          │
+│ [Escolher origem/destino]          │
+│                                   │
+│          mapa em tela cheia        │
+│   toque → 📍 marcador arrastável   │
+│                                   │
+│             [Minha localização]    │
+│ ╭───────────────────────────────╮ │
+│ │ ━━                            │ │
+│ │ Ponto escolhido               │ │
+│ │ Rua X, 123 - Bairro           │ │
+│ │ [Salvar este lugar]           │ │
+│ │ Lugares salvos [Casa] [...]   │ │
+│ │ [Usar este ponto]             │ │
+│ ╰───────────────────────────────╯ │
+└───────────────────────────────────┘
+* Só com foco ou texto; aviso em pílula com fundo.
 ```
 
-**Estado confirmar e salvar** (ao tocar em "Usar este ponto", PL-09 `[HIPÓTESE]`)
+**Modo compacto ao salvar (R1):** sem alça ou linha principal “Ponto escolhido”; o endereço fica numa linha de apoio. Ordem: campo de nome com foco automático → Cancelar e Salvar → quatro tipos numa linha. Com teclado aberto, a ajuda da busca e “Minha localização” desaparecem, e o painel sobe pela altura do teclado. `[EM ABERTO]` Confirmar em aparelho, inclusive fonte a 130% e 200%; o teste automatizado não mede a área visível real.
 
-```
-┌──────────────────────────────┐
-│ Ponto escolhido no mapa      │
-│ [ ] Salvar no aparelho como: │
-│ ┌──────────────────────────┐ │
-│ │ ex.: Faculdade           │ │
-│ └──────────────────────────┘ │
-│ ┌──────────────────────────┐ │
-│ │        Confirmar         │ │
-│ └──────────────────────────┘ │
-└──────────────────────────────┘
-```
+## Comportamento
 
-**Estado fora da área:** mesmo aviso da TL-04, com o botão "Usar este ponto" desabilitado enquanto a mira estiver fora do município (PL-11).
+1. `[DECISÃO]` A câmera abre no ponto do campo, no outro campo, na última posição já autorizada ou no centro padrão. Não pede permissão nem liga o GPS nessa abertura. Nenhum marcador é criado automaticamente.
+2. `[DECISÃO]` Tocar no mapa coloca o marcador exatamente no toque. Outro toque o move. Arrastar o marcador atualiza o ponto no fim do gesto. Mover ou aproximar o mapa não muda o ponto; tocar não recentra a câmera. “Usar este ponto” habilita quando há marcador (R3, resolvido pelo marcador por toque).
+3. `[DECISÃO]` Busca, “Minha localização” e chip de lugar salvo movem a câmera e colocam o marcador no resultado. A busca textual consulta somente após “Buscar”, com pelo menos três caracteres.
+4. `[DECISÃO]` Toda mudança de ponto consulta o endereço pelo geocodificador reverso do sistema (`expo-location`), salvo quando o chip já contém `endereco`. O painel mostra “Buscando endereço…” e depois até duas linhas do endereço; erro ou timeout mostra “Endereço indisponível” com “Ponto escolhido no mapa” como apoio. Respostas antigas são descartadas. A falha não impede confirmar.
+5. `[DECISÃO]` O rótulo gravado na consulta usa o endereço quando disponível, limitado a 60 caracteres com reticências. “Minha localização” e lugar salvo preservam seu rótulo; a busca usa endereço quando disponível e texto digitado como fallback. Toque ou arrasto do marcador substituem qualquer rótulo anterior.
+6. `[DECISÃO]` Salvar lugar guarda nome, tipo, ponto e endereço atual (quando disponível) no aparelho. O formulário mostra o endereço como apoio; o chip com endereço guardado dispensa nova consulta.
+7. Fora do município, o aviso permanece e a confirmação fica desabilitada (PL-11). Web sem mapa permite busca, localização e lugares salvos.
 
-**Estado mapa não carregou (sem rede):** área do mapa com "Não foi possível carregar o mapa. Use um local salvo." e o botão "Voltar".
+## Estados e acessibilidade
 
-## Estrutura e componentes
-
-`Cabecalho` modal (fechar) · `MapaTrajeto` em modo seleção, com mira fixa · `Texto` de instrução · `Botao` primário · `Folha` de confirmação com `Caixa` e `CampoTexto` · `Atribuicao` OSM.
-
-## Conteúdo e dados
-
-Coordenada do centro do mapa (só no aparelho até a consulta); nome digitado, se salvar (`09_dados_por_tela.md`, TL-05).
-
-## Ações do usuário
-
-| Gesto | Resultado | Próxima tela |
-|---|---|---|
-| Arrasta ou dá zoom no mapa | Move a mira | TL-05 |
-| "Usar este ponto" | Abre a confirmação | TL-05 (folha) |
-| "Confirmar" | Preenche o campo; salva no aparelho se marcado | TL-04 |
-| ✕ | Cancela | TL-04 |
-
-## Estados
-
-inicial · confirmar e salvar · fora da área · mapa não carregou.
-
-## Validações e mensagens de erro
-
-| Situação | Mensagem proposta |
-|---|---|
-| Mira fora do município | "Este ponto está fora da área atendida (município de São Paulo)." |
-| Nome vazio com "Salvar" marcado | "Dê um nome para salvar o local." |
-
-## Textos
-
-`escolher_ponto.*` (catálogo em `08_microcopy.md`).
-
-## Acessibilidade
-
-- **Alternativa ao gesto no mapa:** o leitor de tela anuncia "Mapa para escolher um ponto. Use os locais salvos se preferir"; a folha de opções da TL-04 continua sendo o caminho sem mapa.
-- O botão "Usar este ponto" fica fora do mapa, com alvo ≥ 48 dp.
+Sem ponto · marcador escolhido · buscando endereço · endereço indisponível · busca textual · obtendo localização · salvando · fora da área · mapa indisponível. O marcador tem rótulo de acessibilidade e é arrastável; todos os botões de ícone têm rótulo. O endereço usa anúncio `polite`. Alvos de toque têm pelo menos 48 pt; texto escala até 200%. “Reduzir movimento” desliga a animação da câmera.
 
 ## Privacidade e linguagem
 
-- Sem campo de busca de endereço (D-02).
-- **Nenhum marcador de ocorrência, mancha de calor ou rótulo de bairro** no mapa (US-15 AC4, RNF-02).
-- O mapa base é externo (PL-03, limitação descrita na TL-13).
-- O local salvo fica só no aparelho (US-04 AC4).
+`[DECISÃO]` D-30: as coordenadas do ponto marcado são enviadas ao serviço de mapas do celular pela geocodificação reversa do sistema; não são registradas em log nem enviadas a servidor do projeto. A busca textual também usa o serviço do sistema somente ao confirmar a busca. Lugares salvos ficam no aparelho. O mapa não usa cores como indicação de segurança e não mostra ocorrências individuais.
 
-## Critérios de pronto da tela
+## Evidência e pendências
 
-- [ ] O ponto do centro do mapa preenche o campo certo (origem ou destino).
-- [ ] O local salvo aparece em "Locais salvos" da TL-04 e não é enviado ao servidor.
-- [ ] Atribuição OSM visível (US-16 AC1).
-- [ ] Nenhum dado de ocorrência no mapa.
+- `[DECISÃO]` R1: formulário compacto implementado; validação visual com teclado no aparelho ainda pendente.
+- `[DECISÃO]` R2: aviso da busca em pílula com fundo e visível só com foco ou texto.
+- `[DECISÃO]` R3: sem pino fixo; botão habilitado ao colocar marcador por toque.
+- Testes automatizados: `escolher-ponto.test.tsx`, `MapaPonto.native.test.tsx` e `enderecoDoPonto.test.ts`. `[EM ABERTO]` Verificação física do teclado, tela pequena e fontes ampliadas.

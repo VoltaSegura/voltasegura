@@ -8,6 +8,8 @@ export const hipotesesPlanejar = {
   pontosInvertidos: 'Origem e destino invertidos.',
   erroHora: 'Informe a hora no formato HH:mm.',
   diaSaida: 'Dia da saída',
+  menos15: '−15 min',
+  mais15: '+15 min',
   saidaInvalida: 'Confira o horário da saída no planejamento.',
   usarEstePonto: 'Usar este ponto',
   pontoMarcado: 'Ponto marcado. Use este ponto para confirmar.',

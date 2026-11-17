@@ -1,13 +1,18 @@
-import type { ReactNode } from 'react';
+import { useContext, useEffect, useState, type ReactNode } from 'react';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
+import { useFolhaResultado } from './useFolhaResultado';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Botao, SeloExemplo, Texto } from '@/components';
 import { Entrada, NumeroContando, haptica } from '@/components/movimento';
 import type { FocoRota, ModoTrecho, RespostaConsulta, Rota, Trecho } from '@/services';
+import { textos } from '@/textos';
 import { hipotesesResultado } from '@/textos/hipotesesResultado';
 import { brilho, esp, raio, toque } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
 
+import { focosVisiveis, selosExemplo, soRoteamento } from './fontes';
 import { medidas } from './medidas';
 
 export type RotulosModos = Record<ModoTrecho, string>;
@@ -66,20 +71,21 @@ export function SequenciaModos({ trechos, rotulos, rotuloAPe, rotuloLinha, rotul
   </View>;
 }
 
-export function CardRota({ rota, indice, total, selecionada, exemplo, rotulos, onPress, onAbrirDetalhes }: {
-  rota: Rota; indice: number; total: number; selecionada: boolean; exemplo?: boolean;
+export function CardRota({ rota, indice, total, selecionada, exemplo, semExposicao = false, opcaoUnica = false, rotulos, onPress, onAbrirDetalhes }: {
+  rota: Rota; /** `semExposicao` = "só roteamento" (B-08): descarta o foco de exposição. */ semExposicao?: boolean; /** B-51: resposta com 1 rota não mostra focos comparativos. */ opcaoUnica?: boolean; indice: number; total: number; selecionada: boolean; exemplo?: boolean;
   rotulos: RotulosResultado; onPress: () => void; onAbrirDetalhes: () => void;
 }) {
   const { cores } = useTema();
+  const focos = opcaoUnica ? [] : semExposicao ? rota.focos.filter(f => f !== 'MENOR_EXPOSICAO') : rota.focos;
   const modos = rota.trechos.map(t => t.modo === 'A_PE' ? rotulos.trechoAPe(t.duracaoMin) : rotulos.linha(t)).join(', ');
-  const rotuloCard = rotulos.card(rota, indice, total, modos).replace('Toque duas vezes para ver os detalhes.', hipotesesResultado.rotuloSelecao);
+  const rotuloCard = rotulos.card({ ...rota, focos }, indice, total, modos).replace('Toque duas vezes para ver os detalhes.', hipotesesResultado.rotuloSelecao);
   // A opção selecionada é a "acesa": número enorme, fio dourado e brilho. As demais ficam quietas (uma coisa acesa por tela).
   return <View style={[estilos.card, selecionada
     ? [estilos.cardAceso, { backgroundColor: cores.superficie2, borderColor: cores.acao }, brilho(cores.luz, 0.28)]
     : { borderBottomColor: cores.divisoria, borderBottomWidth: medidas.borda }]}>
     <Pressable onPress={() => { if (!selecionada) haptica.selecao(); onPress(); }} accessibilityRole="button" accessibilityState={{ selected: selecionada }}
       accessibilityLabel={rotuloCard} style={estilos.cardSelecao}>
-    <View style={estilos.topo}>{rota.focos.map(f => <RotuloFoco key={f} foco={f} rotulo={rotulos.focos[f]} />)}
+    <View style={estilos.topo}>{focos.map(f => <RotuloFoco key={f} foco={f} rotulo={rotulos.focos[f]} />)}
       {selecionada && <Texto variante="rotulo">{rotulos.selecionada}</Texto>}{exemplo && <SeloExemplo />}</View>
     <View style={estilos.cardMeio}>
       <NumeroContando valor={rota.duracaoMin} formatar={rotulos.duracao} variante={selecionada ? 'numero' : 'duracao'} style={estilos.duracao} />
@@ -174,31 +180,65 @@ export function ListaTrechos({ trechos, rotulos, rotuloLinha, botaoPorQue }: {
   return <View>{trechos.map(t => <ItemTrecho key={t.id} trecho={t} total={trechos.length} rotulos={rotulos} rotuloLinha={rotuloLinha} botaoPorQue={botaoPorQue?.(t)} />)}</View>;
 }
 
-export function PainelResultado({ resposta, rotaSelecionadaId, rotulos, tituloLista, rotuloExpandir, expandido = false, onExpandir, onSelecionar, onAbrirDetalhes, linhaDados, children }: {
+// Memória da sessão do app: sem persistência e sem dados pessoais.
+let dicaSelecaoApresentada = false;
+
+export function PainelResultado({ resposta, rotaSelecionadaId, rotulos, tituloLista, rotuloExpandir, onExpandir, onSelecionar, onAbrirDetalhes, linhaDados, children, saida, alturaFolha, nivel = 0, onRecolher, rodapeLista }: {
   resposta: RespostaConsulta; rotaSelecionadaId: string; rotulos: RotulosResultado;
   tituloLista: string; rotuloExpandir: string; expandido?: boolean; onExpandir: () => void; onSelecionar: (rota: Rota) => void; onAbrirDetalhes: (rota: Rota) => void;
   linhaDados: { texto: string; rotuloAcessivel: string; onPress: () => void; indisponivel?: boolean };
   children?: ReactNode;
+  saida?: string; alturaFolha?: number; nivel?: number; onRecolher?: () => void; rodapeLista?: ReactNode;
 }) {
   const { cores } = useTema();
-  return <View testID="painel-resultado" style={[estilos.painel, { backgroundColor: cores.superficie, borderTopColor: cores.luz }]}>
-    <View accessible={false} importantForAccessibility="no-hide-descendants" style={[estilos.alca, { backgroundColor: cores.luz }]} />
+  const baseSegura = useContext(SafeAreaInsetsContext)?.bottom ?? 0;
+  const [mostrarDica] = useState(() => resposta.rotas.length >= 2 && !dicaSelecaoApresentada);
+  useEffect(() => { if (mostrarDica) dicaSelecaoApresentada = true; }, [mostrarDica]);
+  const { estiloAnimado, panHandlers } = useFolhaResultado(alturaFolha, nivel, onExpandir, onRecolher);
+  const semExposicao = soRoteamento(resposta);
+  const selos = selosExemplo(resposta);
+  const rotaSelecionada = resposta.rotas.find(rota => rota.id === rotaSelecionadaId);
+  const resumo = rotaSelecionada && hipotesesResultado.resumoRecolhido(
+    rotulos.duracao(rotaSelecionada.duracaoMin),
+    rotulos.trocas(rotaSelecionada.trocas).toLocaleLowerCase('pt-BR'),
+    rotulos.caminhada(rotaSelecionada.caminhadaKm),
+    focosVisiveis(rotaSelecionada.focos, resposta).map(foco => rotulos.focos[foco].replace(/^◆\s*/, '')),
+  );
+  return <Animated.View testID="painel-resultado" style={[estilos.painel, alturaFolha !== undefined && { position: 'absolute', left: 0, right: 0, bottom: 0, height: alturaFolha, flexGrow: 0, flexBasis: 'auto' }, { backgroundColor: cores.superficie, borderTopColor: cores.luz, paddingBottom: baseSegura }, estiloAnimado]}>
+    <View {...panHandlers}>
+      <Pressable testID="alca-resultado" accessibilityRole="button" accessibilityLabel={rotuloExpandir}
+        accessibilityHint={hipotesesResultado.alternarAltura} accessibilityValue={{ text: hipotesesResultado.alturas[nivel] }}
+        onPress={onExpandir} style={estilos.toqueAlca}>
+        <View accessible={false} style={[estilos.alca, { backgroundColor: cores.luz }]} />
+      </Pressable>
+    </View>
     <View style={estilos.cabecalho}><Texto accessibilityRole="header" variante="secao" style={estilos.flex}>{tituloLista}</Texto>
-      <Botao variante="texto" rotulo={rotuloExpandir} accessibilityHint={expandido ? hipotesesResultado.dicaRecolher : hipotesesResultado.dicaExpandir} onPress={onExpandir} /></View>
+      {saida && <Texto variante="apoio" style={estilos.hora}>{saida}</Texto>}</View>
+    {!semExposicao && resposta.rotas.length > 1 && resposta.rotas[0]?.focos.includes('MENOR_EXPOSICAO') && <View style={[estilos.chipOrdem, { borderColor: cores.borda }]}>
+      <Texto variante="rotulo">{hipotesesResultado.exposicaoPrimeiro}</Texto>
+    </View>}
+    {nivel === 0 && resumo && <Texto testID="resumo-recolhido" accessibilityLabel={resumo} variante="apoio" numberOfLines={2} ellipsizeMode="tail" style={estilos.resumoRecolhido}>{resumo}</Texto>}
     <ScrollView testID="lista-resultado" style={estilos.lista} contentContainerStyle={estilos.conteudoLista}>
+      {semExposicao && resposta.rotas.length > 0 && <Texto testID="aviso-so-roteamento" variante="apoio" style={estilos.avisoRoteamento}>{textos.soRoteamento.aviso}</Texto>}
       {children}
-      {resposta.rotas.length >= 2 && <Texto variante="apoio" style={estilos.dica}>{hipotesesResultado.dicaSelecao}</Texto>}
-      {resposta.rotas.map((rota, i) => <Entrada key={rota.id} indice={i}><CardRota rota={rota} indice={i + 1} total={resposta.rotas.length} selecionada={rota.id === rotaSelecionadaId} exemplo={resposta.exemplo} rotulos={rotulos} onPress={() => onSelecionar(rota)} onAbrirDetalhes={() => onAbrirDetalhes(rota)} /></Entrada>)}
+      {resposta.rotas.map((rota, i) => <Entrada key={rota.id} indice={i}><CardRota rota={rota} indice={i + 1} total={resposta.rotas.length} selecionada={rota.id === rotaSelecionadaId} exemplo={selos.roteamento || (selos.exposicao && rota.focos.includes('MENOR_EXPOSICAO'))} semExposicao={semExposicao} opcaoUnica={resposta.rotas.length === 1} rotulos={rotulos} onPress={() => onSelecionar(rota)} onAbrirDetalhes={() => onAbrirDetalhes(rota)} /></Entrada>)}
+      {mostrarDica && <Texto variante="apoio" style={estilos.dica}>{hipotesesResultado.dicaSelecao}</Texto>}
+      {rodapeLista}
     </ScrollView>
     <LinhaSobreOsDados {...linhaDados} />
-  </View>;
+  </Animated.View>;
 }
 
 const estilos = StyleSheet.create({
   flex: { flex: 1 },
   painel: { flexGrow: 1, flexShrink: 1, flexBasis: 0, minHeight: 0, borderTopWidth: medidas.borda, borderTopLeftRadius: raio.painel, borderTopRightRadius: raio.painel, overflow: 'hidden' },
-  alca: { width: 36, height: 4, borderRadius: 2, alignSelf: 'center', marginTop: esp[2], opacity: 0.55 },
-  cabecalho: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: esp[4], gap: esp[2] },
+  toqueAlca: { minHeight: toque.minimo, justifyContent: 'center', alignItems: 'center' },
+  alca: { width: 36, height: 4, borderRadius: 2, opacity: 0.55 },
+  hora: { flexShrink: 1 },
+  chipOrdem: { alignSelf: 'flex-start', marginHorizontal: esp[4], marginBottom: esp[2], padding: esp[1], borderWidth: 1, borderRadius: raio.pequeno },
+  avisoRoteamento: { marginHorizontal: esp[4], marginBottom: esp[2] },
+  resumoRecolhido: { marginHorizontal: esp[4], marginBottom: esp[2], flexShrink: 1 },
+  cabecalho: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: esp[4], paddingBottom: esp[2], gap: esp[2], flexWrap: 'wrap' },
   lista: { flex: 1, minHeight: 0 },
   conteudoLista: { flexGrow: 1 },
   card: { padding: esp[4], gap: esp[3], minHeight: toque.minimo },

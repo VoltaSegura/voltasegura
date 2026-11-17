@@ -20,7 +20,11 @@ type Props = {
   testID?: string;
 };
 
-/** Container de tela: fundo do tema, área segura, rolagem e teclado. */
+/**
+ * Container de tela: fundo do tema, área segura, rolagem e teclado.
+ * No Android o `app.json` usa `softwareKeyboardLayoutMode: "pan"` (o sistema já move a janela até o campo focado);
+ * `behavior="height"` somava um segundo ajuste e fazia o teclado abrir e fechar no campo de hora.
+ */
 export function Tela({ children, topo, rodape, hero, rolagem = true, testID }: Props) {
   const { cores } = useTema();
   const conteudo = rolagem ? (
@@ -39,7 +43,7 @@ export function Tela({ children, topo, rodape, hero, rolagem = true, testID }: P
   return (
     <SafeAreaView testID={testID} edges={hero ? ['bottom', 'left', 'right'] : undefined} style={[estilos.base, { backgroundColor: cores.fundo }]}>
       {hero ? null : <LinearGradient pointerEvents="none" colors={[cores.fundoTopo, cores.fundo]} locations={[0, 0.55]} style={StyleSheet.absoluteFill} />}
-      <KeyboardAvoidingView style={estilos.base} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <KeyboardAvoidingView style={estilos.base} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         {topo ? <View style={estilos.faixa}>{topo}</View> : null}
         {conteudo}
         {rodape ? <View style={estilos.faixa}>{rodape}</View> : null}

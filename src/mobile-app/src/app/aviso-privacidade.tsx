@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { View } from 'react-native';
 
-import { Aviso, Tela, Texto } from '@/components';
+import { Aviso, ImagemPlaceholder, Tela, Texto } from '@/components';
 import { textos } from '@/textos';
 import { hipotesesAviso } from '@/textos/hipotesesAviso';
 
@@ -17,6 +17,7 @@ export default function AvisoPrivacidade() {
   return (
     <Tela>
       <Stack.Screen options={{ title: textos.aviso.titulo }} />
+      <ImagemPlaceholder nome="heroPrivacidade" icone="shield-lock-outline" style={{ height: 140, borderRadius: 20 }} />
       <Texto variante="titulo" accessibilityRole="header">{textos.aviso.titulo}</Texto>
       <Aviso variante="minuta" texto={textos.aviso.minuta} />
       {secoes.map(([titulo, conteudo]) => (

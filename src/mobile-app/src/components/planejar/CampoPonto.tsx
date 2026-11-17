@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { esp, raio, toque } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
 
+import { BotaoIcone } from '../BotaoIcone';
 import { Icone, type NomeIcone } from '../Icone';
 import { haptica } from '../movimento';
 import { Texto } from '../Texto';
@@ -15,14 +16,17 @@ type Props = {
   icone?: NomeIcone;
   erro?: string;
   onPress: () => void;
+  /** Ação rápida em ícone ao lado (ex.: usar minha localização). */
+  acao?: { icone: NomeIcone; rotulo: string; onPress: () => void; carregando?: boolean };
   testID?: string;
 };
 
 /** Linha tocável "De onde / Para onde": ícone, rótulo pequeno e valor. Abre direto o mapa (D-29). */
-export function CampoPonto({ rotulo, valor, preenchido = true, icone = 'map-marker-outline', erro, onPress, testID }: Props) {
+export function CampoPonto({ rotulo, valor, preenchido = true, icone = 'map-marker-outline', erro, onPress, acao, testID }: Props) {
   const { cores } = useTema();
   return (
     <View>
+      <View style={estilos.linhaCampo}>
       <Pressable
         testID={testID}
         accessibilityRole="button"
@@ -34,17 +38,20 @@ export function CampoPonto({ rotulo, valor, preenchido = true, icone = 'map-mark
         <View style={[estilos.icone, { backgroundColor: cores.superficie2 }]}><Icone nome={icone} tamanho={20} corTema="acaoLink" /></View>
         <View style={estilos.textos}>
           <Texto variante="rotulo" cor="texto2">{rotulo}</Texto>
-          <Texto variante={preenchido ? 'corpoForte' : 'corpo'} cor={preenchido ? 'texto' : 'texto2'} numberOfLines={1}>{valor}</Texto>
+          <Texto variante={preenchido ? 'corpoForte' : 'corpo'} cor={preenchido ? 'texto' : 'texto2'} numberOfLines={1} ellipsizeMode="tail">{valor}</Texto>
         </View>
-        <Icone nome="chevron-right" tamanho={22} corTema="texto2" />
+        {acao ? null : <Icone nome="chevron-right" tamanho={22} corTema="texto2" />}
       </Pressable>
+      {acao ? <BotaoIcone icone={acao.icone} rotulo={acao.rotulo} fundo="superficie" desabilitado={acao.carregando} onPress={acao.onPress} /> : null}
+      </View>
       {erro ? <Texto variante="apoio" cor="erro" accessibilityRole="alert" accessibilityLiveRegion="polite" style={estilos.erro}>{erro}</Texto> : null}
     </View>
   );
 }
 
 const estilos = StyleSheet.create({
-  linha: { flexDirection: 'row', alignItems: 'center', gap: esp[3], minHeight: toque.minimo + esp[3], paddingHorizontal: esp[2], borderRadius: raio.medio },
+  linhaCampo: { flexDirection: 'row', alignItems: 'center', gap: esp[1] },
+  linha: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: esp[3], minHeight: toque.minimo + esp[3], paddingHorizontal: esp[2], borderRadius: raio.medio },
   icone: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   textos: { flex: 1 },
   erro: { paddingHorizontal: esp[2] },

@@ -42,3 +42,15 @@
 - Renomear lugar na interface; histórico de trajetos (FN-13).
 - Busca com várias sugestões (exigiria serviço próprio ou externo com chave).
 - Verificação visual: ainda só no celular pelo Lucas (o Chrome desta máquina não renderiza o app).
+
+## 6. Rodada 2 de usabilidade (15/11/2026)
+Revisão das evidências e referências em busca de atritos que sobraram. Implementado:
+1. **Origem com um toque:** ícone de localização na linha "De onde" preenche a origem com "Minha localização" (pede a permissão só neste toque, US-05). Antes eram 3 toques e outra tela.
+2. **Saída sem digitar:** atalhos "Agora", "Em 15 min", "Em 30 min", "Em 1 h" acima do campo de hora (o campo continua para horas específicas).
+3. **Adicionar lugar:** último cartão da faixa de lugares e botão no estado vazio levam ao mapa; lá o "Salvar este lugar" já existe.
+4. **Estado vazio com imagem** nos lugares salvos, na busca sem transporte/falha e na espera da consulta.
+5. **Perfil** em Configurações com avatar (placeholder) e e-mail, como na referência de perfil.
+6. **Aviso de privacidade** com imagem de topo.
+7. **Novos espaços de imagem** (todos placeholders): `heroBuscando`, `vazioBusca`, `heroPrivacidade`, `avatarPerfil`, e `vazioLocais` agora em uso. Lista completa em `assets/imagens/LEIA-ME.md`.
+
+**Ainda `[EM ABERTO]` (precisa ver no celular):** resumo do topo do resultado (texto longo "3 opções, com a de menor exposição estimada primeiro" + Expandir lista + Planejar a volta), barra inferior em pílula, renomear lugar, histórico de trajetos. Testes: 399 em 32 suítes.

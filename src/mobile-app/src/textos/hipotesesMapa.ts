@@ -13,7 +13,21 @@ export const hipotesesMapa = {
   lugarUsadoComoOrigem: (nome: string) => `${nome} definido como origem.`,
   lugarUsadoComoDestino: (nome: string) => `${nome} definido como destino.`,
   configuracoes: 'Configurações',
+  adicionarLugar: 'Adicionar lugar',
+  adicionarLugarDica: 'Escolha um ponto no mapa e toque em Salvar este lugar.',
+  usarLocalizacaoOrigem: 'Usar minha localização como origem',
+  localizacaoDefinida: 'Origem definida pela sua localização.',
+  atalhosSaida: 'Atalhos de horário de saída',
+  agora: 'Agora',
+  em15: 'Em 15 min',
+  em30: 'Em 30 min',
+  em1h: 'Em 1 h',
+  perfil: 'Seu perfil',
   // Escolher ponto
+  // [HIPÓTESE] Onda 3: redação ainda não validada com usuários.
+  buscarAvisoCurto: 'Busca usa o serviço de mapas do celular',
+  minhaLocalizacaoPilula: 'Minha localização',
+  salvoComo: (nome: string) => `Salvo como ${nome}`,
   buscar: 'Buscar',
   buscarCampo: 'Buscar endereço ou lugar',
   buscarExemplo: 'Rua, avenida ou lugar em São Paulo',
@@ -37,6 +51,10 @@ export const hipotesesMapa = {
   tipoEstudo: 'Estudo',
   tipoOutro: 'Outro',
   tipoDoLugar: 'Tipo do lugar',
+  // [HIPÓTESE] TL-05, revisão do marcador e do endereço.
+  toqueMapa: 'Toque no mapa para marcar o ponto.',
+  buscandoEndereco: 'Buscando endereço…',
+  enderecoIndisponivel: 'Endereço indisponível',
   // Configurações
   conta: 'Conta',
   lugaresSecao: 'Lugares salvos',

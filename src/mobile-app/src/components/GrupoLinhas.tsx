@@ -23,6 +23,7 @@ type PropsLinha = {
   detalhe?: string;
   /** Se informado, a linha é um botão com seta. */
   onPress?: () => void;
+  rotuloAcessibilidade?: string;
   /** Ação secundária à direita (ex.: apagar). */
   acao?: { icone: NomeIcone; rotulo: string; onPress: () => void };
   ultima?: boolean;
@@ -30,7 +31,7 @@ type PropsLinha = {
   testID?: string;
 };
 
-export function LinhaGrupo({ icone, titulo, detalhe, onPress, acao, ultima = false, destrutiva = false, testID }: PropsLinha) {
+export function LinhaGrupo({ icone, titulo, detalhe, onPress, rotuloAcessibilidade, acao, ultima = false, destrutiva = false, testID }: PropsLinha) {
   const { cores } = useTema();
   const corpo = (
     <>
@@ -45,7 +46,7 @@ export function LinhaGrupo({ icone, titulo, detalhe, onPress, acao, ultima = fal
   return (
     <View style={base}>
       {onPress ? (
-        <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={[titulo, detalhe].filter(Boolean).join('. ')} onPress={onPress} style={estilos.alvo}>
+        <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={rotuloAcessibilidade ?? [titulo, detalhe].filter(Boolean).join('. ')} onPress={onPress} style={estilos.alvo}>
           {corpo}
           <Icone nome="chevron-right" tamanho={22} corTema="texto2" />
         </Pressable>

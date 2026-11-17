@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { formatarHora } from '@/components/resultado/formatos';
 import DetalhesRota from '@/app/(app)/resultado/[rotaId]';
 import PorQueEstaRota from '@/app/(app)/por-que/[rotaId]/[trechoId]';
 import { useConsulta, type ValorConsulta } from '@/consulta';
@@ -34,6 +35,13 @@ function preparar(resposta: RespostaConsulta | null = conclusivo, rotaId = 'rota
 afterEach(() => { jest.clearAllMocks(); mockRedirect = ''; });
 
 describe('TL-08 Detalhes da rota', () => {
+  it('exibe embarque no fuso do aparelho, inclusive quando chega em UTC', async () => {
+    const rota = conclusivo.rotas[0];
+    const iso = '2026-11-15T08:11:00.000Z';
+    preparar({ ...conclusivo, rotas: [{ ...rota, trechos: rota.trechos.map(t => ({ ...t, partidaPrevista: iso })) }] });
+    await render(<DetalhesRota />);
+    expect(screen.getByText(new RegExp(textos.resultado.detalhes.embarque(formatarHora(iso)).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))).toBeTruthy();
+  });
   it('ordena trechos e mostra embarque, desembarque e selo de exemplo', async () => {
     const rota = conclusivo.rotas[0];
     preparar({ ...conclusivo, rotas: [{ ...rota, trechos: [...rota.trechos].reverse() }] });
@@ -63,7 +71,7 @@ describe('TL-08 Detalhes da rota', () => {
     expect(screen.getByText(h.trechoNumerado(1, 2))).toBeTruthy();
   });
 
-  it('não oferece explicação quando L é zero; oferece dados e não compartilhamento', async () => {
+  it('não oferece explicação quando L é zero; oferece dados e o compartilhamento do protótipo', async () => {
     preparar(nao_aplicavel, 'rota_2');
     await render(<DetalhesRota />);
     expect(screen.queryByRole('button', { name: /Por que esta rota\?/ })).toBeNull();
@@ -72,7 +80,8 @@ describe('TL-08 Detalhes da rota', () => {
     expect(mockPush).toHaveBeenCalledWith('/sobre-os-dados');
     await fireEvent.press(screen.getByRole('button', { name: textos.porQue.linkConsiderados }));
     expect(mockPush).toHaveBeenCalledWith({ pathname: '/dados-considerados', params: { rotaId: 'rota_2' } });
-    expect(screen.queryByText(textos.compartilhar.titulo)).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: textos.compartilhar.botaoTl08 }));
+    expect(mockPush).toHaveBeenCalledWith({ pathname: '/compartilhar/[rotaId]', params: { rotaId: 'rota_2' } });
   });
 
   it('redireciona sem resposta ou rota válida', async () => {
@@ -89,7 +98,7 @@ describe('TL-09 Por que esta rota?', () => {
   it.each([
     [conclusivo, textos.porQue.indicativo.conclusivoComFoco],
     [sem_diferenca, textos.porQue.indicativo.semDiferenca],
-    [mistos, textos.porQue.indicativo.semDiferenca],
+    [mistos, textos.casosResultado.mistos],
     [insuficiente_amostra, textos.porQue.indicativo.insuficiente(textos.porQue.motivo.amostra)],
     [insuficiente_cobertura, textos.porQue.indicativo.insuficiente(textos.porQue.motivo.cobertura)],
     [insuficiente_largura, textos.porQue.indicativo.insuficiente(textos.porQue.motivo.largura)],

@@ -1,11 +1,11 @@
 # FL-08 · Planejar a volta
 
 - **Status:** rascunho · **Status das regras:** `[DECISÃO]` (US-07, DT-05)
-- **Ator e gatilho:** Ágatha planejou a ida e toca em "Planejar a volta", ou abre TL-04 e muda o sentido para "volta".
+- **Ator e gatilho:** Ágatha planejou a ida e toca em "Planejar a volta". *(D-29: a TL-04 não tem mais seletor Ida/Volta; para uma volta sem ida prévia, ela simplesmente escolhe origem e destino e usa "Inverter" se quiser.)*
 - **Pré-condições:** sessão ativa; para a inversão automática, uma ida planejada nesta sessão.
 - **Pós-condições:** consulta da volta enviada com o horário próprio (segue para FL-06).
 - **US/AC cobertos:** US-07 AC1–AC2
-- **Telas envolvidas:** TL-07/TL-08 → TL-04 (sentido volta) → TL-06 → TL-07
+- **Telas envolvidas:** TL-07/TL-08 → TL-04 (com a etiqueta "Planejando a volta") → TL-06 → TL-07
 
 ## Diagrama
 
@@ -39,8 +39,8 @@ Ida planejada → inverter → novo horário → alternativas e comparação da 
 
 ## Caminhos alternativos
 
-- Planejar só a volta, sem ida antes: campos vazios, sentido "volta".
-- Trocar ida/volta no seletor de sentido de TL-04 a qualquer momento.
+- Planejar só a volta, sem ida antes: é um planejamento comum (a tela não pede o sentido).
+- Usar "Inverter" na TL-04 a qualquer momento (não existe seletor de sentido).
 
 ## Erros e exceções
 

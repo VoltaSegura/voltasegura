@@ -13,11 +13,12 @@ type Props = {
   onChange: (valor: string) => void;
   onBuscar: () => void;
   buscando?: boolean;
+  ocultarAjuda?: boolean;
   testID?: string;
 };
 
 /** Campo de busca por texto sobre o mapa (D-29). Só consulta ao tocar em Buscar ou no "ok" do teclado. */
-export function BuscaEndereco({ valor, onChange, onBuscar, buscando = false, testID }: Props) {
+export function BuscaEndereco({ valor, onChange, onBuscar, buscando = false, ocultarAjuda = false, testID }: Props) {
   const { cores } = useTema();
   const [focado, setFocado] = useState(false);
   return (
@@ -52,7 +53,7 @@ export function BuscaEndereco({ valor, onChange, onBuscar, buscando = false, tes
           {buscando ? <ActivityIndicator size="small" color={cores.acaoTexto} /> : <Texto variante="rotulo" cor="acaoTexto">{h.buscar}</Texto>}
         </Pressable>
       </View>
-      {focado ? <Texto variante="apoio" cor="texto2" style={[estilos.aviso, { backgroundColor: cores.fundo + 'E6' }]}>{h.buscarAviso}</Texto> : null}
+      {!ocultarAjuda && (focado || valor.length > 0) ? <Texto variante="apoio" cor="texto2" style={[estilos.aviso, { backgroundColor: cores.fundo + 'D9' }]}>{h.buscarAvisoCurto}</Texto> : null}
     </View>
   );
 }
@@ -60,6 +61,6 @@ export function BuscaEndereco({ valor, onChange, onBuscar, buscando = false, tes
 const estilos = StyleSheet.create({
   caixa: { flexDirection: 'row', alignItems: 'center', gap: esp[2], borderRadius: raio.pilula, borderWidth: 1, paddingLeft: esp[4], paddingRight: esp[2], minHeight: toque.minimo + 4 },
   entrada: { flex: 1, minHeight: toque.minimo, paddingVertical: esp[2] },
-  botao: { minHeight: 36, minWidth: 64, borderRadius: raio.pilula, alignItems: 'center', justifyContent: 'center', paddingHorizontal: esp[3] },
-  aviso: { marginTop: esp[2], padding: esp[2], borderRadius: raio.medio },
+  botao: { minHeight: toque.minimo, minWidth: 64, borderRadius: raio.pilula, alignItems: 'center', justifyContent: 'center', paddingHorizontal: esp[3] },
+  aviso: { marginTop: esp[1], alignSelf: 'flex-start', borderRadius: raio.pilula, overflow: 'hidden', paddingHorizontal: esp[2], paddingVertical: esp[1] },
 });

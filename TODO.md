@@ -2,7 +2,7 @@
 
 Lista viva de tarefas do projeto. Entrega final das disciplinas: **19/11/2026, 23h55**.
 
-**Última atualização:** 13/11/2026
+**Última atualização:** 15/11/2026
 
 ## Regras de steering (obrigatórias para agentes de IA)
 
@@ -37,7 +37,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 |---|---|---|---|---|
 | T01 | Fechar os pontos em aberto do estado atual (`docs/06`) | EM DESENVOLVIMENTO | a definir | antes de 19/11 |
 | T02 | Construir o backlog do VoltaSegura | EM DESENVOLVIMENTO | a definir | a definir |
-| T03 | Arquitetar o vídeo pitch (até 4 min) | PENDENTE | a definir | 19/11 23h55 |
+| T03 | Arquitetar o vídeo pitch (até 4 min) | EM DESENVOLVIMENTO (roteiro v1 recebido em 15/11) | a definir | 19/11 23h55 |
 | T12 | Roteamento: teste local do OpenTripPlanner 2 | EM DESENVOLVIMENTO | Lucas Simidu | a definir |
 | T13 | Dados: SSP-SP 2025 e janela de 12 meses | PENDENTE | a definir | a definir |
 | T14 | Pesquisa com estudantes noturnos e universidades | CONCLUÍDO (fora desta fase) | grupo | 11/11 |
@@ -46,7 +46,8 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | T17 | Benchmarking atualizado | PENDENTE | a definir | a definir |
 | T19 | Base de conhecimento e dados já entregues | CONCLUÍDO | grupo | 11/11 |
 | T21 | Script automático de cobertura por região (revisão de vieses) | PENDENTE | a definir | antes do piloto |
-| T22 | Decidir a feature premium e o modelo financeiro | PENDENTE | grupo | antes do pitch (T03) |
+| T22 | Decidir a feature premium e o modelo financeiro | EM DESENVOLVIMENTO (15/11: feature = VoltaSegura+ e modelo freemium individual + empresas, como `[HIPÓTESE]`; falta registrar o que resta e o que o grátis inclui) | grupo | antes do pitch (T03) |
+| T23 | Alinhar a base de conhecimento ao roteiro do pitch (onda de perguntas) | EM DESENVOLVIMENTO (1ª rodada feita em 15/11; faltam itens listados na T23) | grupo | antes de gravar o pitch (T03) |
 
 ### Parte B — Entregas de disciplinas (prazo de todas: 19/11/2026, 23h55)
 
@@ -58,7 +59,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 | T07 | Mobile & IoT | App Expo com a jornada ida e volta, vídeo de até 3 min | EM DESENVOLVIMENTO | `docs/08` (bloco "Sobre os dados"; resultado revisto em `docs/app-map` D-01), T12, T15, T01.7 | Lucas Simidu |
 | T08 | Operating Systems | Provisionamento Linux automatizado, vídeo de até 7 min | PENDENTE | T05/T06 (aplicação a hospedar) | a definir |
 | T09 | Physical Computing | Circuito ESP32 no Wokwi, vídeo de até 4 min, `.txt` | PENDENTE | nenhuma (ESP32 fora do produto, decisão de 11/11) | a definir |
-| T10 | Testing, Compliance & QA | Features e Test Cases no Azure Boards, PDF | PENDENTE | T02 (backlog em `docs/10`), `docs/08` | a definir |
+| T10 | Testing, Compliance & QA | Features e Test Cases no Azure Boards, PDF | EM DESENVOLVIMENTO (rascunhos em `src/qa/`) | T02 (backlog em `docs/10`), `docs/08` | a definir |
 | T11 | Cybersecurity | Módulo PII, Taint Analysis, Risco Cidadão, ZIP | PENDENTE | T01.3 (privacidade), T01.6 (Risco Cidadão) | a definir |
 | T18 | Envio final (todas) | Conferir e enviar cada disciplina até 19/11 23h55 | PENDENTE | T04 a T11 | a definir |
 | T20 | Alinhar backend ao `docs/07`/`docs/08` | Rubricas elegíveis, faixa do dia, cobertura e frases fixas | CONCLUÍDO (12/11/2026) | `docs/07`, `docs/08` | a definir |
@@ -130,7 +131,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ## T03 — Arquitetar o vídeo pitch
 
-**Status:** PENDENTE
+**Status:** EM DESENVOLVIMENTO (15/11/2026: vídeo gravado e fechado segundo o grupo; link no YouTube e descrição pendentes; roteiro v1 do grupo para 5 pessoas recebido e convertido em [`src/qa/pitch/ROTEIRO_PITCH.md`](src/qa/pitch/ROTEIRO_PITCH.md), com o `.txt` original ao lado. O texto ainda não está conferido contra a base: as divergências estão na **T23**. Faltam responsáveis, o storyboard das entregas, a gravação e o link.)
 **Tipo:** Core do projeto (comunicação do produto; o link é enviado pela disciplina de Testing)
 **Referência:** `docs/01_gs_briefing.md` §2–3; `docs/02_entregas_disciplinas.md` (seção Pitch); `docs/05_regras_linguagem_etica.md`.
 
@@ -142,18 +143,18 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 **Decisões já tomadas que valem para o vídeo:** identidade da apresentação em preto e laranja, menos texto e Big Numbers em destaque (`docs/06` §1). Linguagem: "exposição estimada", nunca "rota segura", "área perigosa" ou "segurança garantida".
 
 **O que fazer:**
-- [ ] Definir responsável pelo roteiro, pela gravação e pela edição
-- [ ] Escolher o fio da história (proposta a validar: persona noturna, o problema da volta para casa, a comparação ida e volta, a confiança nos dados, o impacto)
-- [ ] Escolher os Big Numbers (candidatos tirados dos dados do repositório, a conferir antes de usar: 274.990 BOs de roubo/furto na capital em 2026; 39,8% dos BOs do recorte sem hora utilizável; 47% dos bairros com menos de 10 BOs em 2026). Não usar nenhum número como rótulo de bairro ou rua.
-- [ ] Escolher as entregas que entram (app, API, ML, dashboard de Cybersecurity, circuito ESP32), de acordo com o que estiver pronto
-- [ ] Montar o roteiro com tempos por bloco, somando no máximo 4 min
+- [ ] Definir responsável pelo roteiro, pela gravação e pela edição. *O roteiro v1 divide as falas entre "Pessoa 1" a "Pessoa 5", sem nomes (T23, PT-27).*
+- [x] Escolher o fio da história. *15/11: definido pelo grupo no roteiro v1: luz acesa de quem espera → problema e números → solução em três passos → ética e demanda → negócio e roadmap → diferencial → fechamento com "voltar para casa não deveria ser uma aposta".*
+- [ ] Escolher os Big Numbers (candidatos tirados dos dados do repositório, a conferir antes de usar: 274.990 BOs de roubo/furto na capital em 2026; 39,8% dos BOs do recorte sem hora utilizável; 47% dos bairros com menos de 10 BOs em 2026). Não usar nenhum número como rótulo de bairro ou rua. *15/11: o roteiro v1 usa outros números (IBGE e FBSP/Datafolha), sem fonte registrada na base (T23, PT-02 a PT-05).*
+- [ ] Escolher as entregas que entram (app, API, ML, dashboard de Cybersecurity, circuito ESP32), de acordo com o que estiver pronto. *15/11: o roteiro v1 não mostra nenhuma entrega (T23, PT-25).*
+- [ ] Montar o roteiro com tempos por bloco, somando no máximo 4 min. *15/11: v1 recebida, com cerca de 3min56s só de fala, estimados por contagem de palavras (`src/qa/pitch/ROTEIRO_PITCH.md`). Falta medir num ensaio e abrir espaço para as entregas (T23, PT-24).*
 - [ ] Storyboard simples (telas e demonstrações a gravar)
 - [ ] Modelo de receita no pitch: depende da **T22** (feature premium e modelo financeiro); entra como "modelo a validar"
 - [ ] Decidir a paleta dos slides (preto e laranja da apresentação ou dourado da marca; ver T15)
 - [ ] Gravar, editar, subir no YouTube e conferir o link
 - [ ] Colocar o link na tarefa de Testing (ver T18)
 
-**Depende de:** marca (T15), protótipo do app (T07), entregas de ML (T04) e Cybersecurity (T11).
+**Depende de:** marca (T15), protótipo do app (T07), entregas de ML (T04) e Cybersecurity (T11), modelo de negócio (T22) e alinhamento do roteiro com a base (T23).
 **Pronto quando:** vídeo publicado com até 4 min e link enviado.
 
 ---
@@ -295,6 +296,154 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ---
 
+## T23 — Alinhar a base de conhecimento ao roteiro do pitch
+
+**Status:** EM DESENVOLVIMENTO (mapeamento e 1ª rodada de perguntas feitos em 15/11/2026; vídeo já gravado e fechado, então só legenda, narração e descrição se ajustam)
+
+**Resultado da 1ª rodada (15/11/2026; registro em `docs/06` 1.44):**
+
+| Itens | Resposta | Aplicado em |
+|---|---|---|
+| PT-01 | `[DECISÃO]` Público amplo: quem volta à noite (estudantes e trabalhadores) | `docs/03` §3, `docs/10` §2, README (Ficha), AGENTS.md |
+| PT-02 a PT-04 | Fichas pesquisadas; conferência na fonte primária `[EM ABERTO]`; IBGE é de 2021 | `docs/03` §10, `ROTEIRO_PITCH.md` |
+| PT-05 | Números do pitch principais; os antigos de reserva | `docs/03` §10 |
+| PT-06 | Construir até 19/11; só afirmar se estiver pronto | `docs/06` 1.44; depende de T07 |
+| PT-10 | Infosiga e GeoSampa citados como fontes do projeto (app + ML), sem prometer no app | `ROTEIRO_PITCH.md` (ressalvas) |
+| PT-12, PT-16 | `[HIPÓTESE]` Freemium individual + empresas; universidades saem; "sempre gratuito" mantido sem a ressalva no vídeo | `docs/03` §8, `docs/10` §4 |
+| PT-13, PT-14 | `[DECISÃO]` VoltaSegura+ no MVP em versão mínima, rotina só no aparelho, "Depende do tempo" | `docs/10` F7.1/US-22, `docs/03` §6, app-map D-31 |
+| PT-17 a PT-20 | `[HIPÓTESE]` Relatos de infraestrutura como exceção de roadmap; agente e integrações a partir do VoltaSegura+ | `docs/03` §9, `docs/10` DT-10, P-07, P-08, `docs/05` |
+| PT-21 a PT-23 | Verificação do Waze, Google Maps e Moovit fica com o grupo (T17) | T17 |
+| PT-24 a PT-27 | Superados ou abertos pelo vídeo já gravado (tempo, entregas mostradas, ODS, responsáveis): confirmar com o grupo | `[EM ABERTO]` |
+| PT-07, PT-08, PT-09, PT-11, PT-15 | Não perguntados: ajustes de fala; vão como ressalva na descrição se necessário | `[EM ABERTO]` |
+
+**Faltam:** mapear o VoltaSegura+ em `docs/app-map/` (fluxo, tela, funcionalidade, rastreabilidade), implementar F7.1 e FN-15 se o tempo permitir, conferir as estatísticas na fonte primária, decidir o que o plano grátis inclui, fechar PT-24 a PT-27 e os itens não perguntados.
+**Responsável:** grupo
+**Prazo:** antes de gravar o pitch (T03)
+**Tipo:** Core do projeto
+**Referência:** roteiro v1 em [`src/qa/pitch/ROTEIRO_PITCH.md`](src/qa/pitch/ROTEIRO_PITCH.md); conferido contra `docs/01` a `docs/10`, `README.md`, `AGENTS.md`, `docs/app-map/01_decisoes.md` e `src/mobile-app/todo-mobile.md`.
+
+**Como fazer:** passar pelos itens PT-01 a PT-27 numa onda de perguntas, um tema por vez. Cada resposta vira `[DECISÃO]` ou `[HIPÓTESE]`, ou fica `[EM ABERTO]`, e tem dois efeitos possíveis: **atualizar a base** (o pitch passa a valer) ou **ajustar a fala** (a base continua valendo). Registrar em `docs/06` com histórico e em `prompts.md`, aplicar nos documentos da tabela final e só então liberar a gravação.
+
+### O que já está alinhado (não precisa de pergunta)
+
+Exposição estimada como conceito; "não prometemos segurança"; não classificar bairros como perigosos; "quando faltam dados, deixamos isso claro" (dados insuficientes); exposição estimada só nos trechos a pé; origem, destino e horário; comparação por tempo, conexões e confiabilidade dos dados; ida e volta; piloto no município de São Paulo; não vender dados pessoais; SSP-SP e SPTrans como origem dos dados; Waze citado como precedente de alertas.
+
+### Divergências e lacunas
+
+Tipo: **Conflito** = o pitch contradiz uma decisão registrada · **Novo** = conceito que não está na base · **Ajuste** = fala imprecisa diante do que a base define.
+
+**A. Público**
+
+| ID | Tipo | O que o pitch diz | O que a base diz | Pergunta da onda |
+|---|---|---|---|---|
+| PT-01 | Conflito | Fala de quem sai "da aula **ou do trabalho**", cita 8,6 milhões de trabalhadores noturnos e empresas com turno noturno; não cita estudantes universitários nem a persona | Público inicial = estudantes universitários do período noturno; trabalhadores noturnos são "público futuro, não priorizar agora"; persona Ágatha Santos, 24 (`docs/03` §3, `docs/10` §2, Ficha do `README.md`, `AGENTS.md`) | Ampliar o público inicial para estudantes **e** trabalhadores noturnos, ou manter estudantes e ajustar a fala? A persona aparece no vídeo? |
+
+**B. Estatísticas** (`docs/05` exige fonte, público, amostra, período e o que o número mede)
+
+| ID | Tipo | O que o pitch diz | O que a base diz | Pergunta da onda |
+|---|---|---|---|---|
+| PT-02 | Novo | IBGE: "mais da metade" se sente insegura andando sozinha à noite; "um em cada cinco" de dia | Não consta. `docs/03` §10 tem só Ipsos-Ipec/Rede Nossa São Paulo (71%) e Patrícia Galvão/Locomotiva (63%, 35%, 42%) | Qual pesquisa e qual ano (ex.: módulo de vitimização da PNAD)? Público, amostra, o que mede? |
+| PT-03 | Novo | 8,6 milhões de brasileiros trabalham à noite, total ou parcialmente | Não consta | Mesma ficha: fonte exata, ano e definição de "trabalho noturno" |
+| PT-04 | Novo | FBSP + Datafolha, março de 2026: 35,6% deixaram de sair à noite por medo; 36,5% mudaram seus percursos | Não consta | Nome da pesquisa, público, amostra, abrangência (Brasil?) e link |
+| PT-05 | Conflito | Não usa os Big Numbers da base | `docs/03` §10 (71%; 63/35/42) e candidatos da T03 (274.990 BOs etc.) | Os números do pitch substituem os de `docs/03` §10 ou os antigos ficam como reserva para os slides (T16)? |
+
+**C. Solução e funcionalidades**
+
+| ID | Tipo | O que o pitch diz | O que a base diz | Pergunta da onda |
+|---|---|---|---|---|
+| PT-06 | Conflito | "Você ainda pode compartilhar seu trajeto com quem espera por você" (como recurso disponível) | F2.5 é MVP **"Depende do tempo"** (D-22); FN-15 e FN-16 estão `PENDENTE`, 0% (`docs/10` F2.5, `src/mobile-app/todo-mobile.md`) | Construir o compartilhamento até 19/11, ou mudar a fala para roadmap? O vídeo não pode mostrar como pronto o que não existe |
+| PT-07 | Ajuste | "Tudo em uma única tela" | Resultado = mapa + container (D-01); "Por que esta rota?", "Sobre os dados" e "Dados considerados" abrem outras telas | Aceitar a simplificação ou trocar por "tudo no mesmo app"/"na mesma comparação"? |
+| PT-08 | Ajuste | Pessoa 3: "comparamos apenas os trechos a pé" | Só a contagem de registros usa os trechos a pé; tempo e conexões valem para a rota inteira (`docs/08`). A Pessoa 2 já fala certo: "exposição estimada nos trechos a pé" | Trocar por "a exposição estimada considera apenas os trechos a pé"? |
+| PT-09 | Ajuste | "escolher o **melhor** caminho"; "a tecnologia [...] ajuda a se **antecipar** a [riscos]" | O app não elege a melhor rota (F3.2 AC5); `docs/05` proíbe sugerir previsão ("prevemos crimes") | Manter, ou trocar por "comparar caminhos" e "decidir com antecedência"? |
+
+**D. Dados e viabilidade**
+
+| ID | Tipo | O que o pitch diz | O que a base diz | Pergunta da onda |
+|---|---|---|---|---|
+| PT-10 | Conflito | "Utilizamos dados públicos da **SSP-SP e do Infosiga**" | O app usa SSP-SP (furto e roubo na comparação; trânsito pela natureza da própria SSP), GTFS da SPTrans e OpenStreetMap. O Infosiga só entra na entrega de ML (`docs/04`, `docs/07`, `docs/08`, `docs/10` DT-03) | Trocar a fala por "SSP-SP e SPTrans", ou decidir usar o Infosiga no produto (nova decisão em `docs/07` e `docs/08`)? |
+| PT-11 | Ajuste | "A informação já existe. Está na SSP-SP, na SPTrans e no **GeoSampa**" | A iluminação do GeoSampa é indicador de fase 3 (P-03), fora do MVP | Manter (é descrição do problema, não do app) ou tirar o GeoSampa para não sugerir que o app já o usa? |
+
+**E. Negócio e privacidade** (liga com a T22)
+
+| ID | Tipo | O que o pitch diz | O que a base diz | Pergunta da onda |
+|---|---|---|---|---|
+| PT-12 | Conflito | Freemium: comparar e consultar "será sempre gratuito"; receita pelo VoltaSegura+; empresas com turno noturno oferecem como benefício. Universidades não aparecem | Modelo = B2B2C começando por universidades `[HIPÓTESE]` (`docs/03` §8, `docs/10` §4, `docs/06` §2, `AGENTS.md`); a T22 discute o freemium, sem decisão | Freemium individual vira o modelo principal? Universidades saem ou ficam como canal? Empresas entram como canal B2B2C? |
+| PT-13 | Novo | **VoltaSegura+**: "cadastrar sua rotina e receber avisos antes de sair" | Nome e recurso não constam; é a candidata "Rotina da semana" da T22. Atenção: "premium" já nomeia o redesign visual do app (D-28), o que pode confundir | Confirmar nome e escopo. O que diz o aviso (horário de saída? mudança de resultado?). Entra no MVP ou é fase posterior? |
+| PT-14 | Conflito | Cadastrar rotina e receber avisos (VoltaSegura+) | Consultas não são guardadas; histórico só no aparelho; histórico no servidor (opção C) foi rejeitado (`docs/03` §6, DT-08) | A rotina fica só no aparelho, com notificação local (compatível com a decisão atual), ou no servidor (revê DT-08 e contradiz a fala da PT-15)? |
+| PT-15 | Ajuste | "Não armazenamos históricos de buscas nem vendemos dados pessoais" | Correto para o servidor. Existem histórico opcional e lugares salvos **no aparelho** (F1.4, D-29) e guarda temporária durante o compartilhamento (D-21) | Trocar por "não guardamos suas buscas em nossos servidores"? |
+| PT-16 | Conflito | Modelo apresentado como certo ("será sempre gratuito", "poderão oferecer") | Pitch e slides devem apresentar o modelo como "a validar", sem preço (T22; `docs/06` §2) | Assumir "sempre gratuito" como compromisso público? Incluir "modelo a validar" na fala ou na tela? |
+
+**F. Roadmap**
+
+| ID | Tipo | O que o pitch diz | O que a base diz | Pergunta da onda |
+|---|---|---|---|---|
+| PT-17 | Conflito | 1º passo: usuários reportam problemas (postes apagados, calçadas sem acessibilidade) e ganham 3 dias de VoltaSegura+; "dados anônimos" ajudam a melhorar a cidade | Relatos de usuários estão fora: "nenhum relato vira dado no app" (DT-10, `docs/06` §3, `docs/10` §8), por viés, estigmatização, privacidade e moderação. O roadmap (`docs/03` §9) não tem relatos | Relato de infraestrutura é diferente de percepção de segurança: o grupo abre essa exceção? Os relatos aparecem no app ou entram na comparação? Quem recebe os dados (prefeitura, SP156)? Como moderar e evitar relato falso para ganhar o premium? Como anonimizar a localização? |
+| PT-18 | Ajuste | Depois: "agente inteligente para reorganizar trajetos diante de atrasos" | Fase 2: replanejamento com tempo real de fonte confiável (P-01, depende da Olho Vivo, T01.8); fase 3: assistente de orientação após validação (sem ID no backlog) | Registrar o agente como item do roadmap? Em que fase? Ele depende do tempo real |
+| PT-19 | Novo | "Integrações com aplicativos de mobilidade" | Fase 4 só cita integrações institucionais e API | Quais aplicativos (transporte por app, Moovit)? Em que fase? |
+| PT-20 | Ajuste | Ordem: relatos → agente e integrações | Fases 2 (tempo real, compartilhamento) → 3 (indicadores, preferências, assistente) → 4 (parcerias, API, outras cidades) | Reordenar o roadmap de `docs/03` §9 e `docs/10` §9 para seguir o pitch? |
+
+**G. Concorrência e diferencial**
+
+| ID | Tipo | O que o pitch diz | O que a base diz | Pergunta da onda |
+|---|---|---|---|---|
+| PT-21 | Ajuste | Waze "é voltado a motoristas e depende de relatos dos usuários" | Benchmarking funcional pendente (T17); `docs/03` §7 e `docs/05` pedem testar os concorrentes antes de afirmar | Verificar o Waze hoje (alertas de insegurança, origem dos dados, modo a pé) antes de gravar? |
+| PT-22 | Ajuste | Só o Waze é citado | O feedback do professor pede reconhecer Google Maps, Waze e Moovit (`docs/03` §2) | Acrescentar uma frase sobre Google Maps e Moovit (planejam pelo tempo, sem exposição estimada)? |
+| PT-23 | Novo | Diferencial: "pensado para quem caminha e usa transporte público", "partimos de registros oficiais", "outras soluções alertam durante o caminho, nós ajudamos a escolher antes de começar" | Frase em teste: "não mostramos apenas informações sobre riscos; organizamos essas informações para apoiar uma decisão prática de mobilidade" `[HIPÓTESE]` (`docs/03` §4 e §7, `docs/10` §1) | Adotar a frase do pitch como diferencial `[HIPÓTESE]`? "Outras soluções" generaliza: Google Maps e Moovit também planejam antes da saída. E "partimos de registros oficiais" choca com os relatos da PT-17 |
+
+**H. Exigências da GS para o vídeo**
+
+| ID | Tipo | O que o pitch diz | O que a base diz | Pergunta da onda |
+|---|---|---|---|---|
+| PT-24 | Conflito | ~629 palavras faladas, ou ~3min56s (3min42s a 4min12s) | Limite de 4 min (`docs/01` §3) | Cortar falas para abrir tempo para as demonstrações? Meta de tempo de fala? |
+| PT-25 | Conflito | Nenhuma entrega aparece (app, API, ML, dashboard) | O vídeo deve mostrar "as entregas que mais somaram (dashboard incluído)" (`docs/02`, seção Pitch) | Quais entregas entram, com imagem sobre a fala ou em bloco próprio? |
+| PT-26 | Ajuste | ODS não é citado | ODS 11 (metas 11.2 e 11.7) na Ficha (`docs/01` §7) | Citar o ODS 11 numa frase ou num letreiro? |
+| PT-27 | Lacuna | Falas de "Pessoa 1" a "Pessoa 5" | T03 pede responsáveis | Quem faz cada fala, quem grava e quem edita? |
+
+### Produtos e funcionalidades do pitch que não existem no app hoje (PF-01 a PF-12)
+
+Levantamento de 15/11/2026, com as respostas da 1ª rodada já aplicadas. **Evidência da situação no app:** rotas em `src/mobile-app/src/app/` (só há as telas TL-01 a TL-13; `compartilhar/[rotaId].tsx` e `acompanhar/[token].tsx` são `TelaProvisoria`), `src/mobile-app/todo-mobile.md` (FN-15 e FN-16 `PENDENTE`) e `docs/app-map/06_funcionalidades.md` (FN-01 a FN-16, sem VoltaSegura+, relatos nem agente). Não rodei o app para este levantamento. Regra do pitch: **recurso que não existe não é mostrado nem dito como disponível** (`docs/05`).
+
+| ID | O que o pitch diz | Atualização combinada (1ª rodada) | Situação no app hoje | Onde está mapeado | Próximo passo |
+|---|---|---|---|---|---|
+| PF-01 | "Você ainda pode compartilhar seu trajeto com quem espera por você" | PT-06: construir até 19/11 e só afirmar se estiver pronto | **Não existe.** TL-14 é tela provisória; sem endpoint, link temporário nem GPS em segundo plano | FN-15, US-21, D-22 ("Depende do tempo"), PL-18, PL-24 | Decidir se entra antes do prazo (T07); se não, ressalva na descrição do vídeo |
+| PF-02 | (implícito) a pessoa que espera acompanha o trajeto | Mesma decisão da PF-01 | **Não existe.** TL-15 é tela provisória; deep link `voltasegura://acompanhar/<token>` só configurado | FN-16, US-21 AC6–AC8, PL-23 | Segue a PF-01 |
+| PF-03 | **VoltaSegura+**: "cadastrar sua rotina e receber avisos antes de sair" | PT-13/PT-14 `[DECISÃO]`: MVP em versão mínima; rotina **só no aparelho**, notificação local; "Depende do tempo" | **Não existe.** Sem tela, sem função em `06_funcionalidades.md`, sem notificação local; registrado só nos docs | D-31, `docs/10` F7.1/US-22; **falta** FL, TL e FN no app-map | Mapear em `docs/app-map/` (fluxo, tela, FN, rastreabilidade) e definir o texto do aviso e o gatilho (horário de saída? mudança no resultado?) |
+| PF-04 | Plano gratuito x VoltaSegura+ (comparar e consultar "sempre gratuito") | PT-12/PT-16 `[HIPÓTESE]`: freemium individual; "sempre gratuito" mantido no vídeo | **Não existe.** Sem plano, assinatura nem cobrança; todo o app é gratuito hoje | `docs/03` §8, `docs/10` §4, T22 | Definir o que o plano grátis inclui (`[EM ABERTO]`); cobrança real fica fora do protótipo |
+| PF-05 | Empresas com turno noturno oferecem o VoltaSegura+ como benefício | PT-12 `[HIPÓTESE]`: empresas como canal; universidades saem | **Não existe.** Sem conta de empresa, código de benefício nem painel | `docs/03` §8, T22 | Só hipótese de negócio: validar com empresas (T14 ampliada); nada a construir no protótipo |
+| PF-06 | Usuários **reportam** postes apagados e calçadas sem acessibilidade | PT-17 `[HIPÓTESE]`: exceção de roadmap só para infraestrutura; crime e percepção de segurança seguem fora (DT-10) | **Não existe.** Sem formulário, foto, mapa de relatos nem moderação; DT-10 diz que nenhum relato vira dado no app | `docs/10` DT-10, P-07; `docs/03` §9 (roadmap) | Roadmap. Em aberto: moderação, antifraude, anonimização da localização, destino dos dados |
+| PF-07 | Quem reporta ganha **3 dias de VoltaSegura+** | Depende da PF-03 e da PF-06 | **Não existe.** Sem recompensa nem controle de período do plano | `docs/10` P-07 | Roadmap. Risco: relato falso para ganhar o plano (antifraude em aberto) |
+| PF-08 | "Dados anônimos poderão ajudar a melhorar a cidade" | PT-17: destino dos dados `[EM ABERTO]` | **Não existe.** Sem exportação, painel para prefeitura nem canal com o SP156 | `docs/10` P-07 | Roadmap. Definir quem recebe e como anonimizar antes de afirmar |
+| PF-09 | **Agente inteligente** para reorganizar trajetos diante de atrasos | PT-18/PT-20 `[HIPÓTESE]`: roadmap, a partir do VoltaSegura+; depende de tempo real | **Não existe.** O app compara antes da saída; não replaneja nem usa tempo real | `docs/03` §9, `docs/10` P-08; depende da Olho Vivo (T01.8) | Roadmap. Não mostrar no vídeo como pronto |
+| PF-10 | **Integrações com aplicativos de mobilidade** | PT-19 `[HIPÓTESE]`: roadmap, a partir do VoltaSegura+ | **Não existe.** Sem integração, deep link para outros apps nem API pública | `docs/03` §9 | Roadmap. Quais aplicativos: `[EM ABERTO]` |
+| PF-11 | Dados do **Infosiga** ("utilizamos dados públicos da SSP-SP e do Infosiga") | PT-10: fonte do projeto (ML), sem prometer no app | **Não está no app.** O app usa SSP-SP, GTFS da SPTrans e OpenStreetMap; o Infosiga só entra no estudo de ML | `docs/04`, `docs/07`, `docs/08`, DT-03 | Manter a ressalva na descrição do vídeo; só entra no app por nova decisão em `docs/07` e `docs/08` |
+| PF-12 | Dados do **GeoSampa** ("está na SSP-SP, na SPTrans e no GeoSampa") | PT-10: fonte futura, sem prometer no app | **Não está no app.** Iluminação do GeoSampa é indicador de fase 3 | `docs/04`, P-03 | Mesma ressalva da PF-11 |
+
+**Existe só em parte (conferir antes de mostrar no vídeo):** "tudo em uma única tela" (o resultado é mapa + container, mas "Por que esta rota?", "Sobre os dados" e "Dados considerados" abrem outras telas: PT-07); "cruzamos dados de transporte e ocorrências" (o app tem a comparação, mas conferir se a consulta roda com dados reais ou ainda em `mock`; `todo-mobile.md` I-08 e FN-07 indicam troca `mock|api`).
+
+**Ordem sugerida para a decisão do grupo:** PF-03 (já é decisão do MVP e não está mapeada), PF-01/PF-02 (afirmadas no vídeo como disponíveis), PF-04 (define o plano grátis); PF-05 a PF-12 são roadmap ou fonte e entram só como ressalva na descrição do vídeo, nos slides e no `docs/03` §9.
+
+### Documentos a atualizar depois da onda
+
+Cada linha só é aplicada se a resposta da onda mudar a base. Quando a decisão for ajustar a fala, a alteração é só no roteiro.
+
+| Documento | Seções | Itens |
+|---|---|---|
+| `docs/03_projeto_documento_vivo.md` | §3 público; §6 privacidade; §7 concorrência e diferenciação; §8 modelo de negócio; §9 roadmap; §10 estatísticas; §11 estrutura da apresentação (passa a seguir o roteiro) | PT-01, PT-02 a PT-05, PT-12 a PT-17, PT-18 a PT-20, PT-21 a PT-23 |
+| `docs/04_dados_fontes.md` | Papel do Infosiga e do GeoSampa no produto; relatos de usuários como fonte futura | PT-10, PT-11, PT-17 |
+| `docs/05_regras_linguagem_etica.md` | Frases novas ("antecipar riscos", "melhor caminho", "sempre gratuito"); regra "recurso não construído não aparece como disponível"; linguagem dos relatos de infraestrutura | PT-06, PT-09, PT-16, PT-17 |
+| `docs/06_estado_atual.md` | Decisões e hipóteses novas; revisão de DT-10 (relatos); hipótese das universidades (§2); histórico | todos os que virarem decisão |
+| `docs/07` e `docs/08` | Só se o Infosiga entrar no produto | PT-10 |
+| `docs/10_backlog_produto.md` | §1 diferenciação; §2 público; §3 benchmarking; §4 modelo; nova feature do VoltaSegura+ (rotina e avisos); DT-08 e DT-10; §8 fora do escopo; §9 roadmap (relatos, agente, integrações); status de F2.5 | PT-01, PT-06, PT-12 a PT-14, PT-17 a PT-23 |
+| `docs/app-map/` | Nova decisão D-xx se o VoltaSegura+ ou o compartilhamento mudarem o app | PT-06, PT-13, PT-14 |
+| `README.md` (Ficha) | Cidadão beneficiado; como funciona (compartilhamento); indicador de impacto, se o pitch o definir | PT-01, PT-06 |
+| `AGENTS.md` | Linhas "Público inicial" e "Modelo comercial a validar" | PT-01, PT-12 |
+| `src/qa/pitch/ROTEIRO_PITCH.md` | Falas ajustadas, ficha das estatísticas preenchida, tempos medidos no ensaio, storyboard das entregas | todos os de "ajustar a fala", PT-24, PT-25 |
+| `TODO.md` | T03, T16 (slides seguem o pitch), T17 (Waze), T22 (fechada pela PT-12 a PT-16) | PT-12 a PT-16, PT-21, PT-24, PT-25 |
+
+**Pronto quando:** PT-01 a PT-27 respondidos, decisões registradas em `docs/06`, documentos da tabela atualizados e roteiro v2 sem nenhuma fala que contradiga a base.
+
+---
+
 # PARTE B — ENTREGAS DE DISCIPLINAS
 
 ## T04 — IA & Machine Learning
@@ -358,7 +507,7 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 - [ ] Camada `services/` com modo `mock|api` e fixtures por caso do FL-07; sessão no `expo-secure-store`; banco local `expo-sqlite` (FN-13)
 - [ ] Revisão de pontos de design com o Lucas antes de estilizar as telas (PL-19). *13/11: revisão feita com a skill `frontend-design` e aplicada a `docs/app-map/07_design/` (tokens R-01 a R-15, componentes, acessibilidade, mockups), `08_microcopy.md` e TL-07; falta a aprovação visual do Lucas. Nova pendência PL-25 (mapa base e atribuição).*
 - [ ] Conciliar o contrato da API esperado pelo app com o backend (PL-18)
-- [ ] **Compartilhar trajeto e localização ao vivo** (F2.5/US-21, D-19 a D-22). **Depende do tempo:** construir por último; se o prazo apertar, fica para depois. Mapeamento feito em 13/11 (FL-15, FL-16, TL-14, TL-15, FN-15, FN-16); faltam a revisão do Lucas das telas novas, a checagem do GPS em segundo plano no Expo Go (PL-24) e o endpoint no backend (PL-18)
+- [ ] **Compartilhar trajeto e localização ao vivo** (F2.5/US-21, D-19 a D-22). **15/11: protótipo no app com serviço mock** (TL-14, TL-15, indicador global, deep link; testes verdes). Faltam backend real (PL-18), GPS em segundo plano (PL-24) e validação no aparelho; não afirmar como recurso real no pitch. Histórico do que estava planejado: **Depende do tempo:** construir por último; se o prazo apertar, fica para depois. Mapeamento feito em 13/11 (FL-15, FL-16, TL-14, TL-15, FN-15, FN-16); faltam a revisão do Lucas das telas novas, a checagem do GPS em segundo plano no Expo Go (PL-24) e o endpoint no backend (PL-18)
 - [x] Resolver as pendências do mapeamento que bloqueavam telas: PL-01, PL-02, PL-04, PL-08, PL-13, PL-14 e PL-15 (D-08 a D-14, 13/11)
 - [x] Resolver PL-16 (candidatas aos focos) e PL-17 (consulta com uma rota só): D-15 e D-16, 13/11
 - [ ] Cadastro e login (conta obrigatória; consentimento e aviso de privacidade no cadastro; exclusão da conta pelo app; `docs/03` §6). *13/11: por endpoints do backend (D-03); implementação pendente fora deste plano (PL-05).*
@@ -403,14 +552,15 @@ Este arquivo é a fonte única do andamento das tarefas. Todo agente que trabalh
 
 ## T10 — Testing, Compliance & QA
 
-**Status:** PENDENTE (só existe o README em `src/qa/`)
+**Status:** EM DESENVOLVIMENTO (16/11/2026: rascunhos em [`src/qa/FEATURES.md`](src/qa/FEATURES.md) e [`src/qa/TEST_CASES.md`](src/qa/TEST_CASES.md); falta o projeto no Azure Boards, rodar os casos e o PDF)
 **Tipo:** Entrega de disciplina (Testing, Compliance & QA)
 **Referência:** `docs/02` §8; `docs/03` (Fase 1 do roadmap).
 
 **Escopo previsto:** Features com critérios de aceite e Test Cases funcionais (positivos e negativos) no Azure Boards. Peso: 50% Features, 50% Test Cases.
 - [ ] Criar o projeto no Azure Boards e incluir o professor como Admin
+- [ ] *(17/11: CSVs de importação prontos em `src/qa/azure/` (processo Scrum); falta importar, conferir e ligar os Test Cases às Features.)*
 - [ ] Features do MVP com critérios de aceite, a partir de `docs/10_backlog_produto.md` (seção 11 explica a conversão). *13/11: a matriz `docs/app-map/10_rastreabilidade.md` já lista um teste previsto (positivo ou negativo) por AC, base para os Test Cases.*
-- [ ] Test Cases com objetivo, preparação, inputs, outputs esperados e passos
+- [ ] Test Cases com objetivo, preparação, inputs, outputs esperados e passos *(16/11: rascunho de 71 casos em `src/qa/TEST_CASES.md`; falta rodar o app para conferir cada um e cadastrar no Azure.)*
 - [ ] Prints de todas as telas em um documento único e PDF com o link do projeto
 
 ---
@@ -499,3 +649,16 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 13/11/2026 | T07: revisão de design PL-19 feita com a skill `frontend-design` e aplicada aos documentos de design e ao mockup (proposta, aguarda a aprovação visual do Lucas); criada a PL-25. | assistente (a pedido do Lucas) |
 | 14/11/2026 | T07: handoff do app retomado; regressões corrigidas e verificadas (312 testes em 24 suítes, `tsc`, `eslint`, web/Android exportados, Expo Doctor 20/20). Próximas evidências: celular, acessibilidade e entregáveis. | Codex |
 | 14/11/2026 | T07: README mobile atualizado com Ficha completa, estado real do protótipo e execução; script de sync ajustado para preservar o conteúdo no espelho. Prints e vídeo ainda pendentes. | Codex |
+| 15/11/2026 | Roteiro do pitch v1 (5 pessoas) recebido e guardado em `src/qa/pitch/` (`.txt` original e `ROTEIRO_PITCH.md`); T03 → EM DESENVOLVIMENTO (fio da história escolhido). Criada a T23 com o mapeamento pitch × base (PT-01 a PT-27) e a lista de documentos a atualizar depois da onda de perguntas. T22 anotada. | assistente (a pedido do Lucas) |
+| 15/11/2026 | T23, 1ª rodada de perguntas respondida: público amplo, freemium individual + empresas, VoltaSegura+ no MVP (rotina só no aparelho, D-31), relatos de infraestrutura e agente no roadmap, vídeo já gravado. Aplicado em `docs/03`, `docs/05`, `docs/06` (1.44), `docs/10` (v1.9, F7.1), README, AGENTS.md e `ROTEIRO_PITCH.md`. T22 → EM DESENVOLVIMENTO. | assistente (a pedido do Lucas) |
+| 15/11/2026 | T23: acrescentada a lista PF-01 a PF-12 (produtos e funcionalidades do pitch que não existem no app hoje, com a atualização combinada, a situação no app e o próximo passo). Só leitura de rotas, `todo-mobile.md` e `06_funcionalidades.md`; app não executado. | assistente (a pedido do Lucas) |
+| 15/11/2026 | T07/T23: Onda 5 (3 workers): correções do vídeo da onda 3 (teclado `pan`, carrossel de lugares, margens de área segura), VoltaSegura+ mínimo (rotina da semana com lembrete local, F7.1/FN-17, `[DECISÃO]` em `docs/06` 1.45) e compartilhar trajeto como protótipo com mock (PF-01/02/03 no app, sem backend). `tsc`, ESLint e 499 testes em 41 suítes verdes. Pendente: validação no aparelho. | assistente (a pedido do Lucas) |
+| 17/11/2026 | T07: análise dos 4 vídeos `docs/app-map/mapa-funcional/` (roteamento real no celular funciona; trajeto por trecho e "Só roteamento" confirmados). Corrigidos: tempo limite do OTP2 (20→45 s) e aviso de espera longa, chips comparativos com opção única, botões ±15 min na saída. Em aberto (em `src/mobile-app/todo-mobile.md`): campo de saída perde o foco, possível +1 h no fuso, regravar às 18h, mapa vazio inicial, folha máxima. **Depende do tempo:** cruzar rota × ocorrências (B-14/B-15/B-30); sem adaptador no aparelho até a manhã de 18/11, congela em "Só roteamento" (B-40). |
+| 16/11/2026 | T10: gerados os rascunhos `src/qa/FEATURES.md` (22 Features, ACs copiados de `docs/10` §6) e `src/qa/TEST_CASES.md` (71 casos, ≥1 positivo e ≥1 negativo por Feature do MVP). Nada executado; Azure Boards, execução dos casos e PDF seguem pendentes. T10 → EM DESENVOLVIMENTO. | assistente (a pedido do Lucas) |
+| 17/11/2026 | T10: gerados `src/qa/azure/features.csv` (21 Features) e `test_cases.csv` (71 casos com passos) para importar no Azure DevOps (Scrum), com `LEIA-ME.md`. Importação ainda não testada; vínculos Test Case–Feature são manuais. | assistente (a pedido do Lucas) |
+| 17/11/2026 | T10: importar `test_cases.csv` em Boards > Work items deu "Invalid column headers: Test Step, Step Action, Step Expected" (esse formato só vale no Test Plans). Gerado `src/qa/azure/test_cases_boards.csv` (passos no campo `Steps`, XML) para o Boards; não testado. | assistente (a pedido do Lucas) |
+| 17/11/2026 | T10: o Boards recusa Test Case no CSV ("Forbidden work item type"); removido `test_cases_boards.csv`. Test Cases só pelo Test Plans (`test_cases.csv`) ou à mão. | assistente (a pedido do Lucas) |
+| 15/11/2026 | T07: Plano B (dados reais) começou na branch `feat/plano-b`: validação do JSON, `fontes` no contrato, seleção `mock|api|otp2` e adaptador OTP2 ligado com tempo limite e cancelamento (B-01, B-02, B-04, B-05; `src/mobile-app/todo-mobile.md` bloco 11). Depende do Lucas para o OTP2 no ar (T12) e o Neon `dev`. | Claude Code (a pedido do Lucas) |
+| 15/11/2026 | T07: Plano B B-06 (SQL da exposição estimada, ainda não executado no Neon) e B-07 (importador da SSP, rodado na planilha real; 94 circunscrições, cobertura média 90,8%) em `src/mobile-app/scripts/sql` e `scripts/ssp`, feitos por workers no Alethe e conferidos. Carga e testes SQL dependem do Neon `dev` (B-13 a B-15). | Claude Code (a pedido do Lucas) |
+| 16/11/2026 | T12/T07: OTP2 rodando no notebook do Lucas (grafo de 1,1 GB montado em 9 min 46 s com `-Xmx10G`; teste 1 devolveu itinerários com geometria nos trechos a pé) e acessível na LAN (B-10 e B-11 do Plano B; detalhes em `docs/dados-reais/04_plano_implementacao.md` §8). Pico de memória da montagem não medido; ida/volta ainda sem conferência de plausibilidade. Pendentes: B-12 (HTTP no aparelho) e B-13 (Neon `dev`). | Claude Code (a pedido do Lucas) |
+| 16/11/2026 | T07: B-13 respondido (Neon `dev`: sa-east-1, Free 1 GB, PostGIS 3.6.4 disponível, Data API ativável; ver `docs/dados-reais/06_neon_dev_verificacao.md`). B-12 e B-20 adiados para depois do merge com o redesign. Próximo: B-14 (JWT na RPC). | Claude Code (a pedido do Lucas) |

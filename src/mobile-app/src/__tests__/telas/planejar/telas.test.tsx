@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { AccessibilityInfo, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
 import Buscando from '@/app/(app)/buscando';
@@ -19,12 +20,14 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams,
 }));
 jest.mock('@/locais', () => jest.requireActual<typeof import('@/test-utils/locais')>('@/test-utils/locais').moduloLocais);
+jest.mock('expo-location', () => ({ requestForegroundPermissionsAsync: jest.fn(), getCurrentPositionAsync: jest.fn() }));
 jest.mock('@/consulta', () => ({
   ...jest.requireActual<typeof import('@/consulta')>('@/consulta'),
   useConsulta: jest.fn(),
 }));
 
 const consultaMock = jest.mocked(useConsulta);
+const mockGps = jest.requireMock<{ requestForegroundPermissionsAsync: jest.Mock<() => Promise<unknown>>; getCurrentPositionAsync: jest.Mock<() => Promise<unknown>> }>('expo-location');
 const mockPush = jest.mocked(router.push);
 const mockReplace = jest.mocked(router.replace);
 const origem = { lat: -23.5, lon: -46.6 };
@@ -119,6 +122,54 @@ describe('TL-04 Planejar', () => {
     locaisMock.locais = [];
   });
 
+  it('carrossel de lugares sangra até a borda e encaixa cartões ao rolar', async () => {
+    locaisMock.locais = [{ id: 'a', nome: 'Faculdade', tipo: 'estudo', ponto: { lat: -23.55, lon: -46.64 } }];
+    estado();
+    await render(<Planejar />);
+    const rolagem = screen.getByTestId('carrossel-lugares');
+    expect(rolagem.props.decelerationRate).toBe('fast');
+    expect(rolagem.props.snapToInterval).toBe(160);
+    expect(StyleSheet.flatten(rolagem.props.style).marginHorizontal).toBe(-16);
+    expect(StyleSheet.flatten(rolagem.props.contentContainerStyle).paddingHorizontal).toBe(16);
+    locaisMock.locais = [];
+  });
+
+  it('atalhos de horário definem a saída sem digitar', async () => {
+    estado();
+    await render(<Planejar />);
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesMapa.em30 }));
+    expect(definirSaida).toHaveBeenCalledTimes(1);
+    const minutos = (Date.parse(definirSaida.mock.calls[0][0] as string) - Date.now()) / 60000;
+    expect(minutos).toBeGreaterThan(29);
+    expect(minutos).toBeLessThan(31);
+  });
+
+  it('atalho de localização preenche a origem só ao tocar', async () => {
+    mockGps.requestForegroundPermissionsAsync.mockResolvedValue({ status: 'granted' });
+    mockGps.getCurrentPositionAsync.mockResolvedValue({ coords: { latitude: -23.5, longitude: -46.6 } });
+    estado({ ...base, origem: null });
+    await render(<Planejar />);
+    expect(mockGps.requestForegroundPermissionsAsync).not.toHaveBeenCalled();
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesMapa.usarLocalizacaoOrigem }));
+    expect(definirOrigem).toHaveBeenCalledWith({ lat: -23.5, lon: -46.6 }, textos.planejar.minhaLocalizacao);
+  });
+
+  it('atalho de localização sem permissão avisa e não define a origem', async () => {
+    mockGps.requestForegroundPermissionsAsync.mockResolvedValue({ status: 'denied' });
+    estado({ ...base, origem: null });
+    await render(<Planejar />);
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesMapa.usarLocalizacaoOrigem }));
+    expect(screen.getByText(textos.planejar.semPermissao)).toBeTruthy();
+    expect(definirOrigem).not.toHaveBeenCalled();
+  });
+
+  it('"Adicionar lugar" abre o mapa, com ou sem lugares salvos', async () => {
+    estado();
+    await render(<Planejar />);
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesMapa.adicionarLugar }));
+    expect(mockPush).toHaveBeenCalledWith({ pathname: '/escolher-ponto', params: { campo: 'destino' } });
+  });
+
   it('sem lugares salvos mostra o convite para salvar', async () => {
     estado();
     await render(<Planejar />);
@@ -127,6 +178,33 @@ describe('TL-04 Planejar', () => {
 });
 
 describe('TL-06 Buscando', () => {
+  it.each(['ocioso', 'buscando'] as const)('mantém indicador, texto e Cancelar visíveis no estado %s', async (status) => {
+    estado(base, { status });
+    await render(<Buscando />);
+    expect(screen.getByRole('progressbar', { name: textos.buscando.texto })).toBeVisible();
+    expect(screen.getByText(textos.buscando.texto)).toBeVisible();
+    expect(screen.getByRole('button', { name: textos.comuns.cancelar })).toBeVisible();
+  });
+
+  it('após 8 s de espera mostra a linha de demora e a anuncia uma vez; antes disso, não', async () => {
+    jest.useFakeTimers();
+    const anunciar = jest.spyOn(AccessibilityInfo, 'announceForAccessibility').mockImplementation(() => {});
+    try {
+      estado(base, { status: 'buscando' });
+      const tela = await render(<Buscando />);
+      await act(async () => { jest.advanceTimersByTime(7_999); });
+      expect(screen.queryByText(textos.buscando.demora)).toBeNull();
+      await act(async () => { jest.advanceTimersByTime(1); });
+      expect(screen.getByText(textos.buscando.demora)).toBeVisible();
+      expect(anunciar.mock.calls.filter(([t]) => t === textos.buscando.demora)).toHaveLength(1);
+      await act(async () => { await tela.rerender(<Buscando />); jest.advanceTimersByTime(30_000); });
+      expect(anunciar.mock.calls.filter(([t]) => t === textos.buscando.demora)).toHaveLength(1);
+    } finally {
+      anunciar.mockRestore();
+      jest.useRealTimers();
+    }
+  });
+
   it('busca uma vez, substitui ao sucesso e não registra dados no console', async () => {
     const log = jest.spyOn(console, 'log').mockImplementation(() => {});
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});

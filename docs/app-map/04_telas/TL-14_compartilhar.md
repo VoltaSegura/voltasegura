@@ -1,6 +1,6 @@
 # TL-14 · Compartilhar minha volta
 
-- **Status:** rascunho (nova, 13/11/2026; aguarda revisão do Lucas) · **Depende do tempo (D-22)** · **Rota Expo Router prevista:** `/(app)/compartilhar/[rotaId]` (modal) + indicador global
+- **Status:** rascunho (nova, 13/11/2026; aguarda revisão do Lucas) · **implementada como protótipo com mock (15/11/2026): telas reais com serviço de exemplo em memória, sem servidor e sem GPS em segundo plano (PL-24 aberto)** · **Depende do tempo (D-22)** · **Rota Expo Router prevista:** `/(app)/compartilhar/[rotaId]` (modal) + indicador global
 - **Objetivo:** iniciar, acompanhar e encerrar uma sessão de compartilhamento do trajeto e da localização ao vivo com um contato (D-19).
 - **US/AC e funcionalidades cobertas:** US-21 AC1–AC5, AC7, AC9; US-05 AC3 (exceção); US-19 AC4 · FN-15 · **RNF aplicáveis:** RNF-01, RNF-05, RNF-06, RNF-07
 - **Entradas:** botão "Compartilhar minha volta" na TL-08; toque no indicador global "Compartilhando".
@@ -144,6 +144,16 @@ Ver estados. Não há campos digitados.
 - A tela diz o que é compartilhado, até quando e que os dados são apagados ao fim (US-21 AC2, D-21).
 - **Proibido:** "volte em segurança", "fique protegida", "seu contato garante", ou qualquer promessa de proteção (US-21 AC9, RNF-01). Também não se sugere que quem acompanha é responsável pelo que acontecer (RNF-06).
 - Nenhum dado da comparação de exposição vai no link (US-21 AC8).
+
+## Implementação no protótipo (15/11/2026)
+
+- Arquivos: `src/app/(app)/compartilhar/[rotaId].tsx`, `src/compartilhamento/` (sessão, prazos, chegada), `src/components/compartilhamento/IndicadorCompartilhamento.tsx` (indicador global, montado no layout raiz), `src/services/compartilhamento.ts` (`compartilhamentoMock` e `compartilhamentoApi`).
+- Serviço **mock em memória**: sem servidor, sem GPS. A tela e o indicador mostram que é protótipo/exemplo (`hipotesesCompartilhar.prototipo`). O botão "Simular chegada (exemplo)" substitui a chegada por GPS (PL-22); a regra dos 100 m está implementada e testada em `registrarPosicao`.
+- "Compartilhar só o trajeto" fica sempre disponível (US-21 AC5); a permissão de segundo plano real só entra se o PL-24 for resolvido.
+- Tempo máximo = chegada prevista + 30 min; aviso 10 min antes com "Estender 30 min" (PL-20). Se a chegada prevista da consulta de exemplo já passou, o protótipo refaz a conta a partir de agora com a duração da rota.
+- Parar volta à tela anterior; o aviso de encerramento (parou, chegou ou tempo máximo) aparece no topo, com "Ok".
+- Botão "Compartilhar minha volta" na TL-08. Aviso de privacidade (`aviso.compartilhar`) e link para a TL-13 na confirmação.
+- Pendente no aparelho: indicador acima do cabeçalho nativo (safe area) e folha de compartilhar do sistema.
 
 ## Critérios de pronto da tela
 
