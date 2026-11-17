@@ -1,6 +1,7 @@
 import { ambiente, type ModoApi } from '@/config/ambiente';
 import { consultaMock, criarConsultaApi, type EntradaConsulta, type ServicoConsulta } from './consulta';
 import { ErroServico } from './erros';
+import { comExposicao, type ModoCobertura } from './exposicao';
 import { criarConsultaOtp2 } from './otp2';
 
 /** Código do erro quando a configuração do app não permite consultar (modo inválido ou URL ausente). */
@@ -17,6 +18,11 @@ export interface ConfiguracaoConsulta {
   modoApi: ModoApi | 'invalido';
   urlApi: string;
   urlOtp2: string;
+  /** B-30: com `otp2`, só há exposição real se a Data API e o Neon Auth estiverem configurados. */
+  urlDataApi?: string;
+  urlNeonAuth?: string;
+  origemNeonAuth?: string;
+  exposicaoCobertura?: ModoCobertura;
 }
 
 /**
@@ -30,7 +36,15 @@ export function selecionarConsulta(config: ConfiguracaoConsulta): ServicoConsult
     case 'api':
       return config.urlApi ? criarConsultaApi(config.urlApi) : consultaSemConfiguracao;
     case 'otp2':
-      return config.urlOtp2 ? criarConsultaOtp2(config.urlOtp2) : consultaSemConfiguracao;
+      if (!config.urlOtp2) return consultaSemConfiguracao;
+      return config.urlDataApi && config.urlNeonAuth
+        ? comExposicao(criarConsultaOtp2(config.urlOtp2), {
+          urlDataApi: config.urlDataApi,
+          urlNeonAuth: config.urlNeonAuth,
+          origemNeonAuth: config.origemNeonAuth ?? 'http://localhost:8081',
+          modoCobertura: config.exposicaoCobertura,
+        })
+        : criarConsultaOtp2(config.urlOtp2);
     default:
       return consultaSemConfiguracao;
   }

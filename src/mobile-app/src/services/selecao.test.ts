@@ -76,6 +76,20 @@ describe('lerModo (EXPO_PUBLIC_API_MODE)', () => {
   });
 });
 
+describe('lerCoberturaExposicao (EXPO_PUBLIC_EXPOSICAO_COBERTURA)', () => {
+  it.each([
+    [undefined, 'poligono'],
+    ['', 'poligono'],
+    ['poligono', 'poligono'],
+    ['proxy_pontos', 'proxy_pontos'],
+    [' PROXY_PONTOS ', 'proxy_pontos'],
+    ['qualquer', 'poligono'],
+  ])('%p vira %p', (valor, esperado) => {
+    const { lerCoberturaExposicao } = jest.requireActual<typeof import('@/config/ambiente')>('@/config/ambiente');
+    expect(lerCoberturaExposicao(valor)).toBe(esperado);
+  });
+});
+
 describe('seleção da fonte da consulta (B-04)', () => {
   const fetchMock = jest.fn<typeof fetch>();
   let fetchOriginal: typeof fetch;
@@ -112,6 +126,19 @@ describe('seleção da fonte da consulta (B-04)', () => {
       .consultarRotas(entrada).catch(() => {});
     expect(fetchMock.mock.calls[0][0]).toBe('http://otp.exemplo.test:8080/otp/gtfs/v1');
     expect(fetchMock.mock.calls[0][1]?.method).toBe('POST');
+  });
+
+  it('otp2 com Data API e Neon Auth configurados envolve o roteamento (B-30); sem uma delas, é só o roteamento', async () => {
+    const { selecionarConsulta } = carregar();
+    const so = selecionarConsulta({ modoApi: 'otp2', urlApi: '', urlOtp2: 'http://otp.exemplo.test:8080', urlDataApi: 'https://dados.exemplo.test' });
+    await so.consultarRotas(entrada).catch(() => {});
+    expect(fetchMock.mock.calls).toHaveLength(1);
+    expect(String(fetchMock.mock.calls[0][0])).toContain('/otp/gtfs/v1');
+    const com = selecionarConsulta({
+      modoApi: 'otp2', urlApi: '', urlOtp2: 'http://otp.exemplo.test:8080',
+      urlDataApi: 'https://dados.exemplo.test', urlNeonAuth: 'https://auth.exemplo.test', exposicaoCobertura: 'poligono',
+    });
+    expect(com).not.toBe(so);
   });
 
   it.each([

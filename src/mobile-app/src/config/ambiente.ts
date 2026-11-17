@@ -18,6 +18,11 @@ export function lerModo(valor: string | undefined): ModoApi | 'invalido' {
   return (MODOS as readonly string[]).includes(v) ? (v as ModoApi) : 'invalido';
 }
 
+/** `poligono` (padrão) ou `proxy_pontos` [HIPÓTESE, decisão pendente]. Valor desconhecido = `poligono`. */
+export function lerCoberturaExposicao(valor: string | undefined): 'poligono' | 'proxy_pontos' {
+  return (valor ?? '').trim().toLowerCase() === 'proxy_pontos' ? 'proxy_pontos' : 'poligono';
+}
+
 const semBarraFinal = (url: string | undefined) => (url ?? '').trim().replace(/\/+$/, '');
 
 export const ambiente = {
@@ -27,6 +32,10 @@ export const ambiente = {
   urlOtp2: semBarraFinal(process.env.EXPO_PUBLIC_OTP2_URL),
   /** URL pública do Neon Auth da branch (sem segredo). Se definida, contas e login usam o Neon Auth. */
   urlNeonAuth: semBarraFinal(process.env.EXPO_PUBLIC_NEON_AUTH_URL),
+  /** Base da Data API do Neon (sem barra final). Com `otp2`, habilita a exposição estimada real (B-30). */
+  urlDataApi: semBarraFinal(process.env.EXPO_PUBLIC_DATA_API_URL),
+  /** Modo de cobertura enviado à função de exposição. */
+  exposicaoCobertura: lerCoberturaExposicao(process.env.EXPO_PUBLIC_EXPOSICAO_COBERTURA),
   /** Origem enviada ao Neon Auth (o app nativo não tem Origin); precisa ser um domínio confiável. */
   origemNeonAuth: process.env.EXPO_PUBLIC_NEON_AUTH_ORIGIN ?? 'http://localhost:8081',
 } as const;
