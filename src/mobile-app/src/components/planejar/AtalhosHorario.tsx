@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { hipotesesMapa as h } from '@/textos/hipotesesMapa';
+import { hipotesesPlanejar as hp } from '@/textos/hipotesesPlanejar';
 import { esp, raio, toque } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
 
@@ -14,11 +15,17 @@ const ATALHOS = [
   { rotulo: h.em1h, minutos: 60 },
 ] as const;
 
-type Props = { onEscolher: (saida: string) => void; agora?: () => number };
+const AJUSTES = [
+  { rotulo: hp.menos15, minutos: -15 },
+  { rotulo: hp.mais15, minutos: 15 },
+] as const;
+
+type Props = { onEscolher: (saida: string) => void; agora?: () => number; saidaAtual?: string };
 
 /** Atalhos de saída: evita digitar a hora no caso mais comum (sair agora ou daqui a pouco). */
-export function AtalhosHorario({ onEscolher, agora = Date.now }: Props) {
+export function AtalhosHorario({ onEscolher, agora = Date.now, saidaAtual }: Props) {
   const { cores } = useTema();
+  const base = saidaAtual && !Number.isNaN(Date.parse(saidaAtual)) ? Date.parse(saidaAtual) : agora();
   return (
     <View accessibilityRole="toolbar" accessibilityLabel={h.atalhosSaida} style={estilos.linha}>
       {ATALHOS.map((a) => (
@@ -27,6 +34,18 @@ export function AtalhosHorario({ onEscolher, agora = Date.now }: Props) {
           accessibilityRole="button"
           accessibilityLabel={a.rotulo}
           onPress={() => { haptica.selecao(); onEscolher(new Date(agora() + a.minutos * 60000).toISOString()); }}
+          style={[estilos.chip, { borderColor: cores.borda, backgroundColor: cores.superficie2 }]}
+        >
+          <Texto variante="rotulo">{a.rotulo}</Texto>
+        </Pressable>
+      ))}
+      {AJUSTES.map((a) => (
+        <Pressable
+          key={a.rotulo}
+          accessibilityRole="button"
+          accessibilityLabel={a.rotulo}
+          testID={`ajuste-hora${a.minutos > 0 ? 'mais' : 'menos'}`}
+          onPress={() => { haptica.selecao(); onEscolher(new Date(base + a.minutos * 60000).toISOString()); }}
           style={[estilos.chip, { borderColor: cores.borda, backgroundColor: cores.superficie2 }]}
         >
           <Texto variante="rotulo">{a.rotulo}</Texto>

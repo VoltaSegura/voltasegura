@@ -113,7 +113,7 @@ export default function Planejar() {
     </Entrada>
     {erroGps ? <Aviso texto={erroGps} variante="erro" /> : null}
     <Entrada indice={1}>
-      <AtalhosHorario onEscolher={(saida) => { definirSaida(saida); setHoraValida(true); setValidacao(null); }} />
+      <AtalhosHorario saidaAtual={consulta.saida} onEscolher={(saida) => { definirSaida(saida); setHoraValida(true); setValidacao(null); }} />
       <SeletorHorario rotulo={volta ? textos.planejar.saidaVolta : textos.planejar.saida} saida={consulta.saida} onChange={definirSaida} onValidadeChange={setHoraValida} focar={focarHora || foco === 'horario'} />
       <Texto variante="apoio" cor="texto2">{hipotesesPlanejar.diaSaida}: {dia}</Texto>
     </Entrada>

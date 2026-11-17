@@ -1,7 +1,7 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { CampoPonto, CartaoLocal, SeletorHorario } from '@/components/planejar';
+import { AtalhosHorario, CampoPonto, CartaoLocal, SeletorHorario } from '@/components/planejar';
 import { textos } from '@/textos';
 import { hipotesesPlanejar } from '@/textos/hipotesesPlanejar';
 
@@ -40,6 +40,16 @@ describe('componentes de planejamento', () => {
     expect(data.getHours()).toBe(8);
     expect(data.getMinutes()).toBe(30);
     expect(data.getDate()).toBe(new Date(saida).getDate());
+  });
+
+  it('ajusta a saída em ±15 min a partir da saída atual, sem teclado', async () => {
+    const onEscolher = jest.fn<(saida: string) => void>();
+    const saida = '2026-11-17T18:00:00.000Z';
+    await render(<AtalhosHorario saidaAtual={saida} onEscolher={onEscolher} />);
+    await fireEvent.press(screen.getByTestId('ajuste-horamais'));
+    await fireEvent.press(screen.getByTestId('ajuste-horamenos'));
+    expect(onEscolher.mock.calls[0][0]).toBe('2026-11-17T18:15:00.000Z');
+    expect(onEscolher.mock.calls[1][0]).toBe('2026-11-17T17:45:00.000Z');
   });
 
   it('avisa quando a hora digitada é inválida e não altera a saída', async () => {
