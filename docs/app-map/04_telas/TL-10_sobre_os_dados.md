@@ -118,3 +118,5 @@ Seções como cabeçalhos; a cobertura é lida como "Menor tempo: 88 por cento";
 - [ ] As cinco limitações fixas (US-14 AC5).
 - [ ] Créditos SSP-SP, SPTrans e OSM (US-16 AC1).
 - [ ] Sem nota, escala ou níveis (US-14 AC1).
+
+> B-53 (17/11/2026): ver "Cobertura por proxy e texto por caso" em 08_microcopy.md (aviso com fonte ssp; texto próprio por caso na TL-07).

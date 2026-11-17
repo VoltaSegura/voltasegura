@@ -3,7 +3,7 @@ import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
 import { BackHandler } from 'react-native';
 
 import { Aviso, LinhaLista, SeloExemplo, Tela, Texto, Botao } from '@/components';
-import { LinhaCategoria, selosExemplo, soRoteamento } from '@/components/resultado';
+import { LinhaCategoria, coberturaPorProxy, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
 import { SeletorOpcoes } from '@/components/detalhes';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, Rota, TotaisCategoria } from '@/services';
@@ -98,12 +98,13 @@ export default function DadosConsiderados() {
         <>
           <SeletorOpcoes
             rotuloGrupo={t.titulo}
-            opcoes={resposta.rotas.map((item, indice) => ({ valor: item.id, rotulo: h.opcaoComFoco(indice + 1, item.focos.map((foco) => focos[foco]).join(', ')) }))}
+            opcoes={resposta.rotas.map((item, indice) => ({ valor: item.id, rotulo: h.opcaoComFoco(indice + 1, focosVisiveis(item.focos, resposta).map((foco) => focos[foco]).join(', ')) }))}
             valor={rota.id}
             onChange={setSelecao}
           />
           <Texto>{t.contexto({ fonte: resposta.sobreOsDados.fonte, periodo: periodo(janela.inicio, janela.fim), faixa: faixa(rota) })}</Texto>
           <Aviso texto={h.avisoRecorteAntes} />
+          {coberturaPorProxy(resposta) && <Aviso texto={textos.coberturaProxy.aviso} />}
           <Texto variante="secao" accessibilityRole="header">{h.totaisCategoria}</Texto>
           <Grupo key={`${rota.id}-furto`} tipo="furto" totais={rota.categorias.furto} />
           <Grupo key={`${rota.id}-roubo`} tipo="roubo" totais={rota.categorias.roubo} />

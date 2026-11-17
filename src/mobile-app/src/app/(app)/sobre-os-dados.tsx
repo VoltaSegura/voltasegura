@@ -1,7 +1,7 @@
 import { Redirect, Stack, router } from 'expo-router';
 
 import { LinhaLista, Link, SeloExemplo, Tela, Texto } from '@/components';
-import { selosExemplo, soRoteamento } from '@/components/resultado';
+import { coberturaPorProxy, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, RespostaConsulta, Rota } from '@/services';
 import { textos } from '@/textos';
@@ -40,6 +40,7 @@ function situacao(resposta: RespostaConsulta): string {
       return textos.porQue.indicativo.insuficiente(motivo);
     }
     case 'NAO_APLICAVEL': return textos.porQue.indicativo.naoAplicavel;
+    case 'MISTOS': return textos.casosResultado.mistos;
     case 'INDISPONIVEL': return textos.porQue.indicativo.indisponivel;
     default: return textos.porQue.indicativo.semDiferenca;
   }
@@ -92,9 +93,10 @@ export default function SobreOsDados() {
       {horarios}
       <Texto variante="secao" accessibilityRole="header">{textos.sobre.coberturaTitulo}</Texto>
       {resposta.rotas.map((rota, indice) => (
-        <LinhaLista key={rota.id} titulo={h.opcaoComFoco(indice + 1, rota.focos.map((foco) => focos[foco]).join(', '))} valor={cobertura(rota)} />
+        <LinhaLista key={rota.id} titulo={h.opcaoComFoco(indice + 1, focosVisiveis(rota.focos, resposta).map((foco) => focos[foco]).join(', '))} valor={cobertura(rota)} />
       ))}
       <Texto cor="texto2">{textos.sobre.coberturaExplica}</Texto>
+      {coberturaPorProxy(resposta) && <Texto testID="aviso-cobertura-proxy" cor="texto2">{textos.coberturaProxy.aviso}</Texto>}
       <Texto variante="secao" accessibilityRole="header">{textos.sobre.situacaoTitulo}</Texto>
       <Texto>{situacao(resposta)}</Texto>
       <Texto variante="secao" accessibilityRole="header">{textos.sobre.limitacoesTitulo}</Texto>

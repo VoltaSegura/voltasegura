@@ -467,3 +467,16 @@ Usado quando `fontes.exposicao = 'indisponivel'` ou `caso = 'INDISPONIVEL'`: rot
 | `dadosConsiderados` (TL-11) | Sem exposição estimada nesta consulta: nenhum registro foi considerado e não há totais para mostrar. |
 | `sobreTitulo` / `sobreExplica` (TL-10) | Exposição estimada / Indisponível nesta consulta. Os registros da SSP-SP não foram consultados, então nenhuma opção tem número de registros ou cobertura. |
 | `roteamentoTitulo`, `roteamentoExemplo`, `roteamentoReal` (TL-10) | Trajetos e horários / Trajetos de exemplo. / Trajetos e horários do roteamento do projeto (GTFS e OpenStreetMap). |
+
+## Cobertura por proxy e texto por caso (B-53, 17/11/2026, `[HIPÓTESE]`, fonte: `src/textos/coberturaProxy.ts`)
+
+`coberturaProxy.aviso` aparece em TL-09, TL-10 e TL-11 quando `fontes.exposicao = 'ssp'` (fora de "só roteamento"). `casosResultado` é o texto próprio de cada caso na TL-07 (2 ou mais opções); nenhum destaca rota nem rotula território (docs/05).
+
+| Chave | Texto |
+|---|---|
+| `coberturaProxy.aviso` | A cobertura dos dados é estimada pelos pontos dos boletins, não por mapas oficiais das áreas. Recurso em validação. |
+| `casosResultado.semDiferenca` | Com os dados registrados, não há diferença clara de exposição estimada entre as opções. |
+| `casosResultado.mistos` (também em TL-09/10) | Os dados registrados apontam sinais diferentes conforme o trecho a pé: não há uma ordem única de exposição estimada entre as opções. |
+| `casosResultado.insuficiente` | Os dados registrados não bastam para comparar a exposição estimada entre as opções, então elas aparecem sem ordenar por exposição. |
+| `casosResultado.naoAplicavel` | Uma das opções não tem trecho a pé, então a exposição estimada não foi comparada desta vez. |
+| `SEM_COMPARACAO` / opção única | Reusa `resultado.soUma`: Só uma opção neste horário: não há comparação. |

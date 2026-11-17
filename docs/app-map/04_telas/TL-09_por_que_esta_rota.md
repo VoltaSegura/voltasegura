@@ -183,3 +183,5 @@ Nenhuma.
 - [ ] O indicativo corresponde ao caso da API, e mistos aparecem como sem diferença clara (D-11).
 - [ ] Dados insuficientes mostram o motivo, sem ordenar (US-12 AC1–AC2).
 - [ ] Nenhuma regra ou limiar exposto (D-01).
+
+> B-53 (17/11/2026): ver "Cobertura por proxy e texto por caso" em 08_microcopy.md (aviso com fonte ssp; texto próprio por caso na TL-07).

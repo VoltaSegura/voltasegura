@@ -98,7 +98,7 @@ describe('TL-09 Por que esta rota?', () => {
   it.each([
     [conclusivo, textos.porQue.indicativo.conclusivoComFoco],
     [sem_diferenca, textos.porQue.indicativo.semDiferenca],
-    [mistos, textos.porQue.indicativo.semDiferenca],
+    [mistos, textos.casosResultado.mistos],
     [insuficiente_amostra, textos.porQue.indicativo.insuficiente(textos.porQue.motivo.amostra)],
     [insuficiente_cobertura, textos.porQue.indicativo.insuficiente(textos.porQue.motivo.cobertura)],
     [insuficiente_largura, textos.porQue.indicativo.insuficiente(textos.porQue.motivo.largura)],

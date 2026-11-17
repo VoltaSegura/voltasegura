@@ -5,6 +5,7 @@ import { buscando } from './buscando';
 import { comuns } from './comuns';
 import { compartilhar } from './compartilhar';
 import { config } from './config';
+import { coberturaProxy, casosResultado } from './coberturaProxy';
 import { criarConta } from './criarConta';
 import { dadosConsiderados } from './dadosConsiderados';
 import { entrar } from './entrar';
@@ -30,6 +31,8 @@ export const textos = {
   porQue,
   sobre,
   soRoteamento,
+  coberturaProxy,
+  casosResultado,
   dadosConsiderados,
   config,
   aviso,

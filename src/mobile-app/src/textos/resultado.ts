@@ -23,7 +23,7 @@ export const resultado = {
     trocas: string;
     modos: string;
   }) =>
-    `Opção ${p.i} de ${p.n}. ${p.focos}. ${p.duracao}, ${p.km} a pé, ${p.trocas}. ${p.modos}. Toque duas vezes para ver os detalhes.`,
+    `Opção ${p.i} de ${p.n}. ${p.focos ? `${p.focos}. ` : ''}${p.duracao}, ${p.km} a pé, ${p.trocas}. ${p.modos}. Toque duas vezes para ver os detalhes.`,
   detalhes: {
     trecho: (p: { modo: string; distancia: string; duracao: string }) =>
       `${p.modo} · ${p.distancia} · ${p.duracao}`,

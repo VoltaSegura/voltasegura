@@ -1,7 +1,7 @@
 import { Redirect, Stack, router, useLocalSearchParams } from 'expo-router';
 
 import { Botao, Link, SeloExemplo, Tela, Texto } from '@/components';
-import { Indicativo, RotuloFoco, TabelaNumeros, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
+import { Indicativo, RotuloFoco, TabelaNumeros, coberturaPorProxy, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, RespostaConsulta, Rota } from '@/services';
 import { textos } from '@/textos';
@@ -29,6 +29,7 @@ function indicativo(resposta: RespostaConsulta, rota: Rota): string {
       return textos.porQue.indicativo.insuficiente(motivo);
     }
     case 'NAO_APLICAVEL': return textos.porQue.indicativo.naoAplicavel;
+    case 'MISTOS': return textos.casosResultado.mistos;
     case 'INDISPONIVEL': return textos.porQue.indicativo.indisponivel;
     default: return textos.porQue.indicativo.semDiferenca;
   }
@@ -81,6 +82,7 @@ export default function PorQueEstaRota() {
     </>}
     <Texto variante="secao" accessibilityRole="header">{h.qualidadeDados}</Texto>
     <TabelaNumeros linhas={[{ rotulo: textos.porQue.cobertura, valor: exposicao.cobertura === null ? null : `${Math.round(exposicao.cobertura * 100)}%` }]} dadosInsuficientes={textos.dadosConsiderados.insuficiente} />
+    {coberturaPorProxy(resposta) && <Texto testID="aviso-cobertura-proxy" cor="texto2">{textos.coberturaProxy.aviso}</Texto>}
     {resposta.caso === 'INSUFICIENTE' && <Texto cor="texto2">{textos.porQue.semOrdenar}</Texto>}
     <Texto cor="texto2">{textos.porQue.limitacao}</Texto>
     <Link variante="dado" rotulo={textos.porQue.linkSobre} onPress={() => router.push('/sobre-os-dados')} />

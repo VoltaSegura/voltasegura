@@ -4,7 +4,7 @@ import { formatarHora } from '@/components/resultado/formatos';
 import { Redirect, Stack, router } from 'expo-router';
 import { Botao, Texto } from '@/components';
 import { MapaResultado } from '@/components/mapa';
-import { PainelResultado, formatarPeriodo, soRoteamento, type RotulosResultado } from '@/components/resultado';
+import { PainelResultado, formatarPeriodo, soRoteamento, textoCaso, type RotulosResultado } from '@/components/resultado';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, ModoTrecho, Rota, Trecho } from '@/services';
 import { textos } from '@/textos';
@@ -86,6 +86,7 @@ export default function Resultado() {
       }}>
       <View style={estilos.intro}>
         {resposta.rotas.length === 1 && <Texto>{textos.resultado.soUma}</Texto>}
+        {textoCaso(resposta) && <Texto testID="texto-caso">{textoCaso(resposta)}</Texto>}
         {resposta.rotas.length === 0 && <Texto>{resposta.caso === 'INDISPONIVEL' ? hipotesesEstadosResultado.comparacaoIndisponivel : hipotesesEstadosResultado.semServico}</Texto>}
       </View>
     </PainelResultado>

@@ -197,3 +197,5 @@ Nenhuma validação. Erros de rede ficam na TL-06.
 - [x] [HIPÓTESE] Resumo da opção selecionada só na folha recolhida, com duração, trocas, caminhada e foco; reticências e rótulo acessível completo. Evidência: testes de TL-07 e `components/resultado` em 15/11/2026.
 - [x] [DECISÃO] Chip e horário do cabeçalho passam em WCAG AA para texto normal nos temas claro e escuro; razões calculadas na revisão acima.
 - [ ] [EM ABERTO] R4: alternar as três alturas repetidas vezes no aparelho e verificar se o quadro escuro reaparece.
+
+> B-53 (17/11/2026): ver "Cobertura por proxy e texto por caso" em 08_microcopy.md (aviso com fonte ssp; texto próprio por caso na TL-07).

@@ -85,6 +85,17 @@ describe('TL-07 Resultado', () => {
     expect(screen.getByText(textos.resultado.soUma)).toBeTruthy();
     expect(screen.queryByText(hipotesesResultado.dicaSelecao)).toBeNull();
   });
+  it('B-51: uma rota não mostra chips de foco comparativos, só o texto de opção única', async () => {
+    consulta(uma_rota); await render(<Resultado />);
+    for (const f of Object.values(textos.modos.foco)) expect(screen.queryByText(f)).toBeNull();
+    expect(screen.queryByText(hipotesesResultado.exposicaoPrimeiro)).toBeNull();
+    expect(screen.getByRole('button', { name: /^Opção 1 de 1\. \d/ })).toBeTruthy();
+    expect(screen.getByText(textos.resultado.soUma)).toBeTruthy();
+  });
+  it('B-51: com 2+ opções os chips de foco continuam', async () => {
+    consulta(conclusivo); await render(<Resultado />);
+    expect(screen.getAllByText(textos.modos.foco.menorTempo).length).toBeGreaterThan(0);
+  });
   it('outra opção aparece sem duplicar card', async () => {
     consulta(outra_opcao); await render(<Resultado />);
     expect(screen.getByText(textos.modos.foco.outraOpcao)).toBeTruthy();

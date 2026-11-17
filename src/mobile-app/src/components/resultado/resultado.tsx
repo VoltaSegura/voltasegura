@@ -71,12 +71,12 @@ export function SequenciaModos({ trechos, rotulos, rotuloAPe, rotuloLinha, rotul
   </View>;
 }
 
-export function CardRota({ rota, indice, total, selecionada, exemplo, semExposicao = false, rotulos, onPress, onAbrirDetalhes }: {
-  rota: Rota; /** `semExposicao` = "só roteamento" (B-08): descarta o foco de exposição. */ semExposicao?: boolean; indice: number; total: number; selecionada: boolean; exemplo?: boolean;
+export function CardRota({ rota, indice, total, selecionada, exemplo, semExposicao = false, opcaoUnica = false, rotulos, onPress, onAbrirDetalhes }: {
+  rota: Rota; /** `semExposicao` = "só roteamento" (B-08): descarta o foco de exposição. */ semExposicao?: boolean; /** B-51: resposta com 1 rota não mostra focos comparativos. */ opcaoUnica?: boolean; indice: number; total: number; selecionada: boolean; exemplo?: boolean;
   rotulos: RotulosResultado; onPress: () => void; onAbrirDetalhes: () => void;
 }) {
   const { cores } = useTema();
-  const focos = semExposicao ? rota.focos.filter(f => f !== 'MENOR_EXPOSICAO') : rota.focos;
+  const focos = opcaoUnica ? [] : semExposicao ? rota.focos.filter(f => f !== 'MENOR_EXPOSICAO') : rota.focos;
   const modos = rota.trechos.map(t => t.modo === 'A_PE' ? rotulos.trechoAPe(t.duracaoMin) : rotulos.linha(t)).join(', ');
   const rotuloCard = rotulos.card({ ...rota, focos }, indice, total, modos).replace('Toque duas vezes para ver os detalhes.', hipotesesResultado.rotuloSelecao);
   // A opção selecionada é a "acesa": número enorme, fio dourado e brilho. As demais ficam quietas (uma coisa acesa por tela).
@@ -214,14 +214,14 @@ export function PainelResultado({ resposta, rotaSelecionadaId, rotulos, tituloLi
     </View>
     <View style={estilos.cabecalho}><Texto accessibilityRole="header" variante="secao" style={estilos.flex}>{tituloLista}</Texto>
       {saida && <Texto variante="apoio" style={estilos.hora}>{saida}</Texto>}</View>
-    {!semExposicao && resposta.rotas[0]?.focos.includes('MENOR_EXPOSICAO') && <View style={[estilos.chipOrdem, { borderColor: cores.borda }]}>
+    {!semExposicao && resposta.rotas.length > 1 && resposta.rotas[0]?.focos.includes('MENOR_EXPOSICAO') && <View style={[estilos.chipOrdem, { borderColor: cores.borda }]}>
       <Texto variante="rotulo">{hipotesesResultado.exposicaoPrimeiro}</Texto>
     </View>}
     {nivel === 0 && resumo && <Texto testID="resumo-recolhido" accessibilityLabel={resumo} variante="apoio" numberOfLines={2} ellipsizeMode="tail" style={estilos.resumoRecolhido}>{resumo}</Texto>}
     <ScrollView testID="lista-resultado" style={estilos.lista} contentContainerStyle={estilos.conteudoLista}>
       {semExposicao && resposta.rotas.length > 0 && <Texto testID="aviso-so-roteamento" variante="apoio" style={estilos.avisoRoteamento}>{textos.soRoteamento.aviso}</Texto>}
       {children}
-      {resposta.rotas.map((rota, i) => <Entrada key={rota.id} indice={i}><CardRota rota={rota} indice={i + 1} total={resposta.rotas.length} selecionada={rota.id === rotaSelecionadaId} exemplo={selos.roteamento || (selos.exposicao && rota.focos.includes('MENOR_EXPOSICAO'))} semExposicao={semExposicao} rotulos={rotulos} onPress={() => onSelecionar(rota)} onAbrirDetalhes={() => onAbrirDetalhes(rota)} /></Entrada>)}
+      {resposta.rotas.map((rota, i) => <Entrada key={rota.id} indice={i}><CardRota rota={rota} indice={i + 1} total={resposta.rotas.length} selecionada={rota.id === rotaSelecionadaId} exemplo={selos.roteamento || (selos.exposicao && rota.focos.includes('MENOR_EXPOSICAO'))} semExposicao={semExposicao} opcaoUnica={resposta.rotas.length === 1} rotulos={rotulos} onPress={() => onSelecionar(rota)} onAbrirDetalhes={() => onAbrirDetalhes(rota)} /></Entrada>)}
       {mostrarDica && <Texto variante="apoio" style={estilos.dica}>{hipotesesResultado.dicaSelecao}</Texto>}
       {rodapeLista}
     </ScrollView>

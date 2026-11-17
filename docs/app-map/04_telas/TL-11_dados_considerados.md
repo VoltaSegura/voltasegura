@@ -129,3 +129,5 @@ Linhas expansíveis anunciadas como "Furto, 7 registros, recolhido. Toque para v
 - [ ] Aviso de que só os "outros" entram na comparação (US-15 AC2).
 - [ ] Panorama municipal só por ação deliberada, com o aviso (US-15 AC3).
 - [ ] Sem filtros finos nem marcadores (US-15 AC4).
+
+> B-53 (17/11/2026): ver "Cobertura por proxy e texto por caso" em 08_microcopy.md (aviso com fonte ssp; texto próprio por caso na TL-07).
