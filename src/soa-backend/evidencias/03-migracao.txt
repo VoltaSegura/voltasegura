@@ -1,0 +1,7 @@
+$ dotnet run --no-build --project VoltaSegura.Servicos -- --migrar
+Usando as configurações de inicialização de VoltaSegura.Servicos\Properties\launchSettings.json...
+info: Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20261112030004_MigracaoInicial'.
+info: Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20261119024129_ProvenienciaAcervo'.
+Migrações aplicadas. 

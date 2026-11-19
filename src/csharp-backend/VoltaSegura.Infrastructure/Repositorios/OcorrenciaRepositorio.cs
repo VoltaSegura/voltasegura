@@ -5,124 +5,115 @@ using VoltaSegura.Infrastructure.Dados;
 
 namespace VoltaSegura.Infrastructure.Repositorios;
 
-/// <summary>
-/// Conta boletins distintos no corredor caminhado (docs/08 §§28 e 59). Estratégia:
-/// pré-filtro por janela geográfica no banco (LINQ → SQL), depois filtro preciso de
-/// distância (Haversine) em memória. A contagem considera apenas as naturezas
-/// elegíveis (FURTO - OUTROS e ROUBO - OUTROS — docs/07 e docs/08 §3).
-/// </summary>
+/// <summary>Pré-filtro no SQLite e distância ponto–segmento, sem ligar caminhadas separadas.</summary>
 public class OcorrenciaRepositorio : IOcorrenciaRepositorio
 {
     private readonly VoltaSeguraDbContext _contexto;
-
     public OcorrenciaRepositorio(VoltaSeguraDbContext contexto) => _contexto = contexto;
 
     public async Task<int> ContarBoletinsDistintosAsync(
-        IReadOnlyList<Coordenada> pontosCaminhados, double raioMetros,
-        DateOnly inicio, DateOnly fim, IReadOnlyCollection<FaixaDoDia>? faixas, CancellationToken ct)
+        IReadOnlyList<CorredorCaminhada> caminhadas, double raioMetros,
+        DateOnly inicio, DateOnly fim, CancellationToken ct)
     {
-        var candidatas = await BuscarCandidatasAsync(pontosCaminhados, raioMetros, inicio, fim, faixas, ct);
-        var distintas = candidatas
-            .Where(o => pontosCaminhados.Any(p => Geografia.HaversineMetros(p, new Coordenada(o.Latitude!.Value, o.Longitude!.Value)) <= raioMetros))
-            .Select(o => o.ChaveBoletim())
-            .Distinct();
-        return distintas.Count();
+        var candidatas = await BuscarCandidatasAsync(caminhadas, raioMetros, inicio, fim, ct);
+        return candidatas.Where(o => o.Faixa is >= FaixaDoDia.Madrugada and <= FaixaDoDia.Noite
+                && caminhadas.Any(c => (c.Faixa == null || c.Faixa == o.Faixa)
+                    && Geografia.NoCorredor(c.Pontos, new(o.Latitude!.Value, o.Longitude!.Value), raioMetros)))
+            .Select(o => o.ChaveBoletim()).Distinct().Count();
     }
 
-    /// <summary>
-    /// Cobertura conforme docs/08 §64 (DECISÃO de 11/11/2026, após auditoria): fração de
-    /// boletins elegíveis com coordenada válida E faixa do dia informada, dentro das
-    /// circunscrições de delegacia atravessadas pelo corredor. As circunscrições são
-    /// identificadas pelos boletins elegíveis (no período, sem filtro de faixa) cujas
-    /// coordenadas caem no corredor; a fração é calculada sobre TODOS os boletins
-    /// elegíveis dessas circunscrições no período — mede a qualidade dos dados da
-    /// região, não a ocupação do corredor.
-    /// </summary>
     public async Task<double> CoberturaCorredorAsync(
-        IReadOnlyList<Coordenada> pontosCaminhados, double raioMetros,
-        DateOnly inicio, DateOnly fim, IReadOnlyCollection<FaixaDoDia>? faixas, CancellationToken ct)
+        IReadOnlyList<CorredorCaminhada> caminhadas, double raioMetros,
+        DateOnly inicio, DateOnly fim, CancellationToken ct)
     {
-        if (pontosCaminhados.Count == 0) return 0.0;
-
-        // 1. Circunscrições atravessadas: boletins elegíveis com coordenada no corredor,
-        //    no período, sem filtro de faixa (a cobertura mede usabilidade de dados).
-        var noCorredor = await BuscarCandidatasAsync(pontosCaminhados, raioMetros, inicio, fim, faixas: null, ct);
-        var circunscricoes = noCorredor
-            .Where(o => pontosCaminhados.Any(p => Geografia.HaversineMetros(p, new Coordenada(o.Latitude!.Value, o.Longitude!.Value)) <= raioMetros))
-            .Select(o => o.Circunscricao)
-            .Where(c => !string.IsNullOrWhiteSpace(c))
-            .Distinct()
-            .ToList();
-        if (circunscricoes.Count == 0) return 0.0;
-
-        // 2. Fração dos boletins elegíveis dessas circunscrições (período) com
-        //    coordenada válida e faixa informada — projeção mínima para o banco.
-        var consulta = _contexto.Ocorrencias
-            .AsNoTracking()
-            .Where(o => Ocorrencia.NaturezasComparacao.Contains(o.Natureza))
-            .Where(o => o.DataOcorrencia >= inicio && o.DataOcorrencia <= fim)
+        // Aproximação declarada: inferir circunscrições pelos BOs próximos, sem polígonos oficiais.
+        // Sem filtro de faixa: BOs sem faixa também identificam a circunscrição.
+        var candidatas = await BuscarCandidatasAsync(caminhadas, raioMetros, inicio, fim, ct);
+        var circunscricoes = candidatas.Where(o => caminhadas.Any(c =>
+                Geografia.NoCorredor(c.Pontos, new(o.Latitude!.Value, o.Longitude!.Value), raioMetros)))
+            .Select(o => o.Circunscricao).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().ToList();
+        if (circunscricoes.Count == 0) return 0;
+        var registros = await Elegiveis(inicio, fim)
             .Where(o => circunscricoes.Contains(o.Circunscricao))
-            .Select(o => new { o.NumeroBo, o.AnoBo, o.Delegacia, o.Faixa, o.Latitude });
-        var registros = await consulta.ToListAsync(ct);
-
-        var total = registros
-            .Select(o => $"{o.NumeroBo}|{o.AnoBo}|{o.Delegacia}")
-            .Distinct()
-            .Count();
-        if (total == 0) return 0.0;
-
-        var usaveis = registros
-            .Where(o => o.Latitude != null && o.Faixa != null)
-            .Select(o => $"{o.NumeroBo}|{o.AnoBo}|{o.Delegacia}")
-            .Distinct()
-            .Count();
-        return (double)usaveis / total;
+            .Select(o => new { o.Latitude, o.Longitude, o.Faixa }).ToListAsync(ct);
+        // O índice único do banco garante um registro por chave de BO.
+        return registros.Count == 0 ? 0 : (double)registros.Count(o =>
+            Geografia.CoordenadaValida(o.Latitude, o.Longitude)
+            && o.Faixa is >= FaixaDoDia.Madrugada and <= FaixaDoDia.Noite) / registros.Count;
     }
 
-    private async Task<List<Ocorrencia>> BuscarCandidatasAsync(
-        IReadOnlyList<Coordenada> pontos, double raioMetros,
-        DateOnly inicio, DateOnly fim, IReadOnlyCollection<FaixaDoDia>? faixas, CancellationToken ct)
+    public Task<int> ContarBoletinsDistintosAsync(IReadOnlyList<Coordenada> pontos,
+        double raio, DateOnly inicio, DateOnly fim, IReadOnlyCollection<FaixaDoDia>? faixas, CancellationToken ct)
+        => ContarBoletinsDistintosAsync(Corredores(pontos, faixas), raio, inicio, fim, ct);
+    public Task<double> CoberturaCorredorAsync(IReadOnlyList<Coordenada> pontos,
+        double raio, DateOnly inicio, DateOnly fim, IReadOnlyCollection<FaixaDoDia>? faixas, CancellationToken ct)
+        => CoberturaCorredorAsync(Corredores(pontos, faixas), raio, inicio, fim, ct);
+
+    private static IReadOnlyList<CorredorCaminhada> Corredores(IReadOnlyList<Coordenada> pontos,
+        IReadOnlyCollection<FaixaDoDia>? faixas) => faixas is { Count: > 0 }
+        ? faixas.Select(f => new CorredorCaminhada(pontos, f)).ToList()
+        : new[] { new CorredorCaminhada(pontos, null) };
+
+    private IQueryable<Ocorrencia> Elegiveis(DateOnly inicio, DateOnly fim) => _contexto.Ocorrencias
+        .AsNoTracking().Where(o => Ocorrencia.NaturezasComparacao.Contains(o.Natureza))
+        .Where(o => o.DataOcorrencia >= inicio && o.DataOcorrencia <= fim);
+
+    private async Task<List<Ocorrencia>> BuscarCandidatasAsync(IReadOnlyList<CorredorCaminhada> caminhadas,
+        double raio, DateOnly inicio, DateOnly fim, CancellationToken ct)
     {
-        if (pontos.Count == 0) return new List<Ocorrencia>();
-
-        var minLat = pontos.Min(p => p.Latitude) - Graus(raioMetros);
-        var maxLat = pontos.Max(p => p.Latitude) + Graus(raioMetros);
-        var minLon = pontos.Min(p => p.Longitude) - Graus(raioMetros);
-        var maxLon = pontos.Max(p => p.Longitude) + Graus(raioMetros);
-
-        var consulta = _contexto.Ocorrencias
-            .AsNoTracking()
-            // Somente naturezas elegíveis para N (docs/07 e docs/08 §3): FURTO - OUTROS
-            // e ROUBO - OUTROS. Carga, veículo, latrocínio e trânsito não entram.
-            .Where(o => Ocorrencia.NaturezasComparacao.Contains(o.Natureza))
+        var pontos = caminhadas.SelectMany(c => c.Pontos).ToList();
+        if (pontos.Count == 0) return new();
+        if (raio <= 0 || !double.IsFinite(raio) || pontos.Any(p => !Geografia.CoordenadaValida(p.Latitude, p.Longitude)))
+            throw new ArgumentException("Corredor inválido.");
+        var margemLat = raio / 110_000.0;
+        var latitudeMaxima = Math.Min(89.9, pontos.Max(p => Math.Abs(p.Latitude)) + margemLat);
+        var margemLon = margemLat / Math.Cos(latitudeMaxima * Math.PI / 180);
+        var minLat = pontos.Min(p => p.Latitude) - margemLat;
+        var maxLat = pontos.Max(p => p.Latitude) + margemLat;
+        var minLon = pontos.Min(p => p.Longitude) - margemLon;
+        var maxLon = pontos.Max(p => p.Longitude) + margemLon;
+        return await Elegiveis(inicio, fim)
             .Where(o => o.Latitude != null && o.Longitude != null)
-            .Where(o => o.Latitude >= minLat && o.Latitude <= maxLat)
-            .Where(o => o.Longitude >= minLon && o.Longitude <= maxLon)
-            .Where(o => o.DataOcorrencia >= inicio && o.DataOcorrencia <= fim);
-
-        if (faixas is { Count: > 0 })
-            consulta = consulta.Where(o => o.Faixa != null && faixas.Contains(o.Faixa.Value));
-
-        return await consulta.ToListAsync(ct);
+            .Where(o => o.Latitude >= -90 && o.Latitude <= 90 && o.Longitude >= -180 && o.Longitude <= 180)
+            .Where(o => o.Latitude >= minLat && o.Latitude <= maxLat && o.Longitude >= minLon && o.Longitude <= maxLon)
+            .ToListAsync(ct);
     }
-
-    private static double Graus(double metros) => metros / 111_320.0;
 }
 
-/// <summary>Distância geodésica aproximada entre dois pontos (fórmula de Haversine).</summary>
 public static class Geografia
 {
     private const double RaioTerraM = 6_371_000.0;
-
+    private static double Rad(double graus) => graus * Math.PI / 180;
+    public static bool CoordenadaValida(double? lat, double? lon) =>
+        lat is >= -90 and <= 90 && lon is >= -180 and <= 180;
     public static double HaversineMetros(Coordenada a, Coordenada b)
     {
-        var dLat = ParaRadiano(b.Latitude - a.Latitude);
-        var dLon = ParaRadiano(b.Longitude - a.Longitude);
-        var h = Math.Sin(dLat / 2) * Math.Sin(dLat / 2)
-                + Math.Cos(ParaRadiano(a.Latitude)) * Math.Cos(ParaRadiano(b.Latitude))
-                * Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-        return 2 * RaioTerraM * Math.Asin(Math.Min(1.0, Math.Sqrt(h)));
+        var h = Math.Pow(Math.Sin(Rad(b.Latitude - a.Latitude) / 2), 2)
+            + Math.Cos(Rad(a.Latitude)) * Math.Cos(Rad(b.Latitude))
+            * Math.Pow(Math.Sin(Rad(b.Longitude - a.Longitude) / 2), 2);
+        return 2 * RaioTerraM * Math.Asin(Math.Min(1, Math.Sqrt(h)));
     }
-
-    private static double ParaRadiano(double graus) => graus * Math.PI / 180.0;
+    /// <summary>Distância ao arco de círculo máximo, limitada às extremidades.</summary>
+    public static double DistanciaSegmentoMetros(Coordenada ponto, Coordenada a, Coordenada b)
+    {
+        var comprimento = HaversineMetros(a, b) / RaioTerraM;
+        if (comprimento < 1e-12) return HaversineMetros(a, ponto);
+        var delta = HaversineMetros(a, ponto) / RaioTerraM;
+        var angulo = Rumo(a, ponto) - Rumo(a, b);
+        var aoLongo = Math.Atan2(Math.Sin(delta) * Math.Cos(angulo), Math.Cos(delta));
+        if (aoLongo < 0 || aoLongo > comprimento)
+            return Math.Min(HaversineMetros(a, ponto), HaversineMetros(b, ponto));
+        return Math.Abs(Math.Asin(Math.Clamp(Math.Sin(delta) * Math.Sin(angulo), -1, 1))) * RaioTerraM;
+    }
+    private static double Rumo(Coordenada a, Coordenada b) => Math.Atan2(
+        Math.Sin(Rad(b.Longitude - a.Longitude)) * Math.Cos(Rad(b.Latitude)),
+        Math.Cos(Rad(a.Latitude)) * Math.Sin(Rad(b.Latitude))
+        - Math.Sin(Rad(a.Latitude)) * Math.Cos(Rad(b.Latitude)) * Math.Cos(Rad(b.Longitude - a.Longitude)));
+    public static bool NoCorredor(IReadOnlyList<Coordenada> pontos, Coordenada alvo, double raio)
+    {
+        if (pontos.Count == 1) return HaversineMetros(pontos[0], alvo) <= raio;
+        for (var i = 1; i < pontos.Count; i++)
+            if (DistanciaSegmentoMetros(alvo, pontos[i - 1], pontos[i]) <= raio) return true;
+        return false;
+    }
 }

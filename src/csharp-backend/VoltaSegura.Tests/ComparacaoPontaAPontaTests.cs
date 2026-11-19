@@ -15,7 +15,7 @@ namespace VoltaSegura.Tests;
 /// Valida o caminho "Conclusiva" com dados no banco — os testes de unidade cobrem
 /// apenas o avaliador puro.
 /// </summary>
-public class ComparacaoPontaAPontaTests
+public class ComparacaoPontaAPontaTests : IDisposable
 {
     private readonly SqliteConnection _conexao;
     private readonly VoltaSeguraDbContext _contexto;
@@ -113,8 +113,8 @@ public class ComparacaoPontaAPontaTests
         Assert.Equal("R2", resultado.RotaDestacada);
         Assert.NotNull(resultado.PValor);
         Assert.True(resultado.PValor < AvaliadorComparacao.NivelSignificancia);
-        Assert.Equal(40.0 / 0.9, resultado.ExposicaoEstimadaPorRota["R1"], 6);
-        Assert.Equal(10.0 / 0.9, resultado.ExposicaoEstimadaPorRota["R2"], 6);
+        Assert.Equal(40.0 / 0.9, resultado.ExposicaoEstimadaPorRota["R1"]!.Value, 6);
+        Assert.Equal(10.0 / 0.9, resultado.ExposicaoEstimadaPorRota["R2"]!.Value, 6);
     }
 
     [Fact]

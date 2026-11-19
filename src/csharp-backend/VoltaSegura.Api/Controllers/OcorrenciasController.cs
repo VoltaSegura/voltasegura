@@ -23,11 +23,15 @@ public class OcorrenciasController : ControllerBase
     /// <param name="natureza">Filtro opcional por NATUREZA_APURADA (docs/07 — ex.: "FURTO - OUTROS").</param>
     /// <param name="rubrica">Filtro opcional por rubrica (conservada para auditoria — docs/07).</param>
     /// <param name="faixa">Filtro opcional por faixa do dia (1=madrugada, 2=manhã, 3=tarde, 4=noite).</param>
+    /// <param name="ct">Cancelamento da consulta.</param>
     [HttpGet]
     public async Task<IActionResult> Resumo(
         [FromQuery] string? bairro, [FromQuery] string? natureza, [FromQuery] string? rubrica,
         [FromQuery] int? faixa, CancellationToken ct)
     {
+        if (faixa.HasValue && (faixa < 1 || faixa > 4))
+            return BadRequest(new { erro = "Faixa deve estar entre 1 e 4." });
+        var acervo = await _contexto.Acervos.AsNoTracking().FirstOrDefaultAsync(ct);
         var consulta = _contexto.Ocorrencias.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(bairro))
@@ -66,6 +70,8 @@ public class OcorrenciasController : ControllerBase
             periodoDados = inicioPeriodo is null || fimPeriodo is null
                 ? null
                 : new { inicio = inicioPeriodo, fim = fimPeriodo },
+            fonte = acervo?.Fonte ?? "Acervo sem proveniência registrada",
+            exemplo = acervo?.Tipo == "demonstracao",
             sobreOsDados = SobreOsDados.FrasesFixas,
             resumo,
         });
@@ -81,7 +87,7 @@ public static class SobreOsDados
     /// </summary>
     public static readonly string[] FrasesFixas =
     {
-        "Dados públicos da SSP-SP e da SPTrans, com fonte e período indicados em cada consulta.",
+        "Consulte a fonte indicada na resposta; registros de demonstração são sintéticos.",
         "A cobertura dos dados varia por região e período — leia a cobertura antes de comparar.",
         "Quando os dados são insuficientes, a comparação não é concluída — nunca há resposta silenciosa.",
     };

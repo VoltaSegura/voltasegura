@@ -21,6 +21,7 @@ public class DadosController : ControllerBase
     [HttpGet("situacao")]
     public async Task<IActionResult> Situacao(CancellationToken ct)
     {
+        var acervo = await _contexto.Acervos.AsNoTracking().FirstOrDefaultAsync(ct);
         var total = await _contexto.Ocorrencias.AsNoTracking().CountAsync(ct);
         if (total == 0)
         {
@@ -29,7 +30,9 @@ public class DadosController : ControllerBase
             {
                 carregado = false,
                 mensagem = "acervo de ocorrências ainda não carregado — toda comparação retornará dados insuficientes",
-                fonte = "SSP-SP (recorte Furto/Roubo/Trânsito, item 8 das decisões do grupo)",
+                fonte = acervo?.Fonte ?? "Acervo não carregado ou sem proveniência registrada",
+                tipoAcervo = acervo?.Tipo ?? "nao_informado",
+                exemplo = acervo?.Tipo == "demonstracao",
             });
         }
 
@@ -44,7 +47,9 @@ public class DadosController : ControllerBase
             // O índice único (NUM_BO, ANO_BO, delegacia) garante um registro por boletim distinto (item 12).
             boletinsDistintos = total,
             periodoCoberto = new { inicio = maisAntiga, fim = maisRecente },
-            fonte = "SSP-SP (recorte Furto/Roubo/Trânsito, item 8 das decisões do grupo)",
+            fonte = acervo?.Fonte ?? "Acervo não carregado ou sem proveniência registrada",
+                tipoAcervo = acervo?.Tipo ?? "nao_informado",
+                exemplo = acervo?.Tipo == "demonstracao",
         });
     }
 

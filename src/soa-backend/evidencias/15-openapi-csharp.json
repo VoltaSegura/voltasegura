@@ -1,0 +1,170 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "VoltaSegura — VoltaSegura.Api",
+    "description": "Protótipo acadêmico. Roteamento mock e acervo sintético identificados na resposta; exposição estimada não é garantia.",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/ocorrencias": {
+      "get": {
+        "tags": [
+          "Ocorrencias"
+        ],
+        "summary": "Resumo agregado por bairro e faixa do dia, com o período consultado sempre explícito.",
+        "parameters": [
+          {
+            "name": "bairro",
+            "in": "query",
+            "description": "Filtro opcional por bairro (nome exato da SSP-SP).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "natureza",
+            "in": "query",
+            "description": "Filtro opcional por NATUREZA_APURADA (docs/07 — ex.: \"FURTO - OUTROS\").",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rubrica",
+            "in": "query",
+            "description": "Filtro opcional por rubrica (conservada para auditoria — docs/07).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "faixa",
+            "in": "query",
+            "description": "Filtro opcional por faixa do dia (1=madrugada, 2=manhã, 3=tarde, 4=noite).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/trajetos": {
+      "get": {
+        "tags": [
+          "Trajetos"
+        ],
+        "summary": "Lista os trajetos salvos (async + LINQ).",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Trajetos"
+        ],
+        "summary": "Salva um trajeto (ida ou volta) com seus trechos.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequisicaoTrajeto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequisicaoTrajeto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequisicaoTrajeto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Coordenada": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RequisicaoTrajeto": {
+        "type": "object",
+        "properties": {
+          "nomeOrigem": {
+            "type": "string",
+            "nullable": true
+          },
+          "nomeDestino": {
+            "type": "string",
+            "nullable": true
+          },
+          "sentido": {
+            "type": "string",
+            "nullable": true
+          },
+          "trechos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrechoRequisicao"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Corpo de criação de trajeto."
+      },
+      "TrechoRequisicao": {
+        "type": "object",
+        "properties": {
+          "modo": {
+            "type": "string",
+            "description": "WALK, BUS, SUBWAY, RAIL ou TRAM.",
+            "nullable": true
+          },
+          "comprimentoKm": {
+            "type": "number",
+            "description": "Distância do trecho fictício.",
+            "format": "double"
+          },
+          "pontos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Coordenada"
+            },
+            "description": "Coordenadas de exemplo.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Trecho do corpo de criação."
+      }
+    }
+  }
+}

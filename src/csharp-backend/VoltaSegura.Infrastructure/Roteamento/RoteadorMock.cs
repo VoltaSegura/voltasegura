@@ -13,11 +13,13 @@ namespace VoltaSegura.Infrastructure.Roteamento;
 /// </summary>
 public class RoteadorMock : IRoteador
 {
+    public string Fonte => "mock";
     private const int PontosPorTrecho = 12;
 
     public Task<IReadOnlyList<Trajeto>> PlanejarAsync(
-        Coordenada origem, Coordenada destino, string sentido, CancellationToken ct)
+        Coordenada origem, Coordenada destino, string sentido, DateTimeOffset saida, CancellationToken ct)
     {
+        ct.ThrowIfCancellationRequested();
         var distanciaKm = Geografia.HaversineMetros(origem, destino) / 1000.0;
 
         // Duas alternativas determinísticas: (A) mais caminhada, (B) mais transporte.
@@ -34,6 +36,18 @@ public class RoteadorMock : IRoteador
             (Modo: "WALK", Fator: 0.20),
         }, origem, destino, distanciaKm * 1.1); // alternativa ligeiramente mais longa
 
+        foreach (var rota in new[] { a, b })
+        {
+            var instante = saida;
+            rota.SaidaPrevista = saida;
+            foreach (var trecho in rota.Trechos)
+            {
+                trecho.PartidaPrevista = instante;
+                instante = instante.AddMinutes(trecho.ComprimentoKm / (trecho.Modo == "WALK" ? 4.5 : 20) * 60);
+                trecho.ChegadaPrevista = instante;
+            }
+            rota.ChegadaPrevista = instante;
+        }
         IReadOnlyList<Trajeto> trajetos = new[] { a, b };
         return Task.FromResult(trajetos);
     }

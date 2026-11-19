@@ -10,7 +10,7 @@ namespace VoltaSegura.Tests;
 public class EstabilidadeCorredorTests
 {
     private static ResultadoComparacao Resultado(StatusComparacao status, string? rota)
-        => new(status, rota, "motivo de teste", null, new Dictionary<string, double>());
+        => new(status, rota, "motivo de teste", null, new Dictionary<string, double?>());
 
     [Fact]
     public void Consolidar_ResultadosIguaisEmTodasAsLarguras_MantemReferencia()

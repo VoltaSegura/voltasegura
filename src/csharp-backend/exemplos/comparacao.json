@@ -1,0 +1,8 @@
+{
+  "origem": { "latitude": -23.5629, "longitude": -46.6544 },
+  "destino": { "latitude": -23.5379, "longitude": -46.6295 },
+  "saida": "2026-11-19T23:00:00-03:00",
+  "sentido": "volta",
+  "inicio": "2026-01-01",
+  "fim": "2026-09-30"
+}

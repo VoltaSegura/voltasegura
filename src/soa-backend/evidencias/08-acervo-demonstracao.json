@@ -1,0 +1,11 @@
+{
+  "carregado": true,
+  "boletinsDistintos": 80,
+  "periodoCoberto": {
+    "inicio": "2026-01-15",
+    "fim": "2026-09-15"
+  },
+  "fonte": "80 registros sintéticos para demonstração acadêmica; não são dados da SSP-SP",
+  "tipoAcervo": "demonstracao",
+  "exemplo": true
+}

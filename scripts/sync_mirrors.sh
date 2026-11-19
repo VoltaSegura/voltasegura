@@ -15,7 +15,7 @@
 #   - README.md                        (regenerado: Ficha + README da disciplina)
 #
 # O que NÃO é sincronizado (varia por repo, mantido localmente em cada espelho):
-#   - AGENTS.md e prompts.md
+#   - AGENTS.md (prompts.md passa a acompanhar a entrega)
 #
 # Fonte da verdade é sempre o monorepo. Alteração manual direta no espelho
 # será sobrescrita aqui.
@@ -26,6 +26,8 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MIRRORS_DIR="${MIRRORS_DIR:-/tmp/opencode/mirrors}"
 ORG=VoltaSegura
 DRY_RUN="${DRY_RUN:-0}"
+PUSH="${PUSH:-1}" # PUSH=0 prepara/commita, sem publicar
+PYTHON="${PYTHON:-python}"
 
 GIT_PROTOCOL="${GIT_PROTOCOL:-ssh}"   # ssh | https
 
@@ -69,6 +71,10 @@ clone_or_update() { # $1 = repo
 }
 
 regenerate_readme() { # $1 = mirror, $2 = dir, $3 = repo
+  if [ "$2" = "soa-backend" ] || [ "$2" = "csharp-backend" ]; then
+    "$PYTHON" -c 'import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); from preparar_entregas_backend import readme_raiz; Path(sys.argv[3]).write_text(readme_raiz(sys.argv[2]), encoding="utf-8")' "$ROOT/scripts" "$2" "$1/README.md"
+    return
+  fi
   if [ "$2" = "mobile-app" ]; then
     sed -e 's#(../../docs/#(./docs/#g' -e 's#(./ARQUITETURA.md)#(./src/mobile-app/ARQUITETURA.md)#g' -e 's#(./todo-mobile.md)#(./src/mobile-app/todo-mobile.md)#g' -e 's#(../../prompts.md)#(./prompts.md)#g' "$ROOT/src/$2/README.md" > "$1/README.md"
     return
@@ -97,10 +103,18 @@ sync_mirror() { # $1 = dir
   mkdir -p "$mirror/docs"
   rsync -a --checksum "$ROOT"/docs/[0-9][0-9]_*.md "$mirror/docs/"
   rsync -a --checksum "$ROOT/.gitignore" "$mirror/.gitignore"
+  rsync -a --checksum "$ROOT/prompts.md" "$mirror/prompts.md"
 
   # código da disciplina (réplica exata)
   mkdir -p "$mirror/src"
-  rsync -a --delete "$ROOT/src/$dir/" "$mirror/src/$dir/"
+  if [ "$dir" = "soa-backend" ] || [ "$dir" = "csharp-backend" ]; then
+    for componente in soa-backend csharp-backend; do
+      mkdir -p "$mirror/src/$componente"
+      rsync -a --delete --exclude=bin/ --exclude=obj/ --exclude=dados/ --exclude=.venv/ --exclude=__pycache__/ --exclude=TestResults/ --exclude='.env*' "$ROOT/src/$componente/" "$mirror/src/$componente/"
+    done
+  else
+    rsync -a --delete "$ROOT/src/$dir/" "$mirror/src/$dir/"
+  fi
 
   # README raiz regenerado
   regenerate_readme "$mirror" "$dir" "$repo"
@@ -115,8 +129,12 @@ sync_mirror() { # $1 = dir
     else
       git -C "$mirror" add -A
       git -C "$mirror" commit -q -m "chore: sync do monorepo ($sha) — $dir"
-      git -C "$mirror" push -q origin main
-      echo "[sync]   $repo atualizado (monorepo $sha)"
+      if [ "$PUSH" = "1" ]; then
+        git -C "$mirror" push -q origin main
+        echo "[sync]   $repo publicado (monorepo $sha)"
+      else
+        echo "[local]  $repo preparado; push pendente"
+      fi
     fi
   else
     echo "[ok]     $repo já sincronizado"

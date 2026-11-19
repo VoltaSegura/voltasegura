@@ -1,0 +1,467 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "VoltaSegura — VoltaSegura.Servicos",
+    "description": "Protótipo acadêmico. Roteamento mock e acervo sintético identificados na resposta; exposição estimada não é garantia.",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/comparacoes/trajetos": {
+      "post": {
+        "tags": [
+          "Comparacoes"
+        ],
+        "summary": "Compara até cinco alternativas no horário solicitado. Rotas e acervo de exemplo são identificados.",
+        "description": "Saída exige fuso. Início/fim delimitam o histórico, não o horário da viagem. Uma única rota é devolvida sem comparação.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequisicaoComparacao"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequisicaoComparacao"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequisicaoComparacao"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespostaComparacao"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespostaComparacao"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespostaComparacao"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dados/situacao": {
+      "get": {
+        "tags": [
+          "Dados"
+        ],
+        "summary": "Situação geral do acervo de ocorrências carregado (quantidade e período coberto).",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/dados/auditoria": {
+      "get": {
+        "tags": [
+          "Dados"
+        ],
+        "summary": "Auditoria de consultas — SEM coordenadas, endereços ou identificadores (item 23).",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Coordenada": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FaixaDoDia": {
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "FonteResposta": {
+        "type": "object",
+        "properties": {
+          "roteamento": {
+            "type": "string",
+            "nullable": true
+          },
+          "acervo": {
+            "type": "string",
+            "nullable": true
+          },
+          "descricao": {
+            "type": "string",
+            "nullable": true
+          },
+          "exemplo": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PeriodoResposta": {
+        "type": "object",
+        "properties": {
+          "inicio": {
+            "type": "string",
+            "format": "date"
+          },
+          "fim": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "RequisicaoComparacao": {
+        "type": "object",
+        "properties": {
+          "origem": {
+            "$ref": "#/components/schemas/Coordenada"
+          },
+          "destino": {
+            "$ref": "#/components/schemas/Coordenada"
+          },
+          "saida": {
+            "type": "string",
+            "nullable": true
+          },
+          "sentido": {
+            "type": "string",
+            "nullable": true
+          },
+          "inicio": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "fim": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RespostaComparacao": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "situacao": {
+            "type": "string",
+            "nullable": true
+          },
+          "rotaComMenorExposicaoEstimada": {
+            "type": "string",
+            "nullable": true
+          },
+          "pValor": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "boletinsPorRota": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "kmCaminhadosPorRota": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "coberturaPorRota": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "exposicaoEstimadaBoletinsPorKm": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "largurasCorredorTestadasM": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "periodoDados": {
+            "$ref": "#/components/schemas/PeriodoResposta"
+          },
+          "fontes": {
+            "$ref": "#/components/schemas/FonteResposta"
+          },
+          "rotas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RotaResposta"
+            },
+            "nullable": true
+          },
+          "sobreOsDados": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RotaResposta": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "duracaoMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "kmCaminhados": {
+            "type": "number",
+            "format": "double"
+          },
+          "baldeacoes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "saidaPrevista": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "chegadaPrevista": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "trechos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrechoResposta"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TrechoResposta": {
+        "type": "object",
+        "properties": {
+          "ordem": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "modo": {
+            "type": "string",
+            "nullable": true
+          },
+          "comprimentoKm": {
+            "type": "number",
+            "format": "double"
+          },
+          "partidaPrevista": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "chegadaPrevista": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "faixaDoDia": {
+            "$ref": "#/components/schemas/FaixaDoDia"
+          },
+          "linha": {
+            "type": "string",
+            "nullable": true
+          },
+          "geometria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Coordenada"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      }
+    }
+  }
+}

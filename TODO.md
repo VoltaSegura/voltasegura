@@ -481,30 +481,41 @@ Cada linha só é aplicada se a resposta da onda mudar a base. Quando a decisão
 
 ## T05 — SOA & Web Services
 
-**Status:** PENDENTE (só existe o README em `src/soa-backend/`)
+**Status:** EM DESENVOLVIMENTO (18/11/2026: pacote de demonstração regularizado e validado; publicação, acesso do professor e envio pendentes)
 **Tipo:** Entrega de disciplina (SOA & Web Services)
-**Referência:** `docs/02` §1.
+**Referência:** `docs/02` §1; `src/soa-backend/README.md`; `src/soa-backend/evidencias/README.md`.
 
-**Escopo previsto:** API REST de rotas, comparação e exposição estimada. A rubrica pede domínio (3,0), banco de dados (3,0), migrações (1,5), documentação automática (1,5) e testes automatizados (1,0).
-- [ ] Decidir a linguagem e a relação com o backend C# (ver T06 e T01.17)
-- [ ] Modelar o domínio e o banco (conta com e-mail e identificador; sem armazenar consultas nem histórico de trajetos; `docs/03` §6)
-- [ ] Autenticação e exclusão de conta
-- [ ] Implementar endpoints, migrações e Swagger
-- [ ] Testes automatizados
-- [ ] README com execução, solução e nomes dos integrantes; evidências
+[DECISÃO de implementação da entrega] Demonstração autônoma com SQLite real, migrações e API reais, roteamento mock e 80 registros sintéticos explicitamente identificados. Não altera a escolha OTP2/SSP do produto nem afirma integração ao vivo. O PDF p. 27 não exige OTP nominalmente.
+
+- [x] Arquitetura .NET compartilhada e domínio, EF Core/SQLite, endpoints e Swagger implementados.
+- [x] Corrigidos corredor por segmento (caminhadas separadas), margem de longitude, cobertura com ambas as coordenadas/faixa, `L = 0` anulável, limite estrito de significância e validações de entrada.
+- [x] Horário de saída com fuso, faixa por caminhada, até cinco candidatas e retorno de alternativa única sem comparação.
+- [x] Adaptador opcional OTP GraphQL atualizado e testado com respostas controladas; mock segue padrão da entrega.
+- [x] **46 testes aprovados**, zero falhas; aviso de descarte resolvido. Testes incluem regressões, migrações reais e API HTTP.
+- [x] Migração de proveniência adicionada; ambas aplicadas em banco novo e reaplicadas sem mudanças. Carga sintética idempotente e separada da SSP.
+- [x] API executada por HTTP: situação do banco, comparação, validação 400 e auditoria sem localização; persistência confirmada após reinício. Logs, JSONs e prints reais em `src/soa-backend/evidencias/`.
+- [x] README com integrantes/RMs fornecidos pelo usuário, scripts Windows, instruções manuais, rubrica, exemplos e limites. `DADOS_REAIS.md` explica obtenção da SSP e conexão OTP opcional.
+- [x] Empacotamento corrigido: solution completa nos dois espelhos; Ficha atual, registro de IA, links corretos e exclusão de artefatos. Preparador local `scripts/preparar_entregas_backend.py`, sem push; `sync_mirrors.sh` corrigido e sintaxe Bash conferida.
+- [x] Pacote SOA independente testado em pasta limpa pelo comando do README: restore, build, 46 testes, migrações e carga passaram. Links principais conferidos.
+- [ ] Publicar monorepo e espelhos SOA/C#; conferir acesso do professor e enviar link na tarefa SOA (T18). Não houve commit/push nesta regularização.
+- [ ] [EM ABERTO — integração real, fora da demonstração validada] Planilha SSP e servidor OTP indisponíveis ao usuário; carga real, OTP ao vivo, autenticação/contrato completo do app seguem não validados. Não apresentar como concluídos. Script ETL atualizado para caminho configurável e proveniência; execução com base real pendente.
+
+O diagnóstico anterior foi preservado em `src/soa-backend/PLANO_ENTREGA.md`, marcado como histórico.
 
 ---
 
 ## T06 — C# Software Development
 
-**Status:** PENDENTE (só existe o README em `src/csharp-backend/`)
+**Status:** EM DESENVOLVIMENTO (18/11/2026: solution compartilhada compilada, 46 testes aprovados e API C# exercitada por HTTP; publicação/envio pendentes)
 **Tipo:** Entrega de disciplina (C# Software Development)
-**Referência:** `docs/02` §3.
+**Referência:** `docs/02` §3; `src/csharp-backend/README.md`; evidências compartilhadas em `src/soa-backend/evidencias/`.
 
-**Escopo previsto:** backend .NET com POO, interfaces, injeção de dependência, EF Core, LINQ, Web API, async/await e testes unitários. Rubrica: POO (3,0), Web API (2,5), EF Core + LINQ (1,5), async (1,0), qualidade (2,0).
-- [ ] Decidir se é o mesmo serviço da SOA ou módulo distinto
-- [ ] Implementar e testar
-- [ ] README, Swagger/Scalar e evidências
+- [x] Arquitetura compartilhada com API própria, POO, interfaces, DI, EF Core/LINQ e async/await.
+- [x] Correções e testes da T05 aplicam-se ao domínio/infra compartilhados; consulta agregada C# retornou HTTP 200 e identificou acervo sintético.
+- [x] Histórico pessoal no servidor desativado por padrão (GET/POST de trajetos retornam 403), em conformidade com a decisão de histórico só no aparelho. Código legado fica apenas para demonstração fictícia explicitamente habilitada.
+- [x] README, integrantes/RMs, Swagger, scripts e evidências; pacote completo inclui a solution e a documentação compartilhada.
+- [ ] Publicar espelho C#, conferir acesso do professor e enviar na tarefa própria (T18).
+- [ ] Integração real com dados/roteador/app permanece [EM ABERTO], conforme T05; não foi validada com usuários.
 
 ---
 
@@ -710,3 +721,8 @@ Prazo: **19/11/2026, 23h55**. Só **um integrante** envia por disciplina, no Tea
 | 19/11/2026 | T25 marcada CONCLUÍDA: Lucas validou no aparelho ("tudo muito certo" e, depois da correção, o teclado). Docs auditados e corrigidos: D-39 renumerada (era uma segunda D-36) e movida para depois da D-38; `05_navegacao` (abas ligadas, Seguir com compartilhar e Fechar → home); índice de telas e `ARQUITETURA.md` com as rotas em `(abas)`; `todo-mobile` com a pendência do foco resolvida; `docs/06` 1.49; evidência em `docs/app-map/redesign/13_t25b_ajustes_e_teclado.md`. | Claude Code (a pedido do Lucas) |
 | 19/11/2026 | Pasta `docs/redesign/` movida para `docs/app-map/redesign/` (referências atualizadas em TODO, prompts, app-map, dados-reais, HANDOFF e docs do mobile). Commits das alterações pendentes (B-58/B-59, setup, T24, T25, docs, QA) separados por contexto na branch `feat/redesign-t25`, sem coautoria de IA; T24.6 concluída. Espelho `VoltaSegura/mobile-app` sincronizado. | assistente (a pedido do Lucas) |
 | 19/11/2026 | T07: README do app (`src/mobile-app/README.md`, que gera o README do espelho) reescrito: resumo do VoltaSegura, tabela de integrantes (RM e nome), modos mock e real, diagrama das peças, por que cada dependência é instalada (Java/OTP2, GTFS, OSM, Python/osmium, Neon), passo a passo de `npm run setup`, `npm run otp2` e `npm run celular`, opções e problemas comuns; contagem de testes atualizada (857/63). Espelho sincronizado. | assistente (a pedido do Lucas) |
+| 18/11/2026 | T05: diagnóstico contra PDF p. 27 e roteiro em `src/soa-backend/PLANO_ENTREGA.md`; solution compilada e 20 testes aprovados. Status detalhado corrigido para EM DESENVOLVIMENTO; pendentes migrações/HTTP/carga local, correções de cálculo/integração, evidências, integrantes e empacotamento completo do espelho. Nenhum código alterado ou publicado. | assistente, a pedido do usuário |
+
+| 18/11/2026 | T05/T06: regularização autorizada pelo usuário; correções de domínio/geometria/validação, comparação de até cinco rotas, adaptador GraphQL opcional, proveniência e carga fictícia, scripts Windows, 46 testes aprovados, migrações/HTTP/persistência e prints reais. Pacote independente testado em pasta limpa; READMEs com integrantes/RMs e empacotamento completo. Publicação/envio e validação com SSP/OTP reais seguem pendentes. | Codex, a pedido do usuário |
+
+| 18/11/2026 | T05/T06: guia de publicação em `src/soa-backend/PUBLICACAO.md` e pacotes independentes em `output/entregas/`; upload e envio ao portal permanecem com o grupo. | Codex, a pedido do usuário |
