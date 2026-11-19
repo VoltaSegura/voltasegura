@@ -9,7 +9,7 @@ Você é o agente da frente **Plano B (dados reais no app)** do VoltaSegura (app
 **Leia, nesta ordem, antes de qualquer coisa:**
 1. `AGENTS.md` da raiz (linguagem do `docs/05` tem prioridade máxima: "exposição estimada", nunca "rota segura", "perigoso" ou nota) e `src/mobile-app/AGENTS.md` (inclui a regra "mudou o fluxo, mudou a documentação").
 2. `docs/dados-reais/04_plano_implementacao.md` (**o seu plano**: tarefas B-01 a B-40, dono, cronograma e corte), depois `00_plano.md` e, se precisar, `01`, `02` e `03`.
-3. `docs/redesign/09_onda2_evidencia_e_plano_onda3.md` §4 (o que o vídeo mostrou sobre o traçado mockado).
+3. `docs/app-map/redesign/09_onda2_evidencia_e_plano_onda3.md` §4 (o que o vídeo mostrou sobre o traçado mockado).
 
 **Escopo:** só Mobile. Ignore e nunca leia `src/csharp-backend`, `src/soa-backend`, `src/ml`, `src/cybersecurity`, `src/os-infra`, `src/physical-computing`, `src/qa` (decisão D-27).
 

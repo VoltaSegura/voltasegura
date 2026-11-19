@@ -1,6 +1,6 @@
 # Test Cases do VoltaSegura para o Azure Boards
 
-> **Rascunho de 16/11/2026**, derivado de `docs/10_backlog_produto.md` (v1.10) e da matriz `docs/app-map/10_rastreabilidade.md` (os `T-xx.y` da matriz foram reaproveitados e ampliados com preparação, inputs, passos e saída esperada). Caixa-preta, para aceitação e homologação (`docs/02` §8).
+> **Rascunho de 16/11/2026, revisado em 19/11/2026** (revisão contra `docs/app-map/` e `docs/10` v1.11), derivado de `docs/10_backlog_produto.md` (v1.10) e da matriz `docs/app-map/10_rastreabilidade.md` (os `T-xx.y` da matriz foram reaproveitados e ampliados com preparação, inputs, passos e saída esperada). Caixa-preta, para aceitação e homologação (`docs/02` §8).
 >
 > **Tipo:** **+** positivo · **−** negativo. Cada Feature do MVP tem pelo menos um caso de cada tipo. Os cenários com `fixture` usam os casos de teste do mock do app (`conclusivo`, `sem_diferenca`, `mistos`, `insuficiente_amostra`, `insuficiente_cobertura`, `insuficiente_largura`, `nao_aplicavel`, `uma_rota`, `sem_servico`).
 >
@@ -31,12 +31,16 @@
 | F6.1 | TC-20.1, TC-20.2, TC-20.3, TC-20.4 | 1 | 3 |
 | F6.2 | TC-21.1, TC-21.2, TC-21.3 | 1 | 2 |
 | F7.1 | TC-22.1, TC-22.2, TC-22.3, TC-22.4 | 2 | 2 |
+| F2.6 (Seguir rota, US-23) | TC-23.1 a TC-23.11 | 5 | 6 |
+| FN-21 (VoltaSegura+ em simulação, sem Feature no Azure) | TC-24.1 a TC-24.9 | 5 | 4 |
+| FN-22 (contatos, sem Feature no Azure) | TC-25.1 a TC-25.4 | 2 | 2 |
+| FN-13 (lugares salvos e busca, sem Feature no Azure) | TC-26.1 a TC-26.5 | 2 | 3 |
 | RNF-01, RNF-02, RNF-06 | TC-RNF-01 | 0 | 1 |
 | RNF-03, RNF-04 | TC-RNF-03 | 0 | 1 |
 | RNF-07 | TC-RNF-07 | 1 | 0 |
 | RNF-08, RNF-09 | TC-RNF-08 | 0 | 1 |
 
-**Total: 71 Test Cases.**
+**Total: 100 Test Cases.** (71 do rascunho de 16/11 + 29 novos ou reescritos em 19/11: F2.6, FN-21, FN-22, FN-13; TC-04 reescrito, pois o histórico de trajetos não existe nesta versão.)
 
 ---
 
@@ -174,52 +178,51 @@
 1. Abrir o app sem entrar.
 2. Tentar chegar ao planejamento.
 
-### TC-04.1 — Não gravar histórico com a opção desligada (padrão).
+### TC-04.1 — Não gravar trajetos consultados no aparelho (histórico não existe nesta versão).
 
 | Campo | Conteúdo |
 |---|---|
 | Feature | F1.4 |
-| Critério | US-04 AC1 |
+| Critério | US-04 AC1 (histórico de trajetos é `[EM ABERTO]`; "Recentes" não existe, TL-04) |
 | Tipo | Negativo |
-| Objetivo | Não gravar histórico com a opção desligada (padrão). |
-| Preparação | Sessão ativa; histórico desligado. |
+| Objetivo | Garantir que nenhuma consulta fica salva no aparelho como histórico. |
+| Preparação | Sessão ativa; aba Planejar (TL-04) aberta. |
 | Inputs | Uma consulta válida. |
-| Resultado esperado | Nada é salvo no aparelho; "Recentes" vazio. |
+| Resultado esperado | Nenhuma lista "Recentes" aparece na TL-04 nem nas Configurações, e a consulta não fica gravada no aparelho. |
 
 **Passos:**
-1. Confirmar que o histórico está desligado.
-2. Fazer uma consulta.
-3. Abrir "Recentes".
+1. Fazer uma consulta válida.
+2. Fechar e reabrir o app.
+3. Conferir a TL-04 e as Configurações: não há "Recentes" nem lista de trajetos.
 
-### TC-04.2 — Salvar, listar e apagar trajetos no aparelho.
+### TC-04.2 — Salvar, listar e apagar lugares salvos no aparelho.
 
 | Campo | Conteúdo |
 |---|---|
-| Feature | F1.4 |
-| Critério | US-04 AC2 e AC3 |
+| Feature | F1.4 (locais salvos, FN-13) |
+| Critério | FL-11 nota D-29; TL-12 |
 | Tipo | Positivo |
-| Objetivo | Salvar, listar e apagar trajetos no aparelho. |
-| Preparação | Sessão ativa; histórico ligado. |
-| Inputs | Duas consultas válidas. |
-| Resultado esperado | As consultas aparecem em "Recentes"; ao apagar, somem da lista e do aparelho. |
+| Objetivo | Salvar, listar e apagar lugares salvos no aparelho. |
+| Preparação | Sessão ativa; nenhum lugar salvo. |
+| Inputs | Um lugar "Faculdade" (tipo: estudo) pela TL-05. |
+| Resultado esperado | O lugar aparece na lista de Configurações (Lugares salvos) e na TL-04; ao apagar, some da lista e do aparelho, após confirmação. |
 
 **Passos:**
-1. Ligar o histórico.
-2. Fazer duas consultas.
-3. Conferir "Recentes".
-4. Apagar um item e depois todos.
+1. Salvar o lugar "Faculdade" (tipo: estudo) pela TL-05.
+2. Conferir a lista em Configurações e na TL-04.
+3. Apagar o lugar e confirmar.
 
-### TC-04.3 — Garantir que histórico e locais salvos não saem do aparelho.
+### TC-04.3 — Garantir que locais salvos e consultas não saem do aparelho.
 
 | Campo | Conteúdo |
 |---|---|
 | Feature | F1.4 |
 | Critério | US-04 AC4 |
 | Tipo | Negativo |
-| Objetivo | Garantir que histórico e locais salvos não saem do aparelho. |
-| Preparação | Histórico ligado; ferramenta para observar as chamadas de rede. |
+| Objetivo | Garantir que locais salvos e consultas não saem do aparelho. |
+| Preparação | Ferramenta para observar as chamadas de rede. |
 | Inputs | Salvar um local "Faculdade" e fazer uma consulta. |
-| Resultado esperado | Nenhuma chamada leva o histórico ou os locais salvos ao servidor. |
+| Resultado esperado | Nenhuma chamada leva os locais salvos ao servidor do projeto. A busca por texto (TC-26.3) é a única exceção, e só envia o texto digitado. |
 
 **Passos:**
 1. Salvar o local e fazer a consulta.
@@ -975,12 +978,12 @@
 | Critério | US-22 AC1 e AC3 |
 | Tipo | Positivo |
 | Objetivo | Cadastrar, editar e apagar a rotina só no aparelho. |
-| Preparação | Sessão ativa; locais salvos existentes; Feature em protótipo. |
-| Inputs | Rotina: origem, destino, dias e horário de saída. |
+| Preparação | Sessão ativa; pelo menos dois lugares salvos (a rotina pede origem e destino); Feature em protótipo. |
+| Inputs | Rotina: origem, destino, dias e horário de saída (escolhido na folha de rodas, sem teclado, D-35). |
 | Resultado esperado | A rotina persiste só no aparelho, pode ser editada, desativada e apagada, e nada é enviado ao servidor nem vinculado à conta. |
 
 **Passos:**
-1. Cadastrar a rotina.
+1. Abrir a rotina por Configurações > Rotina da semana (TL-12) ou pelo cartão da aba Plus (TL-21) e cadastrar.
 2. Fechar e reabrir o app.
 3. Editar, desativar e apagar a rotina.
 4. Observar o tráfego de rede.
@@ -1129,6 +1132,499 @@
 **Passos:**
 1. Consultar.
 2. Abrir "Por que esta rota?" e "Dados considerados".
+
+### TC-23.1 — Pedir a permissão e mostrar a posição só depois de tocar em Começar.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC1 |
+| Tipo | Positivo |
+| Objetivo | Confirmar que a posição só é lida depois de tocar em "Começar". |
+| Preparação | Rota escolhida (TL-08) com trajeto desenhado; permissão de localização ainda não concedida. |
+| Inputs | Toque em "Seguir esta rota" e depois em "Começar". |
+| Resultado esperado | O app pede a permissão e, depois de concedida, mostra a posição no trajeto, o trecho atual e o próximo passo. |
+
+**Passos:**
+1. Abrir uma rota na TL-08 e tocar em "Seguir esta rota".
+2. Confirmar que nenhuma posição foi lida até aqui.
+3. Tocar em "Começar" e conceder a permissão.
+4. Conferir a posição, o trecho atual e o próximo passo.
+
+### TC-23.2 — Não ler a posição antes de tocar em Começar.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC1 |
+| Tipo | Negativo |
+| Objetivo | Garantir que a tela de introdução não lê a posição. |
+| Preparação | Permissão de localização já concedida; ferramenta para observar a leitura de posição. |
+| Inputs | Toque em "Seguir esta rota" e, depois, em voltar sem tocar em "Começar". |
+| Resultado esperado | Nenhuma leitura de posição acontece; o app volta à TL-08. |
+
+**Passos:**
+1. Tocar em "Seguir esta rota".
+2. Ler a introdução sem tocar em "Começar".
+3. Voltar à TL-08.
+4. Conferir que nenhuma leitura de posição ocorreu.
+
+### TC-23.3 — Informar antes de começar que a posição fica no aparelho e que pode encerrar.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC2 |
+| Tipo | Positivo |
+| Objetivo | Garantir que a pessoa sabe onde a posição fica e que pode encerrar antes de começar. |
+| Preparação | Rota escolhida; sem compartilhamento de viagem ativo. |
+| Inputs | Toque em "Seguir esta rota". |
+| Resultado esperado | A TL-18 diz que a posição fica neste aparelho e que é possível encerrar a qualquer momento. |
+
+**Passos:**
+1. Tocar em "Seguir esta rota".
+2. Ler o texto da introdução.
+
+### TC-23.4 — Manter o indicador visível e encerrar pelo botão.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC3 |
+| Tipo | Positivo |
+| Objetivo | Confirmar que o indicador de sessão fica visível e que o botão de encerrar funciona. |
+| Preparação | Sessão de seguir rota em andamento. |
+| Inputs | Toque no botão de encerrar do indicador. |
+| Resultado esperado | O indicador "Acompanhando sua posição" fica visível durante a sessão; o botão tem área de toque de pelo menos 48 dp; ao tocar, a leitura para e o app volta ao resultado. |
+| Observação | O rótulo do botão é `[EM ABERTO]` ("Encerrar" hoje, "Parar" no AC3); conferir o texto que estiver no app na hora do teste. |
+
+**Passos:**
+1. Começar a sessão e conferir o indicador.
+2. Tentar ocultar o indicador (não deve ser possível).
+3. Medir a área do botão de encerrar.
+4. Tocar no botão e conferir que a leitura para.
+
+### TC-23.5 — Encerrar a sessão sozinha ao chegar ao destino.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC4 |
+| Tipo | Positivo |
+| Objetivo | Garantir que a sessão termina ao chegar ao destino. |
+| Preparação | Sessão em andamento perto do destino (ou com a posição simulada no ponto final do trajeto). Tempo máximo `[EM ABERTO]`, então o teste cobre só a chegada. |
+| Inputs | Posição no ponto final do trajeto. |
+| Resultado esperado | O app informa que a pessoa chegou, encerra a sessão sozinha e para a leitura de posição. |
+
+**Passos:**
+1. Levar a posição até o ponto final da rota (real ou simulada).
+2. Conferir o aviso de chegada.
+3. Conferir que a sessão foi encerrada e a leitura parou.
+
+### TC-23.6 — Não iniciar a sessão com a permissão de localização negada.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC1 |
+| Tipo | Negativo |
+| Objetivo | Garantir que, sem permissão, o app não acompanha a posição. |
+| Preparação | Permissão de localização negada no aparelho. |
+| Inputs | Toque em "Seguir esta rota" e depois em "Começar". |
+| Resultado esperado | O app explica que sem o acesso não dá para acompanhar, oferece tentar de novo ou abrir as configurações, e não lê nenhuma posição. |
+
+**Passos:**
+1. Tocar em "Seguir esta rota" e depois em "Começar".
+2. Ler o aviso de permissão negada.
+3. Conferir que nenhuma posição foi lida.
+
+### TC-23.7 — Não guardar o trajeto nem enviar posições ao servidor.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC5 |
+| Tipo | Negativo |
+| Objetivo | Garantir que nada da sessão fica no aparelho nem vai ao servidor. |
+| Preparação | Sessão sem compartilhamento ativo; ferramenta para observar o tráfego de rede. |
+| Inputs | Seguir uma rota até o fim ou encerrar no meio do caminho. |
+| Resultado esperado | Nenhum trajeto ou posição é gravado no aparelho, e nenhuma chamada de rede leva posições ao servidor. Depois de encerrar, não sobra nada da sessão. |
+
+**Passos:**
+1. Seguir uma rota até o fim e outra encerrada no meio.
+2. Reabrir o app e procurar qualquer trajeto percorrido.
+3. Observar o tráfego de rede durante a sessão.
+
+### TC-23.8 — Avisar ao sair do trajeto e oferecer voltar ao resultado.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC7 |
+| Tipo | Negativo |
+| Objetivo | Garantir que sair do trajeto gera aviso e não recalcula com a posição. |
+| Preparação | Sessão em andamento; posição simulada fora do trajeto. |
+| Inputs | Posição a mais de um trecho de distância da rota. |
+| Resultado esperado | O app avisa que a pessoa saiu do trajeto e oferece voltar ao resultado. Nenhuma posição é enviada a serviço externo para recalcular (recálculo é Fase 2, `[EM ABERTO]`). |
+
+**Passos:**
+1. Simular a posição fora do trajeto.
+2. Conferir o aviso e a opção de voltar ao resultado.
+3. Observar o tráfego de rede: nenhuma posição sai do aparelho.
+
+### TC-23.9 — Não dizer que a navegação garante segurança.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC8 |
+| Tipo | Negativo |
+| Objetivo | Conferir que os textos da navegação não prometem segurança. |
+| Preparação | Telas TL-08 e TL-18 com todos os textos. |
+| Inputs | Textos das telas. |
+| Resultado esperado | Nenhum texto diz que a navegação garante segurança nem que o trajeto é "seguro". |
+
+**Passos:**
+1. Ler todos os textos de TL-08 e TL-18.
+2. Buscar "seguro", "garantia" e "garantimos".
+
+### TC-23.10 — Continuar a leitura em segundo plano só com a sessão ativa. *(HIPÓTESE, PL-24; dispositivo físico)*
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC6 |
+| Tipo | Positivo |
+| Objetivo | Confirmar que, com sessão ativa, a leitura segue com a tela desligada, e para ao encerrar. |
+| Preparação | Dispositivo físico com permissão em segundo plano; sessão em andamento. Depende do GPS em segundo plano (PL-24). |
+| Inputs | Bloquear a tela durante a sessão e depois encerrar. |
+| Resultado esperado | Com a tela desligada, a leitura continua e o indicador segue visível; ao encerrar, a leitura para. |
+
+**Passos:**
+1. Começar a sessão e bloquear a tela.
+2. Aguardar um trecho do trajeto e desbloquear.
+3. Conferir o indicador e a posição.
+4. Encerrar e conferir que a leitura parou.
+
+### TC-23.11 — Não iniciar uma rota sem trajeto desenhado.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | F2.6 |
+| Critério | US-23 AC1 |
+| Tipo | Negativo |
+| Objetivo | Garantir que a sessão não começa sem trajeto para acompanhar. |
+| Preparação | Rota da alternativa sem trajeto desenhado. |
+| Inputs | Toque em "Seguir esta rota" e depois em "Começar". |
+| Resultado esperado | O app informa que a rota não tem trajeto desenhado para acompanhar e não inicia a sessão. |
+
+**Passos:**
+1. Abrir a alternativa sem trajeto e tocar em "Seguir esta rota".
+2. Tocar em "Começar".
+3. Ler a mensagem e conferir que a sessão não começou.
+
+### TC-24.1 — Abrir a aba Plus sem ler dados e com o aviso de demonstração.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-21 (sem Feature própria no Azure) |
+| Critério | FL-19 passo 1; D-36 |
+| Tipo | Positivo |
+| Objetivo | Confirmar que a aba Plus abre os planos com o selo de demonstração. |
+| Preparação | Sessão ativa. |
+| Inputs | Toque na aba Plus. |
+| Resultado esperado | A TL-19 abre com os planos e o selo "Demonstração: nenhuma cobrança real". Nenhum dado é lido. |
+
+**Passos:**
+1. Tocar na aba Plus.
+2. Conferir os planos e o selo.
+3. Conferir que nenhum dado foi lido (rede e armazenamento).
+
+### TC-24.2 — Simular o teste de 7 dias sem gravar nada.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-21 (sem Feature própria no Azure) |
+| Critério | FL-19 passos 2 e 3; D-36 |
+| Tipo | Positivo |
+| Objetivo | Confirmar que o teste grátis é só uma simulação. |
+| Preparação | Aba Plus aberta na TL-19. |
+| Inputs | "Testar 7 dias grátis" e depois "Começar teste grátis". |
+| Resultado esperado | A TL-20 mostra o plano escolhido; ao começar, a TL-21 (home simulada) abre. Nada é gravado. |
+
+**Passos:**
+1. Tocar em "Testar 7 dias grátis".
+2. Conferir a TL-20 com o plano escolhido.
+3. Tocar em "Começar teste grátis".
+4. Conferir a home simulada e voltar à aba Plus.
+
+### TC-24.3 — Abrir a aba Plus na TL-19 de novo depois de sair. *(HIPÓTESE, PL-35)*
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-21 (sem Feature própria no Azure) |
+| Critério | FL-19 regra; PL-35 |
+| Tipo | Negativo |
+| Objetivo | Confirmar que a simulação não guarda estado entre aberturas. |
+| Preparação | Teste grátis iniciado na sessão (TL-21 aberta). |
+| Inputs | Sair da aba Plus e voltar a ela. |
+| Resultado esperado | A aba Plus abre de novo na TL-19 (planos), e não na home simulada. |
+
+**Passos:**
+1. Iniciar o teste grátis até a TL-21.
+2. Sair da aba Plus e voltar.
+3. Conferir que a TL-19 aparece.
+
+### TC-24.4 — Não cobrar, não pedir pagamento e não enviar nada pela simulação.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-21 (sem Feature própria no Azure) |
+| Critério | FL-19 regras; D-36 |
+| Tipo | Negativo |
+| Objetivo | Garantir que o VoltaSegura+ não cobra nem pede dados de pagamento. |
+| Preparação | Ferramenta para observar o tráfego de rede. |
+| Inputs | Percorrer todo o fluxo: planos, teste, home, assinatura. |
+| Resultado esperado | Nenhum campo de pagamento ou cartão aparece; nenhum valor é cobrado, guardado ou enviado; nenhuma chamada de rede pelo fluxo. |
+
+**Passos:**
+1. Percorrer o fluxo completo da aba Plus.
+2. Procurar campos de pagamento ou cartão.
+3. Observar o tráfego de rede durante o fluxo.
+
+### TC-24.5 — Marcar as telas de exemplo com o selo EXEMPLO e sem cálculo.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-21 (sem Feature própria no Azure) |
+| Critério | FL-19 passo 5; D-36 |
+| Tipo | Positivo |
+| Objetivo | Conferir que volta pronta, radar e resumo são exemplos rotulados. |
+| Preparação | Home simulada (TL-21) aberta. |
+| Inputs | Abrir "Minha volta pronta", o cartão do radar e "Ver tudo" no resumo. |
+| Resultado esperado | Cada tela mostra o selo EXEMPLO; nenhum horário, tempo ou número é calculado a partir de dados reais. |
+
+**Passos:**
+1. Abrir a volta pronta (TL-22) e conferir o selo e o texto "Exemplo: não calculado".
+2. Abrir o radar (TL-23) e conferir o selo.
+3. Abrir o resumo (TL-24) e conferir o selo e os números fixos.
+
+### TC-24.6 — Desabilitar o compartilhamento na volta pronta de exemplo.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-21 (sem Feature própria no Azure) |
+| Critério | TL-22 |
+| Tipo | Negativo |
+| Objetivo | Garantir que a volta pronta de exemplo não compartilha nada. |
+| Preparação | TL-22 aberta. |
+| Inputs | Toque em "Compartilhar com um toque". |
+| Resultado esperado | O botão está desabilitado; nenhum compartilhamento acontece. |
+
+**Passos:**
+1. Abrir a TL-22.
+2. Conferir que o botão de compartilhar está desabilitado.
+3. Tentar tocar e conferir que nada acontece.
+
+### TC-24.7 — Manter a rota no radar sem mudá-la.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-21 (sem Feature própria no Azure) |
+| Critério | TL-23 |
+| Tipo | Negativo |
+| Objetivo | Garantir que o radar não muda a rota sozinho. |
+| Preparação | TL-23 aberta. |
+| Inputs | "Ver alternativa" e depois "Manter minha rota". |
+| Resultado esperado | "Ver alternativa" mostra o aviso de que a alternativa é um exemplo; "Manter minha rota" volta à TL-21 com o aviso "Sua rota foi mantida." |
+
+**Passos:**
+1. Tocar em "Ver alternativa" e ler o aviso.
+2. Tocar em "Manter minha rota".
+3. Conferir o aviso e que a rota não mudou.
+
+### TC-24.8 — Mostrar só aviso de simulação ao trocar de plano ou cancelar.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-21 (sem Feature própria no Azure) |
+| Critério | TL-25; D-36 |
+| Tipo | Positivo |
+| Objetivo | Confirmar que trocar ou cancelar só mostra aviso. |
+| Preparação | TL-25 aberta a partir da TL-21. |
+| Inputs | "Trocar para o plano anual" e "Cancelar plano". |
+| Resultado esperado | Cada ação mostra um aviso de simulação; nada é cancelado, cobrado ou guardado. O selo "Demonstração: nenhuma cobrança real" aparece. |
+
+**Passos:**
+1. Tocar em "Trocar para o plano anual" e ler o aviso.
+2. Tocar em "Cancelar plano" e ler o aviso.
+3. Conferir que o plano e as rotinas continuam iguais.
+
+### TC-24.9 — Mostrar a rotina mais recente na home do Plus, ou o convite para cadastrar.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-21 e FN-17 (sem Feature própria no Azure) |
+| Critério | FL-19 passo 4 |
+| Tipo | Positivo |
+| Objetivo | Garantir que a home do Plus mostra a rotina salva no aparelho. |
+| Preparação | Uma rotina salva no aparelho (com e sem rotina, em dois testes). |
+| Inputs | Abrir a home simulada (TL-21). |
+| Resultado esperado | Com rotina, o cartão mostra a mais recente; sem rotina, o convite para cadastrar aparece. Enquanto o aparelho responde, o cartão fica vazio, sem texto de "sem rotina". |
+
+**Passos:**
+1. Com uma rotina salva, abrir a TL-21 e conferir o cartão.
+2. Sem rotina, abrir a TL-21 e conferir o convite.
+3. Abrir a TL-21 logo após o carregamento e conferir o cartão vazio por um instante.
+
+### TC-25.1 — Salvar um contato só com o nome.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-22 (sem Feature própria no Azure) |
+| Critério | TL-27; D-19, D-21 |
+| Tipo | Positivo |
+| Objetivo | Confirmar que o contato guarda só o nome. |
+| Preparação | Aba Contatos aberta, sem contatos. |
+| Inputs | Nome "Mãe". |
+| Resultado esperado | "Mãe" aparece na lista, sem outros dados (telefone, e-mail, foto ou endereço). |
+
+**Passos:**
+1. Abrir a aba Contatos.
+2. Digitar "Mãe" e tocar em "Salvar contato".
+3. Conferir a lista e que não há outros campos.
+
+### TC-25.2 — Recusar o 11º contato.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-22 (sem Feature própria no Azure) |
+| Critério | TL-27 (limite de 10 nomes) |
+| Tipo | Negativo |
+| Objetivo | Garantir o limite de 10 contatos. |
+| Preparação | 10 contatos já salvos. |
+| Inputs | Um 11º nome. |
+| Resultado esperado | O 11º contato não é salvo. A mensagem exibida para o limite é `[EM ABERTO]`; conferir o texto que estiver no app. |
+
+**Passos:**
+1. Com 10 contatos, tentar salvar um 11º.
+2. Conferir que o contato não entrou na lista.
+
+### TC-25.3 — Não enviar nada ao salvar ou listar contatos.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-22 (sem Feature própria no Azure) |
+| Critério | TL-27; D-19 |
+| Tipo | Negativo |
+| Objetivo | Garantir que a lista de contatos não envia nada sozinha. |
+| Preparação | Ferramenta para observar o tráfego de rede. |
+| Inputs | Salvar e listar contatos. |
+| Resultado esperado | Nenhuma chamada de rede leva nomes ou localização ao servidor. |
+
+**Passos:**
+1. Salvar um contato e abrir a lista.
+2. Observar o tráfego de rede.
+
+### TC-25.4 — Apagar um contato.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-22 (sem Feature própria no Azure) |
+| Critério | TL-27 |
+| Tipo | Positivo |
+| Objetivo | Confirmar que um contato pode ser apagado. |
+| Preparação | Um contato salvo. |
+| Inputs | Toque no ícone de apagar do contato. |
+| Resultado esperado | O contato sai da lista e do aparelho. |
+
+**Passos:**
+1. Tocar no ícone de apagar.
+2. Conferir que o contato saiu da lista.
+
+### TC-26.1 — Recusar o 11º lugar salvo.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-13 (sem Feature própria no Azure) |
+| Critério | FL-11 nota D-29 (até 10 lugares) |
+| Tipo | Negativo |
+| Objetivo | Garantir o limite de 10 lugares salvos. |
+| Preparação | 10 lugares salvos. |
+| Inputs | Um 11º lugar pela TL-05. |
+| Resultado esperado | O 11º lugar não é salvo, e o app informa o limite. |
+
+**Passos:**
+1. Com 10 lugares, abrir a TL-05 e tentar salvar um 11º.
+2. Conferir a mensagem e que o lugar não entrou na lista.
+
+### TC-26.2 — Usar um lugar salvo como origem ou destino.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-13 (sem Feature própria no Azure) |
+| Critério | TL-04 (cartões de lugares salvos) |
+| Tipo | Positivo |
+| Objetivo | Confirmar que um lugar salvo preenche o campo de origem ou de destino. |
+| Preparação | Dois lugares salvos (ex.: Casa e Faculdade). |
+| Inputs | Toque no cartão "Casa" para origem e no cartão "Faculdade" para destino. |
+| Resultado esperado | O campo recebe o nome do lugar, e o mapa centraliza nele. |
+
+**Passos:**
+1. Na TL-04, tocar no cartão "Casa".
+2. Conferir o campo de origem e o mapa.
+3. Tocar no cartão "Faculdade" e conferir o destino.
+
+### TC-26.3 — Enviar só o texto digitado ao serviço de busca, depois de confirmar.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-13 (sem Feature própria no Azure) |
+| Critério | FL-05 regras; D-29 |
+| Tipo | Negativo |
+| Objetivo | Garantir que a busca por texto não envia origem, destino nem localização. |
+| Preparação | Ferramenta para observar o tráfego de rede; TL-05 aberta. |
+| Inputs | Texto "Av. Paulista" digitado na busca. |
+| Resultado esperado | Só o texto digitado sai do aparelho, e só depois da confirmação da busca. Nenhuma localização ou ponto anterior é enviado. |
+
+**Passos:**
+1. Digitar "Av. Paulista" na busca da TL-05.
+2. Antes de confirmar, observar o tráfego: nada deve sair.
+3. Confirmar a busca e observar o tráfego: só o texto deve sair.
+
+### TC-26.4 — Escolher o ponto no mapa e ver o endereço no painel.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-13 (sem Feature própria no Azure) |
+| Critério | FL-05 regras; D-30 |
+| Tipo | Positivo |
+| Objetivo | Confirmar que tocar no mapa preenche o ponto com o endereço. |
+| Preparação | TL-05 aberta, sem marcador. |
+| Inputs | Toque em um ponto do mapa. |
+| Resultado esperado | O marcador aparece no ponto; o painel mostra o endereço (até duas linhas) e o campo pode ser confirmado. |
+
+**Passos:**
+1. Tocar em um ponto do mapa.
+2. Conferir o marcador e o endereço no painel.
+3. Confirmar o ponto e conferir o campo preenchido.
+
+### TC-26.5 — Não travar quando o endereço demora ou falha.
+
+| Campo | Conteúdo |
+|---|---|
+| Feature | FN-13 (sem Feature própria no Azure) |
+| Critério | FL-05 regras; D-30 |
+| Tipo | Negativo |
+| Objetivo | Garantir que a falha no endereço não impede confirmar o ponto. |
+| Preparação | Serviço de endereço indisponível ou lento (sem rede, ou modo de teste). |
+| Inputs | Toque em um ponto do mapa. |
+| Resultado esperado | O ponto continua confirmável, sem endereço; uma resposta antiga, que chegue depois de outro toque, é descartada. |
+
+**Passos:**
+1. Desligar a rede ou usar o modo de teste de falha.
+2. Tocar em um ponto do mapa.
+3. Conferir que o ponto pode ser confirmado sem endereço.
 
 ### TC-RNF-01 — Varrer todos os textos do app, do pitch e dos slides em busca de termos proibidos.
 

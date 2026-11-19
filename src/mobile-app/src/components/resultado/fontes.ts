@@ -1,5 +1,6 @@
 import type { FocoRota, RespostaConsulta } from '@/services';
 import { textos } from '@/textos';
+import { hipotesesPrioridade } from '@/textos/hipotesesPrioridade';
 
 /**
  * "Só roteamento" (B-08): rotas reais ou de exemplo SEM exposição validada. Vale quando QUALQUER
@@ -26,6 +27,8 @@ export function coberturaPorProxy(resposta: Pick<RespostaConsulta, 'fontes' | 'c
 /** Texto próprio de cada caso da comparação (B-53); `null` quando o caso não pede texto (CONCLUSIVO, só roteamento, sem rotas, opção única). */
 export function textoCaso(resposta: Pick<RespostaConsulta, 'fontes' | 'caso' | 'rotas'>): string | null {
   if (soRoteamento(resposta) || resposta.rotas.length < 2 || resposta.caso === 'SEM_COMPARACAO') return null; // opção única: `soUma`
+  // B-59 (D-33): há destaque com diferença pequena: a frase acompanha o destaque em vez de negar a comparação
+  if (resposta.rotas.some((r) => r.destaqueExposicao?.confianca === 'pequena')) return hipotesesPrioridade.casoPequena;
   switch (resposta.caso) {
     case 'SEM_DIFERENCA': return textos.casosResultado.semDiferenca;
     case 'MISTOS': return textos.casosResultado.mistos;

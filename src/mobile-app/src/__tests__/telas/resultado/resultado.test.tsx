@@ -32,7 +32,8 @@ describe('TL-07 Resultado', () => {
     expect(screen.getByText(hipotesesResultado.dicaSelecao)).toBeTruthy();
     const horaHome = new Date('2026-11-13T23:00:00-03:00').toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     expect(screen.getByText(hipotesesResultado.saida(horaHome))).toBeTruthy();
-    expect(screen.getAllByText(textos.resultado.saidaPrevista(formatarHora(conclusivo.rotas[0].saidaPrevista))).length).toBeGreaterThan(0);
+    // Item 6 (T25-B): o horário de saída saiu do cartão; a hora fica só no cabeçalho da folha.
+    expect(screen.queryAllByText(textos.resultado.saidaPrevista(formatarHora(conclusivo.rotas[0].saidaPrevista)))).toHaveLength(0);
     await tela.unmount();
     await render(<Resultado />);
     expect(screen.queryByText(hipotesesResultado.dicaSelecao)).toBeNull();
@@ -49,16 +50,22 @@ describe('TL-07 Resultado', () => {
   it('mostra tempo, trocas, caminhada e foco só com a folha recolhida e acompanha a seleção', async () => {
     consulta(conclusivo);
     const tela = await render(<Resultado />);
+    // Item 6: a folha abre no nível médio, então o resumo só aparece depois de recolher (nível 0).
+    expect(screen.queryByTestId('resumo-recolhido')).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: textos.resultado.expandir }));
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesEstadosResultado.recolher }));
     const resumo = screen.getByTestId('resumo-recolhido');
     expect(resumo.props.children).toBe('40 min · 1 troca · 1,0 km a pé · Menor exposição estimada');
     expect(resumo.props.accessibilityLabel).toBe(resumo.props.children);
     mockConsulta.mockReturnValue({ ...(mockConsulta.mock.results[0].value as ValorConsulta), rotaSelecionadaId: conclusivo.rotas[1].id } as ValorConsulta);
     await tela.rerender(<Resultado />);
     expect(screen.getByTestId('resumo-recolhido').props.children).toContain('Menor tempo');
+    // Nível 0 → 1 (meia) → 2 (cheia, rótulo "Recolher lista") → 0: o resumo só volta no nível 0.
     await fireEvent.press(screen.getByRole('button', { name: textos.resultado.expandir }));
     expect(screen.queryByTestId('resumo-recolhido')).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: textos.resultado.expandir }));
-    expect(screen.queryByTestId('resumo-recolhido')).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesEstadosResultado.recolher }));
+    expect(screen.queryByTestId('resumo-recolhido')).not.toBeNull();
   });
   it.each([sem_diferenca, mistos])('sem diferença e mistos não criam foco de exposição', async resposta => {
     consulta(resposta); await render(<Resultado />);
@@ -114,39 +121,38 @@ describe('TL-07 Resultado', () => {
     await fireEvent.press(screen.getByRole('button', { name: hipotesesResultado.detalhes(2) }));
     expect(mockPush).toHaveBeenCalledWith({ pathname: '/resultado/[rotaId]', params: { rotaId: conclusivo.rotas[1].id } });
   });
-  it('alça alterna recolhida, meia, cheia e recolhida, com rótulos acessíveis', async () => {
+  it('alça abre na meia altura, alterna meia, cheia e recolhida, com rótulos acessíveis', async () => {
     consulta(conclusivo); await render(<Resultado />);
     const lista = screen.getByTestId('lista-resultado');
     const altura = () => StyleSheet.flatten(screen.getByTestId('painel-resultado').props.style).height;
-    const recolhida = altura();
+    const textoAlca = () => screen.getByTestId('alca-resultado').props.accessibilityValue.text;
     expect(within(lista).getByRole('button', { name: /Opção 1 de 3/ })).toBeTruthy();
     expect(within(lista).queryByRole('button', { name: textos.sobre.titulo })).toBeNull();
-    expect(within(lista).getByRole('button', { name: textos.resultado.planejarVolta })).toBeTruthy();
-    expect(screen.getByTestId('alca-resultado').props.accessibilityValue.text).toBe(hipotesesResultado.alturas[0]);
-    await fireEvent.press(screen.getByRole('button', { name: textos.resultado.expandir }));
+    // Item 6: planejar a volta saiu do resultado.
+    expect(within(lista).queryByRole('button', { name: textos.resultado.planejarVolta })).toBeNull();
+    // Item 6: a folha começa no nível médio (alturas[1]).
+    expect(textoAlca()).toBe(hipotesesResultado.alturas[1]);
     const meia = altura();
-    expect(meia).toBeGreaterThan(recolhida);
-    expect(screen.getByTestId('alca-resultado').props.accessibilityValue.text).toBe(hipotesesResultado.alturas[1]);
     await fireEvent.press(screen.getByRole('button', { name: textos.resultado.expandir }));
-    expect(altura()).toBeGreaterThan(meia);
-    expect(screen.getByTestId('alca-resultado').props.accessibilityValue.text).toBe(hipotesesResultado.alturas[2]);
+    const cheia = altura();
+    expect(cheia).toBeGreaterThan(meia);
+    expect(textoAlca()).toBe(hipotesesResultado.alturas[2]);
     await fireEvent.press(screen.getByRole('button', { name: hipotesesEstadosResultado.recolher }));
-    expect(altura()).toBe(recolhida);
+    expect(altura()).toBeLessThan(meia);
+    expect(textoAlca()).toBe(hipotesesResultado.alturas[0]);
   });
-  it('abre dados e planeja a volta a partir da ida', async () => {
+  it('abre os dados e não oferece planejar a volta no resultado', async () => {
     consulta(conclusivo); await render(<Resultado />);
     await fireEvent.press(screen.getByRole('button', { name: textos.sobre.titulo }));
     expect(mockPush).toHaveBeenCalledWith('/sobre-os-dados');
-    await fireEvent.press(screen.getByRole('button', { name: textos.resultado.planejarVolta }));
-    expect(planejarVolta).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith('/planejar?sentido=volta');
+    expect(screen.queryByRole('button', { name: textos.resultado.planejarVolta })).toBeNull();
+    expect(planejarVolta).not.toHaveBeenCalled();
   });
-  it('planejar a ida usa sentido ida', async () => {
+  it('não oferece planejar a ida no resultado de volta', async () => {
     consulta(conclusivo, 'volta'); await render(<Resultado />);
-    await fireEvent.press(screen.getByRole('button', { name: textos.resultado.planejarIda }));
-    expect(mockPush).toHaveBeenCalledWith('/planejar?sentido=ida');
-    expect(inverterPontos).toHaveBeenCalledTimes(1);
-    expect(definirSentido).toHaveBeenCalledWith('ida');
+    expect(screen.queryByRole('button', { name: textos.resultado.planejarIda })).toBeNull();
+    expect(inverterPontos).not.toHaveBeenCalled();
+    expect(definirSentido).not.toHaveBeenCalled();
   });
   it('sem resposta redireciona', async () => {
     consulta(null); await render(<Resultado />);

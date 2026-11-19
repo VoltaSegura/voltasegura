@@ -1,5 +1,7 @@
 # TL-16 · Rotina da semana (lista)
 
+> **Revisão D-36 (19/11/2026):** a lista não mudou de conteúdo; a entrada também chega pela home do VoltaSegura+ (TL-21). Visual revisto junto com a aba Plus.
+>
 > **Revisão D-31 (15/11/2026):** tela nova do VoltaSegura+ em versão mínima. `[DECISÃO]` rotina só no aparelho, lembrete local por horário, recurso em validação e sem preço. Textos `[HIPÓTESE]`.
 
 - **Status:** rascunho (nova, 15/11/2026; aguarda revisão do Lucas) · **Depende do tempo (D-31)** · **Rota Expo Router:** `/(app)/rotina` (arquivo `rotina.tsx`; `?aviso=sem_permissao|erro_aviso` quando volta da TL-17)

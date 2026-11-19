@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
-import { brilho, esp, raio, tipo, toque } from '@/theme/tokens';
+import { esp, raio, tipo, toque } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
 
 import { Botao } from './Botao';
@@ -38,6 +38,8 @@ export function CampoTexto({
   const [focado, setFocado] = useState(false);
   const [visivel, setVisivel] = useState(false);
 
+  // O foco aparece só na borda. Não alternar sombra/elevation com o foco: no Android (New Architecture)
+  // isso recria a view nativa da caixa, o TextInput perde o foco e o teclado fecha na hora.
   const corBorda = erro ? cores.erro : focado ? cores.acaoLink : cores.borda;
   const hint = [ajuda, erro].filter(Boolean).join(' ') || undefined;
 
@@ -52,7 +54,6 @@ export function CampoTexto({
             borderColor: corBorda,
             borderWidth: focado || erro ? medidas.bordaFoco : medidas.borda,
           },
-          focado && !erro && brilho(cores.luz, 0.3),
           desabilitado && { opacity: medidas.opacidadeDesabilitado },
         ]}
       >
@@ -104,5 +105,5 @@ export function CampoTexto({
 const estilos = StyleSheet.create({
   base: { gap: esp[1] },
   caixa: { flexDirection: 'row', alignItems: 'center', borderRadius: raio.medio, minHeight: toque.minimo },
-  entrada: { flex: 1, minHeight: toque.minimo, paddingHorizontal: esp[3], paddingVertical: esp[2] },
+  entrada: { flex: 1, minWidth: 0, minHeight: toque.minimo, paddingHorizontal: esp[3], paddingVertical: esp[2] },
 });

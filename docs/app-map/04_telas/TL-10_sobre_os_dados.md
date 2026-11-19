@@ -1,10 +1,17 @@
 # TL-10 · Sobre os dados
 
+> **Revisão de 19/11/2026 — redesign T25 (propagação leve):** `[DECISÃO]` cabeçalho do app (`Cabecalho`, título + "Voltar" à esquerda) no lugar do cabeçalho nativo do Stack, nas duas variantes (com e sem exposição). Textos, dados e regras não mudaram.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/sobre-os-dados`
 - **Objetivo:** mostrar a confiança dos dados, **separada** da exposição estimada: fonte, período, atualização, cobertura por rota, situação, limitações e créditos.
 - **US/AC e funcionalidades cobertas:** US-14 AC1–AC5; US-16 AC1–AC2; US-18 AC3 · FN-11 · decisões D-09, D-11 · **RNF aplicáveis:** RNF-03, RNF-04, RNF-07
 - **Entradas:** linha fixa "Dados: …" (TL-07, TL-08), link na TL-09.
 - **Saídas:** TL-11 (dados considerados); voltar.
+
+
+## Revisão de 17/11/2026 — B-59 · Destaque com diferença pequena (D-33)
+
+Quando a rota em destaque tem confiança `pequena`, o indicativo de "Sobre os dados" diz que ela tem menos registros perto dos trechos a pé entre as alternativas avaliadas, com diferença pequena (texto `[HIPÓTESE]` em `src/textos/hipotesesPrioridade.ts`), em vez do texto do caso (mistos, sem diferença, insuficiente). O caso estatístico continua disponível nos números e nas limitações.
 
 ## Revisão de 16/11/2026 — B-08 · Só roteamento
 

@@ -1,6 +1,6 @@
 import type { EntradaConsulta, ServicoConsulta } from './consulta';
 import {
-  comExposicao, ehCookieSessaoNeonAuth, mesclarExposicao, montarEntradaRpc, TEMPO_LIMITE_EXPOSICAO_MS, ultimoMotivoExposicao,
+  agruparPorCaminhada, comExposicao, ehCookieSessaoNeonAuth, mesclarExposicao, montarEntradaRpc, TEMPO_LIMITE_EXPOSICAO_MS, ultimoMotivoExposicao,
   type MotivoExposicao,
 } from './exposicao';
 import { codificar } from './geometria';
@@ -11,6 +11,8 @@ import type { RespostaConsulta } from './tipos';
 const A = { lat: -23.5, lon: -46.6 };
 const B = { lat: -23.501, lon: -46.601 };
 const C = { lat: -23.505, lon: -46.61 };
+/** Outro ponto de embarque: a 2ª rota caminha por outro lugar (rotas com a mesma caminhada são agrupadas, B-58). */
+const B2 = { lat: -23.5015, lon: -46.6003 };
 const pe = (de: typeof A, ate: typeof A, inicio: string) => ({
   mode: 'WALK', distance: 700, duration: 600,
   start: { scheduledTime: inicio }, end: { scheduledTime: inicio },
@@ -28,7 +30,7 @@ const no = (dur: number, legs: object[]) => ({
 });
 const otp: RespostaOtp2 = { data: { planConnection: { edges: [
   no(2400, [pe(A, B, '2026-11-17T23:00:00-03:00'), onibus]),
-  no(2100, [pe(A, B, '2026-11-18T00:30:00-03:00'), onibus]),
+  no(2100, [pe(A, B2, '2026-11-18T00:30:00-03:00'), onibus]),
 ] } } };
 
 const COOKIE = '__Secure-neon-auth.session_token=abc123.assinatura%2Fxyz%3D';
@@ -102,6 +104,81 @@ describe('montarEntradaRpc', () => {
     const semPe = { ...base.rotas[0], trechos: base.rotas[0].trechos.filter((t) => t.modo !== 'A_PE') };
     expect(montarEntradaRpc([semPe])![0].trechos_a_pe).toEqual([]);
     expect(montarEntradaRpc(Array(6).fill(base.rotas[0]))).toBeNull();
+  });
+
+  it('B-57: remove vértices repetidos do OTP2 (o PostGIS os descarta e a polyline deixaria de ser canônica)', () => {
+    const comRepetido = { ...base.rotas[0], trechos: base.rotas[0].trechos.map((t) =>
+      t.modo === 'A_PE' ? { ...t, geometria: codificar([A, B, B, C]) } : t) };
+    expect(montarEntradaRpc([comRepetido])![0].trechos_a_pe[0].geometria).toBe(codificar([A, B, C]));
+  });
+
+  it('B-57: trecho a pé de comprimento zero fica de fora; geometria ilegível continua barrando o envio', () => {
+    const parado = { ...base.rotas[0], trechos: base.rotas[0].trechos.map((t) =>
+      t.modo === 'A_PE' ? { ...t, geometria: codificar([A, A]) } : t) };
+    expect(montarEntradaRpc([parado])![0].trechos_a_pe).toEqual([]);
+    const ilegivel = { ...base.rotas[0], trechos: base.rotas[0].trechos.map((t) =>
+      t.modo === 'A_PE' ? { ...t, geometria: '' } : t) };
+    expect(montarEntradaRpc([ilegivel])).toBeNull();
+  });
+});
+
+describe('B-58: rotas com a mesma caminhada (gêmeas) e ordem da D-23', () => {
+  // r3: mesma caminhada da r1 (muda só a condução), mais lenta
+  const gemea = (de: RespostaConsulta['rotas'][number], id: string, duracaoMin: number) => ({
+    ...de, id, duracaoMin, focos: [] as RespostaConsulta['rotas'][number]['focos'],
+    trechos: de.trechos.map((t) => ({ ...t, id: t.id.replace(de.id, id) })),
+  });
+  const r1 = () => base.rotas.find((r) => r.id === 'r1')!;
+  const com3 = (r3Duracao: number): RespostaConsulta => ({ ...base, rotas: [...base.rotas, gemea(r1(), 'r3', r3Duracao)] });
+
+  it('agrupa gêmeas e usa a mais rápida como representante', () => {
+    const lenta = agruparPorCaminhada(com3(r1().duracaoMin + 10).rotas);
+    expect(lenta.representantes.map((r) => r.id).sort()).toEqual(['r1', 'r2']);
+    expect(lenta.representanteDe.get('r3')).toBe('r1');
+    const rapida = agruparPorCaminhada(com3(r1().duracaoMin - 10).rotas);
+    expect(rapida.representantes.map((r) => r.id).sort()).toEqual(['r2', 'r3']);
+    expect(rapida.representanteDe.get('r1')).toBe('r3');
+  });
+
+  function servicoCom(resposta: RespostaConsulta, vencedora: string) {
+    const chamadas: string[] = [];
+    const fetchImpl = (async (url: string, init: RequestInit) => {
+      if (url.endsWith('/token')) return resp(true, 200, { token: 'jwt' });
+      chamadas.push(String(init.body));
+      const enviados = (JSON.parse(String(init.body)).p_rotas as { id: string }[]).map((r) => r.id);
+      const reps = resposta.rotas.filter((r) => enviados.includes(r.id));
+      return resp(true, 200, respostaRpc({ ...resposta, rotas: reps }, 'CONCLUSIVO', vencedora));
+    }) as unknown as typeof fetch;
+    const servico = comExposicao({ consultarRotas: async () => resposta }, {
+      urlDataApi: 'https://dados.exemplo.test/rest/v1', urlNeonAuth: 'https://auth.exemplo.test',
+      origemNeonAuth: 'http://localhost:8081', fetchImpl, obterSessao: () => COOKIE,
+    });
+    return { servico, chamadas };
+  }
+
+  it('envia cada caminhada uma vez e copia a exposição do representante para a gêmea', async () => {
+    const { servico, chamadas } = servicoCom(com3(r1().duracaoMin + 10), 'r2');
+    const r = await servico.consultarRotas(entrada);
+    expect(JSON.parse(chamadas[0]).p_rotas).toHaveLength(2);
+    const porId = (id: string) => r.rotas.find((x) => x.id === id)!;
+    expect(porId('r3').exposicao).toEqual(porId('r1').exposicao);
+    expect(porId('r3').exposicao.registros).not.toBeNull();
+  });
+
+  it('CONCLUSIVO: a vencedora vem primeiro (D-23) e só ela tem o foco', async () => {
+    const { servico } = servicoCom(com3(r1().duracaoMin + 10), 'r2');
+    const r = await servico.consultarRotas(entrada);
+    expect(r.caso).toBe('CONCLUSIVO');
+    expect(r.rotas[0].id).toBe('r2');
+    expect(r.rotas.filter((x) => x.focos.includes('MENOR_EXPOSICAO')).map((x) => x.id)).toEqual(['r2']);
+  });
+
+  it('CONCLUSIVO do grupo gêmeo: o destaque vai só para a mais rápida do grupo; a outra fica sem selo', async () => {
+    const { servico } = servicoCom(com3(r1().duracaoMin + 10), 'r1');
+    const r = await servico.consultarRotas(entrada);
+    expect(r.rotas[0].id).toBe('r1');
+    expect(r.rotas.find((x) => x.id === 'r3')!.focos).not.toContain('MENOR_EXPOSICAO');
+    expect(r.rotas.filter((x) => x.focos.includes('MENOR_EXPOSICAO'))).toHaveLength(1);
   });
 });
 

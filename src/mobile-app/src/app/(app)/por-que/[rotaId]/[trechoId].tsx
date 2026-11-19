@@ -1,11 +1,12 @@
 import { Redirect, Stack, router, useLocalSearchParams } from 'expo-router';
 
-import { Botao, Link, SeloExemplo, Tela, Texto } from '@/components';
-import { Indicativo, RotuloFoco, TabelaNumeros, coberturaPorProxy, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
+import { Cabecalho, Link, SeloExemplo, Tela, Texto } from '@/components';
+import { BarraCobertura, Indicativo, RotuloFoco, TabelaNumeros, coberturaPorProxy, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, RespostaConsulta, Rota } from '@/services';
 import { textos } from '@/textos';
 import { hipotesesDetalhes as h } from '@/textos/hipotesesDetalhes';
+import { hipotesesPrioridade } from '@/textos/hipotesesPrioridade';
 
 const numero = (valor: number) => valor.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 const distancia = (km: number) => km < 1 ? `${numero(km * 1000)} m` : `${numero(km)} km`;
@@ -18,6 +19,13 @@ const focos: Record<FocoRota, string> = {
 
 function indicativo(resposta: RespostaConsulta, rota: Rota): string {
   if (resposta.rotas.length === 1 || resposta.caso === 'SEM_COMPARACAO') return textos.porQue.indicativo.semComparacao;
+  // B-59 (D-33): destaque com diferença pequena (menos registros, sem diferença estatística)
+  const destaque = resposta.rotas.find((item) => item.destaqueExposicao?.confianca === 'pequena');
+  if (destaque) {
+    return destaque.id === rota.id
+      ? hipotesesPrioridade.indicativoComFocoPequena
+      : hipotesesPrioridade.indicativoSemFocoPequena(h.opcao(resposta.rotas.indexOf(destaque) + 1));
+  }
   switch (resposta.caso) {
     case 'CONCLUSIVO': return rota.focos.includes('MENOR_EXPOSICAO')
       ? textos.porQue.indicativo.conclusivoComFoco
@@ -44,7 +52,8 @@ export default function PorQueEstaRota() {
   if (!rota || !trecho) return <Redirect href="/planejar" />;
 
   const semExposicao = soRoteamento(resposta);
-  const vencedor = resposta.caso === 'CONCLUSIVO' && !rota.focos.includes('MENOR_EXPOSICAO')
+  const comDestaque = resposta.caso === 'CONCLUSIVO' || resposta.rotas.some((item) => item.destaqueExposicao);
+  const vencedor = comDestaque && !rota.focos.includes('MENOR_EXPOSICAO')
     ? resposta.rotas.find((item) => item.focos.includes('MENOR_EXPOSICAO')) : null;
   const faixa = trecho.faixaDoDia ? textos.modos.faixa[trecho.faixaDoDia.toLowerCase() as keyof typeof textos.modos.faixa] : null;
   const exposicao = rota.exposicao;
@@ -54,11 +63,13 @@ export default function PorQueEstaRota() {
     { rotulo: textos.porQue.porKm, valor: exposicao.kmAPe === 0 ? textos.porQue.naoAplicavel : exposicao.registrosPorKm === null ? null : numero(exposicao.registrosPorKm) },
   ];
 
+  // Cabeçalho do mockup 05: título à esquerda, "Fechar" à direita (sem cabeçalho nativo).
+  const cabecalho = <Cabecalho titulo={textos.porQue.titulo} acaoDireita={{ rotulo: h.fecharExplicacao, onPress: () => router.back() }} />;
+
   if (semExposicao) {
     // Acesso direto (link ou rota salva): sem exposição estimada não há registros, cobertura nem foco para explicar.
-    return <Tela>
-      <Stack.Screen options={{ title: textos.porQue.titulo }} />
-      <Botao variante="texto" rotulo={h.fecharExplicacao} onPress={() => router.back()} />
+    return <Tela topo={cabecalho}>
+      <Stack.Screen options={{ title: textos.porQue.titulo, headerShown: false }} />
       <Texto accessibilityRole="header" variante="secao">{textos.porQue.trecho({ i: trecho.ordem, distancia: distancia(trecho.distanciaKm) })}</Texto>
       {selosExemplo(resposta).roteamento && <SeloExemplo />}
       <Indicativo texto={textos.soRoteamento.porQue} />
@@ -66,9 +77,8 @@ export default function PorQueEstaRota() {
     </Tela>;
   }
 
-  return <Tela>
-    <Stack.Screen options={{ title: textos.porQue.titulo }} />
-    <Botao variante="texto" rotulo={h.fecharExplicacao} onPress={() => router.back()} />
+  return <Tela topo={cabecalho}>
+    <Stack.Screen options={{ title: textos.porQue.titulo, headerShown: false }} />
     <Texto accessibilityRole="header" variante="secao">{textos.porQue.trecho({ i: trecho.ordem, distancia: distancia(trecho.distanciaKm) })}</Texto>
     {focosVisiveis(rota.focos, resposta).map((foco) => <RotuloFoco key={foco} foco={foco} rotulo={focos[foco]} />)}
     {(selosExemplo(resposta).roteamento || selosExemplo(resposta).exposicao) && <SeloExemplo />}
@@ -82,6 +92,7 @@ export default function PorQueEstaRota() {
     </>}
     <Texto variante="secao" accessibilityRole="header">{h.qualidadeDados}</Texto>
     <TabelaNumeros linhas={[{ rotulo: textos.porQue.cobertura, valor: exposicao.cobertura === null ? null : `${Math.round(exposicao.cobertura * 100)}%` }]} dadosInsuficientes={textos.dadosConsiderados.insuficiente} />
+    {exposicao.cobertura !== null && <BarraCobertura rotulo={textos.porQue.cobertura} valor={exposicao.cobertura} />}
     {coberturaPorProxy(resposta) && <Texto testID="aviso-cobertura-proxy" cor="texto2">{textos.coberturaProxy.aviso}</Texto>}
     {resposta.caso === 'INSUFICIENTE' && <Texto cor="texto2">{textos.porQue.semOrdenar}</Texto>}
     <Texto cor="texto2">{textos.porQue.limitacao}</Texto>

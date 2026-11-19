@@ -8,6 +8,7 @@ import { Botao, SeloExemplo, Texto } from '@/components';
 import { Entrada, NumeroContando, haptica } from '@/components/movimento';
 import type { FocoRota, ModoTrecho, RespostaConsulta, Rota, Trecho } from '@/services';
 import { textos } from '@/textos';
+import { hipotesesPrioridade } from '@/textos/hipotesesPrioridade';
 import { hipotesesResultado } from '@/textos/hipotesesResultado';
 import { brilho, esp, raio, toque } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
@@ -78,7 +79,11 @@ export function CardRota({ rota, indice, total, selecionada, exemplo, semExposic
   const { cores } = useTema();
   const focos = opcaoUnica ? [] : semExposicao ? rota.focos.filter(f => f !== 'MENOR_EXPOSICAO') : rota.focos;
   const modos = rota.trechos.map(t => t.modo === 'A_PE' ? rotulos.trechoAPe(t.duracaoMin) : rotulos.linha(t)).join(', ');
-  const rotuloCard = rotulos.card({ ...rota, focos }, indice, total, modos).replace('Toque duas vezes para ver os detalhes.', hipotesesResultado.rotuloSelecao);
+  const rotuloBase = rotulos.card({ ...rota, focos }, indice, total, modos).replace('Toque duas vezes para ver os detalhes.', hipotesesResultado.rotuloSelecao);
+  // B-58: a variação de caminhada se apresenta como tal (texto neutro, sem juízo sobre o caminho)
+  const rotuloVariante = rota.variante?.origem === 'dados' ? hipotesesPrioridade.rotaDosDados : rota.variante ? hipotesesResultado.varianteCaminhada : null;
+  const confianca = !semExposicao && !opcaoUnica && rota.destaqueExposicao ? hipotesesPrioridade.confianca[rota.destaqueExposicao.confianca] : null;
+  const rotuloCard = [rotuloVariante, confianca, rotuloBase].filter(Boolean).join('. ');
   // A opção selecionada é a "acesa": número enorme, fio dourado e brilho. As demais ficam quietas (uma coisa acesa por tela).
   return <View style={[estilos.card, selecionada
     ? [estilos.cardAceso, { backgroundColor: cores.superficie2, borderColor: cores.acao }, brilho(cores.luz, 0.28)]
@@ -87,9 +92,12 @@ export function CardRota({ rota, indice, total, selecionada, exemplo, semExposic
       accessibilityLabel={rotuloCard} style={estilos.cardSelecao}>
     <View style={estilos.topo}>{focos.map(f => <RotuloFoco key={f} foco={f} rotulo={rotulos.focos[f]} />)}
       {selecionada && <Texto variante="rotulo">{rotulos.selecionada}</Texto>}{exemplo && <SeloExemplo />}</View>
+    {confianca && <Texto variante="apoio" testID="confianca-destaque">{confianca}</Texto>}
+    {rotuloVariante && <Texto variante="apoio" cor="texto2" testID="rotulo-variante">{rotuloVariante}</Texto>}
     <View style={estilos.cardMeio}>
-      <NumeroContando valor={rota.duracaoMin} formatar={rotulos.duracao} variante={selecionada ? 'numero' : 'duracao'} style={estilos.duracao} />
-      <View style={estilos.metadados}><Texto variante="apoio">{rotulos.caminhada(rota.caminhadaKm)}</Texto><Texto variante="apoio">{rotulos.trocas(rota.trocas)}</Texto><Texto variante="apoio">{rotulos.saida(rota.saidaPrevista)}</Texto></View></View>
+      {/* Item 6 (T25-B): linha densa "duração · km a pé · trocas"; o horário de saída sai do cartão (fica na folha e em "Sobre os dados"). */}
+      <NumeroContando valor={rota.duracaoMin} formatar={rotulos.duracao} variante="duracao" style={estilos.duracao} />
+      <View style={estilos.metadados}><Texto variante="apoio">{rotulos.caminhada(rota.caminhadaKm)}</Texto><Texto variante="apoio">{rotulos.trocas(rota.trocas)}</Texto></View></View>
       <SequenciaModos trechos={rota.trechos} rotulos={rotulos.modos} rotuloAPe={rotulos.trechoAPe} rotuloLinha={rotulos.linha} rotuloAcessivel={modos} acesa={selecionada} />
     </Pressable>
     <Pressable onPress={onAbrirDetalhes} accessibilityRole="button" accessibilityLabel={hipotesesResultado.detalhes(indice)}
@@ -109,6 +117,34 @@ export function LinhaSobreOsDados({ texto, rotuloAcessivel, onPress, indisponive
     <Texto variante="apoio" cor={indisponivel ? 'texto2' : 'dado'} style={estilos.flex}>{texto}</Texto>
     <Texto cor="dado" accessible={false}>›</Texto>
   </Pressable>;
+}
+
+/**
+ * Cartão "Dados insuficientes" (mockup 04): aparece no topo da lista quando a comparação é insuficiente.
+ * O texto vem de quem chama (o mesmo do caso, para não haver duas versões); as ações são só de navegação.
+ */
+export function CartaoInsuficiente({ titulo, texto, rotuloEntender, rotuloOutroHorario, onEntender, onOutroHorario }: {
+  titulo: string; texto: string; rotuloEntender: string; rotuloOutroHorario: string; onEntender: () => void; onOutroHorario: () => void;
+}) {
+  const { cores } = useTema();
+  return <View testID="cartao-insuficiente" style={[estilos.cartaoInsuf, { backgroundColor: cores.superficie2 }]}>
+    <Texto variante="secao" accessibilityRole="header">{titulo}</Texto>
+    <Texto testID="texto-caso" variante="apoio" cor="texto2">{texto}</Texto>
+    <View style={estilos.cartaoAcoes}>
+      <Botao variante="secundario" rotulo={rotuloEntender} onPress={onEntender} />
+      <Botao variante="texto" rotulo={rotuloOutroHorario} onPress={onOutroHorario} />
+    </View>
+  </View>;
+}
+
+/** Barra de cobertura (0 a 1) da opção: a cor só enche a proporção; o número escrito é o que vale. */
+export function BarraCobertura({ rotulo, valor }: { rotulo: string; valor: number }) {
+  const { cores } = useTema();
+  const pct = Math.round(Math.min(1, Math.max(0, valor)) * 100);
+  return <View accessible accessibilityRole="progressbar" accessibilityLabel={`${rotulo}: ${pct}%`}
+    accessibilityValue={{ min: 0, max: 100, now: pct }} style={[estilos.barraTrilho, { backgroundColor: cores.superficie2 }]}>
+    <View style={[estilos.barraPreench, { width: `${pct}%`, backgroundColor: cores.texto }]} />
+  </View>;
 }
 
 export function Indicativo({ texto }: { texto: string }) {
@@ -241,8 +277,8 @@ const estilos = StyleSheet.create({
   cabecalho: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: esp[4], paddingBottom: esp[2], gap: esp[2], flexWrap: 'wrap' },
   lista: { flex: 1, minHeight: 0 },
   conteudoLista: { flexGrow: 1 },
-  card: { padding: esp[4], gap: esp[3], minHeight: toque.minimo },
-  cardAceso: { margin: esp[2], borderRadius: raio.grande, borderWidth: 1.5, paddingVertical: esp[6] },
+  card: { padding: esp[3], gap: esp[2], minHeight: toque.minimo },
+  cardAceso: { margin: esp[2], borderRadius: raio.grande, borderWidth: 1.5, paddingVertical: esp[4] },
   cardSelecao: { gap: esp[3], minHeight: toque.minimo, paddingRight: toque.minimo + esp[2] },
   cardDetalhes: { position: 'absolute', right: esp[4], bottom: esp[4], width: toque.minimo, height: toque.minimo, borderWidth: medidas.borda, borderRadius: raio.pequeno, alignItems: 'center', justifyContent: 'center' },
   dica: { paddingHorizontal: esp[4], paddingBottom: esp[2] },
@@ -266,4 +302,8 @@ const estilos = StyleSheet.create({
   categoria: { borderBottomWidth: medidas.borda, paddingVertical: esp[2] },
   categoriaBotao: { minHeight: toque.minimo, justifyContent: 'center' },
   categoriaConteudo: { flexDirection: 'row', alignItems: 'center', gap: esp[2] },
+  cartaoInsuf: { borderRadius: raio.medio, padding: esp[4], gap: esp[2] },
+  cartaoAcoes: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: esp[2], marginTop: esp[1] },
+  barraTrilho: { height: esp[2], borderRadius: raio.pilula, overflow: 'hidden' },
+  barraPreench: { height: '100%', borderRadius: raio.pilula },
 });

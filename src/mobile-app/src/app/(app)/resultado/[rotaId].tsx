@@ -10,6 +10,8 @@ import { useConsulta } from '@/consulta';
 import type { FocoRota } from '@/services';
 import { textos } from '@/textos';
 import { hipotesesDetalhes as h } from '@/textos/hipotesesDetalhes';
+import { hipotesesPrioridade } from '@/textos/hipotesesPrioridade';
+import { hipotesesResultado } from '@/textos/hipotesesResultado';
 
 const modos: RotulosModos = {
   A_PE: textos.modos.modo.aPe,
@@ -41,7 +43,7 @@ const rotulos: RotulosTrecho & { modos: RotulosModos } = {
 
 export default function DetalhesRota() {
   const { rotaId } = useLocalSearchParams<{ rotaId?: string }>();
-  const { resposta, estado, planejarVolta } = useConsulta();
+  const { resposta, estado } = useConsulta();
   const [selecionadoId, setSelecionadoId] = useState<string | null>(null);
   const rota = resposta?.rotas.find((item) => item.id === rotaId);
   if (!resposta) return <Redirect href="/planejar" />;
@@ -64,6 +66,8 @@ export default function DetalhesRota() {
     <MapaResultado rotas={[rota]} rotaSelecionadaId={rota.id} onSelecionar={() => {}} expandido exemplo={resposta.fontes.roteamento === 'exemplo'} />
     {(selos.roteamento || (selos.exposicao && rota.focos.includes('MENOR_EXPOSICAO'))) && <SeloExemplo />}
     {focosVisiveis(rota.focos, resposta).map((foco) => <RotuloFoco key={foco} foco={foco} rotulo={focos[foco]} />)}
+    {!semExposicao && rota.destaqueExposicao && <Texto testID="detalhe-confianca">{hipotesesPrioridade.confianca[rota.destaqueExposicao.confianca]}</Texto>}
+    {rota.variante && <Texto cor="texto2" testID="detalhe-variante">{rota.variante.origem === 'dados' ? hipotesesPrioridade.rotaDosDados : hipotesesResultado.varianteCaminhada}</Texto>}
     <Texto>{`${rota.duracaoMin} min · ${textos.resultado.kmAPe(distancia(rota.caminhadaKm))} · ${textos.resultado.trocas(rota.trocas)}`}</Texto>
     <ListaTrechosDetalhada trechos={trechos} modos={modos} detalhe={rotulos.detalhe} embarque={rotulos.embarque}
       selecionadoId={selecionadoId} onSelecionar={setSelecionadoId}
@@ -72,7 +76,7 @@ export default function DetalhesRota() {
     {!temTrechoAPe && <Texto>{textos.resultado.detalhes.semTrechoAPe}</Texto>}
     <Texto cor="texto2">{textos.comuns.horariosPrevistos}</Texto>
     {!semExposicao && <Botao variante="texto" rotulo={textos.porQue.linkConsiderados} onPress={() => router.push({ pathname: '/dados-considerados', params: { rotaId: rota.id } })} />}
-    <Botao variante="secundario" rotulo={textos.compartilhar.botaoTl08} onPress={() => router.push({ pathname: '/compartilhar/[rotaId]', params: { rotaId: rota.id } })} />
-    <Botao variante="secundario" rotulo={textos.resultado.planejarVolta} onPress={() => { planejarVolta(); router.push({ pathname: '/planejar', params: { sentido: 'volta' } }); }} />
+    {/* Item 7 (T25-B): o detalhe termina em "Seguir rota". Compartilhar fica só em seguir/[rotaId]. */}
+    <Botao rotulo={textos.seguir.botaoEntrada} onPress={() => router.push({ pathname: '/seguir/[rotaId]', params: { rotaId: rota.id } })} testID="botao-seguir-rota" />
   </Tela>;
 }

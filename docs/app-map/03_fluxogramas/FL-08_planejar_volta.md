@@ -1,5 +1,7 @@
 # FL-08 · Planejar a volta
 
+> **Revisão de 19/11/2026 — T25-B itens 6 e 7 (D-39):** `[EM ABERTO]` a entrada pelo resultado ("Planejar a volta" no fim da lista e no detalhe da rota) **saiu do app**. Enquanto o Lucas não decidir o novo caminho, este fluxo não tem gatilho na tela de resultado. A regra de inversão (US-07 AC1) continua valendo se a entrada voltar. Os passos abaixo descrevem o fluxo anterior.
+
 - **Status:** rascunho · **Status das regras:** `[DECISÃO]` (US-07, DT-05)
 - **Ator e gatilho:** Ágatha planejou a ida e toca em "Planejar a volta". *(D-29: a TL-04 não tem mais seletor Ida/Volta; para uma volta sem ida prévia, ela simplesmente escolhe origem e destino e usa "Inverter" se quiser.)*
 - **Pré-condições:** sessão ativa; para a inversão automática, uma ida planejada nesta sessão.

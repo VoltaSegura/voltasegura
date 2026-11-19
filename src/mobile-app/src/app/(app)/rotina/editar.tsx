@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 
-import { Aviso, Botao, CampoTexto, Interruptor, Segmentado, Tela, Texto } from '@/components';
-import { CartaoLocal } from '@/components/planejar';
+import { Aviso, Botao, Interruptor, Segmentado, Tela, Texto } from '@/components';
+import { CartaoLocal, SeletorHorario } from '@/components/planejar';
 import { useLocais, type LocalSalvo } from '@/locais';
 import {
   ANTECEDENCIA_PADRAO,
@@ -16,6 +16,7 @@ import {
   type ProblemaRotina,
   type Rotina,
 } from '@/rotina';
+import { horaLocal, isoDeHoraHoje } from '@/plus';
 import { rotina as t } from '@/textos/rotina';
 import { esp, raio, toque } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
@@ -43,7 +44,8 @@ function Formulario({ existente }: { existente?: Rotina }) {
   const [origem, setOrigem] = useState<PontoRotina | null>(existente?.origem ?? null);
   const [destino, setDestino] = useState<PontoRotina | null>(existente?.destino ?? null);
   const [dias, setDias] = useState<number[]>(existente?.dias ?? []);
-  const [hora, setHora] = useState(existente?.hora ?? '');
+  // O seletor de rodas sempre entrega um horário válido: a saída padrão é a hora atual (sem teclado, D-35).
+  const [hora, setHora] = useState(existente?.hora ?? horaLocal(new Date()));
   const [antecedencia, setAntecedencia] = useState(existente?.antecedencia ?? ANTECEDENCIA_PADRAO);
   const [ativa, setAtiva] = useState(existente?.ativa ?? true);
   const [problemas, setProblemas] = useState<ProblemaRotina[]>([]);
@@ -139,15 +141,10 @@ function Formulario({ existente }: { existente?: Rotina }) {
             </View>
             {problemas.includes('SEM_DIAS') ? <Texto variante="apoio" cor="erro" accessibilityRole="alert">{t.erroDias}</Texto> : null}
           </View>
-          <CampoTexto
+          <SeletorHorario
             rotulo={t.hora}
-            testID="rotina-hora"
-            value={hora}
-            ajuda={t.horaAjuda}
-            erro={problemas.includes('HORA_INVALIDA') ? t.erroHora : undefined}
-            onChangeText={(v) => { setHora(v); setProblemas((p) => p.filter((x) => x !== 'HORA_INVALIDA')); }}
-            keyboardType="numbers-and-punctuation"
-            maxLength={5}
+            saida={isoDeHoraHoje(hora)}
+            onChange={(iso) => { setHora(horaLocal(new Date(iso))); setProblemas((p) => p.filter((x) => x !== 'HORA_INVALIDA')); }}
           />
           <Segmentado
             rotuloGrupo={t.antecedencia}

@@ -17,11 +17,6 @@ export const hipotesesMapa = {
   adicionarLugarDica: 'Escolha um ponto no mapa e toque em Salvar este lugar.',
   usarLocalizacaoOrigem: 'Usar minha localização como origem',
   localizacaoDefinida: 'Origem definida pela sua localização.',
-  atalhosSaida: 'Atalhos de horário de saída',
-  agora: 'Agora',
-  em15: 'Em 15 min',
-  em30: 'Em 30 min',
-  em1h: 'Em 1 h',
   perfil: 'Seu perfil',
   // Escolher ponto
   // [HIPÓTESE] Onda 3: redação ainda não validada com usuários.

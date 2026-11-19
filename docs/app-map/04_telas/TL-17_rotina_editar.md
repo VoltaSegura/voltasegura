@@ -1,5 +1,7 @@
 # TL-17 · Criar ou editar rotina
 
+> **Revisão D-35 (18/11/2026, folha de horário):** o horário de saída é escolhido numa **folha com rodas HH:MM** (`SeletorHorario`), sem teclado. A saída padrão é a hora atual. `[EM ABERTO]` nome da rotina e "Quem recebe sua localização" (mockup 11) **não implementados**: dependem de decisão sobre envio (PL-34).
+>
 > **Revisão D-31 (15/11/2026):** tela nova do VoltaSegura+ em versão mínima. Origem e destino vêm dos **lugares salvos** (FN-13), sem digitar endereço. Textos `[HIPÓTESE]`.
 
 - **Status:** rascunho (nova, 15/11/2026; aguarda revisão do Lucas) · **Depende do tempo (D-31)** · **Rota Expo Router:** `/(app)/rotina/editar` (`?id=` ao editar)
@@ -44,7 +46,7 @@
 
 ## Estrutura e componentes
 
-`Tela` · `CartaoLocal` em faixa horizontal, com moldura de destaque no selecionado · botões de dia (`checkbox`) · `CampoTexto` (hora) · `Segmentado` (antecedência) · `Interruptor` · `Aviso` · `Botao`.
+`Tela` · `CartaoLocal` em faixa horizontal, com moldura de destaque no selecionado · botões de dia (`checkbox`) · `SeletorHorario` (saída: folha com rodas, sem teclado) · `Segmentado` (antecedência) · `Interruptor` · `Aviso` · `Botao`.
 
 ## Conteúdo e dados
 
@@ -66,7 +68,7 @@ novo · edição · sem lugares suficientes · erro de campo · salvando · conf
 
 ## Validações e mensagens de erro
 
-Origem e destino obrigatórios e diferentes; ao menos um dia; hora de 00:00 a 23:59 (aceita "7:45", guarda "07:45"). Antecedência: 5, 10, 15 (padrão) ou 30 min.
+Origem e destino obrigatórios e diferentes; ao menos um dia; hora de 00:00 a 23:59 (a roda entrega sempre um valor válido; "7:45" vira "07:45" ao salvar). Antecedência: 5, 10, 15 (padrão) ou 30 min.
 
 ## Textos
 

@@ -1,5 +1,7 @@
 # TL-12 · Configurações
 
+> **Revisão D-38 (19/11/2026, T25-B):** `[DECISÃO]` a tela de Configurações deixa de existir como rota própria. Virou a **aba Perfil** (`(app)/(abas)/perfil.tsx`): conta (e-mail), status do VoltaSegura+ (plano gratuito ou "Assinante mensal/anual · teste até DD/MM"), atalho para a Rotina da semana (TL-16), **tema** Sistema/Claro/Escuro (preferência gravada no aparelho), aviso de privacidade e Sair (encerra a sessão remota antes da local). **Renomear e apagar lugares** (com desfazer de 5 s) foram para a aba Locais (TL-26). O texto abaixo é o histórico da tela; o que mudou está nesta revisão.
+
 > **Revisão D-31 (15/11/2026):** `[DECISÃO]` novo grupo "VoltaSegura+ · recurso em validação" com a linha "Rotina da semana" (detalhe "Lembrete antes de sair, só neste aparelho"), que abre a TL-16, entre Lugares salvos e Privacidade. A TL-12 não lê as rotinas; só leva à TL-16.
 
 > **Revisão D-30 (15/11/2026):** `[DECISÃO]` o detalhe do lugar salvo mostra seu endereço quando houver (até duas linhas); sem endereço, mantém o tipo somente se o nome diferir do rótulo do tipo. Na edição do nome, o endereço aparece como apoio não editável. `[HIPÓTESE]` Para lugares antigos sem endereço, o apoio diz "Endereço não salvo".
@@ -8,7 +10,7 @@
 
 > **Revisão D-29 (14/11/2026):** configurações em grupos (Conta, Lugares salvos, Privacidade) com ícone redondo por linha. **Lugares salvos** listados com apagar (só no aparelho). Histórico de trajetos segue `[EM ABERTO]`.
 
-- **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/configuracoes`
+- **Status:** substituída pela aba Perfil (D-38, 19/11/2026) · **Rota Expo Router:** `/(app)/(abas)/perfil` (`/(app)/configuracoes` foi removida)
 - **Objetivo:** controlar o histórico local e os locais salvos, ler o aviso de privacidade, sair e excluir a conta. **Excluir conta: adiado (D-25), fora do MVP por ora.**
 > **Adiado (D-25).** `[DECISÃO — 14/11/2026]` O botão e o fluxo "Excluir conta" (wireframes, estados, ações e critérios de US-03 abaixo) saem do MVP por ora; o texto fica preservado para retomada. O restante da tela segue pronto.
 - **US/AC e funcionalidades cobertas:** US-03 AC1–AC3; US-04 AC1–AC5 · FN-03, FN-12, FN-13 · **RNF aplicáveis:** RNF-05, RNF-07, RNF-09

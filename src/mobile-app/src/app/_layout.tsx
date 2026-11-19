@@ -7,6 +7,7 @@ import { CompartilhamentoProvider, linkPendente, useCompartilhamento } from '@/c
 import { IndicadorCompartilhamento } from '@/components/compartilhamento/IndicadorCompartilhamento';
 import { definirProvedorToken } from '@/services';
 import { SessaoProvider, useSessao } from '@/sessao/SessaoContext';
+import { ModoTemaProvider } from '@/theme/ModoTemaProvider';
 import { coresEscuro, fonte } from '@/theme/tokens';
 import { useFontesPremium } from '@/theme/fontes';
 import { useTema } from '@/theme/useTema';
@@ -20,15 +21,17 @@ export default function RootLayout() {
   // Segura a primeira pintura (fundo da marca) até as fontes chegarem: evita o salto de fonte.
   if (!fontesProntas) return <View style={{ flex: 1, backgroundColor: coresEscuro.fundo }} />;
   return (
-    <SessaoProvider>
-      <CompartilhamentoProvider>
-        <LigacaoServicos />
-        <LigacaoLink />
-        <IndicadorCompartilhamento>
-          <Navegacao />
-        </IndicadorCompartilhamento>
-      </CompartilhamentoProvider>
-    </SessaoProvider>
+    <ModoTemaProvider>
+      <SessaoProvider>
+        <CompartilhamentoProvider>
+          <LigacaoServicos />
+          <LigacaoLink />
+          <IndicadorCompartilhamento>
+            <Navegacao />
+          </IndicadorCompartilhamento>
+        </CompartilhamentoProvider>
+      </SessaoProvider>
+    </ModoTemaProvider>
   );
 }
 

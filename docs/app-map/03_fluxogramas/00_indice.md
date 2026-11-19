@@ -68,6 +68,8 @@ flowchart TD
 | FL-15 | Compartilhar minha volta (Depende do tempo) | US-21, D-19 a D-22 | [FL-15](FL-15_compartilhar.md) |
 | FL-16 | Acompanhar uma viagem (contato; Depende do tempo) | US-21 AC6–AC8, D-21 | [FL-16](FL-16_acompanhar.md) |
 | FL-17 | Rotina da semana e lembrete antes de sair (VoltaSegura+; Depende do tempo) | US-22, D-31 | [FL-17](FL-17_rotina_lembrete.md) |
+| FL-18 | Seguir rota: navegação no trajeto (Fase 1 feita; Fases 2 e 3 em andamento) | US-23, D-34 | [FL-18](FL-18_seguir_rota.md) |
+| FL-19 | VoltaSegura+: simulação sem cobrança, exemplos e aba Plus (D-36) | FN-21, D-36 | [FL-19](FL-19_plus_simulacao.md) |
 
 ## Cobertura dos AC do MVP
 

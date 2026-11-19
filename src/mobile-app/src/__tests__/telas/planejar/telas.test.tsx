@@ -4,7 +4,7 @@ import { AccessibilityInfo, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
 import Buscando from '@/app/(app)/buscando';
-import Planejar from '@/app/(app)/planejar';
+import Planejar from '@/app/(app)/(abas)/planejar';
 import { useConsulta, type Busca, type Consulta, type ValorConsulta } from '@/consulta';
 import { ErroServico } from '@/services';
 import { conclusivo } from '@/services/fixtures';
@@ -104,7 +104,7 @@ describe('TL-04 Planejar', () => {
     estado({ ...base, sentido: 'volta', origem: destino, destino: origem });
     await render(<Planejar />);
     expect(screen.getByText(hipotesesMapa.planejandoVolta)).toBeTruthy();
-    expect(screen.getByText(textos.planejar.saidaVolta)).toBeTruthy();
+    expect(screen.getByRole('header', { name: textos.planejar.saidaVolta })).toBeTruthy();
     expect(definirOrigem).not.toHaveBeenCalled();
     expect(definirDestino).not.toHaveBeenCalled();
   });
@@ -134,14 +134,18 @@ describe('TL-04 Planejar', () => {
     locaisMock.locais = [];
   });
 
-  it('atalhos de horário definem a saída sem digitar', async () => {
+  it('cartão de horário abre a folha de rodas e grava a saída só ao confirmar', async () => {
     estado();
     await render(<Planejar />);
-    await fireEvent.press(screen.getByRole('button', { name: hipotesesMapa.em30 }));
+    await fireEvent.press(screen.getByTestId('hora-saida'));
+    await fireEvent.press(screen.getByTestId(`${hipotesesPlanejar.rodaHoras}-08`));
+    await fireEvent.press(screen.getByTestId(`${hipotesesPlanejar.rodaMinutos}-30`));
+    expect(definirSaida).not.toHaveBeenCalled();
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesPlanejar.confirmarHorario }));
     expect(definirSaida).toHaveBeenCalledTimes(1);
-    const minutos = (Date.parse(definirSaida.mock.calls[0][0] as string) - Date.now()) / 60000;
-    expect(minutos).toBeGreaterThan(29);
-    expect(minutos).toBeLessThan(31);
+    const data = new Date(definirSaida.mock.calls[0][0] as string);
+    expect(data.getHours()).toBe(8);
+    expect(data.getMinutes()).toBe(30);
   });
 
   it('atalho de localização preenche a origem só ao tocar', async () => {

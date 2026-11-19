@@ -1,8 +1,9 @@
 import { ambiente, type ModoApi } from '@/config/ambiente';
 import { consultaMock, criarConsultaApi, type EntradaConsulta, type ServicoConsulta } from './consulta';
 import { ErroServico } from './erros';
-import { comExposicao, type ModoCobertura } from './exposicao';
+import type { ModoCobertura } from './exposicao';
 import { criarConsultaOtp2 } from './otp2';
+import { comPrioridadeDosDados } from './rotaDosDados';
 
 /** Código do erro quando a configuração do app não permite consultar (modo inválido ou URL ausente). */
 export const CODIGO_CONFIGURACAO = 'CONFIGURACAO';
@@ -37,8 +38,11 @@ export function selecionarConsulta(config: ConfiguracaoConsulta): ServicoConsult
       return config.urlApi ? criarConsultaApi(config.urlApi) : consultaSemConfiguracao;
     case 'otp2':
       if (!config.urlOtp2) return consultaSemConfiguracao;
+      // B-59 (D-33): com exposição real, os registros da SSP-SP desenham o caminho a pé de menor exposição
+      // estimada e ele ganha prioridade (com a confiança ao lado). Sem a Data API, fica só o roteamento.
       return config.urlDataApi && config.urlNeonAuth
-        ? comExposicao(criarConsultaOtp2(config.urlOtp2), {
+        ? comPrioridadeDosDados(criarConsultaOtp2(config.urlOtp2), {
+          urlOtp2: config.urlOtp2,
           urlDataApi: config.urlDataApi,
           urlNeonAuth: config.urlNeonAuth,
           origemNeonAuth: config.origemNeonAuth ?? 'http://localhost:8081',

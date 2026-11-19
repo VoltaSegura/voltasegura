@@ -1,9 +1,11 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { AtalhosHorario, CampoPonto, CartaoLocal, SeletorHorario } from '@/components/planejar';
+import { CampoPonto, CartaoLocal, SeletorHorario } from '@/components/planejar';
 import { textos } from '@/textos';
 import { hipotesesPlanejar } from '@/textos/hipotesesPlanejar';
+
+const dois = (n: number) => String(n).padStart(2, '0');
 
 describe('componentes de planejamento', () => {
   it('mostra endereço no cartão e mantém nome como rótulo', async () => {
@@ -28,13 +30,25 @@ describe('componentes de planejamento', () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('atualiza a hora local sem trocar a data da consulta', async () => {
+  it('mostra a saída com hora e dia, sem campo de texto nem teclado', async () => {
+    const saida = '2026-11-14T23:00:00-03:00';
+    await render(<SeletorHorario rotulo={textos.planejar.saida} saida={saida} onChange={jest.fn()} />);
+    const hora = dois(new Date(saida).getHours()) + ':' + dois(new Date(saida).getMinutes());
+    expect(screen.getByTestId('hora-saida')).toBeTruthy();
+    expect(screen.getByText(hora)).toBeTruthy();
+    expect(screen.queryByRole('textbox')).toBeNull();
+    expect(screen.getByRole('button', { name: new RegExp(`^${textos.planejar.saida} ${hora}, `) })).toBeTruthy();
+  });
+
+  it('abre a folha de rodas, grava a nova hora mantendo o dia e não usa teclado', async () => {
     const onChange = jest.fn<(saida: string) => void>();
     const saida = '2026-11-14T23:00:00-03:00';
     await render(<SeletorHorario rotulo={textos.planejar.saida} saida={saida} onChange={onChange} />);
-    const campo = screen.getByLabelText(textos.planejar.saida);
-    await fireEvent.changeText(campo, '08:30');
-    await fireEvent(campo, 'blur');
+    await fireEvent.press(screen.getByRole('button', { name: new RegExp(textos.planejar.saida) }));
+    await fireEvent.press(screen.getByTestId(`${hipotesesPlanejar.rodaHoras}-08`));
+    await fireEvent.press(screen.getByTestId(`${hipotesesPlanejar.rodaMinutos}-30`));
+    expect(onChange).not.toHaveBeenCalled();
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesPlanejar.confirmarHorario }));
     expect(onChange).toHaveBeenCalledTimes(1);
     const data = new Date(onChange.mock.calls[0][0]);
     expect(data.getHours()).toBe(8);
@@ -42,25 +56,13 @@ describe('componentes de planejamento', () => {
     expect(data.getDate()).toBe(new Date(saida).getDate());
   });
 
-  it('ajusta a saída em ±15 min a partir da saída atual, sem teclado', async () => {
-    const onEscolher = jest.fn<(saida: string) => void>();
-    const saida = '2026-11-17T18:00:00.000Z';
-    await render(<AtalhosHorario saidaAtual={saida} onEscolher={onEscolher} />);
-    await fireEvent.press(screen.getByTestId('ajuste-horamais'));
-    await fireEvent.press(screen.getByTestId('ajuste-horamenos'));
-    expect(onEscolher.mock.calls[0][0]).toBe('2026-11-17T18:15:00.000Z');
-    expect(onEscolher.mock.calls[1][0]).toBe('2026-11-17T17:45:00.000Z');
+  it('cancelar a folha não altera a saída', async () => {
+    const onChange = jest.fn();
+    await render(<SeletorHorario rotulo={textos.planejar.saida} saida="2026-11-14T23:00:00-03:00" onChange={onChange} abrirInicialmente />);
+    await fireEvent.press(screen.getByTestId(`${hipotesesPlanejar.rodaMinutos}-45`));
+    await fireEvent.press(screen.getByRole('button', { name: hipotesesPlanejar.cancelarHorario }));
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.queryByTestId(`${hipotesesPlanejar.rodaMinutos}-45`)).toBeNull();
   });
 
-  it('avisa quando a hora digitada é inválida e não altera a saída', async () => {
-    const onChange = jest.fn();
-    const onValidadeChange = jest.fn();
-    await render(<SeletorHorario rotulo={textos.planejar.saida} saida="2026-11-14T23:00:00-03:00" onChange={onChange} onValidadeChange={onValidadeChange} />);
-    const campo = screen.getByLabelText(textos.planejar.saida);
-    await fireEvent.changeText(campo, '25:90');
-    await fireEvent(campo, 'blur');
-    expect(screen.getByText(hipotesesPlanejar.erroHora)).toBeTruthy();
-    expect(onValidadeChange).toHaveBeenCalledWith(false);
-    expect(onChange).not.toHaveBeenCalled();
-  });
 });

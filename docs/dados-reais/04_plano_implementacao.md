@@ -1,7 +1,7 @@
 # Plano B: plano de implementação (dados reais no app)
 
 **Data:** 15/11/2026 · **Escopo:** só Mobile (D-27) · **Prazo:** código congelado na noite de 18/11; entrega 19/11 23h55.
-**Base:** `00_plano.md` (decisões B1 a B8 e riscos), `01_inventario_e_contrato.md`, `02_roteamento.md`, `03_exposicao_neon.md`, e o vídeo da Onda 2 (`docs/redesign/09_onda2_evidencia_e_plano_onda3.md` §4).
+**Base:** `00_plano.md` (decisões B1 a B8 e riscos), `01_inventario_e_contrato.md`, `02_roteamento.md`, `03_exposicao_neon.md`, e o vídeo da Onda 2 (`docs/app-map/redesign/09_onda2_evidencia_e_plano_onda3.md` §4).
 **Status das afirmações:** `[DECISÃO]` já decidido · `[HIPÓTESE]` proposta do lead · `[EM ABERTO]` depende de medir ou de decisão do Lucas.
 **Regra permanente:** `src/mobile-app/AGENTS.md` ("mudou o fluxo, mudou a documentação"). Linguagem: `docs/05` (exposição estimada, nada de "rota segura"/"perigoso"/nota). Sem commit sem o Lucas pedir. Segredos (`.env.local`, `DATABASE_URL`) nunca em log, chat ou commit.
 

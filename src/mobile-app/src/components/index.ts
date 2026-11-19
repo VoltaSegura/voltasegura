@@ -1,4 +1,7 @@
 export { Aviso, type VarianteAviso } from './Aviso';
+export { BarraAbas, ICONES_ABAS } from './BarraAbas';
+export { FolhaInferior } from './FolhaInferior';
+export { SeloDemo } from './SeloDemo';
 export { Botao, type VarianteBotao } from './Botao';
 export { BotaoIcone } from './BotaoIcone';
 export { Cabecalho } from './Cabecalho';

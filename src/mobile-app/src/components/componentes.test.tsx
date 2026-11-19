@@ -166,6 +166,28 @@ describe('CampoTexto', () => {
     const cor = esquema === 'dark' ? coresEscuro.erro : coresClaro.erro;
     expect(estiloDe(screen.getByText('Erro').props.style).color).toBe(cor);
   });
+
+  // Regressão do teclado que abria e fechava (Locais, Contatos): no Android, alternar sombra com o foco
+  // recria a view da caixa e o TextInput perde o foco. O foco deve mudar só a borda.
+  it('o foco muda a borda e nunca acrescenta sombra à caixa, com ou sem erro', async () => {
+    type No = { parent: No | null; props: { style?: Parameters<typeof StyleSheet.flatten>[0] } };
+    const caixaDe = (campo: No) => {
+      let no = campo.parent;
+      while (no && !estiloDe(no.props.style).borderColor) no = no.parent;
+      return no;
+    };
+    const { rerender } = await render(<CampoTexto rotulo="Nome" erro="Informe um nome" />);
+    const campo = screen.getByLabelText('Nome') as unknown as No;
+    await fireEvent(screen.getByLabelText('Nome'), 'focus');
+    expect(estiloDe(caixaDe(campo)?.props.style).shadowOpacity).toBeUndefined();
+
+    // A primeira tecla limpa o erro com o campo focado: era aqui que a sombra entrava e o foco caía.
+    await rerender(<CampoTexto rotulo="Nome" />);
+    const estilo = estiloDe(caixaDe(screen.getByLabelText('Nome') as unknown as No)?.props.style);
+    expect(estilo.borderColor).toBe(coresEscuro.acaoLink);
+    expect(estilo.shadowOpacity).toBeUndefined();
+    expect(estilo.shadowRadius).toBeUndefined();
+  });
 });
 
 describe('Caixa e Interruptor', () => {

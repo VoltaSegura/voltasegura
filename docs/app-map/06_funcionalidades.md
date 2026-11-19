@@ -25,6 +25,7 @@
 | FN-15 | Compartilhar minha volta (**Depende do tempo**) | TL-08, TL-14, indicador global | US-21 AC1–AC5, AC7, AC9; US-05 AC3; US-19 AC4 | Endpoint de compartilhamento (PL-18), GPS em segundo plano (PL-24) |
 | FN-16 | Acompanhar viagem (**Depende do tempo**) | TL-15 | US-21 AC6–AC8 | Endpoint de compartilhamento (PL-18), deep link |
 | FN-17 | Rotina da semana e lembrete local (VoltaSegura+; **Depende do tempo**) | TL-12, TL-16, TL-17, TL-04 | US-22 AC1–AC5 | FN-13 (lugares), `expo-notifications` |
+| FN-20 | Seguir rota: acompanhamento do trajeto, recálculo ao desviar e segundo plano opcional (**MVP**, D-34) | TL-08, TL-18 | US-23 AC1–AC8; US-05 AC3 (revisto pela D-34) | GPS (`expo-location`), PL-24, PL-26 a PL-32 |
 
 ## Regras comuns
 
@@ -77,6 +78,7 @@
 ## FN-05 · Planejar e validar a consulta
 
 - **Regras:** campos obrigatórios (US-06 AC2); origem ≠ destino (AC4); dentro do município, checado no aparelho (AC3, D-05, PL-11); horário padrão = agora.
+- **Horário (D-37, que revê a D-35, 19/11/2026):** a saída é escolhida num cartão grande (hora em destaque e dia) que abre a folha de rodas HH:MM. Os atalhos (agora, +15, +30, +1 h) e o ajuste ±15 min saíram da tela. A folha não usa teclado, então não há hora digitada inválida; Confirmar grava a saída mantendo o dia da consulta (hoje ou o dia escolhido), Cancelar não altera nada. Testes: `src/__tests__/telas/planejar/componentes.test.tsx` (cartão, folha, confirmar, cancelar) e `telas.test.tsx` (cartão → folha → confirmar).
 - **Testes previstos:** positivo (consulta válida enviada); negativos (destino vazio, origem = destino, ponto fora do município: nada enviado).
 
 ## FN-06 · Planejar a volta
@@ -261,3 +263,68 @@ Resposta `200`:
 - **Implementação:** `src/rotina/` (tipos, armazenamento, `RotinaContext`, `AberturaPorLembrete`), `src/services/lembretes.ts`, `src/textos/rotina.ts`.
 - **Testes:** `src/rotina/rotina.test.tsx` (salvar, editar, desativar, apagar, limite, validação, permissão negada, leitura corrompida), `src/services/lembretes.test.ts` (gatilhos, virada de dia, texto, agendar, cancelar, permissão) com as notificações mockadas.
 - **Depende do aparelho:** o disparo real (inclusive em Expo Go no Android) e o toque no lembrete só se verificam em aparelho.
+
+## FN-18 · Variações de caminhada para comparar a exposição estimada (B-58, D-32)
+
+- **Status (17/11/2026):** implementado no modo `otp2` com exposição real (Data API + sessão do Neon Auth). Sem a Data API, não há variações.
+- **Regras:** até 2 variações por alternativa do roteador (desvio à esquerda e à direita); só trechos a pé de 250 m ou mais; até +30% de comprimento por trecho; caminho de fato diferente (< 70% dos vértices a até 30 m do original); baldeação sem folga descarta a variação; horários recalculados (a saída antecipa antes do 1º embarque, a chegada atrasa depois do último desembarque); até 5 caminhadas distintas; gêmeas comparadas uma vez, destaque na mais rápida do grupo; falha ou demora (15 s) nas variações devolve só as rotas do roteador.
+- **O que sai do aparelho:** as consultas a pé vão ao mesmo servidor OTP2 do roteamento; à função de exposição vão só as geometrias dos trechos a pé e as faixas do dia (B-30), uma vez por caminhada distinta.
+- **Implementação:** `src/services/variantesCaminhada.ts` (`comVariantes`, `acrescentarVariantes`, `gerarVariante`, `montarVariante`, `pegadaCaminhada`), `src/services/exposicao.ts` (`agruparPorCaminhada`, `mesclarExposicao` com representante por grupo e D-23), `src/services/selecao.ts`, `Rota.variante` em `tipos.ts`/`validar.ts`.
+- **Testes:** `src/services/variantesCaminhada.test.ts`, `src/services/exposicao.test.ts` (bloco B-58), `src/__tests__/telas/variante-caminhada/`; com dados reais: `node scripts/e2e-exposicao-real.mjs` (cenários de demonstração).
+
+## FN-19 · Caminho a pé desenhado pelos dados e prioridade com confiança (B-59, D-33)
+
+- **Status (17/11/2026):** implementado no modo `otp2` com exposição real (Data API + sessão do Neon Auth). Substitui as variações geométricas da FN-18 no fluxo (o código delas é a base do motor).
+- **Regras:** 2 alternativas mais rápidas do roteador; até 10 candidatos por trecho a pé ≥ 250 m (desvios a 15/30/45% no meio e a 30% em 30% e 70% do trecho, dos dois lados), sem "vai e volta"; ≤ +30% por trecho; candidato escolhido = menos registros com cobertura ≥ 80% e estritamente melhor que o original; até 6 consultas simultâneas ao OTP2; limite de 20 s para o motor (passou disso, segue só com o roteador). Prioridade: menos registros entre as elegíveis (cobertura ≥ 80%, caminhada > 0, caminhada diferente), em primeiro e selecionada, confiança `clara` (CONCLUSIVO) ou `pequena`.
+- **O que sai do aparelho:** consultas a pé ao mesmo OTP2; ao Neon, só geometrias dos trechos a pé (originais e candidatos) e faixas do dia, pela mesma função `comparar_exposicao` (em lotes de 5).
+- **Implementação:** `src/services/rotaDosDados.ts` (`comPrioridadeDosDados`, `comRotasDosDados`, `desenharPelosDados`, `candidatosDoTrecho`, `escolherPelosDados`, `aplicarPrioridadeDosDados`), `exposicao.ts` (`criarAvaliadorCaminhos`), `Rota.variante.origem` e `Rota.destaqueExposicao` (`tipos.ts`/`validar.ts`), textos em `src/textos/hipotesesPrioridade.ts`; telas TL-07, TL-08, TL-09, TL-10.
+- **Testes:** `src/services/rotaDosDados.test.ts`, `src/__tests__/telas/prioridade-dados/`; real: `E2E_MODO=todos node scripts/e2e-exposicao-real.mjs`.
+
+## FN-20 · Seguir rota: acompanhamento do trajeto, recálculo ao desviar e segundo plano opcional (D-34, US-23)
+
+- **Status (18/11/2026):** implementada no código, **sem commit e sem validação no aparelho**. Fase 1 (primeiro plano), Fase 2 (recálculo ao desviar) e Fase 3 (segundo plano opcional) têm código e testes unitários. Validação no celular pendente (PL-26); pontos de decisão abertos em PL-28 a PL-32.
+- **Regras:**
+  - Lê a posição só depois de a pessoa tocar em "Começar" (US-23 AC1). A permissão de localização é pedida nesse toque.
+  - Com a tela ligada e o app aberto, mantém a tela acesa durante o acompanhamento e a desliga ao encerrar.
+  - Escolhe o trecho atual e o próximo passo a partir da posição (`avaliarPosicao`, em `src/mobile-app/src/services/seguirRota.ts`). Um ponto isolado fora do trajeto não confirma desvio; o desvio é confirmado após várias leituras seguidas fora.
+  - Chegada: encerra sozinha quando a posição fica a até 100 m do destino (`[EM ABERTO]` PL-32).
+  - **Recálculo ao desviar (Fase 2):** confirmado o desvio, consulta uma nova rota com a posição atual como origem, o mesmo destino e o mesmo sentido. Troca pela rota equivalente (`escolherRotaEquivalente`, em `src/mobile-app/src/seguir/recalculo.ts`). Tem intervalo mínimo entre recálculos, limite de falhas seguidas e a opção de "Tentar de novo". Se falhar, a rota anterior continua na tela. Efeitos e modos a confirmar em PL-28 a PL-31.
+  - **Segundo plano opcional (Fase 3):** só com o acompanhamento ativo, com indicador visível e botão "Parar" (D-20; US-23 AC6). Sem o módulo nativo (Expo Go), cai no primeiro plano. `[HIPÓTESE]` (PL-24, PL-27).
+  - Sem histórico: o trajeto e as posições não ficam guardados depois do fim da sessão (US-23 AC5).
+- **O que sai do aparelho:**
+  - Sem compartilhamento ativo, nada da posição sai do aparelho (D-21).
+  - Com compartilhamento ativo (F2.5), a posição vai ao compartilhamento, como já previsto (`registrarPosicao`, a cada 15 s no mínimo).
+  - No recálculo, a posição atual vai ao serviço de consulta (roteador). Isso não tem decisão de privacidade fechada (PL-31).
+- **Implementação:** `src/mobile-app/src/seguir/useSeguirRota.ts` (estado, GPS, recálculo, compartilhamento), `src/mobile-app/src/seguir/recalculo.ts`, `src/mobile-app/src/seguir/segundoPlano.ts`, `src/mobile-app/src/services/seguirRota.ts`, tela `src/mobile-app/src/app/(app)/seguir/[rotaId].tsx`, mapa `src/mobile-app/src/components/mapa/MapaSeguir*.tsx`, textos `src/mobile-app/src/textos/seguir.ts`; entrada pelo botão "Seguir esta rota" em `src/mobile-app/src/app/(app)/resultado/[rotaId].tsx`.
+- **Testes (18/11/2026):** `npx jest src/seguir src/services/seguirRota`: 5 suítes e 71 testes passaram. Cobrem o início sem pedir localização, permissão negada, chegada, encerramento, envio ao compartilhamento, recálculo (debounce, falhas, "Tentar de novo", resposta atrasada descartada), a tarefa de segundo plano e o caminho do Expo Go. Não há teste no celular.
+- **Relação com outras telas:** TL-08 (entrada), TL-18 (tela), TL-07 (resultado, afetada pelo PL-28), FL-18 (fluxo).
+
+
+## FN-21 · VoltaSegura+ em simulação e telas de exemplo (D-36, T25)
+
+- **Descrição:** planos (mensal R$ 9,90/mês e anual R$ 99/ano), confirmação de teste de 7 dias, home, volta pronta, radar, resumo e gerenciar assinatura. Simulação sem cobrança: não há pagamento, não há valor guardado nem enviado; selo "Demonstração: nenhuma cobrança real". Radar, resumo e números da volta pronta são exemplos (selo EXEMPLO), sem backend e sem cálculo real.
+- **Regras:** `[DECISÃO]` nada é cobrado nem gravado; `[DECISÃO]` a home lê a rotina do aparelho (FN-17) sem alterá-la; `[DECISÃO]` o radar nunca muda a rota sozinho. `[HIPÓTESE]` a simulação não guarda estado entre aberturas do app (PL-35).
+- **Implementação:** `src/mobile-app/src/app/(app)/plus/*.tsx`, `src/mobile-app/src/plus/` (datas, exemplos, `FundoMapa`), textos `src/mobile-app/src/textos/plus.ts`.
+- **Testes:** `src/mobile-app/src/plus/datas.test.ts` e `src/mobile-app/src/__tests__/telas/plus/plus.test.tsx` (planos, confirmação, assinatura, radar; nenhuma gravação).
+- **Relação:** TL-19 a TL-25, FL-19, D-36. Substitui a regra "sem preço" da D-31 item 3.
+
+## FN-22 · Contatos de confiança (só nomes, no aparelho; D-36, T25)
+
+- **Descrição:** lista de nomes (ex.: Mãe) guardada só no aparelho, até 10. Sem telefone, e-mail ou conta. Adicionar, remover e recusar nome vazio.
+- **Regras:** `[DECISÃO]` a lista não envia nada sozinha; qualquer envio é uma ação da pessoa com confirmação (D-19, D-21). `[EM ABERTO]` como um contato entra no compartilhamento e na rotina (PL-34).
+- **Implementação:** `src/mobile-app/src/contatos/` (tipos, armazenamento no SecureStore, chave `voltasegura.contatos`), tela `src/mobile-app/src/app/(app)/contatos.tsx`, textos `src/mobile-app/src/textos/abas.ts` (`contatos`).
+- **Testes:** `src/mobile-app/src/contatos/contatos.test.ts` e `plus.test.tsx` (aba Contatos).
+- **Relação:** TL-27, D-19, D-21, FN-13 (lugares, na aba Locais, TL-26).
+
+## Atualização de FN-17 (rotina, horário: D-35)
+
+- O horário de saída é escolhido na folha com rodas (`SeletorHorario`, `src/mobile-app/src/components/planejar/SeletorHorario.tsx`), sem teclado. A saída padrão de uma rotina nova é a hora atual.
+- A rotina não ganhou nome nem destinatários nesta versão: o mockup 11 mostra os dois, mas não há decisão de envio (PL-34).
+
+
+## Atualização de FN-21 e FN-13 (T25-B, D-38, 19/11/2026)
+
+- **FN-21 (assinatura simulada):** o aparelho guarda o plano e a data de início do teste (`voltasegura.plus`, SecureStore). Nenhum valor, dado de pagamento ou chamada ao servidor. Cancelar apaga o registro. A aba Plus e o Perfil leem esse estado (`src/mobile-app/src/plus/AssinaturaContext.tsx`). A regra "nada guardado" da D-36 item 1 vale para valores e pagamentos; o plano e a data passam a ser guardados (D-38).
+- **FN-21 (home):** lista todas as rotinas do aparelho (`PlusHomeConteudo`), não só uma.
+- **FN-13 (lugares salvos):** renomear na própria linha da aba Locais e apagar com "Desfazer" por 5 s (antes na TL-12).
+- **Tema (novo, D-38):** preferência Sistema, Claro ou Escuro, gravada no aparelho (`voltasegura.tema`), escolhida no Perfil (`src/mobile-app/src/theme/ModoTemaProvider.tsx`).

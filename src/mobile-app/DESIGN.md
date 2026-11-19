@@ -1,6 +1,6 @@
 # DESIGN.md: identidade visual premium do VoltaSegura (D-28)
 
-Substitui a versão de 13/11 (fonte do sistema, listas planas). `docs/app-map/07_design/tokens.md` segue valendo para **contraste, cores e linguagem**; este arquivo manda na **identidade e no movimento**. Arquitetura e decisões: `docs/redesign/07_premium_arquitetura.md`.
+Substitui a versão de 13/11 (fonte do sistema, listas planas). `docs/app-map/07_design/tokens.md` segue valendo para **contraste, cores e linguagem**; este arquivo manda na **identidade e no movimento**. Arquitetura e decisões: `docs/app-map/redesign/07_premium_arquitetura.md`.
 
 ## Conceito
 **Fio de luz.** A cidade fica apagada e só o seu caminho acende. Premium aqui é calma e precisão: uma coisa acesa por tela, número grande, muito respiro.

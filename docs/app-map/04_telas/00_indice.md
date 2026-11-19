@@ -19,12 +19,23 @@
 | TL-09 | Por que esta rota? | `/(app)/por-que/[rotaId]/[trechoId]` (modal) | FL-07 | US-10, US-11, US-12, D-08, D-11, D-13 | pronta |
 | TL-10 | Sobre os dados | `/(app)/sobre-os-dados` | FL-09 | US-14 AC1–AC5, US-16, US-18 AC3 | pronta |
 | TL-11 | Dados considerados | `/(app)/dados-considerados` | FL-10 | US-15 AC1–AC4, D-14 | pronta |
-| TL-12 | Configurações | `/(app)/configuracoes` | FL-11, FL-12 (adiado, D-25) | US-03 (adiado, D-25), US-04 | pronta (exclusão de conta: adiado, D-25) |
+| TL-12 | Perfil (aba; antiga Configurações, D-38) | `/(app)/(abas)/perfil` | FL-11, FL-12 (adiado, D-25) | US-03 (adiado, D-25), US-04 | pronta (exclusão de conta: adiado, D-25); configurações removida (D-38) |
 | TL-13 | Aviso de privacidade | `/aviso-privacidade` | FL-02 | US-01 AC6, RNF-09 | pronta |
 | TL-14 | Compartilhar minha volta (**Depende do tempo**) | `/(app)/compartilhar/[rotaId]` (modal) + indicador global | FL-15 | US-21 AC1–AC5, AC7, AC9 | rascunho; protótipo com mock implementado (15/11) |
 | TL-15 | Acompanhar viagem (**Depende do tempo**) | `/(app)/acompanhar/[token]` | FL-16 | US-21 AC6–AC8 | rascunho; protótipo com mock implementado (15/11) |
-| TL-16 | Rotina da semana: lista (**Depende do tempo**) | `/(app)/rotina` | FL-17 | US-22 AC1, AC3–AC5 | rascunho (nova, D-31) |
-| TL-17 | Criar ou editar rotina (**Depende do tempo**) | `/(app)/rotina/editar` | FL-17 | US-22 AC1–AC5 | rascunho (nova, D-31) |
+| TL-16 | Rotina da semana: lista (**Depende do tempo**) | `/(app)/rotina` | FL-17 | US-22 AC1, AC3–AC5 | rascunho (nova, D-31); visual revisto (D-36) |
+| TL-17 | Criar ou editar rotina (**Depende do tempo**) | `/(app)/rotina/editar` | FL-17 | US-22 AC1–AC5 | rascunho (nova, D-31); horário por roda, sem teclado (D-35) |
+| TL-18 | Seguir rota (navegação no trajeto) | `/(app)/seguir/[rotaId]` | FL-18 | US-23 AC1–AC8, D-34 | rascunho (nova, D-34); implementada sem validação no aparelho |
+| TL-19 | VoltaSegura+: planos (**simulação**, D-36) | `/(app)/plus/index` (aba Plus) | FL-19 | FN-21 | pronta para o protótipo (19/11) |
+| TL-20 | VoltaSegura+: confirmação do teste (**simulação**) | `/(app)/plus/confirmacao` | FL-19 | FN-21 | pronta para o protótipo (19/11) |
+| TL-21 | VoltaSegura+: home (rotina real e exemplos) | `/(app)/plus/home` | FL-19 | FN-17, FN-21 | pronta para o protótipo (19/11) |
+| TL-22 | Sua volta está pronta (**EXEMPLO**) | `/(app)/plus/volta-pronta` | FL-19 | FN-21 | pronta para o protótipo (19/11); compartilhar desabilitado (PL-37) |
+| TL-23 | Radar da rota (**EXEMPLO**) | `/(app)/plus/radar` | FL-19 | FN-21 | pronta para o protótipo (19/11); texto a revisar (PL-36) |
+| TL-24 | Resumo da semana (**EXEMPLO**) | `/(app)/plus/resumo` | FL-19 | FN-21 | pronta para o protótipo (19/11) |
+| TL-25 | Gerenciar assinatura (**simulação**) | `/(app)/plus/assinatura` | FL-19 | FN-21 | pronta para o protótipo (19/11) |
+| TL-26 | Locais (aba) | `/(app)/(abas)/locais` | FL-19 (aba) | FN-13 | pronta (19/11) |
+| TL-27 | Contatos (aba; só nomes, D-36) | `/(app)/(abas)/contatos` | — | FN-22 | pronta para o protótipo (19/11); uso no compartilhamento em aberto (PL-34) |
+Perfil (aba) é a TL-12 em `/(app)/(abas)/perfil`; a antiga Configurações foi removida (D-38).
 
 ## Variantes do resultado e onde ficam
 

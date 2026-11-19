@@ -1,10 +1,27 @@
 # TL-07 · Resultado (mapa + container)
 
+> **Revisão de 19/11/2026 — T25-B itens 6 e 7 (D-39):** `[DECISÃO]` a folha abre em **meia altura** (nível 1: 45%, 68% e 90%). Os cartões são mais compactos: linha "duração · km a pé · trocas", sem o horário de saída (o horário fica no cabeçalho da folha). **Saem do resultado:** "Planejar a volta" e "Planejar a ida" no fim da lista; a entrada pela volta fica `[EM ABERTO]` (FL-08). A linha de fonte vira o link "Entenda de onde vem nossos dados e fontes" (`textos.resultado.linkDados`), que abre a TL-10. Os trechos desta seção e as seções de "Planejar a volta" abaixo descrevem o fluxo anterior à revisão.
+
+> **Revisão de 19/11/2026 — redesign T25 (mockups `03_Alternativas` e `04_Dados_insuficientes`):** `[DECISÃO]` a folha de alternativas segue o mockup 03 (contagem "N opções", "Saída às HH:MM", cartões com selo EXEMPLO e "Por que esta rota?"). Quando o caso é `INSUFICIENTE` e há 2 ou mais opções, o texto do caso vira o cartão **"Dados insuficientes"** (mockup 04, `CartaoInsuficiente` em `components/resultado`), com duas ações: "Entender o resultado" (TL-10) e "Outro horário" (TL-04). O corpo do cartão é o mesmo texto do caso (`casosResultado.insuficiente`); nenhum motivo novo foi escrito. Os outros casos seguem como texto simples.
+> **Não aplicado nesta revisão** (fica para o lead): a "Sua ida · 15 nov" flutuante sobre o mapa, a pílula escura "Menor exposição estimada" (depende de token de cor), a linha "Ordenadas por menor exposição estimada" e a barra de dados "Dados: SSP-SP, jan–set/2026" já existente (sem mudança de texto).
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/resultado`
 - **Objetivo:** mostrar **até 3 rotas**, cada uma com o seu foco. Em cima, um mapa com o trajeto inteiro da rota selecionada; embaixo, um container com os cards. **Prioridade: menor exposição estimada (D-23).** Quando existe, essa rota vem primeiro e já selecionada; sem ela, os cards vêm por tempo. Momento: **Comparar** e **Decidir** (`docs/03` §4).
 - **US/AC e funcionalidades cobertas:** US-08 AC1, AC3–AC5; US-11 AC1–AC6; US-12 AC3; US-13 AC1–AC6; US-14 AC1 (linha fixa); US-16 AC1 · FN-08 · decisões D-01, D-09, D-12, D-13, D-16, D-23 (revê a D-10) · **RNF aplicáveis:** RNF-01 a RNF-04, RNF-06 a RNF-08
 - **Entradas:** TL-06 (sucesso). Parâmetros: a resposta da consulta (rotas, focos, situação, sobre os dados).
 - **Saídas:** TL-08 (detalhes da rota), TL-10 (sobre os dados), TL-04 (planejar a volta ou nova consulta).
+
+## Revisão de 17/11/2026 — B-59 · Caminho desenhado pelos dados e prioridade (D-33)
+
+- A rota com menos registros perto dos trechos a pé (cobertura ≥ 80%) recebe "◆ Menor exposição estimada", vem primeiro e já selecionada, com a linha de confiança logo abaixo dos rótulos: "Diferença clara nos registros" ou "Diferença pequena nos registros" `[HIPÓTESE]`.
+- A rota cujo caminho a pé foi escolhido pelos registros mostra "Caminho a pé escolhido pelos registros da SSP-SP" `[HIPÓTESE]` (substitui as variações geométricas da revisão B-58).
+- Com diferença pequena, a frase acima dos cards passa a ser a de `prioridade.caso_pequena` (não diz mais que não dá para comparar).
+
+## Revisão de 17/11/2026 — B-58 · Variações de caminhada (D-32)
+
+- Com exposição real no modo `otp2`, a lista pode trazer, depois das opções do roteador, **variações de caminhada** geradas pelo app: mesmo card, com a linha de apoio "Mesma condução, caminhada por outro caminho" `[HIPÓTESE]` e o mesmo texto no início do rótulo acessível. A variação não ganha foco de tempo nem de caminhada; pode ganhar o de menor exposição estimada.
+- **D-23 aplicada de fato:** no caso CONCLUSIVO, a rota com o foco vem primeiro e já selecionada também no modo `otp2` (o serviço reordena; o app não escolhe pela pessoa).
+- Rotas com a mesma caminhada mostram os mesmos números de exposição; só a mais rápida do grupo pode ter o destaque.
 
 ## Revisão de 16/11/2026 — B-08 · Só roteamento
 

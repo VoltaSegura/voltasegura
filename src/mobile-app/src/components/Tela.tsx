@@ -17,6 +17,8 @@ type Props = {
   hero?: React.ReactNode;
   /** `false` para telas sem rolagem. */
   rolagem?: boolean;
+  /** Tela de aba: reserva o espaço da barra flutuante no fim do conteúdo. */
+  abas?: boolean;
   testID?: string;
 };
 
@@ -25,19 +27,20 @@ type Props = {
  * No Android o `app.json` usa `softwareKeyboardLayoutMode: "pan"` (o sistema já move a janela até o campo focado);
  * `behavior="height"` somava um segundo ajuste e fazia o teclado abrir e fechar no campo de hora.
  */
-export function Tela({ children, topo, rodape, hero, rolagem = true, testID }: Props) {
+export function Tela({ children, topo, rodape, hero, rolagem = true, abas = false, testID }: Props) {
   const { cores } = useTema();
+  const recuoAbas = abas ? { paddingBottom: esp[4] + medidas.alturaBarraAbas } : undefined;
   const conteudo = rolagem ? (
     <ScrollView
       keyboardShouldPersistTaps="handled"
       style={estilos.fluxo}
-      contentContainerStyle={hero ? undefined : estilos.conteudo}
+      contentContainerStyle={hero ? undefined : [estilos.conteudo, recuoAbas]}
     >
       {hero}
-      {hero ? <View style={estilos.conteudo}>{children}</View> : children}
+      {hero ? <View style={[estilos.conteudo, recuoAbas]}>{children}</View> : children}
     </ScrollView>
   ) : (
-    <View style={[estilos.fluxo, estilos.conteudo]}>{children}</View>
+    <View style={[estilos.fluxo, estilos.conteudo, recuoAbas]}>{children}</View>
   );
 
   return (

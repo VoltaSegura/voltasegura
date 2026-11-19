@@ -1,9 +1,10 @@
 import type { EntradaConsulta, ServicoConsulta } from './consulta';
-import { codificar, decodificar } from './geometria';
+import { codificar, decodificar, semPontosRepetidos } from './geometria';
 import { faixaDoDia } from './otp2';
 import type { FaixaDoDia, FocoRota, RespostaConsulta, Rota } from './tipos';
 import { obterToken } from './token';
 import { validarRespostaConsulta } from './validar';
+import { pegadaCaminhada } from './variantesCaminhada';
 
 /**
  * Exposição estimada real (B-30): no modo `otp2`, depois do roteamento, chama a função
@@ -87,9 +88,14 @@ export function montarEntradaRpc(rotas: Rota[]): EntradaRpcRota[] | null {
     const trechosAPe: EntradaRpcRota['trechos_a_pe'] = [];
     for (const t of rota.trechos) {
       if (t.modo !== 'A_PE') continue;
-      const pontos = decodificar(t.geometria);
+      const decodificados = decodificar(t.geometria);
+      if (decodificados.length === 0) return null;
+      // B-57: vértices repetidos do OTP2 tornam a polyline não canônica no PostGIS e a RPC recusa a consulta inteira.
+      const pontos = semPontosRepetidos(decodificados);
+      // Trecho a pé de comprimento zero (um único ponto distinto) não tem caminhada a comparar: fica de fora.
+      if (pontos.length < 2) continue;
       const faixa = t.faixaDoDia ?? faixaDoDia(t.partidaPrevista ?? undefined);
-      if (pontos.length < 2 || !faixa) return null;
+      if (!faixa) return null;
       trechosAPe.push({ geometria: codificar(pontos), faixa });
     }
     if (trechosAPe.length > MAX_TRECHOS_A_PE) return null;
@@ -97,6 +103,29 @@ export function montarEntradaRpc(rotas: Rota[]): EntradaRpcRota[] | null {
   }
   if (new Set(entrada.map((r) => r.id)).size !== entrada.length) return null;
   return entrada;
+}
+
+/**
+ * B-58: rotas com a MESMA caminhada (mesmas geometrias a pé; muda só a condução) têm a mesma exposição
+ * estimada. Mandá-las juntas faria o par empatar (MISTOS) e nenhuma rota venceria todas. Cada grupo vai
+ * uma vez, representado pela rota mais rápida (decisão do Lucas, 17/11/2026); a ordem dos grupos segue a
+ * da primeira rota de cada um. Grupos além do limite ficam fora da comparação.
+ */
+export function agruparPorCaminhada(rotas: Rota[]): { representantes: Rota[]; representanteDe: Map<string, string> } {
+  const grupos = new Map<string, Rota[]>();
+  for (const rota of rotas) {
+    const chave = pegadaCaminhada(rota);
+    grupos.set(chave, [...(grupos.get(chave) ?? []), rota]);
+  }
+  const representantes: Rota[] = [];
+  const representanteDe = new Map<string, string>();
+  for (const membros of grupos.values()) {
+    if (representantes.length >= MAX_ROTAS) break;
+    const rep = membros.reduce((a, b) => (b.duracaoMin < a.duracaoMin ? b : a));
+    representantes.push(rep);
+    for (const m of membros) representanteDe.set(m.id, rep.id);
+  }
+  return { representantes, representanteDe };
 }
 
 const ehObjeto = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -107,24 +136,35 @@ const FONTE_SSP = ' Exposição estimada: boletins de ocorrência da SSP-SP regi
  * Pura: resposta do roteamento + JSON da RPC → resposta com exposição, ou `null` se o JSON não
  * fechar o contrato (o chamador mantém "Só roteamento"). Passa pela mesma validação do modo `api`.
  */
-export function mesclarExposicao(base: RespostaConsulta, bruto: unknown): RespostaConsulta | null {
+export function mesclarExposicao(
+  base: RespostaConsulta,
+  bruto: unknown,
+  representanteDe: ReadonlyMap<string, string> = new Map(base.rotas.map((r) => [r.id, r.id])),
+): RespostaConsulta | null {
   if (!ehObjeto(bruto) || !Array.isArray(bruto.rotas)) return null;
   const caso = bruto.caso;
   if (typeof caso !== 'string' || !CASOS_COM_EXPOSICAO.includes(caso)) return null;
-  if (bruto.rotas.length !== base.rotas.length) return null;
+  const enviados = new Set(representanteDe.values());
+  if (bruto.rotas.length !== enviados.size) return null;
   const porId = new Map<string, Record<string, unknown>>();
   for (const r of bruto.rotas) {
     if (!ehObjeto(r) || typeof r.id !== 'string') return null;
     porId.set(r.id, r);
   }
-  if (porId.size !== base.rotas.length || base.rotas.some((r) => !porId.has(r.id))) return null;
+  if (porId.size !== enviados.size || [...enviados].some((id) => !porId.has(id))) return null;
+  /** Resultado da RPC para a rota: o do representante do grupo dela; `undefined` se ficou fora da comparação. */
+  const resultadoDe = (rota: Rota) => {
+    const rep = representanteDe.get(rota.id);
+    return rep === undefined ? undefined : porId.get(rep);
+  };
 
-  // só CONCLUSIVO destaca, e destaca exatamente uma rota; em outros casos o destaque é ignorado
+  // só CONCLUSIVO destaca, e destaca exatamente uma rota (o representante, que é a mais rápida do grupo
+  // vencedor); as gêmeas mostram a mesma exposição, sem o destaque. Em outros casos o destaque é ignorado.
   let vencedora: string | null = null;
   if (caso === 'CONCLUSIVO') {
-    const destacadas = base.rotas.filter((r) => porId.get(r.id)?.menorExposicao === true);
+    const destacadas = [...enviados].filter((id) => porId.get(id)?.menorExposicao === true);
     if (destacadas.length !== 1) return null;
-    vencedora = destacadas[0].id;
+    vencedora = destacadas[0];
   }
 
   const periodo = ehObjeto(bruto.periodo) ? bruto.periodo : {};
@@ -134,13 +174,15 @@ export function mesclarExposicao(base: RespostaConsulta, bruto: unknown): Respos
     fontes: { roteamento: base.fontes.roteamento, exposicao: 'ssp' },
     caso,
     motivo: bruto.motivo ?? null,
-    rotas: base.rotas.map((rota) => {
-      const r = porId.get(rota.id) as Record<string, unknown>;
+    // D-23: a rota de menor exposição estimada vem primeiro (a tela seleciona a primeira); as demais mantêm a ordem
+    rotas: [...base.rotas].sort((a, b) => Number(b.id === vencedora) - Number(a.id === vencedora)).map((rota) => {
+      const r = resultadoDe(rota);
       const semDestaque = rota.focos.filter((f) => f !== 'MENOR_EXPOSICAO');
       const focos: FocoRota[] = rota.id === vencedora
         ? [...semDestaque.filter((f) => f !== 'OUTRA_OPCAO'), 'MENOR_EXPOSICAO']
         : semDestaque;
-      return { ...rota, focos, exposicao: r.exposicao, categorias: r.categorias };
+      // fora da comparação (além do limite): exposição desconhecida, como veio do roteamento
+      return r ? { ...rota, focos, exposicao: r.exposicao, categorias: r.categorias } : { ...rota, focos };
     }),
     sobreOsDados: {
       ...base.sobreOsDados,
@@ -197,12 +239,84 @@ async function obterJwt(opcoes: OpcoesExposicao, cookie: string, sinal: AbortSig
   return json.token;
 }
 
+/** `POST <DATA_API>/rpc/comparar_exposicao` com o JWT; devolve o JSON cru ou lança `FalhaExposicao`. */
+async function chamarRpc(opcoes: OpcoesExposicao, jwt: string, entrada: EntradaRpcRota[], sinal: AbortSignal): Promise<unknown> {
+  const chamar = opcoes.fetchImpl ?? fetch;
+  const res = await chamar(`${opcoes.urlDataApi}/rpc/comparar_exposicao`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${jwt}`,
+      'Content-Profile': 'mobile_api',
+    },
+    body: JSON.stringify({ p_rotas: entrada, p_modo_cobertura: opcoes.modoCobertura ?? 'poligono' }),
+    credentials: 'omit',
+    signal: sinal,
+  });
+  if (!res.ok) throw new FalhaExposicao(`rpc_http_${statusSeguro(res.status)}`);
+  try {
+    return await res.json();
+  } catch (e) {
+    if (sinal.aborted) throw e;
+    throw new FalhaExposicao('resposta_invalida');
+  }
+}
+
+/** Registros, quilômetros a pé e cobertura de um caminho candidato, como a função os mediu. */
+export interface MedidaCaminho { registros: number | null; kmAPe: number; cobertura: number | null }
+
+/** Mede caminhos candidatos (cada um com seus trechos a pé) pela mesma função da comparação. */
+export type AvaliarCaminhos = (candidatos: EntradaRpcRota[], sinal?: AbortSignal) => Promise<Map<string, MedidaCaminho>>;
+
+/**
+ * B-59 (D-33): avaliador para o motor que desenha o caminho pelos dados. Usa a MESMA RPC da comparação
+ * (`comparar_exposicao`), em lotes de até 5 candidatos, e aproveita só os números de cada caminho (o caso
+ * da comparação entre candidatos é ignorado aqui). O JWT é obtido uma vez por avaliador. `null` se não há
+ * configuração ou sessão (o motor então não roda e o app segue como antes).
+ */
+export function criarAvaliadorCaminhos(opcoes: OpcoesExposicao): AvaliarCaminhos | null {
+  if (!opcoes.urlDataApi || !opcoes.urlNeonAuth) return null;
+  const cookie = (opcoes.obterSessao ?? obterToken)();
+  if (!ehCookieSessaoNeonAuth(cookie)) return null;
+  let jwt: Promise<string> | null = null;
+  return async (candidatos, sinal) => {
+    const controle = new AbortController();
+    const aoCancelar = () => controle.abort();
+    sinal?.addEventListener('abort', aoCancelar);
+    try {
+      jwt ??= obterJwt(opcoes, cookie, controle.signal);
+      const token = await jwt;
+      const lotes: EntradaRpcRota[][] = [];
+      for (let i = 0; i < candidatos.length; i += MAX_ROTAS) lotes.push(candidatos.slice(i, i + MAX_ROTAS));
+      const respostas = await Promise.all(lotes.map((lote) => chamarRpc(opcoes, token, lote, controle.signal)));
+      const medidas = new Map<string, MedidaCaminho>();
+      for (const json of respostas) {
+        if (!ehObjeto(json) || !Array.isArray(json.rotas)) throw new FalhaExposicao('resposta_invalida');
+        for (const r of json.rotas) {
+          if (!ehObjeto(r) || typeof r.id !== 'string' || !ehObjeto(r.exposicao)) continue;
+          const e = r.exposicao;
+          medidas.set(r.id, {
+            registros: typeof e.registros === 'number' ? e.registros : null,
+            kmAPe: typeof e.kmAPe === 'number' ? e.kmAPe : 0,
+            cobertura: typeof e.cobertura === 'number' ? e.cobertura : null,
+          });
+        }
+      }
+      return medidas;
+    } finally {
+      sinal?.removeEventListener('abort', aoCancelar);
+    }
+  };
+}
+
 /** Devolve a resposta com exposição, ou `null` em qualquer falha (o motivo fica em `ultimoMotivoExposicao`). */
 async function buscarExposicao(base: RespostaConsulta, opcoes: OpcoesExposicao, externo?: AbortSignal): Promise<RespostaConsulta | null> {
   if (!opcoes.urlDataApi || !opcoes.urlNeonAuth) { registrarMotivo('sem_config'); return null; }
   const cookie = (opcoes.obterSessao ?? obterToken)();
   if (!ehCookieSessaoNeonAuth(cookie)) { registrarMotivo('sem_sessao'); return null; }
-  const entrada = montarEntradaRpc(base.rotas);
+  const { representantes, representanteDe } = agruparPorCaminhada(base.rotas);
+  const entrada = montarEntradaRpc(representantes);
   if (!entrada) { registrarMotivo('entrada_invalida'); return null; }
 
   const controle = new AbortController();
@@ -212,28 +326,8 @@ async function buscarExposicao(base: RespostaConsulta, opcoes: OpcoesExposicao, 
   externo?.addEventListener('abort', aoCancelar);
   try {
     const jwt = await obterJwt(opcoes, cookie, controle.signal);
-    const chamar = opcoes.fetchImpl ?? fetch;
-    const res = await chamar(`${opcoes.urlDataApi}/rpc/comparar_exposicao`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Bearer ${jwt}`,
-        'Content-Profile': 'mobile_api',
-      },
-      body: JSON.stringify({ p_rotas: entrada, p_modo_cobertura: opcoes.modoCobertura ?? 'poligono' }),
-      credentials: 'omit',
-      signal: controle.signal,
-    });
-    if (!res.ok) throw new FalhaExposicao(`rpc_http_${statusSeguro(res.status)}`);
-    let json: unknown;
-    try {
-      json = await res.json();
-    } catch (e) {
-      if (controle.signal.aborted) throw e;
-      throw new FalhaExposicao('resposta_invalida');
-    }
-    const mesclada = mesclarExposicao(base, json);
+    const json = await chamarRpc(opcoes, jwt, entrada, controle.signal);
+    const mesclada = mesclarExposicao(base, json, representanteDe);
     if (!mesclada) throw new FalhaExposicao('resposta_invalida');
     registrarMotivo('ok');
     return mesclada;

@@ -117,7 +117,7 @@ function mapearTrecho(leg: LegOtp2, rotaId: string, ordem: number): Trecho | nul
 }
 
 /** Une as geometrias dos trechos sem repetir o vértice de conexão. */
-function unirGeometrias(trechos: Trecho[]): string {
+export function unirGeometrias(trechos: Trecho[]): string {
   const pontos: PontoGeometria[] = [];
   for (const t of trechos) {
     const seg = decodificar(t.geometria);
@@ -248,6 +248,14 @@ function combinarSinais(externo: AbortSignal | undefined, tempoMs: number) {
   };
 }
 
+/**
+ * Rastro no terminal do Metro (só em desenvolvimento e fora dos testes): URL, tempo e desfecho.
+ * Nunca registra origem, destino ou horário da pessoa (regras de PII/LGPD).
+ */
+function registrarOtp2(mensagem: string): void {
+  if (typeof __DEV__ !== 'undefined' && __DEV__ && process.env.NODE_ENV !== 'test') console.log(`[otp2] ${mensagem}`);
+}
+
 const erroCancelado = () => Object.assign(new Error('Consulta cancelada'), { name: 'AbortError' });
 
 /**
@@ -264,8 +272,16 @@ export function criarConsultaOtp2(
     async consultarRotas(entrada: EntradaConsulta, opcoes) {
       if (opcoes?.signal?.aborted) throw erroCancelado();
       const sinais = combinarSinais(opcoes?.signal, tempoLimiteMs);
+      const inicio = Date.now();
+      const decorrido = () => `${((Date.now() - inicio) / 1000).toFixed(1)} s`;
+      registrarOtp2(`POST ${urlBase}/otp/gtfs/v1 (limite ${tempoLimiteMs / 1000} s)`);
       /** Traduz a falha de `fetch` ou de `json()`; quem cancelou ou o relógio têm prioridade. */
       const falha = (e: unknown, status: number | null): never => {
+        registrarOtp2(
+          sinais.esgotou()
+            ? `tempo esgotado após ${decorrido()}: o celular alcança ${urlBase}? (abra ${urlBase}/graphiql no navegador dele)`
+            : `falhou após ${decorrido()}: ${(e as { message?: string })?.message ?? String(e)}`,
+        );
         if (sinais.esgotou()) throw new ErroServico('INDISPONIVEL', CODIGO_TEMPO_ESGOTADO, 504);
         if (opcoes?.signal?.aborted || (e as { name?: string })?.name === 'AbortError') throw erroCancelado();
         throw status === null
@@ -292,6 +308,7 @@ export function criarConsultaOtp2(
         } catch (e) {
           return falha(e, null);
         }
+        registrarOtp2(`HTTP ${resposta.status} em ${decorrido()}`);
         if (!resposta.ok) throw new ErroServico('INDISPONIVEL', null, resposta.status);
         let json: RespostaOtp2;
         try {
@@ -300,6 +317,8 @@ export function criarConsultaOtp2(
           return falha(e, resposta.status);
         }
         if (opcoes?.signal?.aborted) throw erroCancelado();
+        const itinerarios = json?.data?.planConnection?.edges?.length ?? 0;
+        registrarOtp2(`${itinerarios} itinerário(s) recebido(s) em ${decorrido()}`);
         return mapearOtp2(json);
       } finally {
         sinais.limpar();

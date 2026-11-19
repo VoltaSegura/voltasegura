@@ -17,7 +17,7 @@ flowchart TD
     FL05A --> PRE["Campo preenchido"]
     S --> DES["Destino: toca no campo (TL-05) ou num lugar salvo"]
     DES --> PRE
-    PRE --> HOR["Horário: atalho (agora, +15, +30, +60 min) ou digita HH:mm"]
+    PRE --> HOR["Horário: cartão grande que abre a folha com rodas HH:MM, sem teclado (D-37)"]
     HOR --> PED["Toca em Ver alternativas"]
     PED --> V1{"Origem e destino preenchidos?"}
     V1 -- "não" --> E1["Abre o mapa do campo faltante; nada é enviado"]
@@ -35,10 +35,10 @@ flowchart TD
 ## Passos
 | Nº | Ação da usuária | Resposta do app | Tela | Dado/serviço |
 |---|---|---|---|---|
-| 1 | Abre o app | Home com origem, destino, atalhos de horário e lugares salvos | TL-04 | Local |
+| 1 | Abre o app | Home com origem, destino, cartão de horário e lugares salvos | TL-04 | Local |
 | 2 | Toca em De onde | Abre o mapa (ou, com ⌖, preenche com a localização) | TL-04 → TL-05 | FL-05, GPS |
 | 3 | Toca em Para onde ou num lugar salvo | Abre o mapa ou preenche o destino | TL-04 → TL-05 | FL-05, local |
-| 4 | Escolhe o horário | Atalho ou HH:mm | TL-04 | Local |
+| 4 | Escolhe o horário | Toca no cartão e ajusta na folha de rodas HH:MM; sem teclado | TL-04 | Local |
 | 5 | Toca em Ver alternativas | Valida e envia | TL-04 → TL-06 | API |
 
 ## Caminhos alternativos

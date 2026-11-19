@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import DetalhesRota from '@/app/(app)/resultado/[rotaId]';
-import Planejar from '@/app/(app)/planejar';
+import Planejar from '@/app/(app)/(abas)/planejar';
 import { RotuloFoco, SequenciaModos } from '@/components/resultado';
 import { useConsulta, type Consulta, type ValorConsulta } from '@/consulta';
 import { conclusivo } from '@/services/fixtures';

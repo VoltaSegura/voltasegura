@@ -11,6 +11,8 @@ export const resultado = {
   saidaPrevista: (hora: string) => `Sai às ${hora} (previsto)`,
   soUma: 'Só uma opção neste horário: não há comparação.',
   planejarVolta: 'Planejar a volta',
+  /** Item 6 (T25-B): link de uma linha na folha de resultado; leva a /sobre-os-dados. */
+  linkDados: 'Entenda de onde vem nossos dados e fontes',
   planejarIda: 'Planejar a ida',
   expandir: 'Expandir lista',
   selecionada: 'selecionada',
