@@ -18,6 +18,7 @@
 | F2.3 — Receber alternativas multimodais | E2 Planejamento do trajeto | MVP |  |
 | F2.4 — Orientação passo a passo | E2 Planejamento do trajeto | MVP |  |
 | F2.5 — Compartilhar trajeto e localização ao vivo | E2 Planejamento do trajeto | MVP | Depende do tempo; protótipo com mock (sem backend real nem GPS em segundo plano). |
+| F2.6 — Seguir rota (navegação no trajeto) | E2 Planejamento do trajeto | MVP | Incluída em 18/11 (D-34); fases 2 e 3 em andamento. |
 | F3.1 — Calcular N, L e D por alternativa | E3 Comparação de exposição estimada | MVP |  |
 | F3.2 — Regra de destaque | E3 Comparação de exposição estimada | MVP |  |
 | F3.3 — Resultado "dados insuficientes" | E3 Comparação de exposição estimada | MVP |  |
@@ -173,6 +174,24 @@
 - **AC8.** O contato não vê dados da conta de quem compartilha nem os números da comparação de exposição `[HIPÓTESE]`.
 - **AC9.** Nenhum texto apresenta o compartilhamento como garantia de segurança nem transfere responsabilidade a quem acompanha (RNF-01, RNF-06).
 - `[EM ABERTO]` Tempo máximo da sessão, frequência de atualização da posição, critério de chegada e se o contato precisa estar logado para abrir o link (`docs/app-map/12_pendencias_e_lacunas.md`, PL-20 a PL-23).
+
+---
+
+## F2.6 — Seguir rota (navegação no trajeto) · MVP · Mobile · `[DECISÃO — 18/11/2026]` (D-34; revista a US-05 AC3)
+
+**Épico:** E2 — Planejamento do trajeto
+
+> **Status (19/11/2026):** Fase 1 (primeiro plano, com a tela ligada) implementada no código e nos testes de unidade; validação no aparelho pendente. Fases 2 (recálculo) e 3 (segundo plano) implementadas no código, sem validação no aparelho. Itens em aberto: PL-22, PL-24 e PL-28 a PL-32.
+
+**US-23.** Como Ágatha, quero acompanhar minha posição no trajeto escolhido enquanto caminho ou sigo de transporte, para saber o próximo passo sem conferir o mapa a cada trecho.
+- **AC1.** Dado uma rota escolhida, quando tocar em "Seguir esta rota" e depois em "Começar", então o app pede a permissão de localização (se ainda não concedida), mostra a posição no trajeto, o trecho atual e o próximo passo. Antes desse toque, o app não lê a posição.
+- **AC2.** Antes de começar, o app informa que a posição fica neste aparelho, a não ser que a pessoa esteja compartilhando a viagem (D-21, F2.5), e que ela pode encerrar a qualquer momento.
+- **AC3.** Durante a sessão, um indicador fica visível, com o botão "Parar" (alvo de pelo menos 48 dp). O indicador não pode ser ocultado (D-20). `[EM ABERTO]` Rótulo do botão: o app usa "Encerrar" hoje (D-34, item 8).
+- **AC4.** A sessão termina sozinha ao chegar ao destino ou ao fim de um tempo máximo `[EM ABERTO]` (valor do tempo máximo e raio de chegada, D-34, item 7).
+- **AC5.** Sem histórico: o trajeto percorrido e as posições não são guardados no aparelho nem enviados ao servidor. Ao encerrar, nada da sessão permanece (D-20, D-21).
+- **AC6.** Com a sessão ativa e a tela desligada ou o app em segundo plano (Fase 3), a leitura continua só enquanto a sessão durar e com o indicador visível. `[HIPÓTESE]` Depende do GPS em segundo plano no Expo Go (PL-24).
+- **AC7.** Ao sair do trajeto, o app avisa e oferece voltar ao resultado. O recálculo a partir da posição atual (Fase 2) fica `[EM ABERTO]`: a posição não pode ir a um serviço fora do aparelho sem decisão, por causa da D-21 (D-34, item 6).
+- **AC8.** Nenhum texto apresenta a navegação como garantia de segurança nem diz que o trajeto é "seguro" (`docs/05`, RNF-01).
 
 ---
 
