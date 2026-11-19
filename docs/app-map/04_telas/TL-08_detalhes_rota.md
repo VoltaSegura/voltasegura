@@ -1,5 +1,7 @@
 # TL-08 · Detalhes da rota (trechos e passo a passo)
 
+> **Revisão de 19/11/2026 — T25-B item 7 (D-39):** `[DECISÃO]` saem deste detalhe os botões "Compartilhar minha volta" e "Planejar a volta". O detalhe termina em "Seguir rota". O compartilhamento fica só na tela Seguir (`seguir/[rotaId]`, cartão de acompanhamento; integração do lead). Esta tela não tem mais a entrada para a TL-14 nem para a volta pela TL-04. As linhas de compartilhamento e de "Planejar a volta" abaixo descrevem o fluxo anterior.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/resultado/[rotaId]` (container expandido da TL-07; voltar recolhe)
 - **Objetivo:** mostrar a rota dividida em trechos, em ordem, com embarque e desembarque. É o passo a passo **só de leitura** (D-04). Os trechos a pé têm o botão "Por que esta rota?" (D-08).
 - **US/AC e funcionalidades cobertas:** US-09 AC1; US-08 AC1, AC3; US-10 AC5 · FN-09 · **RNF aplicáveis:** RNF-01, RNF-07, RNF-08

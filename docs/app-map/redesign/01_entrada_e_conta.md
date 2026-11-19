@@ -12,7 +12,7 @@
 
 ## 2. Rubrica do guia, seção 8
 
-Legenda: ✅ evidência no código; ⚠️ parcial, previsto ou sem teste em aparelho; ❌ ausente ou divergente. A tabela avalia a implementação atual, não o mockup. Cada célula traz uma referência; `guia` = `docs/redesign/00_guia_original.md`.
+Legenda: ✅ evidência no código; ⚠️ parcial, previsto ou sem teste em aparelho; ❌ ausente ou divergente. A tabela avalia a implementação atual, não o mockup. Cada célula traz uma referência; `guia` = `docs/app-map/redesign/00_guia_original.md`.
 
 | Item do checklist | TL-01 | TL-02 | TL-03 | TL-13 |
 |---|---|---|---|---|
@@ -134,7 +134,7 @@ Legenda: ✅ evidência no código; ⚠️ parcial, previsto ou sem teste em apa
 | [DECISÃO] D-24 Neon Auth (`docs/app-map/01_decisoes.md:31`) | Tratar falha web de cookie como erro de senha ou supor fluxo testado em celular. | Mensagem de indisponibilidade, teste real no Expo Go antes de demonstrar, sem segredo no app. `docs/HANDOFF_mobile.md:49` registra o defeito web. |
 | [DECISÃO] D-25 (`docs/app-map/01_decisoes.md:32`) versus aviso (`src/mobile-app/src/textos/aviso.ts:20`) | Dizer que há exclusão de conta quando não há. | Revisar a minuta com Lucas antes da entrega; não inventar canal alternativo. |
 | [EM ABERTO] PL-07 e aceite não armazenado (`docs/app-map/12_pendencias_e_lacunas.md:14`, `docs/app-map/01_decisoes.md:31`) | Mensagem "Informe uma senha" para senha preenchida; inferir prova de consentimento. | Propor texto de erro exato como [HIPÓTESE], não prometer registro do aceite; confirmação jurídica/operacional fora do escopo visual. |
-| [DECISÃO] Guia: só `transform`/`opacity`, reduzir movimento e RN nativo (`docs/redesign/00_guia_original.md:264`, `:14`) | Copiar `stroke-dashoffset`/SVG/DOM do mockup (`mockups/index.html:167`). | Versão estática sem dependência; animação de traçado só se houver decisão técnica posterior. `Animated` basta para fade/transform; checar reduzir movimento. |
+| [DECISÃO] Guia: só `transform`/`opacity`, reduzir movimento e RN nativo (`docs/app-map/redesign/00_guia_original.md:264`, `:14`) | Copiar `stroke-dashoffset`/SVG/DOM do mockup (`mockups/index.html:167`). | Versão estática sem dependência; animação de traçado só se houver decisão técnica posterior. `Animated` basta para fade/transform; checar reduzir movimento. |
 | [DECISÃO] Entrega 19/11 23h55 (`docs/01_gs_briefing.md:36`) e congelamento 18/11 informado no pedido | Redesign amplo sem validação no celular. | Até 18/11: clareza, erros, foco, conteúdo aprovado e testes manuais. Adiar fonte/cena animada/OAuth. |
 
 ## 9. Perguntas para o Lucas

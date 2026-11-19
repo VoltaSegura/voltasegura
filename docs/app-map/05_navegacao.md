@@ -27,7 +27,7 @@ app/
     │   └── [rotaId]/[trechoId].tsx   TL-09 (modal)
     ├── sobre-os-dados.tsx      TL-10
     ├── dados-considerados.tsx  TL-11 (?rotaId=)
-    ├── configuracoes.tsx       TL-12
+    ├── (abas)/perfil.tsx       TL-12 (aba Perfil, D-38)
     ├── rotina.tsx              TL-16 (Depende do tempo, D-31)
     ├── rotina/
     │   └── editar.tsx          TL-17 (?id= ao editar)
@@ -63,7 +63,7 @@ flowchart LR
     TL10 --> TL11
     TL07 --> TL04
     TL08 --> TL04
-    TL04 --> TL12["TL-12 Configurações"]
+    TL04 --> TL12["TL-12 Perfil (aba)"]
     TL12 --> TL16["TL-16 Rotina da semana"]
     TL16 --> TL17["TL-17 Criar ou editar rotina"]
     TL17 --> TL16
@@ -119,3 +119,34 @@ No Android, o botão físico de voltar segue a coluna "Voltar".
 - Com sessão, abrir o app leva direto à TL-04.
 - **Indicador global de compartilhamento:** enquanto a sessão estiver ativa, fica fixo no topo de todas as telas de `(app)` e não pode ser escondido (D-20).
 - TL-07 a TL-11 sem resposta em memória (ex.: o app foi reaberto) redirecionam para TL-04 `[HIPÓTESE]`.
+
+
+## Abas e VoltaSegura+ (D-36, 19/11/2026)
+
+`[DECISÃO]` A barra inferior tem cinco abas. A aba **Planejar** é a home de busca (TL-04). Telas de fluxo (escolher ponto, resultado, por que, buscando, seguir, compartilhar, rotina/editar e as telas do Plus) ficam fora das abas, como pilha ou modal.
+
+| Aba | Rota | Tela | Observação |
+|---|---|---|---|
+| Planejar | `/(app)/planejar` | TL-04 | home de busca (inalterada) |
+| Locais | `/(app)/locais` | TL-26 | salvar abre `/(app)/escolher-ponto` (TL-05) |
+| Contatos | `/(app)/contatos` | TL-27 | só nomes |
+| Plus | `/(app)/plus/index` | TL-19 | planos; o teste leva a `/(app)/plus/confirmacao` (TL-20) e depois a `/(app)/plus/home` (TL-21) |
+| Perfil | `/(app)/(abas)/perfil` | TL-12 | conta, status do VoltaSegura+, atalho da rotina, tema, privacidade e sair (D-38); `/(app)/configuracoes` foi removida |
+
+Caminhos a partir da TL-21 (pilha): `/(app)/plus/volta-pronta` (TL-22), `/(app)/plus/radar` (TL-23), `/(app)/plus/resumo` (TL-24), `/(app)/plus/assinatura` (TL-25), `/(app)/rotina/editar` (TL-17).
+
+`[DECISÃO]` As abas ficam no grupo `src/app/(app)/(abas)/` (`planejar`, `locais`, `contatos`, `plus`, `perfil`), com `Tabs` e a `BarraAbas` em `(abas)/_layout.tsx`. A pilha do `(app)/_layout.tsx` abre em `(abas)` e guarda as telas de fluxo (resultado, modais, Plus de pilha, seguir, compartilhar). As URLs não mudam: o grupo não entra no caminho (`/planejar` continua `/planejar`).
+
+
+## Revisão D-38 (19/11/2026, T25-B): sem Configurações e com portão na aba Plus
+
+- `/(app)/configuracoes` deixa de existir. Quem chegava por ela encontra a aba Perfil (conta, Plus, Rotina, tema, privacidade, sair) e a aba Locais (renomear e apagar lugares).
+- A aba Plus (`/(app)/(abas)/plus`) mostra a home (TL-21) quando há assinatura simulada; sem ela, os planos (TL-19). `/plus/home` continua existindo como tela de pilha.
+- Depois de cancelar a simulação (TL-25), a navegação volta para `/plus`.
+
+## Revisão de 19/11/2026 (T25-B, D-39 e itens 8 e 9)
+
+- **Compartilhar sai do detalhe da rota (TL-08 → TL-14 deixa de existir):** o caminho passa a ser TL-18 Seguir → `/compartilhar/[rotaId]` (TL-14), pelo botão "Compartilhar minha volta" no cartão de acompanhamento, só depois de começar o trajeto (D-39). O `IndicadorCompartilhamento` continua abrindo a TL-14 quando há compartilhamento ativo.
+- **"Planejar a volta" sai do resultado e do detalhe:** `[EM ABERTO]` novo caminho para a volta (FL-08, US-07 AC1).
+- **Fechar no Seguir (TL-18) volta direto à home:** `router.dismissAll()` e `router.replace('/planejar')`, sem passar de volta pelo detalhe e pelo resultado.
+- **Aviso de início do Seguir:** pode ser ocultado com "Entendi e não mostrar de novo" (preferência só no aparelho).

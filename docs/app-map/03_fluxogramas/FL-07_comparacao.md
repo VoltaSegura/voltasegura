@@ -1,5 +1,7 @@
 # FL-07 · Comparação, foco de exposição e "Por que esta rota?"
 
+> **Revisão de 19/11/2026 — T25-B item 6 (D-39):** `[DECISÃO]` a folha de alternativas abre em meia altura (nível inicial 1). A regra de comparação e o texto do caso não mudam.
+
 - **Status:** rascunho · **Status das regras:** regra de par `[DECISÃO]` (DT-03 a DT-07, `docs/08`); três ou mais candidatas, `L = 0` e mistos `[DECISÃO — 13/11/2026]` (D-11 a D-13); apresentação `[DECISÃO]` (D-01, D-08, D-09, D-14, D-23); candidatas `[DECISÃO]` (D-15: até 5)
 - **Ator e gatilho:** o FL-06 recebe duas ou mais candidatas.
 - **Pré-condições:** resposta da API com as candidatas e os resultados da comparação. **O app não calcula estatística:** só exibe o que a API devolve.
@@ -117,3 +119,18 @@ Sem foco de exposição (o caso mais comum): só os focos de menor tempo e menos
 - Confiança separada da exposição; sem nota, escala, semáforo nem verde/vermelho (RNF-04, US-14 AC1).
 - Números sempre da rota inteira, nunca por trecho; sem coordenadas nem boletins individuais (D-08, US-20).
 - Termos proibidos de `docs/05` não aparecem em nenhum estado; "por segurança" incluído (RNF-01, D-12).
+
+## Revisão de 17/11/2026 — B-58 · Variações de caminhada (D-32)
+
+No modo `otp2` com exposição real, entre "roteamento devolve as alternativas" e "comparação de exposição":
+1. o app gera até 2 variações de caminhada por alternativa (só trechos a pé de 250 m ou mais, até +30%), consultando o OTP2 só a pé; falha ou demora acima de 15 s segue só com as alternativas do roteador;
+2. agrupa as rotas pela caminhada e manda à função de exposição um representante por grupo (o mais rápido), até 5;
+3. copia o resultado para as rotas do mesmo grupo; no CONCLUSIVO, a vencedora (a mais rápida do grupo vencedor) vem primeiro e já selecionada (D-23).
+
+Erros: os mesmos do B-30 (qualquer falha da exposição = "Só roteamento"; as rotas nunca caem).
+
+## Revisão de 17/11/2026 — B-59 · Caminho desenhado pelos dados (D-33; substitui o passo 1 da revisão B-58)
+
+1. Para as 2 alternativas mais rápidas, o app gera candidatos para cada trecho a pé (≥ 250 m) pelo OTP2 e mede todos de uma vez na função de exposição; por trecho, fica o de menos registros com cobertura ≥ 80% (e só se for melhor que o original). A rota com os trechos escolhidos entra na lista. Falha ou mais de 20 s: segue só com o roteador.
+2. Comparação oficial (como antes): uma vez por caminhada distinta.
+3. Prioridade: a rota com menos registros (cobertura ≥ 80%, caminhada diferente das demais) recebe o destaque com a confiança (`clara` se CONCLUSIVO, senão `pequena`), em primeiro e selecionada. Sem rival elegível, empate ou rota sem trecho a pé: sem destaque.

@@ -31,6 +31,7 @@ Esta pasta transforma o backlog (`docs/10_backlog_produto.md`, v1.6) em fluxos, 
 6. `07_design/` (tokens, componentes, acessibilidade, **`mockups/index.html`**, que abre com duplo clique) e `08_microcopy.md`.
 7. `10_rastreabilidade.md`: AC → fluxo → tela → teste. É a base dos Test Cases da QA (T10).
 8. `12_pendencias_e_lacunas.md`: o que ainda precisa de resposta.
+9. `redesign/`: análises, planos e evidências das ondas de redesign (00 a 13), com os mockups em `redesign/inspo-melhorar-design/novas-telas`. A pasta saiu de `docs/redesign/` em 19/11/2026.
 
 ## Legenda de status dos arquivos
 
@@ -53,6 +54,7 @@ Esta pasta transforma o backlog (`docs/10_backlog_produto.md`, v1.6) em fluxos, 
 | `10_rastreabilidade.md` (86 AC + 9 RNF) | 4 | pronta |
 | `11_roteiro_demo.md` | 4 | **adiado** (D-18), arquivo não criado |
 | `12_pendencias_e_lacunas.md` | contínuo | 15 abertas, 9 resolvidas (PL-01 a PL-24) |
+| `redesign/` (00 a 13, mockups e evidências) | contínuo | movida de `docs/redesign/` em 19/11/2026; referências atualizadas |
 
 ## Definição de pronto da Frente 1 (`docs/plano_app.md` §8)
 

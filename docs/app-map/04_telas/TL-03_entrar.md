@@ -1,5 +1,7 @@
 # TL-03 · Entrar
 
+> **Revisão de 18/11/2026 — redesign T25 (mockup `06_Login`):** `[DECISÃO]` sem imagem de topo. Botão voltar redondo (`BotaoIcone`), marca "VoltaSegura" (`entrar.marca`) acima do título, subtítulo "Acesse sua conta para planejar sua ida." (`entrar.subtitulo`), campos e "Entrar" primário amarelo; "Não tem conta? Criar conta" abaixo. Não há frase de privacidade no rodapé: o local do histórico segue `[EM ABERTO]` (D-24, FN-13), então o mockup não é seguido nesse ponto. Fluxo e regras de validação não mudaram.
+
 > **Revisão D-29 (14/11/2026):** topo com imagem de borda curva (`heroEntrar`), botão voltar redondo e título sobre a imagem; sem cabeçalho nativo.
 
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(auth)/entrar`

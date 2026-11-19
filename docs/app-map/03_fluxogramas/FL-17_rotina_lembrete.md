@@ -1,5 +1,7 @@
 # FL-17 · Rotina da semana e lembrete antes de sair (VoltaSegura+)
 
+> **Revisão D-36 (19/11/2026):** a rotina também é aberta pela home do VoltaSegura+ (FL-19). O horário é escolhido numa folha com rodas, sem teclado (decisão D-35, de 18/11).
+>
 > **Revisão D-31 (15/11/2026):** `[DECISÃO]` o VoltaSegura+ entra no MVP em versão mínima: rotina salva só no aparelho e **lembrete local por horário**, N minutos antes da saída (padrão 15), sem tempo real. Recurso **em validação**, sem preço. **Depende do tempo:** se o prazo de 19/11 apertar, vira roadmap sem afetar o resto.
 
 - **Status:** rascunho (novo, 15/11/2026; aguarda revisão do Lucas) · **Depende do tempo (D-31)** · **Status das regras:** `[DECISÃO]` (D-31, `docs/10` F7.1/US-22); texto do lembrete, limite de 5 rotinas e opções de antecedência `[HIPÓTESE]`

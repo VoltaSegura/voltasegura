@@ -1,7 +1,7 @@
 ---
 titulo: Backlog do produto VoltaSegura
 projeto: VoltaSegura
-atualizado: 2026-11-15
+atualizado: 2026-11-18
 tipo: backlog-produto
 fonte: "Consolidação das decisões de docs/03, 04, 05, 07, 08 e 06 até a versão 1.30 de docs/06"
 convencao_status: "[DECISÃO] direcionamento atual do grupo · [HIPÓTESE] precisa ser testada · [EM ABERTO] não apresentar como resolvido"
@@ -139,7 +139,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 - **AC1.** Dado o campo de origem, quando tocar em "usar minha localização", então o app pede permissão de GPS (se ainda não concedida) e preenche a origem.
 - **AC2.** Dado a permissão negada, então o usuário consegue escolher a origem normalmente, no mapa, num local salvo ou num ponto de exemplo. *(13/11/2026: antes "digitar a origem"; revisto pela D-02, que não prevê busca de endereço.)*
-- **AC3.** O app não lê a localização em segundo plano nem fora dessa ação. **Exceção** `[DECISÃO — 13/11/2026]` (D-20): durante uma sessão de compartilhamento ativa (F2.5), com indicador visível e botão de parar.
+- **AC3.** O app não lê a localização em segundo plano nem fora dessa ação. **Exceção** `[DECISÃO — 13/11/2026]` (D-20): durante uma sessão de compartilhamento ativa (F2.5), com indicador visível e botão de parar. *(18/11/2026: revisto pela D-34, que acrescenta a leitura durante a Seguir rota iniciada pela pessoa (F2.6, US-23): na Fase 1, com a tela ligada e o app aberto; em segundo plano, só com a sessão ativa, como na D-20.)*
 
 ### E2 — Planejamento do trajeto
 
@@ -195,6 +195,21 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - **AC8.** O contato não vê dados da conta de quem compartilha nem os números da comparação de exposição `[HIPÓTESE]`.
 - **AC9.** Nenhum texto apresenta o compartilhamento como garantia de segurança nem transfere responsabilidade a quem acompanha (RNF-01, RNF-06).
 - `[EM ABERTO]` Tempo máximo da sessão, frequência de atualização da posição, critério de chegada e se o contato precisa estar logado para abrir o link (`docs/app-map/12_pendencias_e_lacunas.md`, PL-20 a PL-23).
+
+#### F2.6 — Seguir rota (navegação no trajeto) · MVP · Mobile · `[DECISÃO — 18/11/2026]` (`docs/app-map/01_decisoes.md`, D-34; revê D-04 e US-05 AC3)
+
+> **Status (18/11/2026):** Fases 1 (primeiro plano), 2 (recálculo ao desviar) e 3 (segundo plano opcional) implementadas no código, com 71 testes passando em 18/11/2026; sem commit e sem validação no aparelho. Decisões em aberto: PL-28 a PL-32 (`docs/app-map/12_pendencias_e_lacunas.md`). Prazo de cada fase `[EM ABERTO]`; se o prazo de 19/11 apertar, aplica-se a D-22.
+
+**US-23.** Como Ágatha, quero acompanhar minha posição no trajeto escolhido enquanto caminho ou sigo de transporte, para saber o próximo passo sem conferir o mapa a cada trecho.
+
+- **AC1.** Dado uma rota escolhida, quando tocar em "Seguir esta rota" e depois em "Começar", então o app pede a permissão de localização (se ainda não concedida), mostra a posição no trajeto, o trecho atual e o próximo passo. Antes desse toque, o app não lê a posição.
+- **AC2.** Antes de começar, o app informa que a posição fica neste aparelho, a não ser que a pessoa esteja compartilhando a viagem (D-21, F2.5), e que ela pode encerrar a qualquer momento.
+- **AC3.** Durante a sessão, um indicador fica visível, com o botão "Parar" (alvo de pelo menos 48 dp). O indicador não pode ser ocultado (D-20). `[EM ABERTO]` Rótulo do botão: o app usa "Encerrar" hoje (D-34, item 8).
+- **AC4.** A sessão termina sozinha ao chegar ao destino ou ao fim de um tempo máximo `[EM ABERTO]` (valor do tempo máximo e raio de chegada, D-34, item 7).
+- **AC5.** Sem histórico: o trajeto percorrido e as posições não são guardados no aparelho nem enviados ao servidor. Ao encerrar, nada da sessão permanece (D-20, D-21).
+- **AC6.** Com a sessão ativa e a tela desligada ou o app em segundo plano (Fase 3), a leitura continua só enquanto a sessão durar e com o indicador visível. `[HIPÓTESE]` Depende do GPS em segundo plano no Expo Go (PL-24).
+- **AC7.** Ao sair do trajeto, o app avisa e oferece voltar ao resultado. O recálculo a partir da posição atual (Fase 2) fica `[EM ABERTO]`: a posição não pode ir a um serviço fora do aparelho sem decisão, por causa da D-21 (D-34, item 6).
+- **AC8.** Nenhum texto apresenta a navegação como garantia de segurança nem diz que o trajeto é "seguro" (`docs/05`, RNF-01).
 
 ### E3 — Comparação de exposição estimada
 
@@ -347,7 +362,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 | Checagens de viés por resultado e por acesso ao registro | Dependem de roteamento em lote | `docs/08` |
 | Garantia de segurança, previsão de crimes, monitoramento contínuo | Contrários ao posicionamento | `docs/03` §9 |
 | Busca de endereço por serviço externo (autocomplete) | A consulta não pode sair para serviços externos de mapas (US-19 AC3) | `docs/app-map` D-02 (13/11/2026) |
-| Navegação ao vivo (acompanhar a posição durante o trajeto) | O passo a passo é só de leitura; GPS só sob demanda (US-05 AC3) | `docs/app-map` D-04 (13/11/2026) |
+| ~~Navegação ao vivo (acompanhar a posição durante o trajeto)~~ **Revisto em 18/11/2026 (D-34): entra no MVP como F2.6 / US-23 (Seguir rota)** | ~~O passo a passo é só de leitura; GPS só sob demanda (US-05 AC3)~~ | ~~`docs/app-map` D-04 (13/11/2026)~~ |
 
 ## 9. Itens de fases posteriores (roadmap)
 
@@ -361,8 +376,10 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 | P-04 | Preferências de mobilidade e acessibilidade | Fase 3 |
 | P-05 | Parcerias, integrações institucionais e API sob demanda; outras cidades | Fase 4 |
 | P-06 | Teste de compreensão das mensagens com usuários (metodologia em `docs/08`) | Após o MVP |
-| P-07 | Relatos de infraestrutura (postes apagados, calçadas sem acessibilidade) com 3 dias de VoltaSegura+ de recompensa; dados anônimos para melhorar a cidade (pitch, 15/11/2026) | Roadmap do pitch, passo 1 |
+| P-07 | Relatos de infraestrutura (postes apagados, calçadas sem acessibilidade) com 3 dias de VoltaSegura+ de recompensa; dados anônimos para melhorar a cidade (pitch, 15/11/2026) | Roadmap do pitch, passo 1 | Sinalização pelos usuários só com moderação, antifraude e anonimização definidas antes (ver PF-06 a PF-08 no TODO.md); sem vínculo com a comparação de exposição (DT-10).
 | P-08 | Agente inteligente que reorganiza trajetos diante de atrasos (depende de P-01) e integrações com aplicativos de mobilidade, a partir do VoltaSegura+ | Roadmap do pitch, passo 2 |
+| P-09 | Ampliação territorial do piloto: da cidade de São Paulo para as demais grandes regiões do estado; depois, outros estados se as fontes de dados se adequarem. Meta de ampliação para o ano seguinte `[HIPÓTESE]`, condicionada à auditoria de fontes e à cobertura medida em cada região (US-17) | Roadmap (Fase 3, a validar) |
+| P-10 | Sinalização de problemas de infraestrutura pelos usuários (ex.: falta de luz em uma rua), como apoio a outros usuários, com a moderação e a privacidade de P-07 | Roadmap, depende de P-07 |
 
 ## 10. Pontos em aberto que afetam o backlog
 
@@ -374,6 +391,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - Endpoints de cadastro, login e exclusão no backend (F1.1 a F1.3): decidido em 13/11/2026 que o app usa endpoints do backend (D-03); o contrato esperado fica em `docs/app-map/` e a implementação está pendente (PL-05).
 - Lacunas do mapeamento do app em `docs/app-map/12_pendencias_e_lacunas.md`. Em 13/11/2026 foram resolvidas PL-01, PL-02, PL-04, PL-08 e PL-13 a PL-15 (D-08 a D-14). PL-16 e PL-17 também foram resolvidas no mesmo dia (D-15: até 5 candidatas; D-16: "outra opção"). **Seguem abertas:** mapa base externo (PL-03), endpoints de conta (PL-05), Google no Expo Go (PL-06), regras de senha (PL-07), nome do ponto escolhido no mapa (PL-09), cópia para o espelho (PL-10), limite do município no aparelho (PL-11), comportamento sem rede (PL-12) e **contrato da API esperado pelo app**, a conciliar com o backend (PL-18).
 - Compartilhamento (F2.5): tempo máximo da sessão, frequência de atualização, critério de chegada, login do contato e GPS em segundo plano no Expo Go (`docs/app-map` PL-20 a PL-24).
+- Seguir rota (F2.6, D-34): sem tempo máximo (item 7), raio de chegada de 100 m; exceção à D-21 no recálculo registrada (item 6); rótulo do botão ("Parar" na D-20 × "Encerrar" no app); GPS em segundo plano (PL-24).
 - Modelo de receita: proposta de assinatura individual (freemium) em discussão no grupo; ver seção 4. Nada decidido.
 - Indicador "Risco Cidadão" (disciplina de Cybersecurity).
 - Atualização do benchmarking (seção 3, T17).
@@ -395,6 +413,8 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 | Data | Versão | Mudança | Responsável |
 |---|---|---|---|
 | 15/11/2026 | 1.9 | Alinhamento ao roteiro do pitch (`TODO.md` T23): público amplo (quem volta à noite), modelo freemium individual + empresas, nova F7.1/US-22 (VoltaSegura+, rotina só no aparelho, Depende do tempo), exceção de roadmap em DT-10, P-07 e P-08. IDs mantidos | Lucas Simidu + assistente |
+| 18/11/2026 | 1.11 | Nova F2.6 / US-23 (Seguir rota: navegação no trajeto com a tela ligada na Fase 1; segundo plano só com sessão ativa). Revisa a US-05 AC3 e a linha de navegação ao vivo da seção 8, pela D-34 (que revê a D-04). Recálculo e posição enviada ao roteador `[EM ABERTO]` (D-21). IDs mantidos | Lucas Simidu + assistente |
+| 19/11/2026 | 1.12 | Novos itens de roadmap: P-09 (ampliação territorial do piloto, SP → grandes regiões do estado → outros estados) e P-10 (sinalização de infraestrutura pelos usuários); P-07 com condições de moderação, antifraude e anonimização. IDs mantidos | Lucas Simidu + assistente |
 | 15/11/2026 | 1.10 | F7.1/US-22 detalhada: gatilho decidido (lembrete local por horário, sem tempo real, texto neutro, aviso não informa mudança no resultado), mapeada em FL-17, TL-16, TL-17 e FN-17; implementada. IDs mantidos | Lucas Simidu + assistente |
 | 14/11/2026 | 1.8 | US-03 / F1.3 (exclusão de conta) adiada por ora pela D-25: fora do MVP, critérios preservados; IDs mantidos | Lucas Simidu + assistente |
 | 13/11/2026 | 1.7 | F2.3 AC5 revisto: a menor exposição estimada passa a ser a prioridade do resultado (D-23); com esse foco, a rota vem primeiro, já selecionada e com rótulo em destaque; sem ele, a ordem segue por tempo. IDs mantidos | Lucas Simidu + assistente |

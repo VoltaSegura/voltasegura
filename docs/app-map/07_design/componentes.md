@@ -29,9 +29,9 @@
 
 | Componente | Variantes | Estados | Tokens | Acessibilidade | Telas |
 |---|---|---|---|---|---|
-| `CampoTexto` | e-mail · senha (com mostrar/ocultar) · texto | vazio · preenchido · focado · erro · desabilitado | `cor.superficie2`, `cor.borda`, `cor.erro` na mensagem, `raio.medio` | Rótulo visível acima; erro ligado ao campo e anunciado | TL-02, TL-03, TL-05 |
+| `CampoTexto` | e-mail · senha (com mostrar/ocultar) · texto | vazio · preenchido · focado · erro · desabilitado | `cor.superficie2`, `cor.borda`, `cor.erro` na mensagem, `raio.medio`. **Focado = só a borda** (`cor.acaoLink`, `medidas.bordaFoco`), **sem brilho nem sombra**: alternar sombra com o foco recria a view no Android e o teclado fecha na hora (correção de 19/11/2026, T25) | Rótulo visível acima; erro ligado ao campo e anunciado | TL-02, TL-03, TL-05, Locais, Contatos |
 | `CampoPonto` | origem · destino | vazio ("Escolher origem") · preenchido (nome) · erro | Como `CampoTexto`, com › | "Origem: Faculdade. Toque para mudar" | TL-04 |
-| `SeletorHorario` | — | padrão "agora" · escolhido | Usa o seletor nativo do sistema | Rótulo "Saída: hoje, 23:00" | TL-04 |
+| `SeletorHorario` | — | cartão grande: ícone de relógio, rótulo, hora em destaque e dia, seta · folha aberta | Cartão abre a folha com rodas de horas (00–23) e minutos (00–59); Confirmar grava, Cancelar descarta; sem `TextInput` e sem teclado | Botão "Saída 23:00, hoje, 15 de novembro", dica "Abre as rodas…"; rodas são ajustáveis (incrementar/decrementar) | TL-04 |
 | `Caixa` (checkbox) | — | marcada · desmarcada · erro | Alvo inclui o texto | Papel "caixa de seleção" com estado | TL-02, TL-05 |
 
 ## Resultado

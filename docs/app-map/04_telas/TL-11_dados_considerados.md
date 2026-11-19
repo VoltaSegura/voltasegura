@@ -1,5 +1,7 @@
 # TL-11 · Dados considerados
 
+> **Revisão de 19/11/2026 — redesign T25 (propagação leve):** `[DECISÃO]` cabeçalho do app (`Cabecalho`) com "Voltar" à esquerda; no panorama municipal o "Voltar" do cabeçalho volta à lista (o botão "Voltar" duplicado no corpo foi removido, para haver um só). Totais, faixas e textos não mudaram.
+
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/(app)/dados-considerados`
 - **Objetivo:** mostrar os totais de Furto, Roubo e Ocorrências de trânsito **de cada rota**, no corredor dos trechos a pé, com as parcelas, e o panorama municipal de outras ocorrências contra a pessoa, só por ação deliberada (D-14, `docs/07`).
 - **US/AC e funcionalidades cobertas:** US-15 AC1–AC4 · FN-11 · **RNF aplicáveis:** RNF-02, RNF-03, RNF-07

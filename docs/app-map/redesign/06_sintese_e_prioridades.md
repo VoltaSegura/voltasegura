@@ -1,6 +1,6 @@
 # Redesign do app: síntese e prioridades
 
-**Data:** 14/11/2026 · **Origem:** 5 análises em `docs/redesign/01` a `05` (feitas por workers Codex) sobre o guia `00_guia_original.md`, mais conferência do lead.
+**Data:** 14/11/2026 · **Origem:** 5 análises em `docs/app-map/redesign/01` a `05` (feitas por workers Codex) sobre o guia `00_guia_original.md`, mais conferência do lead.
 **Status:** `[HIPÓTESE]` tudo aqui é **proposta**. Nada foi implementado. Nenhuma ferramenta do guia foi instalada. Entrega: **19/11/2026, 23h55**; código congelado na **noite de 18/11**.
 
 ## 1. Como o guia deve ser usado

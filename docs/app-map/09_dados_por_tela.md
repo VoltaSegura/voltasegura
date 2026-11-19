@@ -45,7 +45,6 @@
 | Origem / destino (coordenada) | Local / Sistema | Não exibida |
 | Horário de saída | Sistema (agora) / Local | Formato de horário |
 | Lugares salvos | Local (SecureStore, `voltasegura.locais`) | Nome + tipo; até 10; nunca enviados |
-| Atalhos de horário | Sistema (relógio) | Agora, +15, +30, +60 min |
 | Aviso fora da área | Local (checagem no aparelho, PL-11) | — |
 
 ## TL-05 · Escolher ponto
@@ -64,6 +63,10 @@
 | Tipo de aviso | API (`rotas: []`, código HTTP) / Sistema (rede) | `rotas: []` → sem transporte público; sem rede, `504`, `503`, `401` → FL-13 |
 
 ## TL-07 · Resultado
+
+> **17/11/2026 (B-59, D-33):** `Rota.variante.origem = 'dados'` marca a rota cujo caminho a pé foi escolhido pelos registros; `Rota.destaqueExposicao = { confianca: 'clara' | 'pequena' }` acompanha o foco `MENOR_EXPOSICAO` (só com exposição real; some no "só roteamento"). Para escolher o caminho, o aparelho envia ao Neon geometrias de trechos a pé candidatos (sem origem, destino ou horário exato além da faixa do dia).
+
+> **17/11/2026 (B-58, D-32):** `Rota.variante = { deRotaId }` marca a variação de caminhada gerada no aparelho a partir da alternativa `deRotaId` (consultas a pé ao mesmo OTP2; ao Neon vão só as geometrias dos trechos a pé, uma vez por caminhada distinta). Rotas sem representante na comparação (acima de 5 caminhadas distintas) ficam com a exposição `null` (dados insuficientes, nunca zero).
 
 | Campo | Origem | Regra |
 |---|---|---|
@@ -181,3 +184,28 @@
 | Antecedência | Escolha | 5, 10, 15 (padrão) ou 30 min |
 | Lembrete ativo | Escolha | Padrão ligado; a permissão de notificações é pedida ao salvar ativa |
 | Conteúdo da notificação | Fixo + dia e hora | Só o id da rotina vai nos dados; sem coordenadas |
+
+
+## Telas do VoltaSegura+ e abas (D-36, 19/11/2026)
+
+| Tela | Dado exibido | Origem | Guardado ou enviado? |
+|---|---|---|---|
+| TL-19 · planos | Preços e itens do plano | Fixo (`src/textos/plus.ts`) | Não guardado, não enviado |
+| TL-20 · confirmação | Plano escolhido e data do fim do teste | Parâmetro de navegação e data de hoje + 7 dias | Não guardado, não enviado |
+| TL-21 · home | Rotina (origem, destino, hora, antecedência, dias) | Rotina do aparelho (FN-17) | Só no aparelho; a tela não altera |
+| TL-21 · home | Radar, resumo e badge do teste | Exemplos fixos (`src/plus/exemplos.ts`) | Não guardado, não enviado; selo EXEMPLO |
+| TL-22 · volta pronta | Nome e hora da rotina; tempo, trajeto e atalhos | Rotina do aparelho; exemplos fixos | Não guardado; EXEMPLO |
+| TL-23 · radar | Texto do aviso e da alternativa | Fixo | Não guardado; EXEMPLO |
+| TL-24 · resumo | Voltas, tempo a pé, horário e voltas por dia | Exemplos fixos | Não guardado; EXEMPLO |
+| TL-25 · assinatura | Plano simulado, data e valor depois | Fixo e data de hoje | Não guardado, não enviado |
+| TL-26 · locais | Nome, tipo e endereço de cada lugar | Lugares do aparelho (FN-13) | Só no aparelho; apagar com confirmação |
+| TL-27 · contatos | Nome de cada contato | Armazenamento próprio (`voltasegura.contatos`, SecureStore) | Só no aparelho; sem telefone, e-mail ou conta; nada enviado |
+
+
+## Revisão D-38 (19/11/2026, T25-B): o que fica guardado no aparelho
+
+| Dado | Onde aparece | Chave (SecureStore) | Observação |
+|---|---|---|---|
+| Assinatura simulada: plano (mensal ou anual) e data de início | TL-21, TL-25, aba Plus, Perfil | `voltasegura.plus` | Sem valor e sem pagamento. Apagado ao cancelar |
+| Preferência de tema (sistema, claro ou escuro) | Todas as telas (tema), Perfil | `voltasegura.tema` | Padrão: sistema |
+| Lugares salvos (renomear e apagar com desfazer) | TL-26 (aba Locais), rotinas | `voltasegura.locais` | Nada enviado |

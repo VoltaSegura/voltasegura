@@ -6,6 +6,15 @@
 - **Entradas:** TL-08 (botão num trecho a pé). Parâmetros: `rotaId`, `trechoId`.
 - **Saídas:** TL-10 (sobre os dados), TL-11 (dados considerados), fechar (volta à TL-08).
 
+
+## Revisão de 18/11/2026 — redesign T25 (mockup `05_Por_que_esta_rota`)
+
+`[DECISÃO]` O cabeçalho é o `Cabecalho` do app: título "Por que esta rota?" à esquerda e "Fechar" à direita (sem cabeçalho nativo do Stack). A cobertura ganha uma barra de proporção (`BarraCobertura`, `role=progressbar`, valor 0–100%) abaixo da linha "Cobertura dos dados"; o número escrito continua sendo o dado. Textos, regras e estados não mudaram; o selo EXEMPLO segue `fontes.*`.
+
+## Revisão de 17/11/2026 — B-59 · Destaque com diferença pequena (D-33)
+
+Quando a rota em destaque tem confiança `pequena`, o indicativo de "Por que esta rota?" diz que ela tem menos registros perto dos trechos a pé entre as alternativas avaliadas, com diferença pequena (texto `[HIPÓTESE]` em `src/textos/hipotesesPrioridade.ts`), em vez do texto do caso (mistos, sem diferença, insuficiente). O caso estatístico continua disponível nos números e nas limitações.
+
 ## Revisão de 16/11/2026 — B-08 · Só roteamento
 
 [DECISÃO] B-08 (Plano B, 16/11/2026): com `fontes.exposicao = 'indisponivel'` OU `caso = 'INDISPONIVEL'` (ou campos de exposição `null`) a tela trata a consulta como **"Só roteamento"** (`soRoteamento()` em `components/resultado/fontes.ts`). O selo EXEMPLO segue `fontes.*` por bloco (`selosExemplo()`), não o booleano global `exemplo`. Em "Só roteamento" a tela não é alcançada pelo app (botão oculto na TL-08). Em acesso direto, mostra só o indicativo `textos.soRoteamento.porQue` e o link para "Sobre os dados": sem tabela de registros, sem cobertura, sem zero.

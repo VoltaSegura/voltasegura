@@ -1,5 +1,7 @@
 # FL-15 · Compartilhar minha volta (quem compartilha)
 
+> **Revisão de 19/11/2026 — T25-B item 7 (D-39):** `[DECISÃO]` a entrada deixa de ser o botão "Compartilhar minha volta" da TL-08. O compartilhamento é oferecido na tela Seguir (`seguir/[rotaId]`, cartão de acompanhamento); a integração é do lead. A confirmação (TL-14) não muda. Onde o texto abaixo cita TL-08 como entrada, leia "tela Seguir".
+
 - **Status:** rascunho · **Depende do tempo (D-22)** · **Status das regras:** `[DECISÃO]` (D-19 a D-21, US-21); tempo máximo, frequência e chegada `[HIPÓTESE]` (PL-20 a PL-22); GPS em segundo plano no Expo Go a confirmar (PL-24)
 - **Ator e gatilho:** Ágatha escolheu uma rota (TL-08) e toca em "Compartilhar minha volta".
 - **Pré-condições:** sessão ativa no app; uma rota selecionada.

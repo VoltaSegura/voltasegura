@@ -25,7 +25,7 @@
 | Lógica e navegação | ⚠️ `app/(app)/planejar.tsx:19-29,37-63` valida; sentido visual pode divergir do contexto | ⚠️ `app/(app)/escolher-ponto.tsx:51-66` confirma; mapa e GPS convergem | ❌ `app/(app)/buscando.tsx:29-63` voltar não invalida resposta pendente |
 | Testes iOS/Android/web | ❌ `docs/HANDOFF_mobile.md:55-60` pede teste em celular | ❌ `docs/HANDOFF_mobile.md:55-60` pede teste em celular | ❌ `docs/HANDOFF_mobile.md:44-50` registra só jornada web mock e login web falho |
 
-`[DECISÃO]` O guia pede `critique`, `audit`, `shape`, `typeset`, `layout`, `colorize`, `bolder`/`quieter`, `distill`, `animate`, `delight`, `polish`, `harden`, `clarify`, `adapt` e `onboard`; aqui eles são **lentes de revisão**, não ferramentas executadas (`docs/redesign/00_guia_original.md:53-79,275-292`).
+`[DECISÃO]` O guia pede `critique`, `audit`, `shape`, `typeset`, `layout`, `colorize`, `bolder`/`quieter`, `distill`, `animate`, `delight`, `polish`, `harden`, `clarify`, `adapt` e `onboard`; aqui eles são **lentes de revisão**, não ferramentas executadas (`docs/app-map/redesign/00_guia_original.md:53-79,275-292`).
 
 ## 3. TL-04 — Planejar
 
@@ -57,7 +57,7 @@
 
 `[DECISÃO]` Existem estado inicial, campo faltante, pontos iguais e erro “fora da área” (`app/(app)/planejar.tsx:43-63`). `[HIPÓTESE]` Faltam estado de escolha de método, “obtendo localização” no contexto da origem/destino, erro de hora, sem rede e recentes vazio. Sem rede, manter escolha local disponível e só impedir envio se a detecção for confiável; PL-12 continua aberta (`docs/app-map/04_telas/TL-04_planejar.md:104-112,146-156`; `docs/app-map/12_pendencias_e_lacunas.md:17`).
 
-`[HIPÓTESE]` `animate/delight/quieter`: feedback discreto de foco/valor confirmado com `Animated` (somente `opacity`/`transform`); sem animação de altura/cor. `LayoutAnimation` não é necessária para as propostas; respeitar “reduzir movimento” e mostrar mudança instantânea. `harden/adapt`: texto 200%, teclado aberto e rodapé rolável em iPhone pequeno; seletor com padrão iOS no iPhone e Material 3 no Android, mantendo a mesma regra; web só valida a estrutura, não substitui teste móvel (`docs/redesign/00_guia_original.md:53-57,241-251`; `docs/app-map/07_design/acessibilidade.md:11-25`).
+`[HIPÓTESE]` `animate/delight/quieter`: feedback discreto de foco/valor confirmado com `Animated` (somente `opacity`/`transform`); sem animação de altura/cor. `LayoutAnimation` não é necessária para as propostas; respeitar “reduzir movimento” e mostrar mudança instantânea. `harden/adapt`: texto 200%, teclado aberto e rodapé rolável em iPhone pequeno; seletor com padrão iOS no iPhone e Material 3 no Android, mantendo a mesma regra; web só valida a estrutura, não substitui teste móvel (`docs/app-map/redesign/00_guia_original.md:53-57,241-251`; `docs/app-map/07_design/acessibilidade.md:11-25`).
 
 ## 4. TL-05 — Escolher ponto
 
@@ -138,7 +138,7 @@
 5. `[HIPÓTESE]` PL-19/D-06: paleta e mockup são referência provisória; ciano só informa dados/confiança, dourado não sinaliza “segurança”. Fonte Atkinson não está carregada e requer `expo-font` ou outra solução futura; manter fonte do sistema nesta fase (`docs/app-map/01_decisoes.md:13,24`; `theme/tokens.ts:31-71`; `src/mobile-app/package.json:5-22`).
 6. `[DECISÃO]` `docs/05_regras_linguagem_etica.md:16-46` tem prioridade: dizer “exposição estimada” somente quando houver comparação; não usar rótulo territorial, nota, semáforo ou promessa de proteção. Textos novos passam pelo catálogo `docs/app-map/08_microcopy.md:97-147` e `src/mobile-app/src/textos/`.
 7. `[DECISÃO]` US-19 AC2 impede coordenadas, endereços e conta em logs; rótulos/estado de ponto são locais. GPS só sob demanda neste fluxo (`docs/app-map/03_fluxogramas/FL-05_escolher_ponto.md:64-70`).
-8. `[HIPÓTESE]` O guia sugere Reanimated/Reacticx, mas os pacotes não constam de `package.json:5-22`; instalar Reanimated, Gesture Handler, SVG, Skia, NativeWind, Unistyles, expo-font ou expo-haptics adicionaria risco antes de 18/11. As propostas prioritárias usam RN e tokens existentes; nunca colar DOM/CSS web em telas nativas (`docs/redesign/00_guia_original.md:17-35,115-124`).
+8. `[HIPÓTESE]` O guia sugere Reanimated/Reacticx, mas os pacotes não constam de `package.json:5-22`; instalar Reanimated, Gesture Handler, SVG, Skia, NativeWind, Unistyles, expo-font ou expo-haptics adicionaria risco antes de 18/11. As propostas prioritárias usam RN e tokens existentes; nunca colar DOM/CSS web em telas nativas (`docs/app-map/redesign/00_guia_original.md:17-35,115-124`).
 
 ## 8. Perguntas para o Lucas
 

@@ -1,7 +1,7 @@
 # Redesign 2: home sem Ida/Volta, mapa com busca e lugares salvos, imagens
 
 **Data:** 14/11/2026 · **Decisão:** D-29 · **Status:** `[DECISÃO]` do Lucas (pedido em chat após testar o premium no celular); detalhes de microcopy e de visual são `[HIPÓTESE]`.
-**Evidências analisadas:** 7 prints do celular em `docs/redesign/evidencia-redesign-vs/` e 5 referências em `docs/redesign/inspo-melhorar-design/`.
+**Evidências analisadas:** 7 prints do celular em `docs/app-map/redesign/evidencia-redesign-vs/` e 5 referências em `docs/app-map/redesign/inspo-melhorar-design/`.
 
 ## 1. O que as evidências mostram (diagnóstico)
 | Achado (print) | Problema |

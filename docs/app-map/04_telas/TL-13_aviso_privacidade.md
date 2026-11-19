@@ -1,5 +1,7 @@
 # TL-13 · Aviso de privacidade
 
+> **Revisão de 19/11/2026 — redesign T25 (propagação leve):** `[DECISÃO]` cabeçalho do app (`Cabecalho`, título "Aviso de privacidade" + "Voltar") no lugar do cabeçalho nativo; o título deixou de ser repetido no corpo. Texto de `hipotesesAviso.ts` não mudou (continua minuta).
+
 > **Revisão D-30 (15/11/2026):** a seção "Busca de endereço" agora diz que, ao marcar um ponto no mapa, a posição marcada também é enviada ao serviço de mapas do celular para mostrar o endereço; e "Lugares salvos" cita nome, endereço e posição, só no aparelho. Texto em `src/textos/hipotesesAviso.ts` `[HIPÓTESE]`, revisão pendente.
 
 - **Status:** pronta (aprovada por Lucas Simidu em 13/11/2026) · **Rota Expo Router prevista:** `/aviso-privacidade` (acessível com ou sem sessão)

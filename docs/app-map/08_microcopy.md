@@ -86,7 +86,9 @@
 
 | Chave | Texto |
 |---|---|
+| `entrar.marca` | VoltaSegura |
 | `entrar.titulo` | Entrar |
+| `entrar.subtitulo` | Acesse sua conta para planejar sua ida. |
 | `entrar.botao` | Entrar |
 | `entrar.botao_carregando` | Entrando… |
 | `entrar.criar` | Não tem conta? Criar conta |
@@ -104,6 +106,11 @@
 | `planejar.escolher_origem` / `planejar.escolher_destino` | Escolher origem / Escolher destino |
 | `planejar.inverter` | Inverter origem e destino |
 | `planejar.saida` / `planejar.saida_volta` | Saída / Saída da volta |
+| `hipotesesPlanejar.hoje` / `amanha` | hoje / amanhã (prefixo do dia; o cartão mostra "hoje, 15 de novembro") |
+| `hipotesesPlanejar.abrirHorario` | Abre as rodas para escolher a hora e os minutos da saída. |
+| `hipotesesPlanejar.rodaHoras` / `rodaMinutos` | Horas / Minutos (rótulos das rodas) |
+| `hipotesesPlanejar.confirmarHorario` / `cancelarHorario` | Confirmar horário / Cancelar |
+| `hipotesesPlanejar.saidaInvalida` | Confira o horário da saída no planejamento. (aviso de consulta com saída inválida; não ocorre pela folha) |
 | `planejar.ver_alternativas` | Ver alternativas |
 | `planejar.recentes` / `planejar.recentes_vazio` | *(histórico de trajetos fora desta versão, `[EM ABERTO]`)* |
 | `planejar.usar_localizacao` | Usar minha localização |
@@ -159,10 +166,16 @@
 | `linha.leitura` | Linha {numero}-{nome} do {metro_ou_trem} / Ônibus {numero} |
 | `resultado.saida_prevista` | Sai às {hora} (previsto) |
 | `resultado.so_uma` | Só uma opção neste horário: não há comparação. |
-| `resultado.planejar_volta` / `resultado.planejar_ida` | Planejar a volta / Planejar a ida |
+| `resultado.planejar_volta` / `resultado.planejar_ida` | Planejar a volta / Planejar a ida (sem uso na tela de resultado desde 19/11/2026, T25-B; FL-08 `[EM ABERTO]`) |
+| `resultado.link_dados` | Entenda de onde vem nossos dados e fontes (link da folha de resultado, abre TL-10; T25-B item 6, 19/11/2026) |
 | `resultado.expandir` | Expandir lista |
 | `resultado.selecionada` | selecionada |
 | `resultado.rotulo_card` | Opção {i} de {n}. {focos}. {duracao}, {km} a pé, {trocas}. {modos}. Toque duas vezes para ver os detalhes. |
+| `resultado.variante_caminhada` (TL-07 card e TL-08) `[HIPÓTESE]` (D-32, 17/11) | Mesma condução, caminhada por outro caminho (no rótulo acessível do card, vem antes de "Opção {i} de {n}.") |
+| `prioridade.rota_dos_dados` (TL-07 card e TL-08) `[HIPÓTESE]` (D-33) | Caminho a pé escolhido pelos registros da SSP-SP |
+| `prioridade.confianca` (TL-07 card e TL-08, junto do destaque) `[HIPÓTESE]` (D-33) | Diferença clara nos registros / Diferença pequena nos registros |
+| `prioridade.caso_pequena` (TL-07, acima dos cards) `[HIPÓTESE]` (D-33) | A opção em destaque tem menos registros de ocorrência perto dos trechos a pé. A diferença para as outras é pequena: compare também tempo e caminhada. |
+| `prioridade.indicativo` (TL-09 e TL-10) `[HIPÓTESE]` (D-33) | Esta opção tem menos registros de ocorrência perto dos trechos a pé entre as alternativas avaliadas, mas a diferença é pequena. / {Opção n} tem menos registros de ocorrência perto dos trechos a pé, com diferença pequena. |
 | `detalhes.trecho` | {modo} · {distancia} · {duracao} |
 | `detalhes.embarque` | Embarque {hora} (previsto) |
 | `detalhes.da_origem` | Da origem até o ponto |
@@ -295,7 +308,7 @@ Atenção ao `motivo.cobertura`: fala de **cobertura dos dados** na região, nã
 
 | Chave | Texto |
 |---|---|
-| `compartilhar.botao_tl08` | Compartilhar minha volta |
+| `compartilhar.botao_tl08` | Compartilhar minha volta (sem uso no detalhe da rota desde 19/11/2026, T25-B item 7) |
 | `compartilhar.ver` | Ver compartilhamento |
 | `compartilhar.titulo` | Compartilhar minha volta |
 | `compartilhar.verao` | A pessoa que receber o link vai ver, pelo app VoltaSegura: |
@@ -360,7 +373,6 @@ Feita em 13/11/2026 por script local sobre **894 linhas** (refeita após o acré
 | `mapa.de_onde_vazio` / `mapa.para_onde_vazio` | Sua localização ou um ponto no mapa / Buscar destino ou escolher no mapa |
 | `mapa.planejando_volta` | Planejando a volta |
 | `mapa.usar_localizacao_origem` | Usar minha localização como origem |
-| `mapa.agora` / `em15` / `em30` / `em1h` | Agora / Em 15 min / Em 30 min / Em 1 h |
 | `mapa.lugares_salvos` / `lugares_vazio` | Lugares salvos / Salve casa, trabalho ou outro lugar para escolher com um toque. |
 | `mapa.adicionar_lugar` | Adicionar lugar |
 | `mapa.buscar` / `buscar_campo` / `buscar_exemplo` | Buscar / Buscar endereço ou lugar / Rua, avenida ou lugar em São Paulo |
@@ -478,5 +490,45 @@ Usado quando `fontes.exposicao = 'indisponivel'` ou `caso = 'INDISPONIVEL'`: rot
 | `casosResultado.semDiferenca` | Com os dados registrados, não há diferença clara de exposição estimada entre as opções. |
 | `casosResultado.mistos` (também em TL-09/10) | Os dados registrados apontam sinais diferentes conforme o trecho a pé: não há uma ordem única de exposição estimada entre as opções. |
 | `casosResultado.insuficiente` | Os dados registrados não bastam para comparar a exposição estimada entre as opções, então elas aparecem sem ordenar por exposição. |
+| `hipotesesEstadosResultado.cartaoInsuficiente.titulo` | Dados insuficientes (cartão do mockup 04, redesign T25, 18/11/2026; corpo = `casosResultado.insuficiente`) |
+| `hipotesesEstadosResultado.cartaoInsuficiente.entender` | Entender o resultado (abre TL-10) |
+| `hipotesesEstadosResultado.cartaoInsuficiente.outroHorario` | Outro horário (volta ao planejamento, TL-04) |
 | `casosResultado.naoAplicavel` | Uma das opções não tem trecho a pé, então a exposição estimada não foi comparada desta vez. |
 | `SEM_COMPARACAO` / opção única | Reusa `resultado.soUma`: Só uma opção neste horário: não há comparação. |
+
+
+## VoltaSegura+ em simulação, Locais e Contatos (D-36, 19/11/2026, `[HIPÓTESE]`, fonte: `src/textos/plus.ts` e `src/textos/abas.ts`)
+
+| Chave | Texto |
+|---|---|
+| `plus.selo` | Demonstração: nenhuma cobrança real |
+| `plus.testar` | Testar 7 dias grátis |
+| `plus.depois(valor)` | Depois, {valor}. Cancele quando quiser. |
+| `plus.confirmacaoTitulo` | Começar teste de 7 dias |
+| `plus.comecar` | Começar teste grátis |
+| `plus.simulacaoNota` | Simulação: nada é cobrado, guardado nem enviado. |
+| `plus.semRotina` | Você ainda não tem rotina. Cadastre uma para ver sua volta aqui. |
+| `plus.radarCartao` / `plus.radarCorpo` | Exemplo de aviso: uma obra recente perto do trecho a pé da sua volta. Você pode comparar uma alternativa. |
+| `plus.melhorHorarioNota` | Exemplo: os horários e números desta tela não são calculados ainda. |
+| `plus.compartilharEmBreve` | Disponível pela tela da rota. Ainda não funciona nesta tela. |
+| `plus.radarComo` | O Radar compara sua rota com uma alternativa quando há um aviso recente perto do trecho a pé. Nesta demonstração, o aviso e a alternativa são exemplos: nada é calculado a partir da sua rota. |
+| `plus.resumoNota` | Números de exemplo, para mostrar como o resumo vai ficar. Sem nota nem pontuação. |
+| `plus.cancelarNota` | Ao cancelar, suas rotinas continuam guardadas neste aparelho, mas ficam bloqueadas. Você volta ao app grátis e pode assinar de novo quando quiser. |
+| `plus.simuladoTrocar` / `plus.simuladoCancelar` | Simulação: nenhum plano foi trocado. / cancelado. |
+| `abas.locais.*` | Locais: "Seus lugares salvos ficam só neste aparelho."; apagar com confirmação. |
+| `abas.contatos.*` | Contatos: "Pessoas de confiança... Ficam só neste aparelho."; "A lista não envia nada sozinha. Compartilhar é sempre uma ação sua, com confirmação."; "Informe um nome." |
+- `seguir.entendiNaoMostrar` = "Entendi e não mostrar de novo" (TL-18, revisão de 19/11/2026).
+
+
+## Perfil, tema, assinatura e Locais (D-38, 19/11/2026, `[HIPÓTESE]`, fonte: `src/textos/abas.ts` e `src/textos/plus.ts`)
+
+| Chave | Texto |
+|---|---|
+| `abas.perfil.titulo` | Perfil |
+| `abas.perfil.planoGratuito` | Plano gratuito |
+| `abas.perfil.assinante(ate, anual)` | Assinante mensal (ou anual) · teste até {ate} |
+| `abas.perfil.temaTitulo` / `temaSistema` / `temaClaro` / `temaEscuro` | Tema / Sistema / Claro / Escuro |
+| `plus.canceladoAviso` | Assinatura simulada cancelada. Nada foi cobrado. |
+| `plus.assinaturaNomeAnual` | VoltaSegura+ Anual |
+| `plus.gerenciarRotinas` | Gerenciar rotinas |
+| `plus.simuladoCancelar` | Removido (D-38): o cancelamento agora é real na simulação. |

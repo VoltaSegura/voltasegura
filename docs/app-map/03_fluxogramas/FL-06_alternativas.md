@@ -1,5 +1,7 @@
 # FL-06 · Alternativas com foco
 
+> **Revisão de 19/11/2026 — T25-B item 6 (D-39):** `[DECISÃO]` a lista não termina mais em "Planejar a volta/ida"; o fim da lista tem só os horários previstos. A entrada pela volta é `[EM ABERTO]` (FL-08). A folha abre em meia altura.
+
 - **Status:** rascunho · **Status das regras:** `[DECISÃO]` (US-08, DT-01, DT-02, D-01, D-12, D-15, D-16, D-23)
 - **Ator e gatilho:** consulta válida enviada pelo FL-04 ou pelo FL-08.
 - **Pré-condições:** sessão ativa; consulta validada.
