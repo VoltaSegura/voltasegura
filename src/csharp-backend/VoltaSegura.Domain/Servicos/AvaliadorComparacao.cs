@@ -35,7 +35,7 @@ public readonly record struct ResultadoComparacao(
     string? RotaDestacada,
     string Motivo,
     double? PValor,
-    IReadOnlyDictionary<string, double> ExposicaoEstimadaPorRota);
+    IReadOnlyDictionary<string, double?> ExposicaoEstimadaPorRota);
 
 /// <summary>
 /// Implementa a regra de comparação do grupo (docs/08 — decisões de 11/11/2026):
@@ -64,7 +64,7 @@ public class AvaliadorComparacao
 
     public ResultadoComparacao Avaliar(CenarioRota rotaX, CenarioRota rotaY)
     {
-        var exposicao = new Dictionary<string, double>
+        var exposicao = new Dictionary<string, double?>
         {
             [rotaX.Identificador] = ExposicaoEstimada(rotaX),
             [rotaY.Identificador] = ExposicaoEstimada(rotaY),
@@ -90,7 +90,7 @@ public class AvaliadorComparacao
         var p0 = rotaX.KmCaminhados / (rotaX.KmCaminhados + rotaY.KmCaminhados);
         var pValor = TesteBinomialExato.PValorBilateral(rotaX.QuantidadeBoletins, total, p0);
 
-        if (pValor > NivelSignificancia)
+        if (pValor >= NivelSignificancia)
             return Divergente(exposicao, pValor);
 
         // docs/08 §49: destaca somente se a MESMA rota tiver N e D menores.
@@ -99,27 +99,27 @@ public class AvaliadorComparacao
 
         if (xTemMenosBoletins && xTemMenorD)
             return Conclusiva(rotaX.Identificador, exposicao, pValor);
-        if (!xTemMenosBoletins && !xTemMenorD && rotaX.QuantidadeBoletins != rotaY.QuantidadeBoletins)
+        if (rotaY.QuantidadeBoletins < rotaX.QuantidadeBoletins && exposicao[rotaY.Identificador] < exposicao[rotaX.Identificador])
             return Conclusiva(rotaY.Identificador, exposicao, pValor);
 
         return Divergente(exposicao, pValor);
     }
 
     /// <summary>D = N / km caminhados (docs/08 §30). Valor descritivo — sem rótulo territorial.</summary>
-    public static double ExposicaoEstimada(CenarioRota rota)
-        => rota.KmCaminhados <= 0 ? 0.0 : rota.QuantidadeBoletins / rota.KmCaminhados;
+    public static double? ExposicaoEstimada(CenarioRota rota)
+        => rota.KmCaminhados <= 0 ? null : rota.QuantidadeBoletins / rota.KmCaminhados;
 
     private static ResultadoComparacao Conclusiva(
-        string rota, IReadOnlyDictionary<string, double> exposicao, double pValor)
+        string rota, IReadOnlyDictionary<string, double?> exposicao, double pValor)
         => new(StatusComparacao.Conclusiva, rota,
             $"{FraseDadosSuficientes}; menor exposição estimada entre as alternativas avaliadas na {rota}",
             pValor, exposicao);
 
     private static ResultadoComparacao Divergente(
-        IReadOnlyDictionary<string, double> exposicao, double pValor)
+        IReadOnlyDictionary<string, double?> exposicao, double pValor)
         => new(StatusComparacao.Divergente, null, FraseSemDiferencaClara, pValor, exposicao);
 
     private static ResultadoComparacao Insuficiente(
-        IReadOnlyDictionary<string, double> exposicao, string motivo)
+        IReadOnlyDictionary<string, double?> exposicao, string motivo)
         => new(StatusComparacao.DadosInsuficientes, null, $"{FraseDadosInsuficientes} — {motivo}", null, exposicao);
 }

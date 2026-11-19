@@ -1,0 +1,14 @@
+$ dotnet build VoltaSegura.sln --nologo
+  Determinando os projetos a serem restaurados...
+  Todos os projetos estão atualizados para restauração.
+  VoltaSegura.Domain -> C:\Users\ferna\Documents\GitHub\voltasegura\src\csharp-backend\VoltaSegura.Domain\bin\Debug\net8.0\VoltaSegura.Domain.dll
+  VoltaSegura.Infrastructure -> C:\Users\ferna\Documents\GitHub\voltasegura\src\csharp-backend\VoltaSegura.Infrastructure\bin\Debug\net8.0\VoltaSegura.Infrastructure.dll
+  VoltaSegura.Api -> C:\Users\ferna\Documents\GitHub\voltasegura\src\csharp-backend\VoltaSegura.Api\bin\Debug\net8.0\VoltaSegura.Api.dll
+  VoltaSegura.Servicos -> C:\Users\ferna\Documents\GitHub\voltasegura\src\csharp-backend\VoltaSegura.Servicos\bin\Debug\net8.0\VoltaSegura.Servicos.dll
+  VoltaSegura.Tests -> C:\Users\ferna\Documents\GitHub\voltasegura\src\csharp-backend\VoltaSegura.Tests\bin\Debug\net8.0\VoltaSegura.Tests.dll
+
+Compilação com êxito.
+    0 Aviso(s)
+    0 Erro(s)
+
+Tempo Decorrido 00:00:02.01

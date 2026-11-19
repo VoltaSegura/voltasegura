@@ -1,0 +1,381 @@
+{
+  "httpStatus": 200,
+  "requisicao": {
+    "origem": {
+      "latitude": -23.5629,
+      "longitude": -46.6544
+    },
+    "destino": {
+      "latitude": -23.5379,
+      "longitude": -46.6295
+    },
+    "saida": "2026-11-19T23:00:00-03:00",
+    "sentido": "volta",
+    "inicio": "2026-01-01",
+    "fim": "2026-09-30"
+  },
+  "resposta": {
+    "status": "Divergente",
+    "situacao": "Sem diferença clara entre os registros",
+    "rotaComMenorExposicaoEstimada": null,
+    "pValor": 0.9999999999999715,
+    "boletinsPorRota": {
+      "R1": 34,
+      "R2": 29
+    },
+    "kmCaminhadosPorRota": {
+      "R1": 1.6939291086850643,
+      "R2": 1.4492504596527773
+    },
+    "coberturaPorRota": {
+      "R1": 0.9,
+      "R2": 0.9
+    },
+    "exposicaoEstimadaBoletinsPorKm": {
+      "R1": 20.071678221760394,
+      "R2": 20.010343834528122
+    },
+    "largurasCorredorTestadasM": [
+      50,
+      100,
+      150
+    ],
+    "periodoDados": {
+      "inicio": "2026-01-01",
+      "fim": "2026-09-30"
+    },
+    "fontes": {
+      "roteamento": "mock",
+      "acervo": "demonstracao",
+      "descricao": "80 registros sintéticos para demonstração acadêmica; não são dados da SSP-SP",
+      "exemplo": true
+    },
+    "rotas": [
+      {
+        "id": "R1",
+        "duracaoMin": 28.796794846666668,
+        "kmCaminhados": 1.6939291086850643,
+        "baldeacoes": 0,
+        "saidaPrevista": "2026-11-19T23:00:00-03:00",
+        "chegadaPrevista": "2026-11-19T23:28:47.8076908-03:00",
+        "trechos": [
+          {
+            "ordem": 0,
+            "modo": "WALK",
+            "comprimentoKm": 1.6939291086850643,
+            "partidaPrevista": "2026-11-19T23:00:00-03:00",
+            "chegadaPrevista": "2026-11-19T23:22:35.1432869-03:00",
+            "faixaDoDia": 4,
+            "linha": null,
+            "geometria": [
+              {
+                "latitude": -23.5629,
+                "longitude": -46.6544
+              },
+              {
+                "latitude": -23.561877272727273,
+                "longitude": -46.65338136363636
+              },
+              {
+                "latitude": -23.560854545454546,
+                "longitude": -46.65236272727273
+              },
+              {
+                "latitude": -23.559831818181816,
+                "longitude": -46.65134409090909
+              },
+              {
+                "latitude": -23.55880909090909,
+                "longitude": -46.65032545454546
+              },
+              {
+                "latitude": -23.557786363636364,
+                "longitude": -46.64930681818182
+              },
+              {
+                "latitude": -23.556763636363637,
+                "longitude": -46.64828818181818
+              },
+              {
+                "latitude": -23.555740909090908,
+                "longitude": -46.64726954545455
+              },
+              {
+                "latitude": -23.55471818181818,
+                "longitude": -46.64625090909091
+              },
+              {
+                "latitude": -23.553695454545455,
+                "longitude": -46.64523227272728
+              },
+              {
+                "latitude": -23.55267272727273,
+                "longitude": -46.64421363636364
+              },
+              {
+                "latitude": -23.55165,
+                "longitude": -46.643195
+              }
+            ]
+          },
+          {
+            "ordem": 1,
+            "modo": "BUS",
+            "comprimentoKm": 2.0703577995039675,
+            "partidaPrevista": "2026-11-19T23:22:35.1432869-03:00",
+            "chegadaPrevista": "2026-11-19T23:28:47.8076908-03:00",
+            "faixaDoDia": null,
+            "linha": null,
+            "geometria": [
+              {
+                "latitude": -23.55165,
+                "longitude": -46.643195
+              },
+              {
+                "latitude": -23.5504,
+                "longitude": -46.64195
+              },
+              {
+                "latitude": -23.54915,
+                "longitude": -46.640705000000004
+              },
+              {
+                "latitude": -23.5479,
+                "longitude": -46.63946
+              },
+              {
+                "latitude": -23.54665,
+                "longitude": -46.638215
+              },
+              {
+                "latitude": -23.5454,
+                "longitude": -46.63697
+              },
+              {
+                "latitude": -23.544150000000002,
+                "longitude": -46.635725
+              },
+              {
+                "latitude": -23.5429,
+                "longitude": -46.63448
+              },
+              {
+                "latitude": -23.54165,
+                "longitude": -46.633235
+              },
+              {
+                "latitude": -23.5404,
+                "longitude": -46.63199
+              },
+              {
+                "latitude": -23.53915,
+                "longitude": -46.630745
+              },
+              {
+                "latitude": -23.5379,
+                "longitude": -46.6295
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "R2",
+        "duracaoMin": 27.397734876666668,
+        "kmCaminhados": 1.4492504596527773,
+        "baldeacoes": 0,
+        "saidaPrevista": "2026-11-19T23:00:00-03:00",
+        "chegadaPrevista": "2026-11-19T23:27:23.8640926-03:00",
+        "trechos": [
+          {
+            "ordem": 0,
+            "modo": "WALK",
+            "comprimentoKm": 0.6211073398511903,
+            "partidaPrevista": "2026-11-19T23:00:00-03:00",
+            "chegadaPrevista": "2026-11-19T23:08:16.8858718-03:00",
+            "faixaDoDia": 4,
+            "linha": null,
+            "geometria": [
+              {
+                "latitude": -23.5629,
+                "longitude": -46.6544
+              },
+              {
+                "latitude": -23.56255909090909,
+                "longitude": -46.65406045454546
+              },
+              {
+                "latitude": -23.56221818181818,
+                "longitude": -46.653720909090914
+              },
+              {
+                "latitude": -23.561877272727273,
+                "longitude": -46.65338136363636
+              },
+              {
+                "latitude": -23.561536363636364,
+                "longitude": -46.65304181818182
+              },
+              {
+                "latitude": -23.561195454545455,
+                "longitude": -46.652702272727275
+              },
+              {
+                "latitude": -23.560854545454546,
+                "longitude": -46.65236272727273
+              },
+              {
+                "latitude": -23.560513636363634,
+                "longitude": -46.65202318181819
+              },
+              {
+                "latitude": -23.560172727272725,
+                "longitude": -46.651683636363636
+              },
+              {
+                "latitude": -23.559831818181816,
+                "longitude": -46.65134409090909
+              },
+              {
+                "latitude": -23.559490909090908,
+                "longitude": -46.65100454545455
+              },
+              {
+                "latitude": -23.55915,
+                "longitude": -46.650665000000004
+              }
+            ]
+          },
+          {
+            "ordem": 1,
+            "modo": "BUS",
+            "comprimentoKm": 2.6914651393551576,
+            "partidaPrevista": "2026-11-19T23:08:16.8858718-03:00",
+            "chegadaPrevista": "2026-11-19T23:16:21.3495968-03:00",
+            "faixaDoDia": null,
+            "linha": null,
+            "geometria": [
+              {
+                "latitude": -23.55915,
+                "longitude": -46.650665000000004
+              },
+              {
+                "latitude": -23.557672727272728,
+                "longitude": -46.64919363636364
+              },
+              {
+                "latitude": -23.556195454545453,
+                "longitude": -46.64772227272727
+              },
+              {
+                "latitude": -23.55471818181818,
+                "longitude": -46.64625090909091
+              },
+              {
+                "latitude": -23.55324090909091,
+                "longitude": -46.64477954545455
+              },
+              {
+                "latitude": -23.551763636363635,
+                "longitude": -46.643308181818185
+              },
+              {
+                "latitude": -23.550286363636364,
+                "longitude": -46.64183681818182
+              },
+              {
+                "latitude": -23.548809090909092,
+                "longitude": -46.64036545454545
+              },
+              {
+                "latitude": -23.547331818181817,
+                "longitude": -46.63889409090909
+              },
+              {
+                "latitude": -23.545854545454546,
+                "longitude": -46.63742272727273
+              },
+              {
+                "latitude": -23.544377272727274,
+                "longitude": -46.635951363636366
+              },
+              {
+                "latitude": -23.5429,
+                "longitude": -46.63448
+              }
+            ]
+          },
+          {
+            "ordem": 2,
+            "modo": "WALK",
+            "comprimentoKm": 0.8281431198015871,
+            "partidaPrevista": "2026-11-19T23:16:21.3495968-03:00",
+            "chegadaPrevista": "2026-11-19T23:27:23.8640926-03:00",
+            "faixaDoDia": 4,
+            "linha": null,
+            "geometria": [
+              {
+                "latitude": -23.5429,
+                "longitude": -46.63448
+              },
+              {
+                "latitude": -23.542445454545454,
+                "longitude": -46.63402727272727
+              },
+              {
+                "latitude": -23.54199090909091,
+                "longitude": -46.63357454545454
+              },
+              {
+                "latitude": -23.541536363636364,
+                "longitude": -46.63312181818182
+              },
+              {
+                "latitude": -23.54108181818182,
+                "longitude": -46.63266909090909
+              },
+              {
+                "latitude": -23.540627272727274,
+                "longitude": -46.63221636363637
+              },
+              {
+                "latitude": -23.54017272727273,
+                "longitude": -46.63176363636364
+              },
+              {
+                "latitude": -23.53971818181818,
+                "longitude": -46.63131090909091
+              },
+              {
+                "latitude": -23.539263636363636,
+                "longitude": -46.63085818181818
+              },
+              {
+                "latitude": -23.53880909090909,
+                "longitude": -46.63040545454545
+              },
+              {
+                "latitude": -23.538354545454546,
+                "longitude": -46.62995272727273
+              },
+              {
+                "latitude": -23.5379,
+                "longitude": -46.6295
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "sobreOsDados": [
+      "80 registros sintéticos para demonstração acadêmica; não são dados da SSP-SP",
+      "Demonstração: rotas e/ou registros sintéticos. Não representa uma comparação real de trajetos.",
+      "N = boletins distintos; L = km caminhados; D = N/L. Sem caminhada, D é não aplicável (null).",
+      "Cobertura estimada por circunscrições inferidas dos registros próximos, sem polígonos oficiais.",
+      "Subnotificação: zero registro não significa ausência de ocorrência. Coordenadas podem ser pontos de referência.",
+      "Todos os tipos de local entram; só FURTO - OUTROS e ROUBO - OUTROS compõem a comparação.",
+      "Horários programados do transporte podem não refletir mudanças recentes de operação.",
+      "Exposição estimada não é probabilidade individual nem garantia de segurança."
+    ]
+  }
+}

@@ -26,6 +26,10 @@ dist/
 bin/
 obj/
 *.user
+src/csharp-backend/dados/
+src/csharp-backend/TestResults/
+output/entregas/
+tmp/
 
 # Segredos e chaves
 .env

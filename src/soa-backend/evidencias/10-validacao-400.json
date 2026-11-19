@@ -1,0 +1,17 @@
+{
+  "httpStatus": 400,
+  "resposta": {
+    "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "errors": {
+      "Saida": [
+        "Informe saída ISO 8601 com fuso, por exemplo 2026-11-19T23:00:00-03:00."
+      ],
+      "Origem": [
+        "Informe uma origem com latitude e longitude válidas."
+      ]
+    },
+    "traceId": "00-4ad5a87a2eb7b91448e0c0f4675d8a16-3b07eb4ca76d0f67-00"
+  }
+}

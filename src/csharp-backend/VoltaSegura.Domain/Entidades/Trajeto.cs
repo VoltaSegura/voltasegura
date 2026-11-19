@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using VoltaSegura.Domain.Interfaces;
+
 namespace VoltaSegura.Domain.Entidades;
 
 /// <summary>
@@ -6,6 +9,16 @@ namespace VoltaSegura.Domain.Entidades;
 /// </summary>
 public class Trajeto
 {
+    [NotMapped] public DateTimeOffset? SaidaPrevista { get; set; }
+    [NotMapped] public DateTimeOffset? ChegadaPrevista { get; set; }
+    [NotMapped] public double DuracaoMin => SaidaPrevista.HasValue && ChegadaPrevista.HasValue
+        ? (ChegadaPrevista.Value - SaidaPrevista.Value).TotalMinutes : 0;
+    [NotMapped] public int Baldeacoes => Math.Max(0, Trechos.Count(t => t.Modo != "WALK") - 1);
+
+    public IReadOnlyList<CorredorCaminhada> Caminhadas() => Trechos
+        .Where(t => t.Modo == "WALK")
+        .Select(t => new CorredorCaminhada(t.Pontos(), t.PartidaPrevista.HasValue
+            ? PeriodoLocal.Faixa(t.PartidaPrevista.Value) : null)).ToList();
     public long Id { get; set; }
 
     public string NomeOrigem { get; set; } = string.Empty;
@@ -34,6 +47,11 @@ public class Trajeto
 /// <summary>Segmento de um trajeto, com modo (WALK, BUS, SUBWAY, RAIL...) conforme o roteador.</summary>
 public class Trecho
 {
+    [NotMapped] public DateTimeOffset? PartidaPrevista { get; set; }
+    [NotMapped] public DateTimeOffset? ChegadaPrevista { get; set; }
+    [NotMapped] public string? Linha { get; set; }
+    [NotMapped] public string? Embarque { get; set; }
+    [NotMapped] public string? Desembarque { get; set; }
     public long Id { get; set; }
 
     public int Ordem { get; set; }
@@ -69,5 +87,13 @@ public class Trecho
     }
 }
 
-/// <summary>Ponto geográfico. As coordenadas circulam apenas internamente — nunca em logs ou respostas públicas.</summary>
+/// <summary>Ponto geográfico do trajeto consultado: pode compor a resposta da consulta, mas não a auditoria ou o histórico do servidor.</summary>
 public readonly record struct Coordenada(double Latitude, double Longitude);
+
+public static class PeriodoLocal
+{
+    // O recorte do MVP é São Paulo; o fuso é aplicado também quando o OTP retorna UTC.
+    private static readonly TimeZoneInfo Fuso = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
+    public static FaixaDoDia Faixa(DateTimeOffset instante)
+        => (FaixaDoDia)(TimeZoneInfo.ConvertTime(instante, Fuso).Hour / 6 + 1);
+}

@@ -1,114 +1,90 @@
 using System.Net.Http.Json;
-using System.Text.Json.Serialization;
+using System.Text.Json;
 using VoltaSegura.Domain.Entidades;
 using VoltaSegura.Domain.Interfaces;
+using VoltaSegura.Infrastructure.Repositorios;
 
 namespace VoltaSegura.Infrastructure.Roteamento;
 
-/// <summary>
-/// Adaptador para o OpenTripPlanner 2 em servidor próprio (decisão do grupo, item 14),
-/// com GTFS da SPTrans (inclui Metrô e CPTM) + OpenStreetMap. O endpoint de plano é
-/// <c>{base}/otp/routers/{router}/plan</c>. Qualquer resposta inválida vira exceção
-/// clara — o contrato do VoltaSegura nunca inventa rota.
-/// </summary>
+/// <summary>Adaptador opcional OTP2 2.10, GraphQL. Sem fallback silencioso para mock.</summary>
 public class Otp2Roteador : IRoteador
 {
     private readonly HttpClient _http;
-    private readonly string _router;
-
-    public Otp2Roteador(HttpClient http, string router = "default")
-    {
-        _http = http;
-        _router = router;
-    }
-
-    public async Task<IReadOnlyList<Trajeto>> PlanejarAsync(
-        Coordenada origem, Coordenada destino, string sentido, CancellationToken ct)
-    {
-        var url = $"otp/routers/{_router}/plan" +
-                  $"?fromPlace={origem.Latitude.ToStringInvariant()},{origem.Longitude.ToStringInvariant()}" +
-                  $"&toPlace={destino.Latitude.ToStringInvariant()},{destino.Longitude.ToStringInvariant()}" +
-                  "&mode=TRANSIT,WALK&numItineraries=3";
-
-        using var resposta = await _http.GetAsync(url, ct);
-        resposta.EnsureSuccessStatusCode();
-        var plano = await resposta.Content.ReadFromJsonAsync<RespostaPlanoOtp>(cancellationToken: ct)
-            ?? throw new InvalidOperationException("OTP2 devolveu resposta vazia.");
-
-        var trajetos = new List<Trajeto>();
-        foreach (var itinerario in plano.Plan?.Itinerarios ?? Enumerable.Empty<ItinerarioOtp>())
-        {
-            var trechos = new List<Trecho>();
-            var ordem = 0;
-            foreach (var perna in itinerario.Legs)
-            {
-                trechos.Add(Trecho.Criar(
-                    ordem++,
-                    MapearModo(perna.Mode),
-                    (perna.Distance ?? 0) / 1000.0,
-                    perna.LegGeometry?.Pontos is { Length: > 0 } pontos
-                    ? Polilinha.Decodificar(pontos)
-                    : Enumerable.Empty<Coordenada>()));
-            }
-
-            if (trechos.Count == 0) continue;
-
-            trajetos.Add(new Trajeto
-            {
-                NomeOrigem = "origem",
-                NomeDestino = "destino",
-                Sentido = sentido,
-                Trechos = trechos,
-            });
+    public string Fonte => "otp2";
+    public Otp2Roteador(HttpClient http) => _http = http;
+    public const string Consulta = """
+        query ($origem: PlanCoordinateInput!, $destino: PlanCoordinateInput!, $saida: OffsetDateTime!, $n: Int) {
+          planConnection(origin: {location: {coordinate: $origem}},
+            destination: {location: {coordinate: $destino}},
+            dateTime: {earliestDeparture: $saida}, first: $n) {
+            routingErrors { code }
+            edges { node { start end legs {
+              mode distance start { scheduledTime } end { scheduledTime }
+              from { name } to { name } route { shortName longName } legGeometry { points }
+            } } }
+          }
         }
+        """;
 
-        return trajetos;
-    }
-
-    /// <summary>Modos do OTP (WALK, BUS, SUBWAY, RAIL, TRAM...) mapeados para os modos do domínio.</summary>
-    private static string MapearModo(string modoOtp)
-        => modoOtp.Equals("WALK", StringComparison.OrdinalIgnoreCase) ? "WALK"
-         : modoOtp.Equals("SUBWAY", StringComparison.OrdinalIgnoreCase) ? "SUBWAY"
-         : modoOtp.Equals("RAIL", StringComparison.OrdinalIgnoreCase) ? "RAIL"
-         : modoOtp.Equals("TRAM", StringComparison.OrdinalIgnoreCase) ? "TRAM"
-         : "BUS";
-
-    // ── Contratos de desserialização do OTP2 (apenas os campos usados) ──
-
-    private sealed class RespostaPlanoOtp
+    public async Task<IReadOnlyList<Trajeto>> PlanejarAsync(Coordenada origem, Coordenada destino,
+        string sentido, DateTimeOffset saida, CancellationToken ct)
     {
-        [JsonPropertyName("plan")]
-        public PlanoOtp? Plan { get; set; }
-    }
-
-    private sealed class PlanoOtp
-    {
-        [JsonPropertyName("itineraries")]
-        public List<ItinerarioOtp>? Itinerarios { get; set; }
-    }
-
-    private sealed class ItinerarioOtp
-    {
-        [JsonPropertyName("legs")]
-        public List<PernaOtp> Legs { get; set; } = new();
-    }
-
-    private sealed class PernaOtp
-    {
-        [JsonPropertyName("mode")]
-        public string Mode { get; set; } = string.Empty;
-
-        [JsonPropertyName("distance")]
-        public double? Distance { get; set; }
-
-        [JsonPropertyName("legGeometry")]
-        public GeometriaOtp? LegGeometry { get; set; }
-    }
-
-    private sealed class GeometriaOtp
-    {
-        [JsonPropertyName("points")]
-        public string? Pontos { get; set; }
+        var corpo = new { query = Consulta, variables = new {
+            origem = new { latitude = origem.Latitude, longitude = origem.Longitude },
+            destino = new { latitude = destino.Latitude, longitude = destino.Longitude },
+            saida = saida.ToString("O"), n = 5 } };
+        using var resposta = await _http.PostAsJsonAsync("otp/gtfs/v1", corpo, ct);
+        resposta.EnsureSuccessStatusCode();
+        using var json = await JsonDocument.ParseAsync(await resposta.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
+        try
+        {
+            var root = json.RootElement;
+            if (root.TryGetProperty("errors", out var erros) && erros.GetArrayLength() > 0)
+                throw new InvalidDataException("OTP devolveu erro GraphQL.");
+            var plano = root.GetProperty("data").GetProperty("planConnection");
+            var edges = plano.GetProperty("edges");
+            if (edges.GetArrayLength() == 0)
+            {
+                var codigos = plano.GetProperty("routingErrors").EnumerateArray()
+                    .Select(e => e.GetProperty("code").GetString()).ToList();
+                if (codigos.Contains("OUTSIDE_BOUNDS")) throw new ArgumentException("Consulta fora da área do roteador.");
+            }
+            var rotas = new List<Trajeto>();
+            foreach (var edge in edges.EnumerateArray().Take(5))
+            {
+                var node = edge.GetProperty("node");
+                var rota = new Trajeto { Sentido = sentido, NomeOrigem = "origem", NomeDestino = "destino",
+                    SaidaPrevista = node.GetProperty("start").GetDateTimeOffset(),
+                    ChegadaPrevista = node.GetProperty("end").GetDateTimeOffset() };
+                foreach (var leg in node.GetProperty("legs").EnumerateArray())
+                {
+                    var modo = leg.GetProperty("mode").GetString()!;
+                    if (modo is not ("WALK" or "BUS" or "SUBWAY" or "RAIL" or "TRAM" or "FERRY"))
+                        throw new InvalidDataException("Modo de transporte não suportado.");
+                    var pontos = Polilinha.Decodificar(leg.GetProperty("legGeometry").GetProperty("points").GetString()!);
+                    var km = leg.GetProperty("distance").GetDouble() / 1000;
+                    if (pontos.Count < 2 || pontos.Any(p => !Geografia.CoordenadaValida(p.Latitude, p.Longitude))
+                        || !double.IsFinite(km) || km < 0) throw new InvalidDataException("Geometria OTP inválida.");
+                    var trecho = Trecho.Criar(rota.Trechos.Count, modo, km, pontos);
+                    trecho.PartidaPrevista = leg.GetProperty("start").GetProperty("scheduledTime").GetDateTimeOffset();
+                    trecho.ChegadaPrevista = leg.GetProperty("end").GetProperty("scheduledTime").GetDateTimeOffset();
+                    if (trecho.ChegadaPrevista < trecho.PartidaPrevista) throw new InvalidDataException("Horário OTP inválido.");
+                    trecho.Embarque = leg.GetProperty("from").GetProperty("name").GetString();
+                    trecho.Desembarque = leg.GetProperty("to").GetProperty("name").GetString();
+                    if (leg.TryGetProperty("route", out var linha) && linha.ValueKind == JsonValueKind.Object)
+                        trecho.Linha = linha.GetProperty("shortName").GetString() ?? linha.GetProperty("longName").GetString();
+                    rota.Trechos.Add(trecho);
+                }
+                if (rota.Trechos.Count == 0 || rota.ChegadaPrevista < rota.SaidaPrevista)
+                    throw new InvalidDataException("Itinerário OTP inválido.");
+                rotas.Add(rota);
+            }
+            return rotas;
+        }
+        catch (Exception e) when (e is KeyNotFoundException or InvalidOperationException or FormatException or IndexOutOfRangeException)
+        {
+            throw new InvalidDataException("Resposta OTP fora do contrato esperado.", e);
+        }
     }
 }
 
@@ -144,10 +120,4 @@ public static class Polilinha
 
         return (resultado & 1) != 0 ? ~(resultado >> 1) : resultado >> 1;
     }
-}
-
-internal static class DoubleFormato
-{
-    public static string ToStringInvariant(this double valor)
-        => valor.ToString(System.Globalization.CultureInfo.InvariantCulture);
 }

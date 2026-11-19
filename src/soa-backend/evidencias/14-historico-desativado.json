@@ -1,0 +1,6 @@
+{
+  "httpStatus": 403,
+  "resposta": {
+    "erro": "Histórico no servidor desativado; trajetos pessoais ficam apenas no aparelho."
+  }
+}

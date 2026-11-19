@@ -15,6 +15,7 @@ public class VoltaSeguraDbContext : DbContext
     }
 
     public DbSet<Ocorrencia> Ocorrencias => Set<Ocorrencia>();
+    public DbSet<Acervo> Acervos => Set<Acervo>();
 
     public DbSet<Trajeto> TrajetosSalvos => Set<Trajeto>();
 
@@ -22,6 +23,7 @@ public class VoltaSeguraDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Acervo>().ToTable("acervo");
         modelBuilder.Entity<Ocorrencia>(entidade =>
         {
             entidade.ToTable("ocorrencias");

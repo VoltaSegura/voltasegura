@@ -1,0 +1,5 @@
+$ dotnet test VoltaSegura.sln --no-build --nologo
+Execução de teste para C:\Users\ferna\Documents\GitHub\voltasegura\src\csharp-backend\VoltaSegura.Tests\bin\Debug\net8.0\VoltaSegura.Tests.dll (.NETCoreApp,Version=v8.0)
+1 arquivos de teste no total corresponderam ao padrão especificado.
+
+Aprovado!  – Com falha:     0, Aprovado:    46, Ignorado:     0, Total:    46, Duração: 1 s - VoltaSegura.Tests.dll (net8.0)

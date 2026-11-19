@@ -11,9 +11,10 @@ namespace VoltaSegura.Domain.Interfaces;
 /// </summary>
 public interface IRoteador
 {
+    string Fonte { get; }
     /// <summary>Planeja alternativas de trajeto entre dois pontos (coordenadas nunca saem daqui para logs).</summary>
     Task<IReadOnlyList<Trajeto>> PlanejarAsync(
-        Coordenada origem, Coordenada destino, string sentido, CancellationToken ct);
+        Coordenada origem, Coordenada destino, string sentido, DateTimeOffset saida, CancellationToken ct);
 }
 
 /// <summary>
@@ -23,6 +24,13 @@ public interface IRoteador
 /// </summary>
 public interface IOcorrenciaRepositorio
 {
+    Task<int> ContarBoletinsDistintosAsync(
+        IReadOnlyList<CorredorCaminhada> caminhadas, double raioMetros,
+        DateOnly inicio, DateOnly fim, CancellationToken ct);
+
+    Task<double> CoberturaCorredorAsync(
+        IReadOnlyList<CorredorCaminhada> caminhadas, double raioMetros,
+        DateOnly inicio, DateOnly fim, CancellationToken ct);
     /// <summary>
     /// Conta boletins distintos a até <paramref name="raioMetros"/> de qualquer ponto
     /// caminhado da rota, no período informado, para as naturezas elegíveis.
@@ -41,3 +49,6 @@ public interface IOcorrenciaRepositorio
         IReadOnlyList<Coordenada> pontosCaminhados, double raioMetros,
         DateOnly inicio, DateOnly fim, IReadOnlyCollection<FaixaDoDia>? faixas, CancellationToken ct);
 }
+
+/// <summary>Geometria de uma caminhada, isolada dos trechos de transporte, e seu período local.</summary>
+public sealed record CorredorCaminhada(IReadOnlyList<Coordenada> Pontos, FaixaDoDia? Faixa);

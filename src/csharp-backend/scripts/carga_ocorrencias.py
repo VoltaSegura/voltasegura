@@ -32,17 +32,20 @@ Uso:
 
 from __future__ import annotations
 
+import argparse
+import hashlib
+import os
 import sqlite3
 import sys
 import time
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import pandas as pd
 
 RAIZ = Path(__file__).resolve().parents[3]
 XLSX = RAIZ / "utils" / "ssp" / "SPDadosCriminais_2026.xlsx"
-DB = RAIZ / "src" / "csharp-backend" / "dados" / "voltasegura.db"
+DB = Path(os.environ.get("VOLTASEGURA_DB", RAIZ / "src" / "csharp-backend" / "dados" / "voltasegura.db"))
 # Cache do recorte (parquet) — evita reler o xlsx de 140 MB a cada tentativa.
 CACHE = RAIZ / "src" / "csharp-backend" / "dados" / "cache_recorte_ssp.parquet"
 
@@ -208,15 +211,25 @@ def carregar(df: pd.DataFrame, db: Path, truncate: bool = False) -> int:
 
 
 def main() -> None:
-    force = "--force" in sys.argv
+    global XLSX, DB, CACHE
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--arquivo", type=Path, default=XLSX)
+    parser.add_argument("--banco", type=Path, default=DB)
+    parser.add_argument("--force", action="store_true", help="Substituir explicitamente o acervo existente")
+    args = parser.parse_args()
+    XLSX, DB, force = args.arquivo.resolve(), args.banco.resolve(), args.force
+    CACHE = DB.parent / "cache_recorte_ssp.parquet"
+    hash_path = CACHE.with_suffix(".sha256")
 
     print(f"[fonte] {XLSX}")
-    if not XLSX.exists() and not CACHE.exists():
+    if not XLSX.exists():
         raise FileNotFoundError(
             f"{XLSX} não encontrado — baixe em https://www.ssp.sp.gov.br/estatistica/consultas "
             "(instruções em src/ml/dados/README.md)."
         )
 
+    with XLSX.open("rb") as arquivo:
+        digest = hashlib.file_digest(arquivo, "sha256").hexdigest()
     inicio = time.time()
 
     # O SCHEMA é responsabilidade do EF Core: rode antes
@@ -230,6 +243,15 @@ def main() -> None:
     existe = con_check.execute(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='ocorrencias'"
     ).fetchone()
+    possui_metadados = con_check.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='acervo'").fetchone()
+    if not possui_metadados:
+        con_check.close()
+        raise RuntimeError("Aplique também a migração ProvenienciaAcervo antes de importar.")
+    anterior = con_check.execute('SELECT Tipo, Sha256 FROM acervo WHERE Id=1').fetchone()
+    sem_proveniencia = anterior is None and con_check.execute("SELECT COUNT(*) FROM ocorrencias").fetchone()[0] > 0
+    if not force and (sem_proveniencia or (anterior and (anterior[0] != "ssp" or anterior[1] != digest))):
+        con_check.close()
+        raise RuntimeError("Banco contém outro acervo. Use outro banco ou --force para substituição explícita.")
     con_check.close()
     if not existe:
         raise RuntimeError(
@@ -241,7 +263,7 @@ def main() -> None:
         CACHE.unlink()
         print("[limpeza] cache do recorte removido")
 
-    if CACHE.exists():
+    if CACHE.exists() and hash_path.exists() and hash_path.read_text().strip() == digest and not force:
         print(f"[cache] lendo recorte de {CACHE.name}...")
         recorte = pd.read_parquet(CACHE)
     else:
@@ -254,6 +276,7 @@ def main() -> None:
         recorte = recortar(base)
         CACHE.parent.mkdir(parents=True, exist_ok=True)
         recorte.to_parquet(CACHE)
+        hash_path.write_text(digest, encoding="utf-8")
         print(f"      recorte salvo em cache: {CACHE.name}")
 
     por_natureza = recorte["__natureza"].value_counts().to_dict()
@@ -265,7 +288,12 @@ def main() -> None:
 
     print("[3/3] gravando no SQLite...")
     gravadas = carregar(recorte, DB, truncate=force)
+    with sqlite3.connect(DB) as con:
+        con.execute('INSERT OR REPLACE INTO acervo (Id, Tipo, Fonte, Inicio, Fim, AtualizadoEmUtc, Sha256) VALUES (1, ?, ?, ?, ?, ?, ?)',
+            ("ssp", "SSP-SP, SPDadosCriminais_2026; recorte capital, jan–set/2026; CC-BY 4.0",
+             PERIODO_INI.isoformat(), PERIODO_FIM.isoformat(), datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"), digest))
     print(f"      {gravadas:,} linhas gravadas em {DB.name}")
+    print(f"[sha256] {digest}")
 
     print(f"[ok] concluído em {time.time() - inicio:.0f}s")
     print(

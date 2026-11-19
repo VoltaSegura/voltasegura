@@ -107,6 +107,6 @@ public class AvaliadorComparacaoTests
     {
         var d = AvaliadorComparacao.ExposicaoEstimada(Rota("R1", 12, 3.0, 0.9));
 
-        Assert.Equal(4.0, d, 9);
+        Assert.Equal(4.0, d!.Value, 9);
     }
 }

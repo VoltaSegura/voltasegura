@@ -16,15 +16,20 @@ namespace VoltaSegura.Api.Controllers;
 public class TrajetosController : ControllerBase
 {
     private readonly VoltaSeguraDbContext _contexto;
+    private readonly IConfiguration _config;
 
-    public TrajetosController(VoltaSeguraDbContext contexto) => _contexto = contexto;
+    public TrajetosController(VoltaSeguraDbContext contexto, IConfiguration config)
+        => (_contexto, _config) = (contexto, config);
 
     /// <summary>Lista os trajetos salvos (async + LINQ).</summary>
     [HttpGet]
     public async Task<IActionResult> Listar(CancellationToken ct)
     {
+        if (!_config.GetValue<bool>("Demonstracao:PersistirTrajetos"))
+            return StatusCode(403, new { erro = "Histórico no servidor desativado; trajetos pessoais ficam apenas no aparelho." });
         var trajetos = await _contexto.TrajetosSalvos
             .AsNoTracking()
+            .Include(t => t.Trechos)
             .OrderByDescending(t => t.Id)
             .Take(50)
             .Select(t => new
@@ -45,7 +50,9 @@ public class TrajetosController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Salvar([FromBody] RequisicaoTrajeto requisicao, CancellationToken ct)
     {
-        if (requisicao is null || requisicao.Trechos.Count == 0)
+        if (!_config.GetValue<bool>("Demonstracao:PersistirTrajetos"))
+            return StatusCode(403, new { erro = "Persistência desativada. Apenas dados fictícios em ambiente de demonstração podem usar este endpoint." });
+        if (requisicao is null || requisicao.Trechos == null || requisicao.Trechos.Count == 0)
             return BadRequest(new { erro = "informe ao menos um trecho" });
 
         var trajeto = new Trajeto
@@ -75,5 +82,7 @@ public class TrajetosController : ControllerBase
 
     /// <summary>Trecho do corpo de criação.</summary>
     /// <param name="Modo">WALK, BUS, SUBWAY, RAIL ou TRAM.</param>
+    /// <param name="ComprimentoKm">Distância do trecho fictício.</param>
+    /// <param name="Pontos">Coordenadas de exemplo.</param>
     public sealed record TrechoRequisicao(string Modo, double ComprimentoKm, List<Coordenada> Pontos);
 }

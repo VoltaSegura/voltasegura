@@ -1,0 +1,5 @@
+$ dotnet run --no-build --project VoltaSegura.Servicos -- --migrar
+Usando as configurações de inicialização de VoltaSegura.Servicos\Properties\launchSettings.json...
+info: Microsoft.EntityFrameworkCore.Migrations[20405]
+      No migrations were applied. The database is already up to date.
+Migrações aplicadas. 
