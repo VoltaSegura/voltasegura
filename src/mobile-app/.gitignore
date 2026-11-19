@@ -44,3 +44,6 @@ yarn-error.*
 .env
 !.env.example
 .neon
+
+# OTP2 baixado pelo npm run setup (jar, GTFS, mapa e grafo; centenas de MB)
+.otp2/

@@ -13,6 +13,7 @@
     "expo-constants": "~58.0.16",
     "expo-font": "~58.0.12",
     "expo-haptics": "~58.0.8",
+    "expo-keep-awake": "~58.0.4",
     "expo-linear-gradient": "~58.0.4",
     "expo-linking": "~58.0.17",
     "expo-location": "~58.0.22",
@@ -21,6 +22,7 @@
     "expo-secure-store": "~58.0.3",
     "expo-sqlite": "~58.0.17",
     "expo-status-bar": "~58.0.5",
+    "expo-task-manager": "~58.0.14",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-native": "0.88.1",
@@ -48,7 +50,10 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest",
+    "setup": "node scripts/setup/setup.mjs",
+    "otp2": "node scripts/setup/otp2.mjs",
+    "celular": "node scripts/setup/setup.mjs --so-ip && expo start -c"
   },
   "private": true,
   "engines": {
