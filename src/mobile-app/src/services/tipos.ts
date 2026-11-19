@@ -72,6 +72,21 @@ export interface Rota {
   trechos: Trecho[];
   exposicao: ExposicaoRota;
   categorias: CategoriasRota;
+  /**
+   * B-58: presente quando a rota é uma variação de caminhada gerada pelo app a partir de outra
+   * alternativa (mesma condução, trechos a pé por outro caminho). Ausente nas alternativas do roteador.
+   */
+  variante?: {
+    deRotaId: string;
+    /** B-59 (D-33): `dados` = caminho a pé escolhido pelos registros da SSP-SP; ausente = desvio geométrico (B-58). */
+    origem?: 'dados';
+  };
+  /**
+   * B-59 (D-33): só na rota com o foco `MENOR_EXPOSICAO`. `clara` = a comparação estatística do docs/08
+   * concluiu a favor dela (CONCLUSIVO); `pequena` = tem menos registros com cobertura suficiente, mas a
+   * diferença não passou no teste. A confiança é sempre exibida junto com o destaque (docs/05).
+   */
+  destaqueExposicao?: { confianca: 'clara' | 'pequena' };
 }
 
 /** De onde veio cada bloco da resposta. */

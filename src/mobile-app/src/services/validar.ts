@@ -156,7 +156,7 @@ function validarRoteamento(v: unknown): RotaSemExposicao {
   if (!trechos.length) throw new Formato();
   if (new Set(trechos.map((t) => t.id)).size !== trechos.length) throw new Formato();
   const focos = lista(r.focos).map((f) => umDe(f, FOCOS));
-  return {
+  const rota: RotaSemExposicao = {
     id: textoNaoVazio(r.id),
     focos: [...new Set(focos)],
     duracaoMin: numero(r.duracaoMin),
@@ -167,6 +167,13 @@ function validarRoteamento(v: unknown): RotaSemExposicao {
     geometria: geometria(r.geometria),
     trechos,
   };
+  // B-58: variação de caminhada gerada pelo app; só aparece quando veio no JSON
+  if (r.variante !== undefined) {
+    const v = objeto(r.variante);
+    rota.variante = { deRotaId: textoNaoVazio(v.deRotaId) };
+    if (v.origem !== undefined) rota.variante.origem = umDe(v.origem, ['dados'] as const);
+  }
+  return rota;
 }
 
 function validarSobreOsDados(v: unknown): RespostaConsulta['sobreOsDados'] {
@@ -330,11 +337,17 @@ export function validarRespostaConsulta(bruto: unknown): RespostaConsulta {
     fontes,
     caso,
     motivo,
-    rotas: rotas.map((rota, i) => ({
-      ...rota,
-      focos: caso === 'INDISPONIVEL' ? rota.focos.filter((f) => f !== 'MENOR_EXPOSICAO') : rota.focos,
-      ...porRota[i],
-    })),
+    rotas: rotas.map((rota, i) => {
+      const focos = caso === 'INDISPONIVEL' ? rota.focos.filter((f) => f !== 'MENOR_EXPOSICAO') : rota.focos;
+      const validada: Rota = { ...rota, focos, ...porRota[i] };
+      // B-59: a confiança só existe junto com o destaque de exposição; formato desconhecido = sem confiança
+      const d = (rotasBrutas[i] as Objeto).destaqueExposicao;
+      const confianca = d !== null && typeof d === 'object' ? (d as Objeto).confianca : undefined;
+      if (focos.includes('MENOR_EXPOSICAO') && (confianca === 'clara' || confianca === 'pequena')) {
+        validada.destaqueExposicao = { confianca };
+      }
+      return validada;
+    }),
     sobreOsDados,
     panoramaMunicipal,
   };

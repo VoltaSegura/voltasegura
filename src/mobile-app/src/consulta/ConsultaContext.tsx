@@ -29,6 +29,11 @@ export interface ValorConsulta {
   inverterPontos(): void;
   cancelarBusca(): void;
   selecionarRota(id: string): void;
+  /**
+   * Troca a resposta em memória sem passar por `buscando` (usado pelo recálculo da "Seguir rota", que não pode
+   * tirar a tela do trajeto) e seleciona a rota que a substitui.
+   */
+  atualizarResposta(resposta: RespostaConsulta, rotaId: string): void;
   buscar(): Promise<void>;
   limpar(): void;
   planejarVolta(): void;
@@ -148,6 +153,10 @@ export function ConsultaProvider({ children, dentroDoMunicipio }: Props) {
       inverterPontos,
       cancelarBusca,
       selecionarRota: (id) => dispatch({ tipo: 'selecionarRota', id }),
+      atualizarResposta: (resposta, rotaId) => {
+        dispatch({ tipo: 'sucesso', resposta });
+        dispatch({ tipo: 'selecionarRota', id: rotaId });
+      },
       buscar,
       limpar,
       planejarVolta,

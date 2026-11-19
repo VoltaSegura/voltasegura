@@ -33,6 +33,18 @@ export function codificar(pontos: readonly PontoGeometria[]): string {
   return texto;
 }
 
+/**
+ * Remove pontos consecutivos que coincidem na precisão de 5 casas (o OTP2 às vezes repete um vértice).
+ * O PostGIS descarta esses repetidos ao decodificar, e a polyline deixaria de ser canônica para a
+ * função de exposição (B-57).
+ */
+export function semPontosRepetidos(pontos: readonly PontoGeometria[]): PontoGeometria[] {
+  const mesmo = (a: PontoGeometria, b: PontoGeometria) =>
+    Math.round(a.lat * PRECISAO) === Math.round(b.lat * PRECISAO)
+    && Math.round(a.lon * PRECISAO) === Math.round(b.lon * PRECISAO);
+  return pontos.filter((p, i) => i === 0 || !mesmo(p, pontos[i - 1]));
+}
+
 function lerValor(texto: string, inicio: number): { valor: number; proximo: number } | null {
   let valor = 0;
   let deslocamento = 0;
