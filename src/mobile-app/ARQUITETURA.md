@@ -35,7 +35,7 @@ src/mobile-app/
     ├── config/         ambiente.ts: modo mock|api|otp2, URLs da API e do OTP2 e URL/origem do Neon Auth
     ├── consulta/       estado global da consulta em memória: reducer, validação, planejar a volta, ConsultaProvider
     ├── sessao/         SessaoProvider (SecureStore, expira sozinha; entrar() e sair() provisórios para as telas atuais)
-    ├── services/       consulta (mock, api, otp2), seleção da fonte (`selecao.ts`), validação do JSON (`validar.ts`), conta (mock, api e Neon Auth), erros, http, token; fixtures/ com os 12 casos
+    ├── services/       consulta (mock, api, otp2), seleção da fonte (`selecao.ts`), variações de caminhada (`variantesCaminhada.ts`, B-58), caminho desenhado pelos dados e prioridade com confiança (`rotaDosDados.ts`, B-59), validação do JSON (`validar.ts`), conta (mock, api e Neon Auth), erros, http, token; fixtures/ com os 12 casos
     ├── textos/         microcopy de 08_microcopy.md em 16 módulos; `hipoteses.ts` guarda o que o catálogo só descreve por regra (`sequenciaLeitura`, `[HIPÓTESE]`)
     └── theme/          tokens.ts (de 07_design/tokens.md) e useTema()
 ```
@@ -60,7 +60,7 @@ Seguem a árvore de `docs/app-map/05_navegacao.md`. A única diferença é a pas
 | `/por-que/[rotaId]/[trechoId]` | `(app)/por-que/[rotaId]/[trechoId].tsx` | TL-09 (modal) |
 | `/sobre-os-dados` | `(app)/sobre-os-dados.tsx` | TL-10 |
 | `/dados-considerados?rotaId=` | `(app)/dados-considerados.tsx` | TL-11 |
-| `/configuracoes` | `(app)/configuracoes.tsx` | TL-12 |
+| `/perfil` (aba) | `(app)/(abas)/perfil.tsx` | TL-12 (D-38; configurações removida) |
 | `/compartilhar/[rotaId]` | `(app)/compartilhar/[rotaId].tsx` | TL-14 (modal; Depende do tempo) |
 | `/acompanhar/[token]` | `(app)/acompanhar/[token].tsx` | TL-15 (Depende do tempo) |
 
@@ -89,3 +89,12 @@ Pendente (05_navegacao, "Guardas"): voltar à rota guardada depois de a sessão 
 1. Conferir a jornada rodando (celular e navegador): login pelo Neon Auth, escolher ponto, buscar e ver o resultado.
 2. Decidir o histórico de trajetos (FN-13; os locais salvos já existem, D-29) e a aprovação visual do design (PL-19). Redesign 2 (D-29): home sem Ida/Volta, mapa em tela cheia com busca por texto, imagens com reserva (`theme/imagens.ts`); testes: 395 em 32 suítes.
 3. Lacunas conhecidas: `CenaRotaAcesa`; hora de saída só na hora local; nome genérico do ponto (PL-09); sem estado de conectividade (PL-12); atribuição do mapa (PL-25); polígono do município (PL-11).
+
+
+## Atualização D-36 (19/11/2026): VoltaSegura+ em simulação, abas e contatos
+
+- Abas em `src/app/(app)/(abas)/` (`_layout.tsx` com `Tabs` e `BarraAbas`): `planejar`, `locais`, `contatos`, `plus` (portão: home se há assinatura simulada, senão planos) e `perfil` (tela própria; `configuracoes.tsx` foi removida, D-38). Pilha do Plus em `src/app/(app)/plus/`: `confirmacao`, `home`, `volta-pronta`, `radar`, `resumo`, `assinatura`. Provedores novos: `ModoTemaProvider` (raiz, `app/_layout.tsx`) e `AssinaturaProvider` (`(app)/_layout.tsx`). Mapa em `docs/app-map/05_navegacao.md`.
+- `src/plus/`: datas da simulação (sem Intl), dados de exemplo (`exemplos.ts`) e `FundoMapa` (decorativo, feito com Views; sem SVG no projeto).
+- `src/contatos/`: nomes no SecureStore (`voltasegura.contatos`), até 10; sem telefone ou conta. Não há provider: a tela carrega e grava sozinha.
+- `src/textos/plus.ts` e `src/textos/abas.ts` entram no agregador `src/textos/index.ts`.
+- O horário da rotina usa `SeletorHorario` (`src/components/planejar/`).

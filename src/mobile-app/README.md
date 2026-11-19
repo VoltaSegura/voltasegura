@@ -24,17 +24,39 @@ Há 13 telas implementadas (TL-01 a TL-13), 11 cenários de exemplo, serviços p
 
 ## Como rodar
 
-Pré-requisitos: Node.js 22.13+ e npm. Para testar no celular, instale o Expo Go e conecte computador e celular à mesma rede; a abertura no aparelho ainda precisa ser validada.
+Pré-requisitos: Node.js 22.13+ e npm. No celular, o Expo Go, com computador e celular na mesma rede Wi-Fi.
+
+### Jeito rápido: dados de exemplo (sem servidor)
 
 ```bash
 cd src/mobile-app
-npm ci
-npx expo start
+npm run setup -- --modo mock
+npm run celular
 ```
 
-O modo padrão é `mock` e não exige arquivo `.env`. Para testar no navegador, use `npx expo start --web`. O Expo Router carrega as telas de `src/app/`.
+Os trajetos e números são fixtures rotuladas como **EXEMPLO**, não dados reais.
 
-Para usar o Neon Auth em um aparelho, copie `.env.example` para `.env` e preencha **somente** a URL pública `EXPO_PUBLIC_NEON_AUTH_URL` e a origem confiável `EXPO_PUBLIC_NEON_AUTH_ORIGIN`. Esse fluxo ainda precisa de teste no React Native. Nunca coloque `DATABASE_URL` ou outro segredo em `EXPO_PUBLIC_*`. O modo `api` para trajetos depende da conciliação do contrato com o backend (PL-18). No celular, use o IP da máquina na rede local em `EXPO_PUBLIC_API_URL`, não `localhost`.
+### Trajetos reais (OTP2) e exposição estimada (Neon)
+
+```bash
+cd src/mobile-app
+npm run setup        # uma vez: dependências, .env.local com o IP da rede, Java 25, OTP2 e grafo
+npm run otp2         # terminal 1: servidor de trajetos na porta 8080 (deixe aberto)
+npm run celular      # terminal 2: confere o IP e abre o Expo com cache limpo
+```
+
+O que o `npm run setup` faz (scripts em `scripts/setup/`):
+
+1. roda `npm install` se faltar;
+2. descobre o IPv4 do computador na rede local, ignorando adaptadores virtuais (WSL, Hyper-V, VirtualBox), e grava no `.env.local` as variáveis `EXPO_PUBLIC_*`: modo `otp2`, URL do OTP2 e URLs públicas do Neon (`scripts/setup/neon-publico.json`, sem segredo). Chaves que já existem no `.env.local` ficam como estão;
+3. procura Java 25+ (exigido pelo OTP 2.10) e, no Windows, oferece instalar com o `winget`;
+4. baixa o OTP2, o GTFS da SPTrans e o OpenStreetMap do Sudeste, recorta o mapa para o município (Python 3 + osmium, num ambiente isolado) e monta o grafo. Na primeira vez leva de 20 a 40 minutos e pede uns 12 GB de RAM; depois, o `graph.obj` é reaproveitado.
+
+Os arquivos do OTP2 ficam em `src/mobile-app/.otp2/` (fora do git). No monorepo, se `scripts/otp2/dados/graph.obj` já existir, o script usa essa pasta. Opções: `--dados <pasta>`, `--memoria 6G`, `--porta 8080` no `npm run otp2`, e `--ip <IPv4>` no `npm run setup` se a detecção errar. Trocou de Wi-Fi? `npm run celular` já atualiza o IP.
+
+Para ver a exposição estimada, crie uma conta no app e entre. Sem login, o app mostra só os trajetos ("só roteamento"). Se o celular não abrir `http://<IP>:8080/graphiql`, libere o Java no Firewall do Windows para redes privadas. Em desenvolvimento, o terminal do Expo mostra cada consulta ao OTP2 (`[otp2] ...`), sem coordenadas da pessoa.
+
+Para testar no navegador, use `npx expo start --web`. Nunca coloque `DATABASE_URL` ou outro segredo em `EXPO_PUBLIC_*`. O modo `api` para trajetos depende da conciliação do contrato com o backend (PL-18).
 
 | Verificação | Comando |
 |---|---|

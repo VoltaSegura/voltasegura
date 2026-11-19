@@ -2,7 +2,10 @@ import { beforeEach, afterEach, describe, expect, it, jest } from '@jest/globals
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, Keyboard, Platform, type KeyboardEvent } from 'react-native';
 
-import Configuracoes from '@/app/(app)/configuracoes';
+import Locais from '@/app/(app)/(abas)/locais';
+import Perfil from '@/app/(app)/(abas)/perfil';
+import { AssinaturaProvider } from '@/plus';
+import { ModoTemaProvider } from '@/theme/ModoTemaProvider';
 import DadosConsiderados from '@/app/(app)/dados-considerados';
 import SobreOsDados from '@/app/(app)/sobre-os-dados';
 import { useConsulta, type ValorConsulta } from '@/consulta';
@@ -24,6 +27,14 @@ jest.mock('expo-router', () => {
     useLocalSearchParams: () => ({}),
   };
 });
+jest.mock('expo-secure-store', () => {
+  let guardado: string | null = null;
+  return {
+    getItemAsync: jest.fn(async () => guardado),
+    setItemAsync: jest.fn(async (_k: string, v: string) => { guardado = v; }),
+    deleteItemAsync: jest.fn(async () => { guardado = null; }),
+  };
+});
 jest.mock('@/locais', () => jest.requireActual<typeof import('@/test-utils/locais')>('@/test-utils/locais').moduloLocais);
 jest.mock('@/consulta', () => ({ useConsulta: jest.fn() }));
 jest.mock('@/sessao/SessaoContext', () => ({ useSessao: jest.fn() }));
@@ -36,6 +47,10 @@ const mockSessao = jest.mocked(useSessao);
 const mockRemota = jest.mocked((servicos.conta as typeof servicos.conta & {
   encerrarSessaoRemota: (token: string) => Promise<void>;
 }).encerrarSessaoRemota);
+
+function Providers({ children }: { children: React.ReactNode }) {
+  return <ModoTemaProvider><AssinaturaProvider>{children}</AssinaturaProvider></ModoTemaProvider>;
+}
 
 function consulta(resposta: ValorConsulta['resposta'] = conclusivo) {
   mockConsulta.mockReturnValue({ resposta, rotaSelecionadaId: conclusivo.rotas[0].id } as ValorConsulta);
@@ -55,14 +70,14 @@ afterEach(() => {
   mockHref = '';
 });
 
-describe('TL-12 Configurações', () => {
+describe('TL-12 Configurações (Locais e Perfil)', () => {
   it('mostra endereço no detalhe e na edição, e avisa quando não foi salvo', async () => {
     locaisMock.locais = [
       { id: 'casa', nome: 'Casa', tipo: 'casa', ponto: { lat: -23.5, lon: -46.6 }, endereco: 'Rua Um, 10, São Paulo' },
       { id: 'estudo', nome: 'Faculdade', tipo: 'estudo', ponto: { lat: -23.6, lon: -46.7 } },
     ];
     sessao();
-    await render(<Configuracoes />);
+    await render(<Locais />);
     expect(screen.getByText('Rua Um, 10, São Paulo')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
     expect(screen.getAllByText('Rua Um, 10, São Paulo')).toHaveLength(2);
@@ -85,7 +100,7 @@ describe('TL-12 Configurações', () => {
 
   it('oculta o tipo repetido e mantém o detalhe quando o nome difere', async () => {
     sessao();
-    await render(<Configuracoes />);
+    await render(<Locais />);
     expect(screen.getAllByText('Casa')).toHaveLength(1);
     expect(screen.getByText('Estudo')).toBeTruthy();
     expect(screen.getByRole('button', { name: c.renomear('Casa') })).toBeTruthy();
@@ -94,7 +109,7 @@ describe('TL-12 Configurações', () => {
   it('edita com foco automático, limita a 30 e salva o nome normalizado', async () => {
     sessao();
     const anuncio = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
-    await render(<Configuracoes />);
+    await render(<Locais />);
     await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
     expect(screen.getByLabelText(c.nomeLugar).props.autoFocus).toBe(true);
     expect(screen.getByLabelText(c.nomeLugar).props.value).toBe('Casa');
@@ -111,7 +126,7 @@ describe('TL-12 Configurações', () => {
 
   it('cancela sem renomear e mantém o botão de apagar durante a edição', async () => {
     sessao();
-    await render(<Configuracoes />);
+    await render(<Locais />);
     await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
     await fireEvent.changeText(screen.getByLabelText(c.nomeLugar), 'Outro nome');
     expect(screen.getByRole('button', { name: 'Apagar Casa' })).toBeTruthy();
@@ -122,7 +137,7 @@ describe('TL-12 Configurações', () => {
 
   it('recusa nome vazio e permite corrigir', async () => {
     sessao();
-    await render(<Configuracoes />);
+    await render(<Locais />);
     await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
     await fireEvent.changeText(screen.getByLabelText(c.nomeLugar), '   ');
     await fireEvent.press(screen.getByRole('button', { name: c.salvar }));
@@ -136,7 +151,7 @@ describe('TL-12 Configurações', () => {
     sessao();
     const local = locaisMock.locais[1];
     const anuncio = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
-    await render(<Configuracoes />);
+    await render(<Locais />);
     await fireEvent.press(screen.getByRole('button', { name: 'Apagar Faculdade' }));
     expect(locaisMock.apagar).toHaveBeenCalledWith('estudo');
     expect(anuncio).toHaveBeenCalledWith(c.lugarApagado);
@@ -150,7 +165,7 @@ describe('TL-12 Configurações', () => {
   it('oferece desfazer por exatamente 5 segundos', async () => {
     jest.useFakeTimers();
     sessao();
-    await render(<Configuracoes />);
+    await render(<Locais />);
     await fireEvent.press(screen.getByRole('button', { name: 'Apagar Casa' }));
     await act(async () => { jest.advanceTimersByTime(4999); });
     expect(screen.getByRole('button', { name: c.desfazer })).toBeTruthy();
@@ -168,7 +183,7 @@ describe('TL-12 Configurações', () => {
       return { remove: jest.fn() };
     });
     sessao();
-    await render(<Configuracoes />);
+    await render(<Locais />);
     await fireEvent.press(screen.getByRole('button', { name: c.renomear('Casa') }));
     await act(async () => { listeners.keyboardDidShow({ endCoordinates: { screenY: 400, height: 300 } } as KeyboardEvent); });
     expect(screen.getByTestId('espaco-teclado').props.style.height).toBe(300);
@@ -180,7 +195,7 @@ describe('TL-12 Configurações', () => {
 
   it('omite exclusão e histórico; exibe lugares salvos', async () => {
     sessao();
-    await render(<Configuracoes />);
+    await render(<Providers><Perfil /></Providers>);
     expect(screen.getByText(textos.config.conta)).toBeTruthy();
     expect(screen.queryByText(textos.config.excluir.link)).toBeNull();
     expect(screen.queryByText(textos.config.historico)).toBeNull();
@@ -191,7 +206,7 @@ describe('TL-12 Configurações', () => {
     const ordem: string[] = [];
     mockRemota.mockImplementation(async () => { ordem.push('remota'); });
     const local = sessao(jest.fn(async () => { ordem.push('local'); }));
-    await render(<Configuracoes />);
+    await render(<Providers><Perfil /></Providers>);
     await act(async () => { await fireEvent.press(screen.getByRole('button', { name: textos.config.sair })); });
     expect(mockRemota).toHaveBeenCalledWith('token-exemplo');
     expect(local).toHaveBeenCalledTimes(1);
@@ -201,7 +216,7 @@ describe('TL-12 Configurações', () => {
   it('encerra a sessão local mesmo quando a remota falha', async () => {
     mockRemota.mockRejectedValue(new Error('falha'));
     const local = sessao();
-    await render(<Configuracoes />);
+    await render(<Providers><Perfil /></Providers>);
     await act(async () => { await fireEvent.press(screen.getByRole('button', { name: textos.config.sair })); });
     expect(local).toHaveBeenCalledTimes(1);
   });
@@ -211,7 +226,7 @@ describe('TL-12 Configurações', () => {
     mockRemota.mockReturnValue(pendente);
     sessao();
     mockSessao.mockReturnValue({ sessao: { email: 'conta@exemplo.invalid', token: 'token-real', expiraEm: '2099-01-01' }, encerrarSessao: jest.fn(), logado: true } as unknown as ReturnType<typeof useSessao>);
-    await render(<Configuracoes />);
+    await render(<Providers><Perfil /></Providers>);
     expect(screen.queryByText(textos.comuns.exemplo)).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: textos.config.sair }));
     expect(screen.getByRole('button', { name: /Saindo/ }).props.accessibilityState.disabled).toBe(true);

@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { formatarHora } from '@/components/resultado/formatos';
 import { Redirect, Stack, router } from 'expo-router';
-import { Botao, Texto } from '@/components';
+import { Texto } from '@/components';
 import { MapaResultado } from '@/components/mapa';
-import { PainelResultado, formatarPeriodo, soRoteamento, textoCaso, type RotulosResultado } from '@/components/resultado';
+import { CartaoInsuficiente, PainelResultado, soRoteamento, textoCaso, type RotulosResultado } from '@/components/resultado';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, ModoTrecho, Rota, Trecho } from '@/services';
 import { textos } from '@/textos';
@@ -41,11 +41,12 @@ const rotulos: RotulosResultado = {
 };
 export default function Resultado() {
   const { cores } = useTema();
-  const { estado, resposta, rotaSelecionadaId, selecionarRota, planejarVolta, inverterPontos, definirSentido } = useConsulta();
+  const { estado, resposta, rotaSelecionadaId, selecionarRota } = useConsulta();
   const { height } = useWindowDimensions();
   const [alturaTela, setAlturaTela] = useState(height);
-  const [nivel, setNivel] = useState(0);
-  const alturaFolha = Math.round(alturaTela * [0.28, 0.55, 0.88][nivel]);
+  // Item 6 (T25-B): a folha abre no nível médio (cartões visíveis sem arrastar); os níveis seguem o ciclo do alça.
+  const [nivel, setNivel] = useState(1);
+  const alturaFolha = Math.round(alturaTela * [0.45, 0.68, 0.90][nivel]);
   if (!resposta) return <Redirect href="/planejar" />;
   const selecionada = resposta.rotas.find(r => r.id === rotaSelecionadaId) ?? resposta.rotas[0];
   const tituloLista = resposta.rotas.length === 0 ? hipotesesEstadosResultado.semAlternativas : hipotesesResultado.opcoes(resposta.rotas.length);
@@ -56,7 +57,6 @@ export default function Resultado() {
   const abrirDetalhes = (rota: Rota) => {
     router.push({ pathname: '/resultado/[rotaId]', params: { rotaId: rota.id } });
   };
-  const proximoSentido = estado.consulta.sentido === 'ida' ? 'volta' : 'ida';
   return <View style={[estilos.tela, { backgroundColor: cores.fundo }]} onLayout={evento => {
     const medida = evento.nativeEvent.layout.height;
     if (medida > 0) setAlturaTela(medida);
@@ -72,21 +72,25 @@ export default function Resultado() {
       onAbrirDetalhes={abrirDetalhes}
       rodapeLista={<View style={estilos.intro}>
         <Texto variante="apoio">{textos.comuns.horariosPrevistos}</Texto>
-        <Botao variante="texto" rotulo={estado.consulta.sentido === 'volta' ? textos.resultado.planejarIda : textos.resultado.planejarVolta}
-          onPress={() => { if (proximoSentido === 'volta') planejarVolta(); else { inverterPontos(); definirSentido('ida'); } router.push(`/planejar?sentido=${proximoSentido}`); }} />
       </View>}
       linhaDados={{
-        texto: soRoteamento(resposta) ? (resposta.rotas.length > 0 ? textos.soRoteamento.linhaDados : textos.comuns.linhaDadosIndisponivel) : textos.comuns.linhaDados({
-          fonte: resposta.sobreOsDados.fonte,
-          periodo: formatarPeriodo(resposta.sobreOsDados.periodo.inicio, resposta.sobreOsDados.periodo.fim),
-        }),
+        // Item 6: link de uma linha para a explicação dos dados (a fonte e o período ficam em "Sobre os dados").
+        texto: soRoteamento(resposta) ? (resposta.rotas.length > 0 ? textos.soRoteamento.linhaDados : textos.comuns.linhaDadosIndisponivel) : textos.resultado.linkDados,
         rotuloAcessivel: textos.sobre.titulo,
         indisponivel: soRoteamento(resposta),
         onPress: () => router.push('/sobre-os-dados'),
       }}>
       <View style={estilos.intro}>
         {resposta.rotas.length === 1 && <Texto>{textos.resultado.soUma}</Texto>}
-        {textoCaso(resposta) && <Texto testID="texto-caso">{textoCaso(resposta)}</Texto>}
+        {/* Mockup 04: caso insuficiente vira cartão com as duas ações; os demais casos seguem como texto. */}
+        {resposta.caso === 'INSUFICIENTE' && textoCaso(resposta) ? <CartaoInsuficiente
+          titulo={hipotesesEstadosResultado.cartaoInsuficiente.titulo}
+          texto={textoCaso(resposta) ?? ''}
+          rotuloEntender={hipotesesEstadosResultado.cartaoInsuficiente.entender}
+          rotuloOutroHorario={hipotesesEstadosResultado.cartaoInsuficiente.outroHorario}
+          onEntender={() => router.push('/sobre-os-dados')}
+          onOutroHorario={() => router.push('/planejar')} />
+          : textoCaso(resposta) && <Texto testID="texto-caso">{textoCaso(resposta)}</Texto>}
         {resposta.rotas.length === 0 && <Texto>{resposta.caso === 'INDISPONIVEL' ? hipotesesEstadosResultado.comparacaoIndisponivel : hipotesesEstadosResultado.semServico}</Texto>}
       </View>
     </PainelResultado>

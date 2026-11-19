@@ -1,12 +1,13 @@
 import { Stack, useRouter } from 'expo-router';
 import { useRef, useState, type ComponentRef } from 'react';
-import { AccessibilityInfo, TextInput } from 'react-native';
+import { AccessibilityInfo, StyleSheet, TextInput, View } from 'react-native';
 
-import { Aviso, Botao, BotaoIcone, Hero, Link, Tela, Texto } from '@/components';
+import { Aviso, Botao, BotaoIcone, Link, Tela, Texto } from '@/components';
 import { CampoEntrada } from '@/components/entrada';
 import { ErroServico, servicos } from '@/services';
 import { useSessao } from '@/sessao/SessaoContext';
 import { textos } from '@/textos';
+import { esp } from '@/theme/tokens';
 
 const FORMATO_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -53,8 +54,14 @@ export default function Entrar() {
   }
 
   return (
-    <Tela hero={<Hero imagem="heroEntrar" icone="lock-outline" altura={190} esquerda={<BotaoIcone icone="arrow-left" rotulo={textos.comuns.voltar} onPress={() => router.back()} />}><Texto variante="titulo" accessibilityRole="header">{textos.entrar.titulo}</Texto></Hero>}>
+    <Tela>
       <Stack.Screen options={{ title: textos.entrar.titulo, headerShown: false }} />
+      <BotaoIcone icone="arrow-left" rotulo={textos.comuns.voltar} onPress={() => router.back()} />
+      <View style={estilos.cabecalho}>
+        <Texto variante="cabecalho" cor="texto2">{textos.entrar.marca}</Texto>
+        <Texto variante="titulo" accessibilityRole="header">{textos.entrar.titulo}</Texto>
+        <Texto variante="corpo" cor="texto2">{textos.entrar.subtitulo}</Texto>
+      </View>
       <CampoEntrada
         ref={emailRef}
         rotulo={textos.criarConta.email}
@@ -91,3 +98,7 @@ export default function Entrar() {
     </Tela>
   );
 }
+
+const estilos = StyleSheet.create({
+  cabecalho: { gap: esp[1] },
+});

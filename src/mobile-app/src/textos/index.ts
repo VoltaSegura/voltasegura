@@ -1,3 +1,4 @@
+import { abas } from './abas';
 import { abertura } from './abertura';
 import { acompanhar } from './acompanhar';
 import { aviso } from './aviso';
@@ -11,9 +12,11 @@ import { dadosConsiderados } from './dadosConsiderados';
 import { entrar } from './entrar';
 import { escolherPonto } from './escolherPonto';
 import { modos } from './modos';
+import { plus } from './plus';
 import { planejar } from './planejar';
 import { porQue } from './porQue';
 import { resultado } from './resultado';
+import { seguir } from './seguir';
 import { sobre } from './sobre';
 import { soRoteamento } from './soRoteamento';
 
@@ -38,6 +41,9 @@ export const textos = {
   aviso,
   compartilhar,
   acompanhar,
+  seguir,
+  plus,
+  abas,
 } as const;
 
 export type Textos = typeof textos;

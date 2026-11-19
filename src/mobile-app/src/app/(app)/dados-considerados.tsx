@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
+import { Redirect, Stack, router, useLocalSearchParams } from 'expo-router';
 import { BackHandler } from 'react-native';
 
-import { Aviso, LinhaLista, SeloExemplo, Tela, Texto, Botao } from '@/components';
+import { Aviso, Cabecalho, LinhaLista, SeloExemplo, Tela, Texto } from '@/components';
 import { LinhaCategoria, coberturaPorProxy, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
 import { SeletorOpcoes } from '@/components/detalhes';
 import { useConsulta } from '@/consulta';
@@ -77,15 +77,14 @@ export default function DadosConsiderados() {
   const panoramaPeriodo = resposta.panoramaMunicipal.periodo;
 
   return (
-    <Tela>
-      <Stack.Screen options={{ title: panorama ? t.panoramaTitulo : t.titulo }} />
+    <Tela topo={<Cabecalho titulo={panorama ? t.panoramaTitulo : t.titulo} navegacao={{ rotulo: textos.comuns.voltar, onPress: () => (panorama ? setPanorama(false) : router.back()) }} />}>
+      <Stack.Screen options={{ title: panorama ? t.panoramaTitulo : t.titulo, headerShown: false }} />
       {selosExemplo(resposta).exposicao ? <SeloExemplo /> : null}
       {semExposicao ? (
         // B-08: sem exposição estimada não há totais, nem zeros, nem panorama a mostrar.
         <Aviso texto={textos.soRoteamento.dadosConsiderados} />
       ) : panorama ? (
         <>
-          <Botao variante="texto" rotulo={textos.comuns.voltar} onPress={() => setPanorama(false)} />
           <Texto variante="secao" accessibilityRole="header">{t.panoramaTitulo}</Texto>
           <Aviso texto={t.panoramaAviso(periodo(panoramaPeriodo.inicio, panoramaPeriodo.fim))} />
           <LinhaLista titulo={t.homicidio} valor={numero(resposta.panoramaMunicipal.homicidioDoloso)} />

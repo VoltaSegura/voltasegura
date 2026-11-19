@@ -71,7 +71,7 @@ describe('TL-08 Detalhes da rota', () => {
     expect(screen.getByText(h.trechoNumerado(1, 2))).toBeTruthy();
   });
 
-  it('não oferece explicação quando L é zero; oferece dados e o compartilhamento do protótipo', async () => {
+  it('não oferece explicação quando L é zero; oferece dados e Seguir rota, sem compartilhar nem planejar volta', async () => {
     preparar(nao_aplicavel, 'rota_2');
     await render(<DetalhesRota />);
     expect(screen.queryByRole('button', { name: /Por que esta rota\?/ })).toBeNull();
@@ -80,8 +80,11 @@ describe('TL-08 Detalhes da rota', () => {
     expect(mockPush).toHaveBeenCalledWith('/sobre-os-dados');
     await fireEvent.press(screen.getByRole('button', { name: textos.porQue.linkConsiderados }));
     expect(mockPush).toHaveBeenCalledWith({ pathname: '/dados-considerados', params: { rotaId: 'rota_2' } });
-    await fireEvent.press(screen.getByRole('button', { name: textos.compartilhar.botaoTl08 }));
-    expect(mockPush).toHaveBeenCalledWith({ pathname: '/compartilhar/[rotaId]', params: { rotaId: 'rota_2' } });
+    // Item 7 (T25-B): compartilhar e planejar a volta saíram do detalhe; o compartilhamento fica em seguir/.
+    expect(screen.queryByRole('button', { name: textos.compartilhar.botaoTl08 })).toBeNull();
+    expect(screen.queryByRole('button', { name: textos.resultado.planejarVolta })).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: textos.seguir.botaoEntrada }));
+    expect(mockPush).toHaveBeenCalledWith({ pathname: '/seguir/[rotaId]', params: { rotaId: 'rota_2' } });
   });
 
   it('redireciona sem resposta ou rota válida', async () => {

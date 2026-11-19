@@ -66,4 +66,4 @@ Ao terminar qualquer mudança de fluxo, faça também:
 3. Se o fluxo mudou por decisão do Lucas, cite a decisão (D-nn) e a data na faixa de revisão da tela e do fluxo.
 4. Rode `npx tsc --noEmit`, `npx eslint src` e `npx jest`; os testes que descrevem o fluxo devem ser atualizados junto (um teste que ainda descreve o fluxo antigo é um bug de documentação).
 5. Não commite sem o Lucas pedir. O monorepo é a fonte da verdade; o espelho recebe a cópia pelo `scripts/sync_mirrors.sh` (não edite código no espelho).
-6. Para mudanças grandes, escreva ou atualize o plano em `docs/redesign/` ou `docs/dados-reais/` antes de implementar.
+6. Para mudanças grandes, escreva ou atualize o plano em `docs/app-map/redesign/` ou `docs/dados-reais/` antes de implementar.

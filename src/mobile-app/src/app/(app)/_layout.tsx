@@ -4,6 +4,7 @@ import { router, Stack } from 'expo-router';
 import { ConsultaProvider } from '@/consulta';
 import { LocaisProvider } from '@/locais';
 import { AberturaPorLembrete, RotinaProvider } from '@/rotina';
+import { AssinaturaProvider } from '@/plus/AssinaturaContext';
 import { fonte } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
 import { Botao } from '@/components/Botao';
@@ -15,7 +16,7 @@ import { rotina as rotinaTextos } from '@/textos/rotina';
  * Com sessão o app sempre abre na home (TL-04). Sem isto, o Expo Router escolhe a rota
  * inicial pela ordem dos arquivos e pode abrir numa tela sem seta de voltar (ex.: Rotina).
  */
-export const unstable_settings = { initialRouteName: 'planejar' };
+export const unstable_settings = { initialRouteName: '(abas)' };
 
 /**
  * Rotas que exigem sessão. A guarda fica na raiz (Stack.Protected).
@@ -26,10 +27,12 @@ export default function AppLayout() {
   return (
     <ConsultaProvider>
       <LocaisProvider>
-        <RotinaProvider>
-          {Platform.OS !== 'web' ? <AberturaPorLembrete /> : null}
-          <PilhaApp />
-        </RotinaProvider>
+        <AssinaturaProvider>
+          <RotinaProvider>
+            {Platform.OS !== 'web' ? <AberturaPorLembrete /> : null}
+            <PilhaApp />
+          </RotinaProvider>
+        </AssinaturaProvider>
       </LocaisProvider>
     </ConsultaProvider>
   );
@@ -48,7 +51,7 @@ function PilhaApp() {
         contentStyle: { backgroundColor: cores.fundo },
       }}
     >
-      <Stack.Screen name="planejar" options={{ headerShown: false }} />
+      <Stack.Screen name="(abas)" options={{ headerShown: false }} />
       <Stack.Screen
         name="escolher-ponto"
         options={{ presentation: 'modal', headerShown: false }}
@@ -56,13 +59,13 @@ function PilhaApp() {
       <Stack.Screen name="buscando" options={{ headerShown: false }} />
       <Stack.Screen name="resultado/index" />
       <Stack.Screen name="resultado/[rotaId]" />
+      <Stack.Screen name="seguir/[rotaId]" options={{ title: textos.seguir.titulo }} />
       <Stack.Screen
         name="por-que/[rotaId]/[trechoId]"
         options={{ presentation: 'modal', headerBackVisible: false, headerLeft: () => null, headerTitle: ({ children }) => <TituloModal titulo={children} cor={cores.texto} />, headerRight: () => <Botao variante="texto" rotulo={textos.comuns.fechar} onPress={() => router.back()} /> }}
       />
       <Stack.Screen name="sobre-os-dados" />
       <Stack.Screen name="dados-considerados" />
-      <Stack.Screen name="configuracoes" />
       <Stack.Screen name="rotina" options={{ title: rotinaTextos.titulo }} />
       <Stack.Screen name="rotina/editar" />
       <Stack.Screen

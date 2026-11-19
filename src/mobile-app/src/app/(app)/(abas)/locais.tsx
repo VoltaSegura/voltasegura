@@ -1,24 +1,23 @@
 import { useEffect, useRef, useState, type ComponentRef } from 'react';
 import { AccessibilityInfo, Keyboard, Platform, ScrollView, StyleSheet, View } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { router } from 'expo-router';
 
-import { Aviso, Botao, CampoTexto, GrupoLinhas, ImagemPlaceholder, LinhaGrupo, Tela, Texto } from '@/components';
+import { Aviso, Botao, CampoTexto, EstadoVazio, GrupoLinhas, LinhaGrupo, Tela, Texto } from '@/components';
 import { infoTipo } from '@/components/planejar';
-import { useLocais, MAX_NOME, type LocalSalvo } from '@/locais';
+import { MAX_NOME, useLocais, type LocalSalvo } from '@/locais';
 import { normalizarNome } from '@/locais/armazenamento';
-import { servicos } from '@/services';
-import { useSessao } from '@/sessao/SessaoContext';
-import { textos } from '@/textos';
-import { rotina as r } from '@/textos/rotina';
-import { hipotesesDetalhes as h } from '@/textos/hipotesesDetalhes';
-import { hipotesesMapa as m } from '@/textos/hipotesesMapa';
+import { abas } from '@/textos/abas';
 import { hipotesesConfig as c } from '@/textos/hipotesesConfig';
+import { hipotesesMapa as m } from '@/textos/hipotesesMapa';
 import { esp } from '@/theme/tokens';
 
-export default function Configuracoes() {
-  const { sessao, encerrarSessao } = useSessao();
-  const { locais, apagar, renomear, restaurar } = useLocais();
-  const [saindo, setSaindo] = useState(false);
+/**
+ * Aba Locais (TL-26; itens 1 e 11 do T25-B). Renomear inline e apagar com "Desfazer" por 5 s,
+ * vindos da antiga TL-12. Nada é enviado: os lugares ficam no aparelho.
+ */
+export default function Locais() {
+  const { locais, carregado, apagar, renomear, restaurar } = useLocais();
+  const t = abas.locais;
 
   const [editando, setEditando] = useState<string | null>(null);
   const [nome, setNome] = useState('');
@@ -58,6 +57,7 @@ export default function Configuracoes() {
     return () => { abrir.remove(); fechar.remove(); };
   }, []);
 
+  // O "Desfazer" fica disponível por exatamente 5 segundos.
   useEffect(() => {
     if (!apagado) return;
     const prazo = setTimeout(() => setApagado(null), 5000);
@@ -122,26 +122,8 @@ export default function Configuracoes() {
     finally { trava.current = false; setOcupado(false); }
   }
 
-  async function sair() {
-    if (saindo) return;
-    setSaindo(true);
-    try {
-      if (sessao && 'encerrarSessaoRemota' in servicos.conta && typeof servicos.conta.encerrarSessaoRemota === 'function') {
-        try {
-          await servicos.conta.encerrarSessaoRemota(sessao.token);
-        } catch {
-          // A saída local precisa acontecer mesmo se a remota falhar.
-        }
-      }
-      await encerrarSessao();
-      router.replace('/entrar');
-    } finally {
-      setSaindo(false);
-    }
-  }
-
   return (
-    <Tela rolagem={false}>
+    <Tela rolagem={false} abas>
       <ScrollView
         ref={rolagem}
         style={estilos.rolagem}
@@ -149,20 +131,14 @@ export default function Configuracoes() {
         keyboardShouldPersistTaps="handled"
         onScroll={(evento) => { deslocamento.current = evento.nativeEvent.contentOffset.y; }}
         scrollEventThrottle={16}
-        onContentSizeChange={mostrarEditor}
       >
-        <Stack.Screen options={{ title: textos.config.titulo }} />
-        <View accessible accessibilityLabel={[textos.config.conta, sessao?.email].filter(Boolean).join('. ')} style={estilos.perfil}>
-          <ImagemPlaceholder nome="avatarPerfil" icone="account-outline" escurecer={false} style={estilos.avatar} />
-          <View style={estilos.perfilTextos}>
-            <Texto variante="rotulo" cor="texto2">{textos.config.conta}</Texto>
-            <Texto variante="destaque" numberOfLines={1}>{sessao?.email ?? textos.config.conta}</Texto>
-          </View>
-        </View>
+        <Texto variante="titulo" accessibilityRole="header">{t.titulo}</Texto>
+        <Texto variante="corpo" cor="texto2">{t.intro}</Texto>
         <GrupoLinhas titulo={m.lugaresSecao}>
           {locais.length ? locais.map((l, i) => (
             <View key={l.id}>
               <LinhaGrupo
+                testID={`local-${l.id}`}
                 icone={infoTipo[l.tipo].icone}
                 titulo={l.nome}
                 detalhe={l.endereco || (l.nome === infoTipo[l.tipo].rotulo ? undefined : infoTipo[l.tipo].rotulo)}
@@ -179,7 +155,6 @@ export default function Configuracoes() {
                     onChangeText={(valor) => { setNome(valor.slice(0, MAX_NOME)); setErroNome(''); }}
                     maxLength={MAX_NOME}
                     autoFocus
-                    onFocus={mostrarEditor}
                     erro={erroNome}
                     desabilitado={ocupado}
                     returnKeyType="done"
@@ -193,6 +168,7 @@ export default function Configuracoes() {
             </View>
           )) : <LinhaGrupo icone="bookmark-outline" titulo={m.lugaresSecaoVazia} ultima />}
         </GrupoLinhas>
+        {carregado && locais.length === 0 ? <EstadoVazio texto={t.vazio} /> : null}
         {apagado ? (
           <View style={estilos.aviso}>
             <Texto accessibilityLiveRegion="polite">{c.lugarApagado}</Texto>
@@ -200,21 +176,7 @@ export default function Configuracoes() {
           </View>
         ) : null}
         {erro ? <Aviso texto={erro} variante="erro" /> : null}
-        <Texto variante="apoio" cor="texto2">{m.noAparelho}</Texto>
-        <GrupoLinhas titulo={r.selo}>
-          <LinhaGrupo icone="calendar-clock-outline" titulo={r.entradaConfig} detalhe={r.entradaConfigDetalhe} onPress={() => router.push('/rotina')} ultima />
-        </GrupoLinhas>
-        <GrupoLinhas titulo={textos.config.privacidade}>
-          <LinhaGrupo icone="shield-lock-outline" titulo={textos.aviso.titulo} onPress={() => router.push('/aviso-privacidade')} ultima />
-        </GrupoLinhas>
-        <Botao
-          rotulo={textos.config.sair}
-          variante="secundario"
-          carregando={saindo}
-          rotuloCarregando={h.saindo}
-          anuncioCarregando={textos.comuns.carregando}
-          onPress={() => { void sair(); }}
-        />
+        <Botao rotulo={t.salvar} onPress={() => router.push('/escolher-ponto')} />
         {Platform.OS === 'android' && alturaTeclado > 0 ? <View testID="espaco-teclado" style={{ height: alturaTeclado }} /> : null}
       </ScrollView>
     </Tela>
@@ -226,7 +188,4 @@ const estilos = StyleSheet.create({
   conteudo: { padding: esp[4], gap: esp[4] },
   editor: { padding: esp[3], gap: esp[2] },
   aviso: { gap: esp[2] },
-  perfil: { flexDirection: 'row', alignItems: 'center', gap: esp[4] },
-  avatar: { width: 72, height: 72, borderRadius: 36 },
-  perfilTextos: { flex: 1 },
 });

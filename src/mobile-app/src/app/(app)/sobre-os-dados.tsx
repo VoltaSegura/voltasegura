@@ -1,11 +1,12 @@
 import { Redirect, Stack, router } from 'expo-router';
 
-import { LinhaLista, Link, SeloExemplo, Tela, Texto } from '@/components';
+import { Cabecalho, LinhaLista, Link, SeloExemplo, Tela, Texto } from '@/components';
 import { coberturaPorProxy, focosVisiveis, selosExemplo, soRoteamento } from '@/components/resultado';
 import { useConsulta } from '@/consulta';
 import type { FocoRota, RespostaConsulta, Rota } from '@/services';
 import { textos } from '@/textos';
 import { hipotesesDetalhes as h } from '@/textos/hipotesesDetalhes';
+import { hipotesesPrioridade } from '@/textos/hipotesesPrioridade';
 
 const focos: Record<FocoRota, string> = {
   MENOR_TEMPO: textos.modos.foco.menorTempo,
@@ -28,6 +29,9 @@ function data(dataIso: string): string {
 
 function situacao(resposta: RespostaConsulta): string {
   if (resposta.rotas.length === 1 || resposta.caso === 'SEM_COMPARACAO') return textos.porQue.indicativo.semComparacao;
+  // B-59 (D-33): destaque com diferença pequena
+  const destaque = resposta.rotas.find((item) => item.destaqueExposicao?.confianca === 'pequena');
+  if (destaque) return `${h.opcao(resposta.rotas.indexOf(destaque) + 1)}: ${hipotesesPrioridade.indicativoComFocoPequena}`;
   switch (resposta.caso) {
     case 'CONCLUSIVO': {
       const rota = resposta.rotas.find((item) => item.focos.includes('MENOR_EXPOSICAO'));
@@ -65,11 +69,14 @@ export default function SobreOsDados() {
     {selos.roteamento && !ambos ? <SeloExemplo /> : null}
     <Texto>{textos.sobre.atualizacaoGtfs(data(atualizacao.gtfs))}</Texto>
   </>;
+  // Cabeçalho do app (mockup 04/05 do redesign): título e "Voltar", sem cabeçalho nativo.
+  const cabecalho = <Cabecalho titulo={textos.sobre.titulo} navegacao={{ rotulo: textos.comuns.voltar, onPress: () => router.back() }} />;
+
   if (semExposicao) {
     // B-08 · "Só roteamento": sem período, sem base SSP, sem cobertura, sem comparação.
     return (
-      <Tela>
-        <Stack.Screen options={{ title: textos.sobre.titulo }} />
+      <Tela topo={cabecalho}>
+        <Stack.Screen options={{ title: textos.sobre.titulo, headerShown: false }} />
         <Texto variante="secao" accessibilityRole="header">{textos.soRoteamento.roteamentoTitulo}</Texto>
         <Texto>{selos.roteamento ? textos.soRoteamento.roteamentoExemplo : textos.soRoteamento.roteamentoReal}</Texto>
         {horarios}
@@ -83,8 +90,8 @@ export default function SobreOsDados() {
     );
   }
   return (
-    <Tela>
-      <Stack.Screen options={{ title: textos.sobre.titulo }} />
+    <Tela topo={cabecalho}>
+      <Stack.Screen options={{ title: textos.sobre.titulo, headerShown: false }} />
       {ambos ? <SeloExemplo /> : null}
       {selos.exposicao && !ambos ? <SeloExemplo /> : null}
       <Texto variante="secao" accessibilityRole="header">{textos.sobre.fonteTitulo}</Texto>

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ScrollView, StyleSheet, View } from 'react-native';
 import * as Location from 'expo-location';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
-import { Aviso, BotaoIcone, Botao, Hero, ImagemPlaceholder, Tela, Texto } from '@/components';
-import { AtalhosHorario, CampoPonto, CartaoAdicionarLocal, CartaoLocal, SeletorHorario } from '@/components/planejar';
+import { Aviso, BotaoIcone, Botao, ImagemPlaceholder, Tela, Texto } from '@/components';
+import { CampoPonto, CartaoAdicionarLocal, CartaoLocal, SeletorHorario } from '@/components/planejar';
 import { LARGURA_CARTAO_LOCAL } from '@/components/planejar/CartaoLocal';
 import { Entrada } from '@/components/movimento';
 import { useConsulta, validarConsulta, type CodigoProblema } from '@/consulta';
@@ -22,8 +22,6 @@ export default function Planejar() {
   const { estado, rotulos, definirOrigem, definirDestino, definirSentido, definirSaida, inverterPontos, planejarVolta } = useConsulta();
   const { consulta, busca } = estado;
   const [validacao, setValidacao] = useState<{ chave: string; problemas: CodigoProblema[] } | null>(null);
-  const [horaValida, setHoraValida] = useState(true);
-  const [focarHora, setFocarHora] = useState(foco === 'horario');
   const parametroAplicado = useRef(false);
   const { locais } = useLocais();
   const { cores } = useTema();
@@ -42,14 +40,12 @@ export default function Planejar() {
 
   function verificar() {
     const encontrados = validarConsulta(consulta);
-    if (!horaValida && !encontrados.includes('SAIDA_INVALIDA')) encontrados.push('SAIDA_INVALIDA');
     setValidacao({ chave: chaveConsulta, problemas: encontrados });
     if (encontrados.length === 0) router.push('/buscando');
     else {
       if (encontrados.includes('ORIGEM_AUSENTE')) abrir('origem');
       else if (encontrados.includes('DESTINO_AUSENTE')) abrir('destino');
-      else if (encontrados.includes('SAIDA_INVALIDA')) setFocarHora(true);
-      AccessibilityInfo.announceForAccessibility(encontrados.includes('ORIGEM_AUSENTE') ? textos.planejar.erroOrigem : encontrados.includes('DESTINO_AUSENTE') ? textos.planejar.erroDestino : encontrados.includes('SAIDA_INVALIDA') ? hipotesesPlanejar.erroHora : textos.planejar.mesmoLugar);
+      AccessibilityInfo.announceForAccessibility(encontrados.includes('ORIGEM_AUSENTE') ? textos.planejar.erroOrigem : encontrados.includes('DESTINO_AUSENTE') ? textos.planejar.erroDestino : encontrados.includes('SAIDA_INVALIDA') ? hipotesesPlanejar.saidaInvalida : textos.planejar.mesmoLugar);
     }
   }
 
@@ -86,20 +82,13 @@ export default function Planejar() {
   const rotuloDestino = consulta.destino ? rotulos?.destino ?? textos.planejar.pontoMapa : textos.planejar.escolherDestino;
 
   const volta = consulta.sentido === 'volta';
-  const dia = Number.isNaN(Date.parse(consulta.saida)) ? '--' : new Date(consulta.saida).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' });
 
-  return <Tela hero={
-    <Hero
-      imagem="heroPlanejar"
-      icone="city-variant-outline"
-      direita={<BotaoIcone icone="cog-outline" rotulo={textos.config.titulo} onPress={() => router.push('/configuracoes')} />}
-    >
+  return <Tela abas>
+    <View style={estilos.cabecalho}>
       <Texto variante="rotulo" cor="acaoLink">{textos.abertura.titulo}</Texto>
       <Texto variante="titulo" accessibilityRole="header">{h.saudacao}</Texto>
       <Texto variante="apoio" cor="texto2">{h.subtitulo}</Texto>
-    </Hero>
-  }>
-    <Stack.Screen options={{ title: textos.abertura.titulo }} />
+    </View>
     {volta ? <View style={[estilos.etiqueta, { backgroundColor: cores.superficie2 }]}><Texto variante="rotulo" accessibilityRole="header">{h.planejandoVolta}</Texto></View> : null}
     <Entrada indice={0}>
       <View style={[estilos.painel, { backgroundColor: cores.superficie, borderColor: cores.divisoria }]}>
@@ -112,10 +101,9 @@ export default function Planejar() {
       </View>
     </Entrada>
     {erroGps ? <Aviso texto={erroGps} variante="erro" /> : null}
-    <Entrada indice={1}>
-      <AtalhosHorario saidaAtual={consulta.saida} onEscolher={(saida) => { definirSaida(saida); setHoraValida(true); setValidacao(null); }} />
-      <SeletorHorario rotulo={volta ? textos.planejar.saidaVolta : textos.planejar.saida} saida={consulta.saida} onChange={definirSaida} onValidadeChange={setHoraValida} focar={focarHora || foco === 'horario'} />
-      <Texto variante="apoio" cor="texto2">{hipotesesPlanejar.diaSaida}: {dia}</Texto>
+    <Entrada indice={1} style={estilos.bloco}>
+      <Texto variante="secao" accessibilityRole="header">{volta ? textos.planejar.saidaVolta : textos.planejar.saida}</Texto>
+      <SeletorHorario rotulo={volta ? textos.planejar.saidaVolta : textos.planejar.saida} saida={consulta.saida} onChange={definirSaida} abrirInicialmente={foco === 'horario'} />
     </Entrada>
     {foco === 'horario' ? <Texto variante="apoio" cor="texto2">{hipotesesPlanejar.retornoHorario}</Texto> : null}
     {problemas.includes('SAIDA_INVALIDA') ? <Aviso texto={hipotesesPlanejar.saidaInvalida} variante="erro" /> : null}
@@ -143,6 +131,8 @@ export default function Planejar() {
 }
 
 const estilos = StyleSheet.create({
+  cabecalho: { gap: esp[1] },
+  bloco: { gap: esp[3] },
   painel: { borderRadius: raio.painel, borderWidth: 1, padding: esp[2] },
   separador: { flexDirection: 'row', alignItems: 'center', gap: esp[2], paddingLeft: esp[2] + 17 },
   fio: { flex: 1, height: 1 },

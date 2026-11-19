@@ -1,0 +1,35 @@
+/** Textos das abas Locais, Contatos e Perfil (TL-26, TL-27 e Perfil). Contatos ficam só no aparelho e não enviam nada sozinhos. */
+export const abas = {
+  locais: {
+    titulo: 'Locais',
+    intro: 'Seus lugares salvos ficam só neste aparelho.',
+    vazio: 'Nenhum lugar salvo ainda. Salve casa, trabalho ou estudo para usar nas buscas e na rotina.',
+    salvar: 'Salvar um lugar',
+  },
+  contatos: {
+    titulo: 'Contatos',
+    intro: 'Pessoas de confiança para quem você pode contar sua volta. Ficam só neste aparelho.',
+    notaEnvio: 'A lista não envia nada sozinha. Compartilhar é sempre uma ação sua, com confirmação.',
+    vazio: 'Nenhum contato ainda.',
+    adicionar: 'Adicionar contato',
+    campoNome: 'Nome',
+    ajudaNome: 'Use um nome que você reconheça, como Mãe.',
+    salvar: 'Salvar contato',
+    remover: 'Remover',
+    nomeVazio: 'Informe um nome.',
+    limite: (max: number) => `Você já tem ${max} contatos. Remova um para adicionar outro.`,
+    erro: 'Não foi possível salvar agora. Tente de novo.',
+    removido: 'Contato removido.',
+    adicionado: 'Contato salvo.',
+  },
+  perfil: {
+    titulo: 'Perfil',
+    plusSecao: 'VoltaSegura+',
+    planoGratuito: 'Plano gratuito',
+    assinante: (ate: string, anual: boolean) => `Assinante ${anual ? 'anual' : 'mensal'} · teste até ${ate}`,
+    temaTitulo: 'Tema',
+    temaSistema: 'Sistema',
+    temaClaro: 'Claro',
+    temaEscuro: 'Escuro',
+  },
+} as const;
