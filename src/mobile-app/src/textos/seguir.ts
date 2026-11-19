@@ -1,0 +1,48 @@
+// Textos da navegação "Seguir rota" (TL-18). Fonte da regra de linguagem: docs/05_regras_linguagem_etica.md.
+// Tom neutro: a navegação mostra onde a pessoa está no trajeto, nunca julga o caminho nem o lugar.
+export const seguir = {
+  titulo: 'Seguir rota',
+  botaoEntrada: 'Seguir esta rota',
+  intro: 'O mapa acompanha sua posição no trajeto enquanto o app estiver aberto e a tela ligada. Você pode encerrar a qualquer momento.',
+  sobreLocalizacao: 'Sua posição fica neste aparelho, a não ser que você esteja compartilhando a viagem.',
+  comecar: 'Começar',
+  entendiNaoMostrar: 'Entendi e não mostrar de novo',
+  semPermissao: 'Sem acesso à localização não dá para acompanhar o trajeto. Você pode liberar o acesso nas configurações do aparelho.',
+  tentarDeNovo: 'Tentar de novo',
+  erroGps: 'Não foi possível ler sua posição agora. Tente de novo.',
+  semTrajeto: 'Esta rota não tem trajeto desenhado para acompanhar.',
+  buscandoGps: 'Procurando sua posição…',
+  indicadorAtivo: 'Acompanhando sua posição',
+  proximoPasso: 'Próximo passo',
+  restante: (distancia: string, minutos: number) => `${distancia} · cerca de ${minutos} min restantes`,
+  chegadaPrevista: (hora: string) => `Chegada prevista às ${hora}`,
+  foraDoTrajeto: 'Você saiu do trajeto. Vamos recalcular a partir daqui.',
+  recalculoFalhou: 'Não foi possível recalcular agora. Mantivemos o trajeto anterior.',
+  chegou: 'Você chegou ao destino.',
+  encerrado: 'Acompanhamento encerrado.',
+  fechar: 'Fechar',
+  encerrar: 'Encerrar',
+  recentrar: 'Recentrar',
+  mapaRotulo: 'Mapa do trajeto, com sua posição em destaque.',
+  marcadorPosicao: 'Você está aqui',
+  marcadorDestino: 'Destino',
+  mapaWeb: 'O acompanhamento do trajeto está disponível no app do celular.',
+  segundoPlano: {
+    pedidoTitulo: 'Acompanhar com o app em segundo plano?',
+    pedidoCorpo:
+      'Para continuar mostrando sua posição com o app fora da tela, o VoltaSegura precisa de acesso à localização também em segundo plano. Enquanto o acompanhamento estiver ativo, uma notificação fica visível e você pode encerrar quando quiser. O trajeto não é guardado.',
+    pedidoPermitir: 'Permitir',
+    pedidoAgoraNao: 'Agora não',
+    semPermissao: 'Sem acesso em segundo plano, o trajeto só é acompanhado com o app aberto e a tela ligada.',
+    notificacaoTitulo: 'VoltaSegura acompanha seu trajeto',
+    notificacaoCorpo: 'Toque para ver o próximo passo.',
+    },
+  instrucao: {
+    caminhar: (distancia: string, ate: string) => `Caminhe ${distancia} até ${ate}`,
+    caminharAoDestino: (distancia: string) => `Caminhe ${distancia} até o destino`,
+    embarcar: (em: string, identificacao: string, hora: string | null) =>
+      `Embarque em ${em} · ${identificacao}${hora ? ` · previsto para ${hora}` : ''}`,
+    seguir: (identificacao: string, ate: string) => `Siga com ${identificacao} até ${ate}`,
+    seguirSemDestino: (identificacao: string) => `Siga com ${identificacao}`,
+  },
+} as const;

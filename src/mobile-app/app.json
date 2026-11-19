@@ -30,7 +30,11 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Permitir que o VoltaSegura use sua localização quando você tocar em Usar minha localização."
+          "locationWhenInUsePermission": "Permitir que o VoltaSegura use sua localização para mostrar sua posição no trajeto e para escolher o ponto de partida.",
+          "locationAlwaysAndWhenInUsePermission": "Permitir que o VoltaSegura use sua localização também em segundo plano, para seguir sua posição no trajeto com o app fora da tela. Só fica ativo enquanto você acompanha uma rota, e você pode encerrar quando quiser.",
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
         }
       ],
       "expo-font",
